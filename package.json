@@ -9,9 +9,9 @@
     "node": "12.15.x"
   },
   "devDependencies": {
-    "http-server": "^0.12.3"
+    "express": "^4.17.1"
   },
   "scripts": {
-    "start": "http-server"
+    "start": "node index.js"
   }
 }
