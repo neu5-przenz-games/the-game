@@ -4,4 +4,4 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
      res.sendFile('index.html', {root: __dirname + '/public/'});
 });
-app.listen(process.env.PORT || 5000)
+app.listen(process.env.PORT || 5000);

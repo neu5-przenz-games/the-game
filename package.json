@@ -8,10 +8,10 @@
   "engines": {
     "node": "12.15.x"
   },
-  "devDependencies": {
-    "express": "^4.17.1"
-  },
   "scripts": {
     "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
