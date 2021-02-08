@@ -1,8 +1,17 @@
 {
-  "dependencies": {
-    "http-server": "^0.12.3"
+  "name": "the-game",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/neu5/group-registration",
+  "author": "neu5",
+  "license": "MIT",
+  "engines": {
+    "node": "12.15.x"
   },
   "scripts": {
-    "start": "http-server"
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
