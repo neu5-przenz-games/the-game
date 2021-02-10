@@ -6,7 +6,7 @@
   "author": "neu5",
   "license": "MIT",
   "engines": {
-    "node": "12.15.x"
+    "node": "14.15.x"
   },
   "scripts": {
     "start": "node index.js"
