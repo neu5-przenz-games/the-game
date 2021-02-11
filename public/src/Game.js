@@ -3,12 +3,15 @@ class Game extends Phaser.Scene {
         super('Game');
     }
     create() {
+        this.socket = io();
         this.add.sprite(0, 0, 'background').setOrigin(0,0);
         this.stateStatus = null;
         this._score = 0;
-        this._time = 10;
-		this._gamePaused = false;
-		this._runOnce = false;
+        this._time = 30;
+        this._playersNum = 0;
+        this._players = {};
+        this._gamePaused = false;
+        this._runOnce = false;
 
 		this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY, 'clickme', this.addPoints, this, 'static');
         this.buttonDummy.setOrigin(0.5,0.5);
@@ -30,6 +33,36 @@ class Game extends Phaser.Scene {
             },
             callbackScope: this,
             loop: true
+        });
+
+		this.socket.on("newPlayer", player => {
+            let id = player.playerId;
+            this.displayServerMessage("New player connected! " + id);
+            this.updatePlayers(this._playersNum + 1);
+            this._players[id] = {
+                score: 0,
+                playerId: id,
+            };
+            this.updateScoreboard();
+        });
+        this.socket.on("playerDisconnected", id => {
+            this.displayServerMessage("Player has left: " + id);
+            this.updatePlayers(this._playersNum - 1);
+            delete this._players[id];
+            this.updateScoreboard();
+        });
+        this.socket.on("currentPlayers", players => {
+            let playerNum = Object.keys(players).length;
+            this.displayServerMessage("Current players: " + playerNum);
+            this.updatePlayers(playerNum);
+            this._players = players;
+            this.updateScoreboard();
+        });
+        this.socket.on("playerScored", player => {
+            this._players[player.playerId] = {
+                score: player.score,
+            };
+            this.updateScoreboard();
         });
 
 		this.input.keyboard.on('keydown', this.handleKey, this);
@@ -119,6 +152,7 @@ class Game extends Phaser.Scene {
         this.screenPausedGroup.toggleVisible();
 	}
 	stateGameover() {
+		this.socket.disconnect();
 		this.currentTimer.paused =! this.currentTimer.paused;
 		EPT.Storage.setHighscore('EPT-highscore',this._score);
 		EPT.fadeOutIn(function(self){
@@ -144,6 +178,16 @@ class Game extends Phaser.Scene {
 
 		this.textScore.y = -this.textScore.height-20;
 		this.tweens.add({targets: this.textScore, y: 45, duration: 500, delay: 100, ease: 'Back'});
+
+		this.textPlayers = this.add.text(EPT.world.width-210, EPT.world.height-30, 'Players: '+this._playersNum, fontScore);
+		this.textPlayers.setOrigin(0,1);
+		this.textPlayers.y = EPT.world.height+this.textPlayers.height+30;
+		this.tweens.add({targets: this.textPlayers, y: EPT.world.height-30, duration: 500, ease: 'Back'});
+
+		this.textScoreboard = this.add.text(30, EPT.world.height-200, 'Scoreboard:\n', { font: '22px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 3 });
+		this.textScoreboard.setOrigin(0,1);
+		this.textScoreboard.y = EPT.world.height+this.textScoreboard.height+30;
+		this.tweens.add({targets: this.textScoreboard, y: EPT.world.height-200, duration: 500, ease: 'Back'});		
 
 		this.textTime = this.add.text(30, EPT.world.height-30, EPT.text['gameplay-timeleft']+this._time, fontScore);
 		this.textTime.setOrigin(0,1);
@@ -202,6 +246,28 @@ class Game extends Phaser.Scene {
         this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
 
         this.cameras.main.shake(100, 0.01, true);
+
+		this._players[this.socket.id].score = this._score;
+		this.socket.emit('playerScore', this._players[this.socket.id]);
+		this.updateScoreboard();
+    }
+	updatePlayers(n) {
+		this._playersNum = n;
+		this.textPlayers.setText('Players: ' + this._playersNum);
+	}
+	displayServerMessage(msg) {
+		var posX = 30;
+		var posY = 150;
+		var msg = this.add.text(posX, posY, 'server: ' + msg, { font: '22px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 3 });
+		msg.setOrigin(0.0, 0.0);
+        this.tweens.add({targets: msg, alpha: 0, y: posY-50, duration: 4000, ease: 'Linear'});
+    }
+	updateScoreboard() {
+		let text = 'Scoreboard: ';
+		for (var id of Object.keys(this._players)) {
+			text += (id == this.socket.id ? '\n    You (' : '\nPlayer (') + id.substring(0, 5).toUpperCase() + "): " + this._players[id].score;
+		}
+		this.textScoreboard.setText(text);
     }
 	stateRestart() {
 		EPT.Sfx.play('click');
