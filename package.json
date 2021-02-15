@@ -2,7 +2,7 @@
   "name": "the-game",
   "version": "0.0.1",
   "main": "index.js",
-  "repository": "https://github.com/neu5/group-registration",
+  "repository": "https://github.com/neu5-przenz-games/the-game",
   "author": "neu5",
   "license": "MIT",
   "engines": {
@@ -12,6 +12,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "socket.io": "^3.1.1"
   }
 }
