@@ -27,16 +27,16 @@ var gameConfig = {
 	scale: {
 		mode: Phaser.Scale.FIT,
 		autoCenter: Phaser.Scale.CENTER_BOTH,
-		width: 640,
-		height: 960
+		width: 1024,
+		height: 768
 	},
-	scene: [Boot, Preloader, MainMenu, Settings, Story, Game]
+	scene: [Boot, Preloader, MainMenu, Settings, Game]
 }
 game = new Phaser.Game(gameConfig);
 window.focus();
 
 // Usage tracking
 window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-30485283-26');
+// function gtag(){dataLayer.push(arguments);}
+// gtag('js', new Date());
+// gtag('config', 'UA-30485283-26');

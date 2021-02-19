@@ -7,6 +7,9 @@ class Boot extends Phaser.Scene {
         this.load.image('logo-enclave', 'img/logo-enclave.png');
         this.load.image('loading-background', 'img/loading-background.png');
         WebFont.load({ custom: { families: ['Berlin'], urls: ['fonts/BRLNSDB.css'] } });
+
+        this.load.image('tileset', 'tileset/tileset.png');
+        this.load.tilemapTiledJSON('map', 'map/map.json');
     }
     create() {
         EPT.world = {

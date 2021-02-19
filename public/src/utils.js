@@ -260,8 +260,7 @@ EPT.Lang = {
       'gameplay-timeleft': 'Time left: ',
       'gameplay-paused': 'PAUSED',
       'gameplay-gameover': 'GAME OVER',
-      'menu-highscore': 'Highscore: ',
-      'screen-story-howto': 'Story / how to play\nscreen'
+      'menu-highscore': 'Highscore: '
     },
     'pl': {
       'FONT': 'Arial',
@@ -300,8 +299,7 @@ EPT.Lang = {
       'gameplay-timeleft': 'Pozostały czas: ',
       'gameplay-paused': 'PAUZA',
       'gameplay-gameover': 'KONIEC GRY',
-      'menu-highscore': 'Rekord: ',
-      'screen-story-howto': 'Ekran fabuły / jak grać'
+      'menu-highscore': 'Rekord: '
     }
   }
 };

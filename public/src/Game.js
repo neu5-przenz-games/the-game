@@ -3,37 +3,41 @@ class Game extends Phaser.Scene {
         super('Game');
     }
     create() {
+		const map = this.make.tilemap({ key: 'map' });
+        const tileset = map.addTilesetImage('tileset', 'tileset');
+        map.createLayer('Ground', tileset);
+
         this.socket = io();
-        this.add.sprite(0, 0, 'background').setOrigin(0,0);
+        // this.add.sprite(0, 0, 'background').setOrigin(0,0);
         this.stateStatus = null;
         this._score = 0;
-        this._time = 30;
+        // this._time = 30;
         this._playersNum = 0;
         this._players = {};
         this._gamePaused = false;
         this._runOnce = false;
 
-		this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY, 'clickme', this.addPoints, this, 'static');
-        this.buttonDummy.setOrigin(0.5,0.5);
-        this.buttonDummy.setAlpha(0);
-        this.buttonDummy.setScale(0.1);
-        this.tweens.add({targets: this.buttonDummy, alpha: 1, duration: 500, ease: 'Linear'});
-        this.tweens.add({targets: this.buttonDummy, scale: 1, duration: 500, ease: 'Back'});
+		// this.buttonDummy = new Button(EPT.world.centerX, EPT.world.centerY, 'clickme', this.addPoints, this, 'static');
+        // this.buttonDummy.setOrigin(0.5,0.5);
+        // this.buttonDummy.setAlpha(0);
+        // this.buttonDummy.setScale(0.1);
+        // this.tweens.add({targets: this.buttonDummy, alpha: 1, duration: 500, ease: 'Linear'});
+        // this.tweens.add({targets: this.buttonDummy, scale: 1, duration: 500, ease: 'Back'});
         
         this.initUI();
-        this.currentTimer = this.time.addEvent({
-            delay: 1000,
-            callback: function(){
-                this._time--;
-                this.textTime.setText(EPT.text['gameplay-timeleft']+this._time);
-                if(!this._time) {
-                    this._runOnce = false;
-                    this.stateStatus = 'gameover';
-                }
-            },
-            callbackScope: this,
-            loop: true
-        });
+        // this.currentTimer = this.time.addEvent({
+        //     delay: 1000,
+        //     callback: function(){
+        //         this._time--;
+        //         this.textTime.setText(EPT.text['gameplay-timeleft']+this._time);
+        //         if(!this._time) {
+        //             this._runOnce = false;
+        //             this.stateStatus = 'gameover';
+        //         }
+        //     },
+        //     callbackScope: this,
+        //     loop: true
+        // });
 
 		this.socket.on("newPlayer", player => {
             let id = player.playerId;
@@ -43,26 +47,22 @@ class Game extends Phaser.Scene {
                 score: 0,
                 playerId: id,
             };
-            this.updateScoreboard();
         });
         this.socket.on("playerDisconnected", id => {
             this.displayServerMessage("Player has left: " + id);
             this.updatePlayers(this._playersNum - 1);
             delete this._players[id];
-            this.updateScoreboard();
         });
         this.socket.on("currentPlayers", players => {
             let playerNum = Object.keys(players).length;
             this.displayServerMessage("Current players: " + playerNum);
             this.updatePlayers(playerNum);
             this._players = players;
-            this.updateScoreboard();
         });
         this.socket.on("playerScored", player => {
             this._players[player.playerId] = {
                 score: player.score,
             };
-            this.updateScoreboard();
         });
 
 		this.input.keyboard.on('keydown', this.handleKey, this);
@@ -151,52 +151,52 @@ class Game extends Phaser.Scene {
 	statePaused() {
         this.screenPausedGroup.toggleVisible();
 	}
-	stateGameover() {
-		this.socket.disconnect();
-		this.currentTimer.paused =! this.currentTimer.paused;
-		EPT.Storage.setHighscore('EPT-highscore',this._score);
-		EPT.fadeOutIn(function(self){
-			self.screenGameoverGroup.toggleVisible();			
-			self.buttonPause.input.enabled = false;
-			self.buttonDummy.input.enabled = false;
-			self.screenGameoverScore.setText(EPT.text['gameplay-score']+self._score);
-			self.gameoverScoreTween();
-		}, this);
-		this.screenGameoverBack.x = -this.screenGameoverBack.width-20;
-		this.tweens.add({targets: this.screenGameoverBack, x: 100, duration: 500, delay: 250, ease: 'Back'});
-		this.screenGameoverRestart.x = EPT.world.width+this.screenGameoverRestart.width+20;
-		this.tweens.add({targets: this.screenGameoverRestart, x: EPT.world.width-100, duration: 500, delay: 250, ease: 'Back'});
-	}
+	// stateGameover() {
+	// 	this.socket.disconnect();
+	// 	this.currentTimer.paused =! this.currentTimer.paused;
+	// 	EPT.Storage.setHighscore('EPT-highscore',this._score);
+	// 	EPT.fadeOutIn(function(self){
+	// 		self.screenGameoverGroup.toggleVisible();			
+	// 		self.buttonPause.input.enabled = false;
+	// 		self.buttonDummy.input.enabled = false;
+	// 		self.screenGameoverScore.setText(EPT.text['gameplay-score']+self._score);
+	// 		self.gameoverScoreTween();
+	// 	}, this);
+	// 	this.screenGameoverBack.x = -this.screenGameoverBack.width-20;
+	// 	this.tweens.add({targets: this.screenGameoverBack, x: 100, duration: 500, delay: 250, ease: 'Back'});
+	// 	this.screenGameoverRestart.x = EPT.world.width+this.screenGameoverRestart.width+20;
+	// 	this.tweens.add({targets: this.screenGameoverRestart, x: EPT.world.width-100, duration: 500, delay: 250, ease: 'Back'});
+	// }
     initUI() {
-		this.buttonPause = new Button(20, 20, 'button-pause', this.managePause, this);
-		this.buttonPause.setOrigin(0,0);
+		// this.buttonPause = new Button(20, 20, 'button-pause', this.managePause, this);
+		// this.buttonPause.setOrigin(0,0);
 
 		var fontScore = { font: '38px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 5 };
 		var fontScoreWhite =  { font: '38px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 5 };
-		this.textScore = this.add.text(EPT.world.width-30, 45, EPT.text['gameplay-score']+this._score, fontScore);
-		this.textScore.setOrigin(1,0);
+		// this.textScore = this.add.text(EPT.world.width-30, 45, EPT.text['gameplay-score']+this._score, fontScore);
+		// this.textScore.setOrigin(1,0);
 
-		this.textScore.y = -this.textScore.height-20;
-		this.tweens.add({targets: this.textScore, y: 45, duration: 500, delay: 100, ease: 'Back'});
+		// this.textScore.y = -this.textScore.height-20;
+		// this.tweens.add({targets: this.textScore, y: 45, duration: 500, delay: 100, ease: 'Back'});
 
 		this.textPlayers = this.add.text(EPT.world.width-210, EPT.world.height-30, 'Players: '+this._playersNum, fontScore);
 		this.textPlayers.setOrigin(0,1);
 		this.textPlayers.y = EPT.world.height+this.textPlayers.height+30;
 		this.tweens.add({targets: this.textPlayers, y: EPT.world.height-30, duration: 500, ease: 'Back'});
 
-		this.textScoreboard = this.add.text(30, EPT.world.height-200, 'Scoreboard:\n', { font: '22px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 3 });
-		this.textScoreboard.setOrigin(0,1);
-		this.textScoreboard.y = EPT.world.height+this.textScoreboard.height+30;
-		this.tweens.add({targets: this.textScoreboard, y: EPT.world.height-200, duration: 500, ease: 'Back'});		
+		// this.textScoreboard = this.add.text(30, EPT.world.height-200, 'Scoreboard:\n', { font: '22px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 3 });
+		// this.textScoreboard.setOrigin(0,1);
+		// this.textScoreboard.y = EPT.world.height+this.textScoreboard.height+30;
+		// this.tweens.add({targets: this.textScoreboard, y: EPT.world.height-200, duration: 500, ease: 'Back'});		
 
-		this.textTime = this.add.text(30, EPT.world.height-30, EPT.text['gameplay-timeleft']+this._time, fontScore);
-		this.textTime.setOrigin(0,1);
+		// this.textTime = this.add.text(30, EPT.world.height-30, EPT.text['gameplay-timeleft']+this._time, fontScore);
+		// this.textTime.setOrigin(0,1);
 
-		this.textTime.y = EPT.world.height+this.textTime.height+30;
-		this.tweens.add({targets: this.textTime, y: EPT.world.height-30, duration: 500, ease: 'Back'});		
+		// this.textTime.y = EPT.world.height+this.textTime.height+30;
+		// this.tweens.add({targets: this.textTime, y: EPT.world.height-30, duration: 500, ease: 'Back'});		
 
-		this.buttonPause.y = -this.buttonPause.height-20;
-        this.tweens.add({targets: this.buttonPause, y: 20, duration: 500, ease: 'Back'});
+		// this.buttonPause.y = -this.buttonPause.height-20;
+        // this.tweens.add({targets: this.buttonPause, y: 20, duration: 500, ease: 'Back'});
 
 		var fontTitle = { font: '48px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 10 };
 
@@ -235,22 +235,22 @@ class Game extends Phaser.Scene {
 		this.screenGameoverGroup.add(this.screenGameoverScore);
 		this.screenGameoverGroup.toggleVisible();
     }
-    addPoints() {
-		this._score += 10;
-        this.textScore.setText(EPT.text['gameplay-score']+this._score);
+    // addPoints() {
+	// 	this._score += 10;
+    //     this.textScore.setText(EPT.text['gameplay-score']+this._score);
         
-        var randX = Phaser.Math.Between(200, EPT.world.width-200);
-        var randY = Phaser.Math.Between(200, EPT.world.height-200);
-		var pointsAdded = this.add.text(randX, randY, '+10', { font: '48px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 10 });
-		pointsAdded.setOrigin(0.5, 0.5);
-        this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
+    //     var randX = Phaser.Math.Between(200, EPT.world.width-200);
+    //     var randY = Phaser.Math.Between(200, EPT.world.height-200);
+	// 	var pointsAdded = this.add.text(randX, randY, '+10', { font: '48px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 10 });
+	// 	pointsAdded.setOrigin(0.5, 0.5);
+    //     this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
 
-        this.cameras.main.shake(100, 0.01, true);
+    //     this.cameras.main.shake(100, 0.01, true);
 
-		this._players[this.socket.id].score = this._score;
-		this.socket.emit('playerScore', this._players[this.socket.id]);
-		this.updateScoreboard();
-    }
+	// 	this._players[this.socket.id].score = this._score;
+	// 	this.socket.emit('playerScore', this._players[this.socket.id]);
+	// 	this.updateScoreboard();
+    // }
 	updatePlayers(n) {
 		this._playersNum = n;
 		this.textPlayers.setText('Players: ' + this._playersNum);
