@@ -70,12 +70,10 @@ class MainMenu extends Phaser.Scene {
         }
     }
     clickEnclave() {
-        EPT.Sfx.play('click');
         window.top.location.href = 'https://enclavegames.com/';
     }
     clickSettings() {
         if(this.bgFilesLoaded) {
-            EPT.Sfx.play('click');
             if(this.loadImage) {
                 this.loadImage.destroy();
             }
@@ -98,11 +96,10 @@ class MainMenu extends Phaser.Scene {
     }
     clickStart() {
         if(this.bgFilesLoaded) {
-            EPT.Sfx.play('click');
             if(this.loadImage) {
                 this.loadImage.destroy();
             }
-            EPT.fadeOutScene('Story', this);
+            EPT.fadeOutScene('Game', this);
         }
         else {
             var animationFrames = this.anims.generateFrameNumbers('loader');

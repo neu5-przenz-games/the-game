@@ -30,7 +30,6 @@ var appShellFiles = [
   './js/Preloader.js',
   './js/MainMenu.js',
   './js/Settings.js',
-  './js/Story.js',
   './js/Game.js',
   './img/background.png',
   './img/banner-beer.png',
