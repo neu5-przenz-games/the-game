@@ -1,64 +1,31 @@
 var EPT = {};
 
 EPT.Sfx = {
-	manage: function(type, mode, game, button, label) {
-		switch(mode) {
-			case 'init': {
+  manage: function(type, mode, game, button, label) {
+    switch(mode) {
+      case 'init': {
         EPT.Storage.initUnset('EPT-'+type, true);
         EPT.Sfx.status = EPT.Sfx.status || [];
         EPT.Sfx.status[type] = EPT.Storage.get('EPT-'+type);
-        if(type == 'sound') {
-          EPT.Sfx.sounds = [];
-          EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
-        }
-        else { // music
-          if(!EPT.Sfx.music || !EPT.Sfx.music.isPlaying) {
-            EPT.Sfx.music = game.sound.add('music-theme');
-            EPT.Sfx.music.volume = 0.5;
-          }
-        }
-				break;
-			}
-			case 'on': {
-				EPT.Sfx.status[type] = true;
-				break;
-			}
-			case 'off': {
-				EPT.Sfx.status[type] = false;
-				break;
-			}
-			case 'switch': {
-				EPT.Sfx.status[type] =! EPT.Sfx.status[type];
-				break;
-			}
-			default: {}
+        break;
+      }
+      case 'on': {
+        EPT.Sfx.status[type] = true;
+        break;
+      }
+      case 'off': {
+        EPT.Sfx.status[type] = false;
+        break;
+      }
+      case 'switch': {
+        EPT.Sfx.status[type] =! EPT.Sfx.status[type];
+        break;
+      }
+      default: {}
     }
     EPT.Sfx.update(type, button, label);
 
-    if(type == 'music' && EPT.Sfx.music) {
-      if(EPT.Sfx.status['music']) {
-        if(!EPT.Sfx.music.isPlaying) {
-          EPT.Sfx.music.play({loop:true});
-        }
-      }
-      else {
-        EPT.Sfx.music.stop();
-      }
-    }
-
     EPT.Storage.set('EPT-'+type, EPT.Sfx.status[type]);
-	},
-	play: function(audio) {
-    if(audio == 'music') {
-      if(EPT.Sfx.status['music'] && EPT.Sfx.music && !EPT.Sfx.music.isPlaying) {
-        EPT.Sfx.music.play({loop:true});
-      }
-    }
-    else { // sound
-      if(EPT.Sfx.status['sound'] && EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
-        EPT.Sfx.sounds[audio].play();
-      }
-    }
   },
   update: function(type, button, label) {
     if(button) {
@@ -136,53 +103,53 @@ class Button extends Phaser.GameObjects.Image {
 };
 
 EPT.Storage = {
-	availability: function() {
-		if(!(!(typeof(window.localStorage) === 'undefined'))) {
-			console.log('localStorage not available');
-			return null;
-		}
-	},
-	get: function(key) {
-		this.availability();
-		try {
-			return JSON.parse(localStorage.getItem(key));
-		}
-		catch(e) {
-			return window.localStorage.getItem(key);
-		}
-	},
-	set: function(key, value) {
-		this.availability();
-		try {
-			window.localStorage.setItem(key, JSON.stringify(value));
-		}
-		catch(e) {
-			if(e == QUOTA_EXCEEDED_ERR) {
-				console.log('localStorage quota exceeded');
-			}
-		}
-	},
-	initUnset: function(key, value) {
-		if(this.get(key) === null) {
-			this.set(key, value);
-		}
-	},
-	getFloat: function(key) {
-		return parseFloat(this.get(key));
-	},
-	setHighscore: function(key, value) {
-		if(value > this.getFloat(key)) {
-			this.set(key, value);
-		}
-	},
-	remove: function(key) {
-		this.availability();
-		window.localStorage.removeItem(key);
-	},
-	clear: function() {
-		this.availability();
-		window.localStorage.clear();
-	}
+  availability: function() {
+    if(!(!(typeof(window.localStorage) === 'undefined'))) {
+      console.log('localStorage not available');
+      return null;
+    }
+  },
+  get: function(key) {
+    this.availability();
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    }
+    catch(e) {
+      return window.localStorage.getItem(key);
+    }
+  },
+  set: function(key, value) {
+    this.availability();
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    }
+    catch(e) {
+      if(e == QUOTA_EXCEEDED_ERR) {
+        console.log('localStorage quota exceeded');
+      }
+    }
+  },
+  initUnset: function(key, value) {
+    if(this.get(key) === null) {
+      this.set(key, value);
+    }
+  },
+  getFloat: function(key) {
+    return parseFloat(this.get(key));
+  },
+  setHighscore: function(key, value) {
+    if(value > this.getFloat(key)) {
+      this.set(key, value);
+    }
+  },
+  remove: function(key) {
+    this.availability();
+    window.localStorage.removeItem(key);
+  },
+  clear: function() {
+    this.availability();
+    window.localStorage.clear();
+  }
 };
 
 EPT.Lang = {
@@ -303,16 +270,3 @@ EPT.Lang = {
     }
   }
 };
-
-// Usage tracking - remember to replace with your own!
-var head = document.getElementsByTagName('head')[0];
-var script = document.createElement('script');
-script.type = 'text/javascript';
-script.onload = function() {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-30485283-26');
-}
-script.src = 'https://www.googletagmanager.com/gtag/js?id=UA-30485283-26';
-head.appendChild(script);

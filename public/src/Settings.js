@@ -205,15 +205,12 @@ class Settings extends Phaser.Scene {
         }
     }
 	clickSound() {
-		EPT.Sfx.play('click');
 		EPT.Sfx.manage('sound', 'switch', this, this.buttonSound, this.textSound);
 	}
 	clickMusic() {
-		EPT.Sfx.play('click');
 		EPT.Sfx.manage('music', 'switch', this, this.buttonMusic, this.textMusic);
 	}
 	clickCredits() {
-		EPT.Sfx.play('click');
 		this.tweens.add({targets: this.containerCredits, y: 0, duration: 750, ease: 'Cubic.easeOut' });
 
 		this.buttonBack.input.enabled = false;
@@ -227,11 +224,9 @@ class Settings extends Phaser.Scene {
 	}
     clickBeer() {
         console.log('Beer clicked!');
-        EPT.Sfx.play('click');
         window.top.location.href = 'https://www.paypal.me/end3r';
     }
 	clickKeyboard() {
-		EPT.Sfx.play('click');
 		this.tweens.add({targets: this.containerKeyboard, y: 0, duration: 750, ease: 'Cubic.easeOut' });
 
 		this.buttonBack.input.enabled = false;
@@ -244,7 +239,6 @@ class Settings extends Phaser.Scene {
 		this.screenName = 'keyboard';
 	}
 	clickBack(name) {
-		EPT.Sfx.play('click');
 		if(name) {
 			this.buttonBack.input.enabled = true;
 			this.buttonSound.input.enabled = true;
@@ -266,7 +260,6 @@ class Settings extends Phaser.Scene {
 		}
 	}
 	clickEnclave() {
-		EPT.Sfx.play('click');
 		window.top.location.href = 'https://enclavegames.com/';
 	}
 };
