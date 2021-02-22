@@ -19,8 +19,7 @@ class Game extends Phaser.Scene {
             this.displayServerMessage("New player connected! " + id);
             this.updatePlayers(this._playersNum + 1);
             this._players[id] = {
-                score: 0,
-                playerId: id,
+                playerId: id
             };
         });
         this.socket.on("playerDisconnected", id => {
@@ -34,25 +33,13 @@ class Game extends Phaser.Scene {
             this.updatePlayers(playerNum);
             this._players = players;
         });
-        this.socket.on("playerScored", player => {
-            this._players[player.playerId] = {
-                score: player.score,
-            };
-        });
 
         this.input.keyboard.on('keydown', this.handleKey, this);
         this.cameras.main.fadeIn(250);
         this.stateStatus = 'playing';
     }
-    update() {
-
-    }
     handleKey(e) {
         switch(e.code) {
-            case 'Enter': {
-                this.addPoints();
-                break;
-            }
             case 'KeyB': {
                 this.stateBack();
                 break;
