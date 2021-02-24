@@ -21,13 +21,12 @@ io.on('connection', socket => {
     // emit a message to all players to remove this player
     io.emit('playerDisconnected', socket.id);
   });
-
 });
 
-app.use(express.static('public'));
+app.use(express.static('dist'));
 
 app.get('/', (req, res) => {
-     res.sendFile('index.html', {root: __dirname + '/public/'});
+    res.sendFile('index.html', {root: './dist'});
 });
 
 module.exports = server.listen(process.env.PORT || 5000);
