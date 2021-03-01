@@ -30,7 +30,8 @@
     "watcherGlob": "**"
   },
   "scripts": {
-    "build": "parcel build src/index.html",
+    "build": "if test \"$NODE_ENV\" = \"production\"; then yarn build:prod; else yarn build:dev; fi",
+    "build:prod": "NODE_ENV=production parcel build src/index.html",
     "build:dev": "NODE_ENV=development parcel build src/index.html --no-minify",
     "dev": "parcel watch src/index.html",
     "serve": "node backend/index.js",
