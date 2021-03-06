@@ -22,10 +22,7 @@ export default class Game extends Phaser.Scene {
         const collisionsLayer = tilemap.createLayer('Collisions', tileset);
         const aboveLayer = tilemap.createLayer('Above', tileset);
 
-        // collisionsLayer.setCollisionByProperty({ collides: true });
-
         const playerSprite = this.add.sprite(0, 0, 'player');
-        // playerSprite.setDepth(2);
         this.cameras.main.startFollow(playerSprite);
 
         const gridMovementConfig = {
@@ -38,13 +35,6 @@ export default class Game extends Phaser.Scene {
           };
         
         this.gridMovementPlugin.create(tilemap, gridMovementConfig);
-
-        // const debugGraphics = this.add.graphics().setAlpha(0.75);
-        //     collisionsLayer.renderDebug(debugGraphics, {
-        //     tileColor: null, // Color of non-colliding tiles
-        //     collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-        //     faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
-        // });
 
         this.socket = io();
         this.stateStatus = null;
