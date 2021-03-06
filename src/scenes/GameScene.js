@@ -76,14 +76,15 @@ export default class Game extends Phaser.Scene {
     }
     update() {
         const cursors = this.input.keyboard.createCursorKeys();
-            if (cursors.left.isDown) {
+
+        if (cursors.left.isDown) {
             this.gridMovementPlugin.moveLeft('player');
-            } else if (cursors.right.isDown) {
+        } else if (cursors.right.isDown) {
             this.gridMovementPlugin.moveRight('player');
-            } else if (cursors.up.isDown) {
+        } else if (cursors.up.isDown) {
             this.gridMovementPlugin.moveUp('player');
-            } else if (cursors.down.isDown) {
+        } else if (cursors.down.isDown) {
             this.gridMovementPlugin.moveDown('player');
-            }
+        }
     }
 };
