@@ -1,57 +1,58 @@
-'use strict'
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const io = require("socket.io-client");
+const server = require("../index");
 
-var chai = require('chai')
-  , chaiHttp = require('chai-http')
-  , server = require('../index')
-  , io = require('socket.io-client')
-  , ioOptions = { 
-      transports: ['websocket']
-    , forceNew: true
-    , reconnection: false
-  }
-  , server
-  , socket
-  , testHost = 'http://localhost:5000/'
+const ioOptions = {
+  transports: ["websocket"],
+  forceNew: true,
+  reconnection: false,
+};
+
+let socket;
+const testHost = "http://localhost:5000/";
 
 chai.use(chaiHttp);
 chai.should();
 
-describe('Server socket tests', function(){
-  beforeEach(function(done){
-    socket = io(testHost, ioOptions)
-    socket.on('connect', function() {
+describe("Server socket tests", () => {
+  beforeEach((done) => {
+    socket = io(testHost, ioOptions);
+    socket.on("connect", () => {
       done();
     });
-  })
-  afterEach(function(done){
-    if(socket.connected) {
+  });
+  afterEach((done) => {
+    if (socket.connected) {
       socket.disconnect();
     }
     done();
-  })
+  });
 
-  it('New player join and leave', function(done) {
-    let newPlayer = io(testHost, ioOptions);
-    socket.on('newPlayer', function(msg){
-      msg.should.have.key('playerId');
+  it("New player join and leave", (done) => {
+    const newPlayer = io(testHost, ioOptions);
+    socket.on("newPlayer", (newPlayermsg) => {
+      newPlayermsg.should.have.key("playerId");
       newPlayer.disconnect();
-      socket.on('playerDisconnected', function(msg){
-        msg.should.have.lengthOf(20);
-        done();
-      })
-    })
-  })
-})
 
-describe('Server HTTP tests', function() {
-  it('Main page content', function(done) {
-    chai.request(server)
-      .get('/')
+      socket.on("playerDisconnected", (playerDisconnectedMsg) => {
+        playerDisconnectedMsg.should.have.lengthOf(20);
+        done();
+      });
+    });
+  });
+});
+
+describe("Server HTTP tests", () => {
+  it("Main page content", (done) => {
+    chai
+      .request(server)
+      .get("/")
       .end((err, res) => {
-        chai.expect(err).to.not.exist;
+        chai.expect(err).to.not.exist; // eslint-disable-line
         res.should.have.status(200);
-        res.should.have.property('body');
+        res.should.have.property("body");
         done();
       });
   });
-})
+});
