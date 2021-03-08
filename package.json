@@ -38,7 +38,7 @@
     }
   },
   "lint-staged": {
-    "{src|test}/**/*.js": [
+    "**/*.js": [
       "npm run lint:fix",
       "git add"
     ]
@@ -55,7 +55,7 @@
     "build:prod": "NODE_ENV=production parcel build src/index.html",
     "build:dev": "NODE_ENV=development parcel build src/index.html --no-minify",
     "dev": "parcel watch src/index.html",
-    "lint": "eslint '**/*.{js,jsx}' --quiet",
+    "lint": "eslint '**/*.js'",
     "lint:fix": "npm run lint -- --fix",
     "serve": "node backend/index.js",
     "test": "mocha backend/test"
