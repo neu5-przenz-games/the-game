@@ -1,0 +1,49 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.settings {
+  width: 100%;
+  min-height: 20%;
+  background: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.mobile-nav {
+  display: block;
+}
+
+.profile-wrapper {
+  display: none;
+}
+.profile-wrapper.show {
+  display: block;
+}
+
+@media only screen and (min-width: 1366px) {
+  .wrapper {
+    width: 1366px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+  }
+  .settings {
+    position: relative;
+    background: none;
+  }
+  .mobile-nav {
+    display: none;
+  }
+  .profile-wrapper {
+    display: block;
+  }
+}
