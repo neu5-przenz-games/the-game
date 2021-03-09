@@ -1,5 +1,6 @@
 html,
 body {
+  font-family: Arial;
   margin: 0;
   padding: 0;
 }
@@ -11,7 +12,7 @@ body {
 .settings {
   width: 100%;
   min-height: 20%;
-  background: rgba(255, 255, 255, 0.6);
+  max-height: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -21,13 +22,31 @@ body {
 .mobile-nav {
   display: block;
 }
+.mobile-nav-button {
+  border: none;
+  background: rgba(255, 255, 255, 0.7);
+  margin: 10px;
+  padding: 10px;
+}
 
 .profile-wrapper {
+  background: rgba(255, 255, 255, 0.6);
   display: none;
+  overflow: auto;
+  padding: 10px;
 }
 .profile-wrapper.show {
   display: block;
 }
+
+.player-list__header {
+  display: flex;
+}
+.player-list__content {
+  height: 70%;
+  overflow: auto;
+}
+
 
 @media only screen and (min-width: 1366px) {
   .wrapper {

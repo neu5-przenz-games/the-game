@@ -1,9 +1,13 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
+import UiPlayerList from "../ui/playerList";
+
 export default class Game extends Phaser.Scene {
   constructor() {
     super("Game");
+
+    this.playerList = new UiPlayerList();
   }
 
   preload() {
@@ -42,35 +46,29 @@ export default class Game extends Phaser.Scene {
 
     this.socket = io();
     this.stateStatus = null;
-    this.playersNum = 0;
     this.players = {};
 
     this.socket.on("newPlayer", (player) => {
       const id = player.playerId;
+      this.playerList.addPlayer(id);
       this.displayServerMessage(`New player connected! ${id}`);
-      this.updatePlayers(this.playersNum + 1);
       this.players[id] = {
         playerId: id,
       };
     });
     this.socket.on("playerDisconnected", (id) => {
+      this.playerList.removePlayer(id);
       this.displayServerMessage(`Player has left: ${id}`);
-      this.updatePlayers(this.playersNum - 1);
       delete this.players[id];
     });
     this.socket.on("currentPlayers", (players) => {
-      const playerNum = Object.keys(players).length;
-      this.displayServerMessage(`Current players: ${playerNum}`);
-      this.updatePlayers(playerNum);
       this.players = players;
+      this.playerList.rebuild(players);
+      this.displayServerMessage(`Current players: ${this.playerList.count}`);
     });
 
     this.cameras.main.fadeIn(250);
     this.stateStatus = "playing";
-  }
-
-  updatePlayers(n) {
-    this.playersNum = n;
   }
 
   displayServerMessage(msgArg) {
