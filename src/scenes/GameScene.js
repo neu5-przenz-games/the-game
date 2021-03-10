@@ -29,7 +29,7 @@ export default class Game extends Phaser.Scene {
     tilemap.createLayer("Above", tileset);
 
     const playerSprite = this.add.sprite(0, 0, "player");
-    this.cameras.main.startFollow(playerSprite);
+    this.cameras.main.startFollow(playerSprite, true);
 
     const gridMovementConfig = {
       characters: [
