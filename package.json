@@ -22,12 +22,17 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
     "mocha": "^8.3.0",
+    "nodemon": "^2.0.7",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-clean-easy": "^1.0.2",
     "parcel-plugin-static-files-copy": "^2.5.1",
-    "phaser-grid-movement-plugin": "^1.5.0",
+    "phaser-grid-movement-plugin": "^1.7.0",
     "prettier": "^2.2.1",
     "socket.io-client": "^3.1.1"
+  },
+  "nodemonConfig": {
+    "ignore": ["src/*"],
+    "delay": "1000"
   },
   "parcelCleanPaths": [
     "dist"
@@ -43,7 +48,7 @@
     "dev": "parcel watch src/index.html",
     "lint": "eslint '**/*.js'",
     "lint:fix": "npm run lint -- --fix",
-    "serve": "node backend/index.js",
+    "serve": "nodemon backend/index.js",
     "test": "mocha backend/test"
   }
 }
