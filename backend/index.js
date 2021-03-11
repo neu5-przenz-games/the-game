@@ -82,7 +82,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
       availablePlayer.isOnline = false;
       availablePlayer.socketId = null;
-      io.emit("playerDisconnected", socket.id);
+      io.emit("playerDisconnected", availablePlayer.id);
     });
   } else {
     // there is no available players

@@ -1,13 +1,14 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
-import UiPlayerList from "../ui/playerList";
+import UIPlayerStatusList from "../ui/playerList/playerStatusList";
+import UIProfile from "../ui/profile";
 
 export default class Game extends Phaser.Scene {
   constructor() {
     super("Game");
 
-    this.playerList = new UiPlayerList();
+    this.playerList = new UIPlayerStatusList();
   }
 
   preload() {
@@ -42,18 +43,23 @@ export default class Game extends Phaser.Scene {
 
     this.socket.on("newPlayer", (newPlayer) => {
       this.displayServerMessage(`New player connected! ${newPlayer.id}`);
+      this.playerList.playerActive(newPlayer.id);
     });
     this.socket.on("playerDisconnected", (id) => {
       this.displayServerMessage(`Player has left: ${id}`);
+      this.playerList.playerInactive(id);
     });
     this.socket.on("currentPlayers", (players, socketId) => {
       this.players = players;
       this.mainPlayerName = this.players.find(
         (player) => player.socketId === socketId
       ).id;
+      this.profile = new UIProfile(this.mainPlayerName);
       this.createPlayers(socketId);
       this.playerList.rebuild(players);
-      this.displayServerMessage(`Current players: ${this.playerList.count}`);
+      this.displayServerMessage(
+        `Current players: ${this.playerList.activeCount}`
+      );
     });
     this.socket.on("playerMoving", (player) => {
       this.gridMovementPlugin.moveTo(player.id, { x: player.x, y: player.y });
