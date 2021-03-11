@@ -32,13 +32,21 @@ describe("Server socket tests", () => {
   it("New player join and leave", (done) => {
     const newPlayer = io(testHost, ioOptions);
     socket.on("newPlayer", (newPlayermsg) => {
-      newPlayermsg.should.have.key("facingDirection");
-      newPlayermsg.should.have.key("id");
-      newPlayermsg.should.have.key("isOnline");
-      newPlayermsg.should.have.key("socketId");
-      newPlayermsg.should.have.key("walkingAnimationMapping");
-      newPlayermsg.should.have.key("x");
-      newPlayermsg.should.have.key("y");
+      newPlayermsg.should.have.keys(
+        "facingDirection",
+        "id",
+        "isOnline",
+        "socketId",
+        "walkingAnimationMapping",
+        "x",
+        "y"
+      );
+      // newPlayermsg.should.have.key("isOnline");
+      // newPlayermsg.should.have.key("socketId");
+      // newPlayermsg.should.have.key("walkingAnimationMapping");
+      // newPlayermsg.should.have.key("x");
+      // newPlayermsg.should.have.key("y");
+      // newPlayermsg.should.have.key("facingDirection");
       newPlayer.disconnect();
 
       socket.on("playerDisconnected", (playerDisconnectedMsg) => {
