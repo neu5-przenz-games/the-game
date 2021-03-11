@@ -41,12 +41,6 @@ describe("Server socket tests", () => {
         "x",
         "y"
       );
-      // newPlayermsg.should.have.key("isOnline");
-      // newPlayermsg.should.have.key("socketId");
-      // newPlayermsg.should.have.key("walkingAnimationMapping");
-      // newPlayermsg.should.have.key("x");
-      // newPlayermsg.should.have.key("y");
-      // newPlayermsg.should.have.key("facingDirection");
       newPlayer.disconnect();
 
       socket.on("playerDisconnected", (playerDisconnectedMsg) => {

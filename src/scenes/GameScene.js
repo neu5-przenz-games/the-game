@@ -44,9 +44,7 @@ export default class Game extends Phaser.Scene {
       this.displayServerMessage(`New player connected! ${newPlayer.id}`);
     });
     this.socket.on("playerDisconnected", (id) => {
-      // this.playerList.removePlayer(id);
       this.displayServerMessage(`Player has left: ${id}`);
-      // delete this.players[id];
     });
     this.socket.on("currentPlayers", (players, socketId) => {
       this.players = players;

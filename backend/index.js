@@ -79,11 +79,9 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("playerMoving", playerMoving);
     });
 
-    // when a player disconnects, remove them from our players object
     socket.on("disconnect", () => {
       availablePlayer.isOnline = false;
       availablePlayer.socketId = null;
-      // emit a message to all players to remove this player
       io.emit("playerDisconnected", socket.id);
     });
   } else {
