@@ -44,7 +44,7 @@ describe("Server socket tests", () => {
       newPlayer.disconnect();
 
       socket.on("playerDisconnected", (playerDisconnectedMsg) => {
-        playerDisconnectedMsg.should.have.lengthOf(20);
+        playerDisconnectedMsg.should.have.lengthOf(7);
         done();
       });
     });
