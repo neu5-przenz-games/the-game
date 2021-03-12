@@ -4,24 +4,89 @@ const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
-const players = {};
+const players = [
+  {
+    id: "player1",
+    x: 3,
+    y: 3,
+    walkingAnimationMapping: 0,
+    isOnline: false,
+    socketId: null,
+    facingDirection: "down",
+  },
+  {
+    id: "player2",
+    x: 5,
+    y: 3,
+    walkingAnimationMapping: 1,
+    isOnline: false,
+    socketId: null,
+    facingDirection: "down",
+  },
+  {
+    id: "player3",
+    x: 3,
+    y: 5,
+    walkingAnimationMapping: 2,
+    isOnline: false,
+    socketId: null,
+    facingDirection: "down",
+  },
+  {
+    id: "player4",
+    x: 5,
+    y: 5,
+    walkingAnimationMapping: 3,
+    isOnline: false,
+    socketId: null,
+    facingDirection: "down",
+  },
+  {
+    id: "player5",
+    x: 3,
+    y: 8,
+    walkingAnimationMapping: 4,
+    isOnline: false,
+    socketId: null,
+    facingDirection: "down",
+  },
+  {
+    id: "player6",
+    x: 8,
+    y: 3,
+    walkingAnimationMapping: 5,
+    isOnline: false,
+    socketId: null,
+    facingDirection: "down",
+  },
+];
 
 io.on("connection", (socket) => {
-  // create a new player and add it to our players object
-  players[socket.id] = {
-    playerId: socket.id,
-  };
-  // send the players object to the new player
-  socket.emit("currentPlayers", players);
-  // update all other players of the new player
-  socket.broadcast.emit("newPlayer", players[socket.id]);
+  const availablePlayer = players.find((player) => !player.isOnline);
+  if (availablePlayer) {
+    availablePlayer.isOnline = true;
+    availablePlayer.socketId = socket.id;
+    socket.emit("currentPlayers", players, socket.id);
 
-  // when a player disconnects, remove them from our players object
-  socket.on("disconnect", () => {
-    delete players[socket.id];
-    // emit a message to all players to remove this player
-    io.emit("playerDisconnected", socket.id);
-  });
+    socket.broadcast.emit("newPlayer", availablePlayer);
+
+    socket.on("playerMovement", (playerMoving) => {
+      const p = players.find((player) => player.id === playerMoving.id);
+      p.x = playerMoving.x;
+      p.y = playerMoving.y;
+      p.facingDirection = playerMoving.facingDirection;
+
+      socket.broadcast.emit("playerMoving", playerMoving);
+    });
+
+    socket.on("disconnect", () => {
+      availablePlayer.isOnline = false;
+      availablePlayer.socketId = null;
+      io.emit("playerDisconnected", availablePlayer.id);
+    });
+  } else {
+    // there is no available players
+  }
 });
 
 app.use(express.static("dist"));

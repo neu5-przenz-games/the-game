@@ -1,11 +1,11 @@
-export default class UiPlayerList {
-  constructor() {
+export default class UIPlayerList {
+  constructor(listClassPrefix) {
     const [playerList] = document.getElementsByClassName(
-      "player-list__content"
+      `${listClassPrefix}__content`
     );
     this.playerList = playerList;
     const [playerListCounter] = document.getElementsByClassName(
-      "player-list__count"
+      `${listClassPrefix}__count`
     );
     this.playerListCounter = playerListCounter;
     this.playerCount = 0;
@@ -51,10 +51,10 @@ export default class UiPlayerList {
   }
 
   removePlayer(playerId) {
-    const playerEntry = document.querySelector(
+    const entry = this.playerList.querySelector(
       `[data-player-id="${playerId}"]`
     );
-    playerEntry.remove();
+    entry.remove();
     this.decreaseCount();
   }
 }

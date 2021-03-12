@@ -3,6 +3,7 @@ body {
   font-family: Arial;
   margin: 0;
   padding: 0;
+  background: steelblue;
 }
 
 .wrapper {
@@ -39,14 +40,18 @@ body {
   display: block;
 }
 
-.player-list__header {
-  display: flex;
-}
-.player-list__content {
-  height: 70%;
-  overflow: auto;
+.profile-wrapper__hello {
+  font-weight: bold;
 }
 
+[class^="player-list-"][class$="__header"] {
+  display: flex;
+}
+
+[class^="player-list-"][class$="__content"] {
+  max-height: 20%;
+  overflow: auto;
+}
 
 @media only screen and (min-width: 1366px) {
   .wrapper {

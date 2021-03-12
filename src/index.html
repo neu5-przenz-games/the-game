@@ -14,6 +14,7 @@
             </nav>
             <aside class="profile-wrapper">
                 <h2>The game</h2>
+                <div class="profile-wrapper__hello"></div>
                 <div>
                     Stats
                 </div>
@@ -21,11 +22,16 @@
                     Equipment
                 </div>
                 <div class ="player-list">
-                    <div class="player-list__header">
-                        Online players
-                        <div class="player-list__count">(0)</div>
+                    <div class="player-list-active__header">
+                        Active players
+                        <div class="player-list-active__count">(0)</div>
                     </div>
-                    <ul class="player-list__content"></ul>
+                    <ul class="player-list-active__content"></ul>
+                    <div class="player-list-inactive__header">
+                        Inactive players
+                        <div class="player-list-inactive__count">(0)</div>
+                    </div>
+                    <ul class="player-list-inactive__content"></ul>
                 </div>
                 <div>
                     Chat
