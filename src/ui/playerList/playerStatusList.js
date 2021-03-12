@@ -22,11 +22,11 @@ export default class UIPlayerStatusList {
 
   rebuild(players) {
     this.clear();
-    Object.entries(players).forEach((p) => {
-      if (p[1].isOnline === true) {
-        this.activePlayerList.addPlayer(p[1].id);
+    players.forEach((p) => {
+      if (p.isOnline === true) {
+        this.activePlayerList.addPlayer(p.id);
       } else {
-        this.inactivePlayerList.addPlayer(p[1].id);
+        this.inactivePlayerList.addPlayer(p.id);
       }
     });
   }
