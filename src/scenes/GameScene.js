@@ -48,22 +48,10 @@ export default class Game extends Phaser.Scene {
       tileset1,
       tileset2,
     ]);
-    const layer2 = this.tilemap.createLayer("Tile Layer 2", [
-      tileset1,
-      tileset2,
-    ]);
-    const layer3 = this.tilemap.createLayer("Tile Layer 3", [
-      tileset1,
-      tileset2,
-    ]);
-    const layer4 = this.tilemap.createLayer("Tile Layer 4", [
-      tileset1,
-      tileset2,
-    ]);
-    const layer5 = this.tilemap.createLayer("Tile Layer 5", [
-      tileset1,
-      tileset2,
-    ]);
+    this.tilemap.createLayer("Tile Layer 2", [tileset1, tileset2]);
+    this.tilemap.createLayer("Tile Layer 3", [tileset1, tileset2]);
+    this.tilemap.createLayer("Tile Layer 4", [tileset1, tileset2]);
+    this.tilemap.createLayer("Tile Layer 5", [tileset1, tileset2]);
     // const tileset = this.tilemap.addTilesetImage("tileset", "tileset");
 
     // this.groundLayer = this.tilemap.createLayer("Ground", tileset);
