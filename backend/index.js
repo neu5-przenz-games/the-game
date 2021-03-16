@@ -7,8 +7,8 @@ const io = require("socket.io")(server);
 const players = [
   {
     id: "player1",
-    x: 3,
-    y: 3,
+    x: 1,
+    y: 2,
     walkingAnimationMapping: 0,
     isOnline: false,
     socketId: null,
@@ -16,7 +16,7 @@ const players = [
   },
   {
     id: "player2",
-    x: 5,
+    x: 4,
     y: 3,
     walkingAnimationMapping: 1,
     isOnline: false,

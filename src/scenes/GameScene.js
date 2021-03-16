@@ -16,16 +16,9 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tiles", "./assets/iso-64x64-outside.png");
-    this.load.image("tiles2", "./assets/iso-64x64-building.png");
+    this.load.image("tiles", "./assets/stone_E.png");
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
-    // this.load.image("tileset", "./assets/tileset/tileset.png");
-    // this.load.tilemapTiledJSON("map", "./assets/map/map.json");
-
-    this.load.spritesheet("characters", "./assets/character/characters.png", {
-      frameWidth: 52,
-      frameHeight: 72,
-    });
+    this.load.image("male", "./assets/character/male.png");
   }
 
   create() {
@@ -38,23 +31,9 @@ export default class Game extends Phaser.Scene {
 
   buildMap() {
     this.tilemap = this.make.tilemap({ key: "map" });
-    const tileset1 = this.tilemap.addTilesetImage("iso-64x64-outside", "tiles");
-    const tileset2 = this.tilemap.addTilesetImage(
-      "iso-64x64-building",
-      "tiles2"
-    );
+    const tileset = this.tilemap.addTilesetImage("tileset", "tiles");
 
-    this.groundLayer = this.tilemap.createLayer("Tile Layer 1", [
-      tileset1,
-      tileset2,
-    ]);
-    this.tilemap.createLayer("Tile Layer 2", [tileset1, tileset2]);
-    this.tilemap.createLayer("Tile Layer 3", [tileset1, tileset2]);
-    this.tilemap.createLayer("Tile Layer 4", [tileset1, tileset2]);
-    this.tilemap.createLayer("Tile Layer 5", [tileset1, tileset2]);
-    // const tileset = this.tilemap.addTilesetImage("tileset", "tileset");
-
-    // this.groundLayer = this.tilemap.createLayer("Ground", tileset);
+    this.groundLayer = this.tilemap.createLayer("Ground", tileset);
     // this.tilemap.createLayer("Collisions", tileset);
     // this.tilemap.createLayer("Above", tileset);
 
@@ -98,7 +77,6 @@ export default class Game extends Phaser.Scene {
   initClicking() {
     this.input.on(Phaser.Input.Events.POINTER_UP, (pointer) => {
       const { worldX, worldY } = pointer;
-
       this.gridMovementPlugin.moveTo(
         this.mainPlayerName,
         this.groundLayer.worldToTileXY(worldX, worldY)
@@ -111,7 +89,7 @@ export default class Game extends Phaser.Scene {
   }
 
   createPlayers() {
-    this.mainPlayer = this.add.sprite(0, 0, "characters");
+    this.mainPlayer = this.add.sprite(0, 0, "male");
 
     const gridMovementConfig = {
       characters: this.players.map((player) => {
@@ -120,7 +98,7 @@ export default class Game extends Phaser.Scene {
           sprite:
             player.socketId === this.socketId
               ? this.mainPlayer
-              : this.add.sprite(0, 0, "characters"),
+              : this.add.sprite(0, 0, "male"),
           walkingAnimationMapping: player.walkingAnimationMapping,
           facingDirection: player.facingDirection,
           startPosition: new Phaser.Math.Vector2(player.x, player.y),
