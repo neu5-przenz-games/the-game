@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import GridMovementPlugin from "phaser-grid-movement-plugin";
 
 import GameScene from "./scenes/GameScene";
 
@@ -22,15 +21,6 @@ const config = {
     width: gameWidth,
     height: gameHeight,
     parent: "the-game",
-  },
-  plugins: {
-    scene: [
-      {
-        key: "gridMovementPlugin",
-        plugin: GridMovementPlugin,
-        mapping: "gridMovementPlugin",
-      },
-    ],
   },
   physics: {
     default: "arcade",

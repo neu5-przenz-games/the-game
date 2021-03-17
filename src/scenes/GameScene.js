@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
+import Skeleton from "../gameObjects/Skeleton";
+
 import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 import UIProfile from "../ui/profile";
 
@@ -10,15 +12,19 @@ export default class Game extends Phaser.Scene {
 
     this.mainPlayer = null;
     this.mainPlayerName = null;
+    this.playersFromServer = [];
     this.players = [];
     this.playerList = new UIPlayerStatusList();
     this.socketId = null;
   }
 
   preload() {
-    this.load.image("tiles", "./assets/stone_E.png");
+    this.load.image("tileset-outside", "./assets/tileset/outside.png");
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
-    this.load.image("male", "./assets/character/male.png");
+    this.load.spritesheet("skeleton", "./assets/character/skeleton.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
   }
 
   create() {
@@ -31,20 +37,24 @@ export default class Game extends Phaser.Scene {
 
   buildMap() {
     this.tilemap = this.make.tilemap({ key: "map" });
-    const tileset = this.tilemap.addTilesetImage("tileset", "tiles");
+    const tilesetOutside = this.tilemap.addTilesetImage(
+      "outside",
+      "tileset-outside"
+    );
 
-    this.groundLayer = this.tilemap.createLayer("Ground", tileset);
-    // this.tilemap.createLayer("Collisions", tileset);
-    // this.tilemap.createLayer("Above", tileset);
+    this.groundLayer = this.tilemap.createLayer("Ground", tilesetOutside);
+    this.tilemap.createLayer("Buildings", tilesetOutside);
+    this.tilemap.createLayer("Above", tilesetOutside);
 
     this.socket = io();
 
-    this.cameras.main.setBounds(
-      0,
-      0,
-      this.tilemap.widthInPixels,
-      this.tilemap.heightInPixels
-    );
+    // this.cameras.main.setBounds(
+    //   0,
+    //   0,
+    //   this.tilemap.widthInPixels,
+    //   this.tilemap.heightInPixels
+    // );
+    // this.cameras.main.setPosition(0, 0);
   }
 
   initSockets() {
@@ -52,14 +62,16 @@ export default class Game extends Phaser.Scene {
       this.displayServerMessage(`New player connected! ${newPlayer.id}`);
       this.playerList.playerActive(newPlayer.id);
     });
+
     this.socket.on("playerDisconnected", (id) => {
       this.displayServerMessage(`Player has left: ${id}`);
       this.playerList.playerInactive(id);
     });
+
     this.socket.on("currentPlayers", (players, socketId) => {
       this.socketId = socketId;
-      this.players = players;
-      this.mainPlayerName = this.players.find(
+      this.playersFromServer = players;
+      this.mainPlayerName = this.playersFromServer.find(
         (player) => player.socketId === this.socketId
       ).id;
       this.profile = new UIProfile(this.mainPlayerName);
@@ -69,18 +81,15 @@ export default class Game extends Phaser.Scene {
         `Current players: ${this.playerList.activeCount}`
       );
     });
-    this.socket.on("playerMoving", (player) => {
-      this.gridMovementPlugin.moveTo(player.id, { x: player.x, y: player.y });
-    });
+
+    this.socket.on("playerMoving", () => {});
   }
 
   initClicking() {
     this.input.on(Phaser.Input.Events.POINTER_UP, (pointer) => {
       const { worldX, worldY } = pointer;
-      this.gridMovementPlugin.moveTo(
-        this.mainPlayerName,
-        this.groundLayer.worldToTileXY(worldX, worldY)
-      );
+
+      this.mainPlayer.goTo(worldX, worldY);
     });
 
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -89,25 +98,22 @@ export default class Game extends Phaser.Scene {
   }
 
   createPlayers() {
-    this.mainPlayer = this.add.sprite(0, 0, "male");
+    this.players = this.playersFromServer.map((player) =>
+      this.add.existing(
+        new Skeleton({
+          scene: this,
+          x: player.x,
+          y: player.y,
+          isMainPlayer: player.socketId === this.socketId,
+          motion: "idle",
+          direction: player.direction,
+        })
+      )
+    );
 
-    const gridMovementConfig = {
-      characters: this.players.map((player) => {
-        return {
-          id: player.id,
-          sprite:
-            player.socketId === this.socketId
-              ? this.mainPlayer
-              : this.add.sprite(0, 0, "male"),
-          walkingAnimationMapping: player.walkingAnimationMapping,
-          facingDirection: player.facingDirection,
-          startPosition: new Phaser.Math.Vector2(player.x, player.y),
-        };
-      }),
-    };
+    this.mainPlayer = this.players.find((player) => player.isMainPlayer);
 
     this.cameras.main.startFollow(this.mainPlayer, true);
-    this.gridMovementPlugin.create(this.tilemap, gridMovementConfig);
   }
 
   displayServerMessage(msgArg) {
@@ -132,19 +138,14 @@ export default class Game extends Phaser.Scene {
   emitPlayerMovement() {
     this.socket.emit("playerMovement", {
       id: this.mainPlayerName,
-      facingDirection: this.gridMovementPlugin.getFacingDirection(
-        this.mainPlayerName
-      ),
-      ...this.gridMovementPlugin.getPosition(this.mainPlayerName),
     });
   }
 
   update() {
-    if (
-      this.mainPlayerName &&
-      this.gridMovementPlugin.isMoving(this.mainPlayerName)
-    ) {
-      this.emitPlayerMovement();
+    if (this.players.length) {
+      this.players.forEach((player) => {
+        player.update();
+      });
     }
   }
 }
