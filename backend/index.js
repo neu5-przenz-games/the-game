@@ -6,55 +6,49 @@ const io = require("socket.io")(server);
 
 const players = [
   {
-    id: "player1",
+    name: "player1",
     x: 240,
     y: 290,
-    walkingAnimationMapping: 0,
     isOnline: false,
     socketId: null,
     direction: "east",
   },
   {
-    id: "player2",
+    name: "player2",
     x: 200,
     y: 200,
-    walkingAnimationMapping: 1,
     isOnline: false,
     socketId: null,
     direction: "southEast",
   },
   {
-    id: "player3",
+    name: "player3",
     x: 350,
     y: 500,
-    walkingAnimationMapping: 2,
     isOnline: false,
     socketId: null,
     direction: "south",
   },
   {
-    id: "player4",
+    name: "player4",
     x: 100,
     y: 400,
-    walkingAnimationMapping: 3,
     isOnline: false,
     socketId: null,
     direction: "southWest",
   },
   {
-    id: "player5",
+    name: "player5",
     x: -100,
     y: 600,
-    walkingAnimationMapping: 4,
     isOnline: false,
     socketId: null,
     direction: "west",
   },
   {
-    id: "player6",
+    name: "player6",
     x: -200,
     y: 200,
-    walkingAnimationMapping: 5,
     isOnline: false,
     socketId: null,
     direction: "northWest",
@@ -71,10 +65,9 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("newPlayer", availablePlayer);
 
     socket.on("playerMovement", (playerMoving) => {
-      const p = players.find((player) => player.id === playerMoving.id);
+      const p = players.find((player) => player.name === playerMoving.name);
       p.x = playerMoving.x;
       p.y = playerMoving.y;
-      p.facingDirection = playerMoving.facingDirection;
 
       socket.broadcast.emit("playerMoving", playerMoving);
     });
@@ -82,7 +75,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
       availablePlayer.isOnline = false;
       availablePlayer.socketId = null;
-      io.emit("playerDisconnected", availablePlayer.id);
+      io.emit("playerDisconnected", availablePlayer.name);
     });
   } else {
     // there is no available players

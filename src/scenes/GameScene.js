@@ -47,25 +47,17 @@ export default class Game extends Phaser.Scene {
     this.tilemap.createLayer("Above", tilesetOutside);
 
     this.socket = io();
-
-    // this.cameras.main.setBounds(
-    //   0,
-    //   0,
-    //   this.tilemap.widthInPixels,
-    //   this.tilemap.heightInPixels
-    // );
-    // this.cameras.main.setPosition(0, 0);
   }
 
   initSockets() {
     this.socket.on("newPlayer", (newPlayer) => {
-      this.displayServerMessage(`New player connected! ${newPlayer.id}`);
-      this.playerList.playerActive(newPlayer.id);
+      this.displayServerMessage(`New player connected! ${newPlayer.name}`);
+      this.playerList.playerActive(newPlayer.name);
     });
 
-    this.socket.on("playerDisconnected", (id) => {
-      this.displayServerMessage(`Player has left: ${id}`);
-      this.playerList.playerInactive(id);
+    this.socket.on("playerDisconnected", (name) => {
+      this.displayServerMessage(`Player has left: ${name}`);
+      this.playerList.playerInactive(name);
     });
 
     this.socket.on("currentPlayers", (players, socketId) => {
@@ -73,7 +65,7 @@ export default class Game extends Phaser.Scene {
       this.playersFromServer = players;
       this.mainPlayerName = this.playersFromServer.find(
         (player) => player.socketId === this.socketId
-      ).id;
+      ).name;
       this.profile = new UIProfile(this.mainPlayerName);
       this.createPlayers();
       this.playerList.rebuild(players);
@@ -82,7 +74,9 @@ export default class Game extends Phaser.Scene {
       );
     });
 
-    this.socket.on("playerMoving", () => {});
+    this.socket.on("playerMoving", (player) => {
+      this.players.find((p) => p.name === player.name).goTo(player.x, player.y);
+    });
   }
 
   initClicking() {
@@ -101,12 +95,13 @@ export default class Game extends Phaser.Scene {
     this.players = this.playersFromServer.map((player) =>
       this.add.existing(
         new Skeleton({
+          direction: player.direction,
+          isMainPlayer: player.socketId === this.socketId,
+          motion: "idle",
+          name: player.name,
           scene: this,
           x: player.x,
           y: player.y,
-          isMainPlayer: player.socketId === this.socketId,
-          motion: "idle",
-          direction: player.direction,
         })
       )
     );
@@ -137,7 +132,9 @@ export default class Game extends Phaser.Scene {
 
   emitPlayerMovement() {
     this.socket.emit("playerMovement", {
-      id: this.mainPlayerName,
+      name: this.mainPlayerName,
+      x: this.mainPlayer.x,
+      y: this.mainPlayer.y,
     });
   }
 
@@ -146,6 +143,11 @@ export default class Game extends Phaser.Scene {
       this.players.forEach((player) => {
         player.update();
       });
+    }
+    if (this.mainPlayer) {
+      if (this.mainPlayer.motion === "walk") {
+        this.emitPlayerMovement();
+      }
     }
   }
 }

@@ -33,11 +33,10 @@ describe("Server socket tests", () => {
     const newPlayer = io(testHost, ioOptions);
     socket.on("newPlayer", (newPlayermsg) => {
       newPlayermsg.should.have.keys(
-        "facingDirection",
-        "id",
+        "direction",
         "isOnline",
+        "name",
         "socketId",
-        "walkingAnimationMapping",
         "x",
         "y"
       );

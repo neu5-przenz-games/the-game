@@ -20,7 +20,7 @@ const anims = {
   walk: {
     startFrame: 4,
     endFrame: 12,
-    speed: 2,
+    speed: 0.15,
   },
   attack: {
     startFrame: 12,
@@ -41,9 +41,19 @@ const anims = {
 
 // GameObject Skeleton
 export default class Skeleton extends Phaser.GameObjects.Image {
-  constructor({ scene, x, y, isMainPlayer, motion, direction, distance }) {
+  constructor({
+    direction,
+    distance,
+    isMainPlayer,
+    motion,
+    name,
+    scene,
+    x,
+    y,
+  }) {
     super(scene, x, y, "skeleton", direction.offset);
 
+    this.name = name;
     this.startX = x;
     this.startY = y;
     this.destX = null;
@@ -55,11 +65,13 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.anim = anims[motion];
     this.direction = directions[direction];
     this.speed = 0.15;
+    this.walkSpeed = 2;
     this.f = this.anim.startFrame;
 
     this.depth = y + 64;
 
     this.scene = scene;
+    this.label = this.scene.add.text(x - 32, y - 136, this.name);
 
     this.scene.time.delayedCall(
       this.anim.speed * 1000,
@@ -72,8 +84,29 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   goTo(x, y) {
     this.destX = x;
     this.destY = y;
-    this.motion = "walk";
+
+    this.makeMovement("walk");
+  }
+
+  makeMovement(movement) {
+    this.motion = movement;
     this.anim = anims[this.motion];
+    this.speed = anims[this.motion].speed;
+    this.f = this.anim.startFrame;
+    this.frame = this.texture.get(this.direction.offset + this.f);
+  }
+
+  resetAnimation() {
+    this.f = this.anim.startFrame;
+
+    this.frame = this.texture.get(this.direction.offset + this.f);
+
+    this.scene.time.delayedCall(
+      this.anim.speed * 1000,
+      this.changeFrame,
+      [],
+      this
+    );
   }
 
   changeFrame() {
@@ -135,36 +168,22 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     }
   }
 
-  resetAnimation() {
-    this.f = this.anim.startFrame;
-
-    this.frame = this.texture.get(this.direction.offset + this.f);
-
-    this.scene.time.delayedCall(
-      this.anim.speed * 1000,
-      this.changeFrame,
-      [],
-      this
-    );
-  }
-
   update() {
     if (this.motion === "walk") {
-      this.speed = anims[this.motion].speed;
       if (this.x > this.destX) {
         if (this.y > this.destY) {
-          this.x -= 1 * this.speed;
-          this.y -= 1 * this.speed;
+          this.x -= 1 * this.walkSpeed;
+          this.y -= 1 * this.walkSpeed;
         } else {
-          this.x -= 1 * this.speed;
-          this.y += 1 * this.speed;
+          this.x -= 1 * this.walkSpeed;
+          this.y += 1 * this.walkSpeed;
         }
       } else if (this.y > this.destY) {
-        this.x += 1 * this.speed;
-        this.y -= 1 * this.speed;
+        this.x += 1 * this.walkSpeed;
+        this.y -= 1 * this.walkSpeed;
       } else {
-        this.x += 1 * this.speed;
-        this.y += 1 * this.speed;
+        this.x += 1 * this.walkSpeed;
+        this.y += 1 * this.walkSpeed;
       }
 
       if (
@@ -173,10 +192,11 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       ) {
         this.destX = null;
         this.destY = null;
-        this.motion = "idle";
-        this.anim = anims[this.motion];
-        this.speed = anims[this.motion].speed;
+
+        this.makeMovement("idle");
       }
     }
+
+    this.label.setPosition(this.x - 32, this.y - 140);
   }
 }
