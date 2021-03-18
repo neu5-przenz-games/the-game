@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
+import Skeleton from "../gameObjects/Skeleton";
+
 import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 import UIProfile from "../ui/profile";
 
@@ -8,98 +10,105 @@ export default class Game extends Phaser.Scene {
   constructor() {
     super("Game");
 
+    this.mainPlayer = null;
+    this.mainPlayerName = null;
+    this.playersFromServer = [];
+    this.players = [];
     this.playerList = new UIPlayerStatusList();
+    this.socketId = null;
   }
 
   preload() {
-    this.load.image("tileset", "./assets/tileset/tileset.png");
+    this.load.image("tileset-outside", "./assets/tileset/outside.png");
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
-
-    this.load.spritesheet("characters", "./assets/character/characters.png", {
-      frameWidth: 52,
-      frameHeight: 72,
+    this.load.spritesheet("skeleton", "./assets/character/skeleton.png", {
+      frameWidth: 128,
+      frameHeight: 128,
     });
   }
 
   create() {
+    this.buildMap();
+
+    this.initSockets();
+
+    this.initClicking();
+  }
+
+  buildMap() {
     this.tilemap = this.make.tilemap({ key: "map" });
-    const tileset = this.tilemap.addTilesetImage("tileset", "tileset");
-
-    const groundLayer = this.tilemap.createLayer("Ground", tileset);
-    this.tilemap.createLayer("Collisions", tileset);
-    this.tilemap.createLayer("Above", tileset);
-
-    this.socket = io();
-    this.mainPlayer = null;
-    this.mainPlayerName = null;
-    this.players = [];
-
-    this.cameras.main.setBounds(
-      0,
-      0,
-      this.tilemap.widthInPixels,
-      this.tilemap.heightInPixels
+    const tilesetOutside = this.tilemap.addTilesetImage(
+      "outside",
+      "tileset-outside"
     );
 
+    this.groundLayer = this.tilemap.createLayer("Ground", tilesetOutside);
+    this.tilemap.createLayer("Buildings", tilesetOutside);
+    this.tilemap.createLayer("Above", tilesetOutside);
+
+    this.socket = io();
+  }
+
+  initSockets() {
     this.socket.on("newPlayer", (newPlayer) => {
-      this.displayServerMessage(`New player connected! ${newPlayer.id}`);
-      this.playerList.playerActive(newPlayer.id);
+      this.displayServerMessage(`New player connected! ${newPlayer.name}`);
+      this.playerList.playerActive(newPlayer.name);
     });
-    this.socket.on("playerDisconnected", (id) => {
-      this.displayServerMessage(`Player has left: ${id}`);
-      this.playerList.playerInactive(id);
+
+    this.socket.on("playerDisconnected", (name) => {
+      this.displayServerMessage(`Player has left: ${name}`);
+      this.playerList.playerInactive(name);
     });
+
     this.socket.on("currentPlayers", (players, socketId) => {
-      this.players = players;
-      this.mainPlayerName = this.players.find(
-        (player) => player.socketId === socketId
-      ).id;
+      this.socketId = socketId;
+      this.playersFromServer = players;
+      this.mainPlayerName = this.playersFromServer.find(
+        (player) => player.socketId === this.socketId
+      ).name;
       this.profile = new UIProfile(this.mainPlayerName);
-      this.createPlayers(socketId);
+      this.createPlayers();
       this.playerList.rebuild(players);
       this.displayServerMessage(
         `Current players: ${this.playerList.activeCount}`
       );
     });
-    this.socket.on("playerMoving", (player) => {
-      this.gridMovementPlugin.moveTo(player.id, { x: player.x, y: player.y });
-    });
 
+    this.socket.on("playerMoving", (player) => {
+      this.players.find((p) => p.name === player.name).goTo(player.x, player.y);
+    });
+  }
+
+  initClicking() {
     this.input.on(Phaser.Input.Events.POINTER_UP, (pointer) => {
       const { worldX, worldY } = pointer;
 
-      this.gridMovementPlugin.moveTo(
-        this.mainPlayerName,
-        groundLayer.worldToTileXY(worldX, worldY)
-      );
+      this.mainPlayer.goTo(worldX, worldY);
     });
 
-    // remember to clean up on Scene shutdown
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.input.off(Phaser.Input.Events.POINTER_UP);
     });
   }
 
-  createPlayers(socketId) {
-    this.mainPlayer = this.add.sprite(0, 0, "characters");
+  createPlayers() {
+    this.players = this.playersFromServer.map((player) =>
+      this.add.existing(
+        new Skeleton({
+          direction: player.direction,
+          isMainPlayer: player.socketId === this.socketId,
+          motion: "idle",
+          name: player.name,
+          scene: this,
+          x: player.x,
+          y: player.y,
+        })
+      )
+    );
 
-    const gridMovementConfig = {
-      characters: this.players.map((player) => {
-        return {
-          id: player.id,
-          sprite:
-            player.socketId === socketId
-              ? this.mainPlayer
-              : this.add.sprite(0, 0, "characters"),
-          walkingAnimationMapping: player.walkingAnimationMapping,
-          facingDirection: player.facingDirection,
-          startPosition: new Phaser.Math.Vector2(player.x, player.y),
-        };
-      }),
-    };
+    this.mainPlayer = this.players.find((player) => player.isMainPlayer);
 
     this.cameras.main.startFollow(this.mainPlayer, true);
-    this.gridMovementPlugin.create(this.tilemap, gridMovementConfig);
   }
 
   displayServerMessage(msgArg) {
@@ -123,20 +132,22 @@ export default class Game extends Phaser.Scene {
 
   emitPlayerMovement() {
     this.socket.emit("playerMovement", {
-      id: this.mainPlayerName,
-      facingDirection: this.gridMovementPlugin.getFacingDirection(
-        this.mainPlayerName
-      ),
-      ...this.gridMovementPlugin.getPosition(this.mainPlayerName),
+      name: this.mainPlayerName,
+      x: this.mainPlayer.x,
+      y: this.mainPlayer.y,
     });
   }
 
   update() {
-    if (
-      this.mainPlayerName &&
-      this.gridMovementPlugin.isMoving(this.mainPlayerName)
-    ) {
-      this.emitPlayerMovement();
+    if (this.players.length) {
+      this.players.forEach((player) => {
+        player.update();
+      });
+    }
+    if (this.mainPlayer) {
+      if (this.mainPlayer.motion === "walk") {
+        this.emitPlayerMovement();
+      }
     }
   }
 }

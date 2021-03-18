@@ -6,58 +6,52 @@ const io = require("socket.io")(server);
 
 const players = [
   {
-    id: "player1",
-    x: 3,
-    y: 3,
-    walkingAnimationMapping: 0,
+    name: "player1",
+    x: 240,
+    y: 290,
     isOnline: false,
     socketId: null,
-    facingDirection: "down",
+    direction: "east",
   },
   {
-    id: "player2",
-    x: 5,
-    y: 3,
-    walkingAnimationMapping: 1,
+    name: "player2",
+    x: 200,
+    y: 200,
     isOnline: false,
     socketId: null,
-    facingDirection: "down",
+    direction: "southEast",
   },
   {
-    id: "player3",
-    x: 3,
-    y: 5,
-    walkingAnimationMapping: 2,
+    name: "player3",
+    x: 350,
+    y: 500,
     isOnline: false,
     socketId: null,
-    facingDirection: "down",
+    direction: "south",
   },
   {
-    id: "player4",
-    x: 5,
-    y: 5,
-    walkingAnimationMapping: 3,
+    name: "player4",
+    x: 100,
+    y: 400,
     isOnline: false,
     socketId: null,
-    facingDirection: "down",
+    direction: "southWest",
   },
   {
-    id: "player5",
-    x: 3,
-    y: 8,
-    walkingAnimationMapping: 4,
+    name: "player5",
+    x: -100,
+    y: 600,
     isOnline: false,
     socketId: null,
-    facingDirection: "down",
+    direction: "west",
   },
   {
-    id: "player6",
-    x: 8,
-    y: 3,
-    walkingAnimationMapping: 5,
+    name: "player6",
+    x: -200,
+    y: 200,
     isOnline: false,
     socketId: null,
-    facingDirection: "down",
+    direction: "northWest",
   },
 ];
 
@@ -71,10 +65,9 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("newPlayer", availablePlayer);
 
     socket.on("playerMovement", (playerMoving) => {
-      const p = players.find((player) => player.id === playerMoving.id);
+      const p = players.find((player) => player.name === playerMoving.name);
       p.x = playerMoving.x;
       p.y = playerMoving.y;
-      p.facingDirection = playerMoving.facingDirection;
 
       socket.broadcast.emit("playerMoving", playerMoving);
     });
@@ -82,7 +75,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
       availablePlayer.isOnline = false;
       availablePlayer.socketId = null;
-      io.emit("playerDisconnected", availablePlayer.id);
+      io.emit("playerDisconnected", availablePlayer.name);
     });
   } else {
     // there is no available players

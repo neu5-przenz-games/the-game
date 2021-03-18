@@ -24,9 +24,9 @@ export default class UIPlayerStatusList {
     this.clear();
     players.forEach((p) => {
       if (p.isOnline === true) {
-        this.activePlayerList.addPlayer(p.id);
+        this.activePlayerList.addPlayer(p.name);
       } else {
-        this.inactivePlayerList.addPlayer(p.id);
+        this.inactivePlayerList.addPlayer(p.name);
       }
     });
   }
