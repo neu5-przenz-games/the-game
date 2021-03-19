@@ -11,17 +11,19 @@ body {
 }
 
 .settings {
-  width: 100%;
-  min-height: 20%;
-  max-height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
 }
+.settings.show {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
 
 .mobile-nav {
-  display: block;
+  display: inline-block;
 }
 .mobile-nav-button {
   border: none;
@@ -35,7 +37,7 @@ body {
   display: none;
   padding: 10px;
 }
-.profile-wrapper.show {
+.settings.show .profile-wrapper {
   display: block;
 }
 
@@ -103,6 +105,7 @@ body {
   .settings {
     position: relative;
     background: none;
+    width: 100%;
   }
   .mobile-nav {
     display: none;

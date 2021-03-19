@@ -8,11 +8,11 @@ const windowHeight = window.innerHeight;
 const gameWidth = windowWidth > 1366 ? 1024 : windowWidth;
 const gameHeight = windowWidth > 1366 ? 768 : windowHeight;
 
-const profileWrapper = document.getElementsByClassName("profile-wrapper")[0];
-const mobileNavBtn = document.getElementsByClassName("mobile-nav-button")[0];
+const [settings] = document.getElementsByClassName("settings");
+const [mobileNavBtn] = document.getElementsByClassName("mobile-nav-button");
 
 mobileNavBtn.onclick = () => {
-  profileWrapper.classList.toggle("show");
+  settings.classList.toggle("show");
 };
 
 const config = {
