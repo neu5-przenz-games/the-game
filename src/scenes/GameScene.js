@@ -5,6 +5,7 @@ import Skeleton from "../gameObjects/Skeleton";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 import UIProfile from "../ui/profile";
+import UIChat from "../ui/chat";
 
 export default class Game extends Phaser.Scene {
   constructor() {
@@ -15,6 +16,7 @@ export default class Game extends Phaser.Scene {
     this.playersFromServer = [];
     this.players = [];
     this.playerList = new UIPlayerStatusList();
+    this.chat = new UIChat();
     this.socketId = null;
   }
 
@@ -33,6 +35,8 @@ export default class Game extends Phaser.Scene {
     this.initSockets();
 
     this.initClicking();
+
+    this.initChatInputCapture();
   }
 
   buildMap() {
@@ -51,7 +55,7 @@ export default class Game extends Phaser.Scene {
 
   initSockets() {
     this.socket.on("newPlayer", (newPlayer) => {
-      this.displayServerMessage(`New player connected! ${newPlayer.name}`);
+      this.displayServerMessage(`New player connected: ${newPlayer.name}`);
       this.playerList.playerActive(newPlayer.name);
     });
 
@@ -77,6 +81,10 @@ export default class Game extends Phaser.Scene {
     this.socket.on("playerMoving", (player) => {
       this.players.find((p) => p.name === player.name).goTo(player.x, player.y);
     });
+
+    this.socket.on("playerMessage", (message, playerName) => {
+      this.chat.addMessage(playerName, message.text);
+    });
   }
 
   initClicking() {
@@ -88,6 +96,18 @@ export default class Game extends Phaser.Scene {
 
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.input.off(Phaser.Input.Events.POINTER_UP);
+    });
+  }
+
+  initChatInputCapture() {
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && this.chat.message) {
+        this.socket.emit("chatMessage", {
+          text: this.chat.message,
+        });
+        this.chat.addOwnMessage();
+        this.chat.clearInput();
+      }
     });
   }
 
@@ -112,22 +132,7 @@ export default class Game extends Phaser.Scene {
   }
 
   displayServerMessage(msgArg) {
-    const posX = 30;
-    const posY = 150;
-    const msg = this.add.text(posX, posY, `server: ${msgArg}`, {
-      font: "22px ",
-      fill: "#ffde00",
-      stroke: "#000",
-      strokeThickness: 3,
-    });
-    msg.setOrigin(0.0, 0.0);
-    this.tweens.add({
-      targets: msg,
-      alpha: 0,
-      y: posY - 50,
-      duration: 4000,
-      ease: "Linear",
-    });
+    this.chat.addServerMessage(msgArg);
   }
 
   emitPlayerMovement() {

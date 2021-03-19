@@ -72,6 +72,11 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("playerMoving", playerMoving);
     });
 
+    socket.on("chatMessage", (message) => {
+      const p = players.find((player) => player.socketId === socket.id);
+      socket.broadcast.emit("playerMessage", message, p.name);
+    });
+
     socket.on("disconnect", () => {
       availablePlayer.isOnline = false;
       availablePlayer.socketId = null;
