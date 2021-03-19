@@ -5,6 +5,8 @@ export default class UIChat {
     this.chatInput = chatInput;
     const [chatMessages] = document.getElementsByClassName("chat__messages");
     this.chatMessages = chatMessages;
+    const [chatContent] = document.getElementsByClassName("chat__content");
+    this.chatContent = chatContent;
   }
 
   get message() {
@@ -20,6 +22,7 @@ export default class UIChat {
       document.createTextNode(`${name}${delimeter} ${message}`)
     );
     this.chatMessages.appendChild(entry);
+    this.chatContent.scrollTop = this.chatContent.scrollHeight;
   }
 
   addOwnMessage() {
