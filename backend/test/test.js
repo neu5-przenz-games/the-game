@@ -34,6 +34,7 @@ describe("Server socket tests", () => {
     socket.on("newPlayer", (newPlayermsg) => {
       newPlayermsg.should.have.keys(
         "direction",
+        "isMoving",
         "isOnline",
         "name",
         "socketId",

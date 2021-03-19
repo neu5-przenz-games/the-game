@@ -32,6 +32,8 @@ export default class Game extends Phaser.Scene {
   create() {
     this.buildMap();
 
+    // this.extractMapFromPhaserObject();
+
     this.initSockets();
 
     this.initClicking();
@@ -47,13 +49,24 @@ export default class Game extends Phaser.Scene {
     );
 
     this.groundLayer = this.tilemap.createLayer("Ground", tilesetOutside);
-    this.tilemap.createLayer("Buildings", tilesetOutside);
+    this.tilemap.createLayer("OnGround", tilesetOutside);
+    this.tilemap.createLayer("Collides", tilesetOutside);
     this.tilemap.createLayer("Above", tilesetOutside);
+  }
 
-    this.socket = io();
+  extractMapFromPhaserObject() {
+    // find better way to do that
+    const myMap = this.tilemap.layers[2].data.map((arr) => {
+      return arr.map((t) => {
+        return t.index;
+      });
+    });
+    console.log(myMap);
   }
 
   initSockets() {
+    this.socket = io();
+
     this.socket.on("newPlayer", (newPlayer) => {
       this.displayServerMessage(`New player connected: ${newPlayer.name}`);
       this.playerList.playerActive(newPlayer.name);
@@ -78,8 +91,13 @@ export default class Game extends Phaser.Scene {
       );
     });
 
-    this.socket.on("playerMoving", (player) => {
-      this.players.find((p) => p.name === player.name).goTo(player.x, player.y);
+    this.socket.on("playerMoving", (players) => {
+      players.forEach((p) => {
+        const player = this.players.find((pf) => pf.name === p.name);
+        const dest = this.groundLayer.tileToWorldXY(p.x, p.y);
+        player.x = dest.x;
+        player.y = dest.y;
+      });
     });
 
     this.socket.on("playerMessage", (message, playerName) => {
@@ -91,7 +109,10 @@ export default class Game extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_UP, (pointer) => {
       const { worldX, worldY } = pointer;
 
-      this.mainPlayer.goTo(worldX, worldY);
+      this.socket.emit("playerWishToGo", {
+        name: this.mainPlayerName,
+        ...this.groundLayer.worldToTileXY(worldX, worldY, true),
+      });
     });
 
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -120,8 +141,7 @@ export default class Game extends Phaser.Scene {
           motion: "idle",
           name: player.name,
           scene: this,
-          x: player.x,
-          y: player.y,
+          ...this.groundLayer.tileToWorldXY(player.x, player.y),
         })
       )
     );
@@ -148,11 +168,6 @@ export default class Game extends Phaser.Scene {
       this.players.forEach((player) => {
         player.update();
       });
-    }
-    if (this.mainPlayer) {
-      if (this.mainPlayer.motion === "walk") {
-        this.emitPlayerMovement();
-      }
     }
   }
 }
