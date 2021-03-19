@@ -32,6 +32,8 @@ export default class Game extends Phaser.Scene {
   create() {
     this.buildMap();
 
+    // this.extractMapFromPhaserObject();
+
     this.initSockets();
 
     this.initClicking();
