@@ -7,20 +7,12 @@ const io = require("socket.io")(server);
 const map = require("./map");
 let players = require("./players");
 
-<<<<<<< HEAD
 let timePast = Date.now();
-=======
-let t1 = Date.now();
->>>>>>> draft of movement controlled by backend
 
 const canGo = ({ x, y }) => {
-  const tile = map[y - 1][x - 1];
+  const tile = map[y][x];
 
-<<<<<<< HEAD
   // TODO (#50): add check if there is no other player at the moment
-=======
-  // add check if there is no other player at the moment
->>>>>>> draft of movement controlled by backend
 
   return tile === -1;
 };
@@ -49,17 +41,10 @@ io.on("connection", (socket) => {
     setInterval(() => {
       players = players.map((player) => {
         const p = player;
-<<<<<<< HEAD
         const timeNow = Date.now();
 
         if (player.isMoving && timeNow - timePast >= 200) {
           timePast = timeNow;
-=======
-        const t2 = Date.now();
-
-        if (player.isMoving && t2 - t1 >= 200) {
-          t1 = t2;
->>>>>>> draft of movement controlled by backend
 
           if (player.x > player.destX) {
             p.x -= 1;
