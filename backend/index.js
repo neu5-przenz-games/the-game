@@ -4,56 +4,18 @@ const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
-const players = [
-  {
-    name: "player1",
-    x: 240,
-    y: 290,
-    isOnline: false,
-    socketId: null,
-    direction: "east",
-  },
-  {
-    name: "player2",
-    x: 200,
-    y: 200,
-    isOnline: false,
-    socketId: null,
-    direction: "southEast",
-  },
-  {
-    name: "player3",
-    x: 350,
-    y: 500,
-    isOnline: false,
-    socketId: null,
-    direction: "south",
-  },
-  {
-    name: "player4",
-    x: 100,
-    y: 400,
-    isOnline: false,
-    socketId: null,
-    direction: "southWest",
-  },
-  {
-    name: "player5",
-    x: -100,
-    y: 600,
-    isOnline: false,
-    socketId: null,
-    direction: "west",
-  },
-  {
-    name: "player6",
-    x: -200,
-    y: 200,
-    isOnline: false,
-    socketId: null,
-    direction: "northWest",
-  },
-];
+const map = require("./map");
+let players = require("./players");
+
+let timePast = Date.now();
+
+const canGo = ({ x, y }) => {
+  const tile = map[y - 1][x - 1];
+
+  // TODO (#50): add check if there is no other player at the moment
+
+  return tile === -1;
+};
 
 io.on("connection", (socket) => {
   const availablePlayer = players.find((player) => !player.isOnline);
@@ -63,6 +25,47 @@ io.on("connection", (socket) => {
     socket.emit("currentPlayers", players, socket.id);
 
     socket.broadcast.emit("newPlayer", availablePlayer);
+
+    socket.on("playerWishToGo", ({ name, x, y }) => {
+      if (x > 0 && y > 0) {
+        if (canGo({ x, y, map })) {
+          const p = players.find((player) => player.name === name);
+
+          p.isMoving = true;
+          p.destX = x;
+          p.destY = y;
+        }
+      }
+    });
+
+    setInterval(() => {
+      players = players.map((player) => {
+        const p = player;
+        const timeNow = Date.now();
+
+        if (player.isMoving && timeNow - timePast >= 200) {
+          timePast = timeNow;
+
+          if (player.x > player.destX) {
+            p.x -= 1;
+          } else if (player.x < player.destX) {
+            p.x += 1;
+          } else if (player.y > player.destY) {
+            p.y -= 1;
+          } else if (player.y < player.destY) {
+            p.y += 1;
+          } else {
+            p.isMoving = false;
+            p.destX = null;
+            p.destY = null;
+          }
+        }
+
+        return p;
+      });
+
+      socket.emit("playerMoving", players);
+    }, 50);
 
     socket.on("playerMovement", (playerMoving) => {
       const p = players.find((player) => player.name === playerMoving.name);
