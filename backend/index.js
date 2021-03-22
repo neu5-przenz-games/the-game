@@ -7,12 +7,12 @@ const io = require("socket.io")(server);
 const map = require("./map");
 let players = require("./players");
 
-let t1 = Date.now();
+let timePast = Date.now();
 
 const canGo = ({ x, y }) => {
   const tile = map[y - 1][x - 1];
 
-  // add check if there is no other player at the moment
+  // TODO (#50): add check if there is no other player at the moment
 
   return tile === -1;
 };
@@ -41,10 +41,10 @@ io.on("connection", (socket) => {
     setInterval(() => {
       players = players.map((player) => {
         const p = player;
-        const t2 = Date.now();
+        const timeNow = Date.now();
 
-        if (player.isMoving && t2 - t1 >= 200) {
-          t1 = t2;
+        if (player.isMoving && timeNow - timePast >= 200) {
+          timePast = timeNow;
 
           if (player.x > player.destX) {
             p.x -= 1;

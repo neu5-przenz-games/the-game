@@ -32,8 +32,6 @@ export default class Game extends Phaser.Scene {
   create() {
     this.buildMap();
 
-    // this.extractMapFromPhaserObject();
-
     this.initSockets();
 
     this.initClicking();
@@ -55,7 +53,7 @@ export default class Game extends Phaser.Scene {
   }
 
   extractMapFromPhaserObject() {
-    // find better way to do that
+    // TODO (#48): find better way to do that
     const myMap = this.tilemap.layers[2].data.map((arr) => {
       return arr.map((t) => {
         return t.index;
