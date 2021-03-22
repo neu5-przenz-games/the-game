@@ -7,6 +7,23 @@ import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 import UIProfile from "../ui/profile";
 import UIChat from "../ui/chat";
 
+const markAndfadeOutTile = (tile) => {
+  tile.setAlpha(0.6);
+
+  setTimeout(() => {
+    tile.setAlpha(0.7);
+  }, 100);
+  setTimeout(() => {
+    tile.setAlpha(0.8);
+  }, 200);
+  setTimeout(() => {
+    tile.setAlpha(0.9);
+  }, 300);
+  setTimeout(() => {
+    tile.setAlpha(1);
+  }, 400);
+};
+
 export default class Game extends Phaser.Scene {
   constructor() {
     super("Game");
@@ -32,6 +49,7 @@ export default class Game extends Phaser.Scene {
   create() {
     this.buildMap();
 
+    // fix: #48
     // this.extractMapFromPhaserObject();
 
     this.initSockets();
@@ -55,7 +73,6 @@ export default class Game extends Phaser.Scene {
   }
 
   extractMapFromPhaserObject() {
-    // find better way to do that
     const myMap = this.tilemap.layers[2].data.map((arr) => {
       return arr.map((t) => {
         return t.index;
@@ -106,13 +123,37 @@ export default class Game extends Phaser.Scene {
   }
 
   initClicking() {
+    let lastTime = 0;
+    let prevPointer = { x: null, y: null };
+
     this.input.on(Phaser.Input.Events.POINTER_UP, (pointer) => {
+      const clickDelay = this.time.now - lastTime;
       const { worldX, worldY } = pointer;
 
-      this.socket.emit("playerWishToGo", {
-        name: this.mainPlayerName,
-        ...this.groundLayer.worldToTileXY(worldX, worldY, true),
-      });
+      const clickedTile = this.groundLayer.worldToTileXY(worldX, worldY, true);
+
+      if (clickedTile.x > 0 && clickedTile.y > 0) {
+        // fix: #54
+        markAndfadeOutTile(
+          this.groundLayer.getTileAt(clickedTile.x - 1, clickedTile.y - 1)
+        );
+
+        if (
+          clickedTile.x === prevPointer.x &&
+          clickedTile.y === prevPointer.y &&
+          clickDelay < 400
+        ) {
+          // fix: #54
+          this.socket.emit("playerWishToGo", {
+            name: this.mainPlayerName,
+            x: clickedTile.x - 1,
+            y: clickedTile.y - 1,
+          });
+        }
+
+        lastTime = this.time.now;
+        prevPointer = clickedTile;
+      }
     });
 
     this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
