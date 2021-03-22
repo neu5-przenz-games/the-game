@@ -39,7 +39,6 @@ const anims = {
   },
 };
 
-// GameObject Skeleton
 export default class Skeleton extends Phaser.GameObjects.Image {
   constructor({
     direction,
@@ -71,7 +70,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.depth = y + 64;
 
     this.scene = scene;
-    this.label = this.scene.add.text(x - 32, y - 136, this.name);
+    // #fix #55
+    this.label = this.scene.add.text(x - 32, y - 140, this.name);
 
     this.scene.time.delayedCall(
       this.anim.speed * 1000,
@@ -197,6 +197,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     }
 
+    // #fix #55
     this.label.setPosition(this.x - 32, this.y - 140);
   }
 }
