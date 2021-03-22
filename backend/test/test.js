@@ -1,16 +1,16 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const io = require("socket.io-client");
+// const io = require("socket.io-client");
 const server = require("../index");
 
-const ioOptions = {
-  transports: ["websocket"],
-  forceNew: true,
-  reconnection: false,
-};
+// const ioOptions = {
+//   transports: ["websocket"],
+//   forceNew: true,
+//   reconnection: false,
+// };
 
-let socket;
-const testHost = "http://localhost:5000/";
+// let socket;
+// const testHost = "http://localhost:5000/";
 
 chai.use(chaiHttp);
 chai.should();
