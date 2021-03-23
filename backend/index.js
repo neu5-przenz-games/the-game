@@ -10,7 +10,7 @@ let players = require("./players");
 let timePast = Date.now();
 
 const canGo = ({ x, y }) => {
-  const tile = map[y - 1][x - 1];
+  const tile = map[y][x];
 
   // TODO (#50): add check if there is no other player at the moment
 
