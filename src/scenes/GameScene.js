@@ -69,16 +69,6 @@ export default class Game extends Phaser.Scene {
     this.tilemap.createLayer("Above", tilesetOutside);
   }
 
-  extractMapFromPhaserObject() {
-    // TODO (#48): find better way to do that
-    const myMap = this.tilemap.layers[2].data.map((arr) => {
-      return arr.map((t) => {
-        return t.index;
-      });
-    });
-    console.log(myMap);
-  }
-
   initSockets() {
     this.socket = io();
 

@@ -4,7 +4,7 @@ const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
-const map = require("./map");
+const map = require("../public/assets/map/map.js");
 let players = require("./players");
 
 let timePast = Date.now();
