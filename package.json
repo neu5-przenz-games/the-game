@@ -41,9 +41,11 @@
     "watcherGlob": "**"
   },
   "scripts": {
+    "prebuild": "yarn extract:map",
     "build": "if test \"$NODE_ENV\" = \"production\"; then yarn build:prod; else yarn build:dev; fi",
     "build:prod": "NODE_ENV=production parcel build src/index.html",
     "build:dev": "NODE_ENV=development parcel build src/index.html --no-minify",
+    "predev": "yarn extract:map",
     "dev": "parcel watch src/index.html",
     "extract:map": "node ./scripts/extractMap.js",
     "lint": "eslint '**/*.js'",
