@@ -1,7 +1,6 @@
 .DS_Store
 .env
 yarn-error.log
-public/assets/map/map.js
 node_modules/
 .cache/
 dist/
