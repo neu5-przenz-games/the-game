@@ -1,6 +1,6 @@
 .DS_Store
+.env
+yarn-error.log
 node_modules/
 .cache/
-yarn-error.log
 dist/
-.env

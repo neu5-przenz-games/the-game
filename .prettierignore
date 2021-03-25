@@ -1,2 +1,2 @@
 .travis.yml
-backend/map.js
+public/assets/map/map.js
