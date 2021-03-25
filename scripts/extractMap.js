@@ -1,3 +1,11 @@
+/**
+ * Role of this script is to create two-dimensional array
+ * containing colliding tiles - player shouldn't be able to stand on that tile.
+ *
+ * Tiled map editor generates one-dimensional array for every layer.
+ * In this script we take that array and we create two-dimensional array
+ * in the phaser-like manner so it can be used on backend.
+ */
 const fs = require("fs");
 
 const LAYER_NAME = "Collides";
@@ -8,12 +16,12 @@ const layerCollides = require("../public/assets/map/map.json").layers.find(
 
 const arr = [];
 
-for (let j = 0, m = 0; j < layerCollides.width; j += 1) {
+for (let i = 0, idx = 0; i < layerCollides.width; i += 1) {
   arr.push([]);
-  for (let k = 0; k < layerCollides.height; k += 1) {
-    const tileId = layerCollides.data[m];
-    arr[j][k] = tileId === 0 ? -1 : tileId;
-    m += 1;
+  for (let j = 0; j < layerCollides.height; j += 1) {
+    const tileId = layerCollides.data[idx];
+    arr[i][j] = tileId === 0 ? -1 : tileId;
+    idx += 1;
   }
 }
 
