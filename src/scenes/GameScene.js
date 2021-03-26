@@ -121,7 +121,7 @@ export default class Game extends Phaser.Scene {
       const { worldX, worldY } = pointer;
 
       const clickedTile = this.groundLayer.worldToTileXY(worldX, worldY, true);
-      // worldToTileXY method is giving us +1 tile so we need to substract 1
+      // worldToTileXY method is giving us +1 tile so we need to subtract 1
       clickedTile.x -= 1;
       clickedTile.y -= 1;
 
