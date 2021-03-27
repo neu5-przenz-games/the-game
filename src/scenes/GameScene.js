@@ -99,7 +99,9 @@ export default class Game extends Phaser.Scene {
     this.socket.on("playerMoving", (players) => {
       players.forEach((p) => {
         const player = this.players.find((pf) => pf.name === p.name);
-        const dest = this.groundLayer.tileToWorldXY(p.x, p.y);
+        // we need to add 1 to X to render player in the right place
+        const dest = this.groundLayer.tileToWorldXY(p.x + 1, p.y);
+
         player.x = dest.x;
         player.y = dest.y;
       });
@@ -119,11 +121,13 @@ export default class Game extends Phaser.Scene {
       const { worldX, worldY } = pointer;
 
       const clickedTile = this.groundLayer.worldToTileXY(worldX, worldY, true);
+      // worldToTileXY method is giving us +1 tile so we need to subtract 1
+      clickedTile.x -= 1;
+      clickedTile.y -= 1;
 
-      if (clickedTile.x > 0 && clickedTile.y > 0) {
-        // TODO (#54)
+      if (clickedTile.x >= 0 && clickedTile.y >= 0) {
         markAndfadeOutTile(
-          this.groundLayer.getTileAt(clickedTile.x - 1, clickedTile.y - 1)
+          this.groundLayer.getTileAt(clickedTile.x, clickedTile.y)
         );
 
         if (
@@ -131,11 +135,10 @@ export default class Game extends Phaser.Scene {
           clickedTile.y === prevPointer.y &&
           clickDelay < 400
         ) {
-          // TODO (#54)
           this.socket.emit("playerWishToGo", {
             name: this.mainPlayerName,
-            x: clickedTile.x - 1,
-            y: clickedTile.y - 1,
+            x: clickedTile.x,
+            y: clickedTile.y,
           });
         }
 
@@ -166,7 +169,8 @@ export default class Game extends Phaser.Scene {
           motion: "idle",
           name: player.name,
           scene: this,
-          ...this.groundLayer.tileToWorldXY(player.x, player.y),
+          // we need to add 1 to X to render player in the right place
+          ...this.groundLayer.tileToWorldXY(player.x + 1, player.y),
         })
       )
     );

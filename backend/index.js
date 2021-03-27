@@ -27,7 +27,7 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("newPlayer", availablePlayer);
 
     socket.on("playerWishToGo", ({ name, x, y }) => {
-      if (x > 0 && y > 0) {
+      if (x >= 0 && y >= 0) {
         if (canGo({ x, y, map })) {
           const p = players.find((player) => player.name === name);
 
@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
       });
 
       socket.emit("playerMoving", players);
-    }, 50);
+    }, 100);
 
     socket.on("playerMovement", (playerMoving) => {
       const p = players.find((player) => player.name === playerMoving.name);
