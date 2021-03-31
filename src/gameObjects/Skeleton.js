@@ -70,8 +70,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.depth = y + 64;
 
     this.scene = scene;
-    // TODO (#55)
-    this.label = this.scene.add.text(x - 32, y - 140, this.name);
+
+    this.label = this.scene.add.text(x, y, this.name).setOrigin(0.5, -1.0);
+    this.label.depth = this.depth + 1;
 
     this.scene.time.delayedCall(
       this.anim.speed * 1000,
@@ -197,7 +198,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     }
 
-    // TODO (#55)
-    this.label.setPosition(this.x - 32, this.y - 140);
+    this.label.setPosition(this.x, this.y - this.displayHeight / 2);
   }
 }
