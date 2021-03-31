@@ -1,4 +1,5 @@
 const express = require("express");
+const PF = require("pathfinding");
 
 const app = express();
 const server = require("http").Server(app);
@@ -7,15 +8,46 @@ const io = require("socket.io")(server);
 const map = require("../public/assets/map/map.js"); // eslint-disable-line
 let players = require("./players");
 
-let timePast = Date.now();
+const grid = new PF.Grid(map);
 
-const canGo = ({ x, y }) => {
-  const tile = map[y][x];
+const finder = new PF.AStarFinder({
+  allowDiagonal: true,
+});
 
-  // TODO (#50): add check if there is no other player at the moment
+setInterval(() => {
+  players = players.map((player) => {
+    const p = player;
 
-  return tile === -1;
-};
+    if (p.isMoving) {
+      const [x, y] = finder.findPath(
+        p.x,
+        p.y,
+        p.destX,
+        p.destY,
+        grid.clone()
+      )[1];
+
+      if (players.find((pl) => pl.x === x && pl.y === y)) {
+        p.isMoving = false;
+        p.destX = null;
+        p.destY = null;
+      } else {
+        p.x = x;
+        p.y = y;
+
+        if (p.x === p.destX && p.y === p.destY) {
+          p.isMoving = false;
+          p.destX = null;
+          p.destY = null;
+        }
+      }
+    }
+
+    return p;
+  });
+
+  io.emit("playerMoving", players);
+}, 250);
 
 io.on("connection", (socket) => {
   const availablePlayer = players.find((player) => !player.isOnline);
@@ -28,44 +60,17 @@ io.on("connection", (socket) => {
 
     socket.on("playerWishToGo", ({ name, x, y }) => {
       if (x >= 0 && y >= 0) {
-        if (canGo({ x, y, map })) {
+        if (map[y][x] === 0) {
           const p = players.find((player) => player.name === name);
 
-          p.isMoving = true;
-          p.destX = x;
-          p.destY = y;
+          if (p.x !== x || p.y !== y) {
+            p.isMoving = true;
+            p.destX = x;
+            p.destY = y;
+          }
         }
       }
     });
-
-    setInterval(() => {
-      players = players.map((player) => {
-        const p = player;
-        const timeNow = Date.now();
-
-        if (player.isMoving && timeNow - timePast >= 200) {
-          timePast = timeNow;
-
-          if (player.x > player.destX) {
-            p.x -= 1;
-          } else if (player.x < player.destX) {
-            p.x += 1;
-          } else if (player.y > player.destY) {
-            p.y -= 1;
-          } else if (player.y < player.destY) {
-            p.y += 1;
-          } else {
-            p.isMoving = false;
-            p.destX = null;
-            p.destY = null;
-          }
-        }
-
-        return p;
-      });
-
-      socket.emit("playerMoving", players);
-    }, 100);
 
     socket.on("playerMovement", (playerMoving) => {
       const p = players.find((player) => player.name === playerMoving.name);

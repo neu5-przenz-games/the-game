@@ -20,7 +20,7 @@ for (let i = 0, idx = 0; i < layerCollides.width; i += 1) {
   arr.push([]);
   for (let j = 0; j < layerCollides.height; j += 1) {
     const tileId = layerCollides.data[idx];
-    arr[i][j] = tileId === 0 ? -1 : tileId;
+    arr[i][j] = tileId === 0 ? 0 : 1;
     idx += 1;
   }
 }
