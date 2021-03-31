@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "pathfinding": "^0.4.18",
     "phaser": "^3.52.0",
     "socket.io": "^3.1.1"
   },
@@ -30,7 +31,9 @@
     "socket.io-client": "^3.1.1"
   },
   "nodemonConfig": {
-    "ignore": ["src/*"],
+    "ignore": [
+      "src/*"
+    ],
     "delay": "1000"
   },
   "parcelCleanPaths": [
