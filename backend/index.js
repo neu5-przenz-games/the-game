@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
         if (map[y][x] === 0) {
           const p = players.find((player) => player.name === name);
 
-          if (p.x !== x && p.y !== y) {
+          if (p.x !== x || p.y !== y) {
             p.isMoving = true;
             p.destX = x;
             p.destY = y;
