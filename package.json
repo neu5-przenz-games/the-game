@@ -54,6 +54,6 @@
     "lint": "eslint '**/*.js'",
     "lint:fix": "npm run lint -- --fix",
     "serve": "nodemon backend/index.js",
-    "test": "mocha backend/test"
+    "test": "mocha backend/test --exit"
   }
 }
