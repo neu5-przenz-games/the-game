@@ -16,34 +16,39 @@ const finder = new PF.AStarFinder({
 
 setInterval(() => {
   players = players.map((player) => {
-    const p = player;
+    const playerNew = player;
 
-    if (p.isMoving) {
-      const [x, y] = finder.findPath(
-        p.x,
-        p.y,
-        p.destX,
-        p.destY,
-        grid.clone()
-      )[1];
+    if (playerNew.isMoving) {
+      const tempGrid = grid.clone();
 
-      if (players.find((pl) => pl.x === x && pl.y === y)) {
-        p.isMoving = false;
-        p.destX = null;
-        p.destY = null;
-      } else {
-        p.x = x;
-        p.y = y;
+      // add current players positions to the map grid
+      players.forEach((pl) => tempGrid.setWalkableAt(pl.x, pl.y, false));
 
-        if (p.x === p.destX && p.y === p.destY) {
-          p.isMoving = false;
-          p.destX = null;
-          p.destY = null;
+      const path = finder.findPath(
+        playerNew.x,
+        playerNew.y,
+        playerNew.destX,
+        playerNew.destY,
+        tempGrid
+      );
+
+      if (path[1] && path[1].length) {
+        const [x, y] = path[1];
+        playerNew.x = x;
+        playerNew.y = y;
+
+        if (
+          playerNew.x === playerNew.destX &&
+          playerNew.y === playerNew.destY
+        ) {
+          playerNew.isMoving = false;
+          playerNew.destX = null;
+          playerNew.destY = null;
         }
       }
     }
 
-    return p;
+    return playerNew;
   });
 
   io.emit("playerMoving", players);
