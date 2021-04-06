@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
-import Skeleton from "../gameObjects/Skeleton";
+import Skeleton, { OFFSET, directions } from "../gameObjects/Skeleton";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 import UIProfile from "../ui/profile";
@@ -99,11 +99,12 @@ export default class Game extends Phaser.Scene {
     this.socket.on("playerMoving", (players) => {
       players.forEach((p) => {
         const player = this.players.find((pf) => pf.name === p.name);
-        // we need to add 1 to X to render player in the right place
-        const dest = this.groundLayer.tileToWorldXY(p.x + 1, p.y);
 
-        player.x = dest.x;
-        player.y = dest.y;
+        const { x, y } = this.groundLayer.tileToWorldXY(p.x, p.y);
+
+        player.nextDirection = directions[p.direction];
+        player.x = x + OFFSET.X;
+        player.y = y + OFFSET.Y;
       });
     });
 
@@ -164,13 +165,12 @@ export default class Game extends Phaser.Scene {
     this.players = this.playersFromServer.map((player) =>
       this.add.existing(
         new Skeleton({
-          direction: player.direction,
+          direction: directions[player.direction],
           isMainPlayer: player.socketId === this.socketId,
           motion: "idle",
           name: player.name,
           scene: this,
-          // we need to add 1 to X to render player in the right place
-          ...this.groundLayer.tileToWorldXY(player.x + 1, player.y),
+          ...this.groundLayer.tileToWorldXY(player.x, player.y),
         })
       )
     );

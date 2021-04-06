@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-const directions = {
+export const directions = {
   west: { offset: 0, x: -2, y: 0, opposite: "east" },
   northWest: { offset: 32, x: -2, y: -1, opposite: "southEast" },
   north: { offset: 64, x: 0, y: -2, opposite: "south" },
@@ -39,25 +39,18 @@ const anims = {
   },
 };
 
+export const OFFSET = {
+  X: 32,
+  Y: 16,
+};
+
 export default class Skeleton extends Phaser.GameObjects.Image {
-  constructor({
-    direction,
-    distance,
-    isMainPlayer,
-    motion,
-    name,
-    scene,
-    x,
-    y,
-  }) {
-    super(scene, x, y, "skeleton", direction.offset);
+  constructor({ direction, isMainPlayer, motion, name, scene, x, y }) {
+    super(scene, x + OFFSET.X, y + OFFSET.Y, "skeleton", direction.offset);
 
     this.name = name;
-    this.startX = x;
-    this.startY = y;
     this.destX = null;
     this.destY = null;
-    this.distance = distance;
     this.isMainPlayer = isMainPlayer;
 
     this.motion = motion;
@@ -73,129 +66,13 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.label = this.scene.add.text(x, y, this.name).setOrigin(0.5, -1.0);
     this.label.depth = this.depth + 1;
-
-    this.scene.time.delayedCall(
-      this.anim.speed * 1000,
-      this.changeFrame,
-      [],
-      this
-    );
-  }
-
-  goTo(x, y) {
-    this.destX = x;
-    this.destY = y;
-
-    this.makeMovement("walk");
-  }
-
-  makeMovement(movement) {
-    this.motion = movement;
-    this.anim = anims[this.motion];
-    this.speed = anims[this.motion].speed;
-    this.f = this.anim.startFrame;
-    this.frame = this.texture.get(this.direction.offset + this.f);
-  }
-
-  resetAnimation() {
-    this.f = this.anim.startFrame;
-
-    this.frame = this.texture.get(this.direction.offset + this.f);
-
-    this.scene.time.delayedCall(
-      this.anim.speed * 1000,
-      this.changeFrame,
-      [],
-      this
-    );
-  }
-
-  changeFrame() {
-    this.f += 1;
-
-    let delay = this.anim.speed;
-
-    if (this.f === this.anim.endFrame) {
-      switch (this.motion) {
-        case "walk":
-          this.f = this.anim.startFrame;
-          this.frame = this.texture.get(this.direction.offset + this.f);
-          this.scene.time.delayedCall(delay * 1000, this.changeFrame, [], this);
-          break;
-
-        case "attack":
-          delay = Math.random() * 2;
-          this.scene.time.delayedCall(
-            delay * 1000,
-            this.resetAnimation,
-            [],
-            this
-          );
-          break;
-
-        case "idle":
-          delay = 0.5 + Math.random();
-          this.scene.time.delayedCall(
-            delay * 1000,
-            this.resetAnimation,
-            [],
-            this
-          );
-          break;
-
-        case "die":
-          delay = 6 + Math.random() * 6;
-          this.scene.time.delayedCall(
-            delay * 1000,
-            this.resetAnimation,
-            [],
-            this
-          );
-          break;
-        default:
-          delay = 0.5 + Math.random();
-          this.scene.time.delayedCall(
-            delay * 1000,
-            this.resetAnimation,
-            [],
-            this
-          );
-          break;
-      }
-    } else {
-      this.frame = this.texture.get(this.direction.offset + this.f);
-
-      this.scene.time.delayedCall(delay * 1000, this.changeFrame, [], this);
-    }
   }
 
   update() {
-    if (this.motion === "walk") {
-      if (this.x > this.destX) {
-        if (this.y > this.destY) {
-          this.x -= 1 * this.walkSpeed;
-          this.y -= 1 * this.walkSpeed;
-        } else {
-          this.x -= 1 * this.walkSpeed;
-          this.y += 1 * this.walkSpeed;
-        }
-      } else if (this.y > this.destY) {
-        this.x += 1 * this.walkSpeed;
-        this.y -= 1 * this.walkSpeed;
-      } else {
-        this.x += 1 * this.walkSpeed;
-        this.y += 1 * this.walkSpeed;
-      }
-
-      if (
-        Math.abs(this.x - this.destX) < 10 &&
-        Math.abs(this.y - this.destY) < 10
-      ) {
-        this.destX = null;
-        this.destY = null;
-
-        this.makeMovement("idle");
-      }
+    if (this.nextDirection) {
+      this.direction = this.nextDirection;
+      this.frame = this.texture.get(this.direction.offset);
+      this.nextDirection = null;
     }
 
     this.label.setPosition(this.x, this.y - this.displayHeight / 2);
