@@ -14,11 +14,23 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
+const getDirection = (currentTile, nextTile) =>
+  ({
+    "1,0": "southEast",
+    "1,1": "south",
+    "0,1": "southWest",
+    "-1,1": "west",
+    "-1,0": "northWest",
+    "-1,-1": "north",
+    "0,-1": "northEast",
+    "1,-1": "east",
+  }[[nextTile.x - currentTile.x, nextTile.y - currentTile.y].join()]);
+
 setInterval(() => {
   players = players.map((player) => {
     const playerNew = player;
 
-    if (playerNew.isMoving) {
+    if (playerNew.destX !== null && playerNew.destY !== null) {
       const tempGrid = grid.clone();
 
       // add current players positions to the map grid
@@ -32,16 +44,18 @@ setInterval(() => {
         tempGrid
       );
 
-      if (path[1] && path[1].length) {
+      if (path[1]) {
         const [x, y] = path[1];
+
+        playerNew.direction = getDirection(
+          { x: playerNew.x, y: playerNew.y },
+          { x, y }
+        );
+
         playerNew.x = x;
         playerNew.y = y;
 
-        if (
-          playerNew.x === playerNew.destX &&
-          playerNew.y === playerNew.destY
-        ) {
-          playerNew.isMoving = false;
+        if (playerNew.destX === x && playerNew.destY === y) {
           playerNew.destX = null;
           playerNew.destY = null;
         }
@@ -69,7 +83,6 @@ io.on("connection", (socket) => {
           const p = players.find((player) => player.name === name);
 
           if (p.x !== x || p.y !== y) {
-            p.isMoving = true;
             p.destX = x;
             p.destY = y;
           }
