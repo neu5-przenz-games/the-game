@@ -9,6 +9,7 @@ const map = require("../public/assets/map/map.js"); // eslint-disable-line
 let players = require("./players");
 
 const grid = new PF.Grid(map);
+let lastTime = Date.now();
 
 const finder = new PF.AStarFinder({
   allowDiagonal: true,
@@ -29,35 +30,50 @@ const getDirection = (currentTile, nextTile) =>
 setInterval(() => {
   players = players.map((player) => {
     const playerNew = player;
+    const currentTime = Date.now();
 
     if (playerNew.destX !== null && playerNew.destY !== null) {
-      const tempGrid = grid.clone();
+      if (playerNew.nextX !== null && playerNew.nextY !== null) {
+        if (currentTime - lastTime >= 250) {
+          lastTime = currentTime;
 
-      // add current players positions to the map grid
-      players.forEach((pl) => tempGrid.setWalkableAt(pl.x, pl.y, false));
+          playerNew.x = playerNew.nextX;
+          playerNew.y = playerNew.nextY;
 
-      const path = finder.findPath(
-        playerNew.x,
-        playerNew.y,
-        playerNew.destX,
-        playerNew.destY,
-        tempGrid
-      );
+          playerNew.nextX = null;
+          playerNew.nextY = null;
 
-      if (path[1]) {
-        const [x, y] = path[1];
+          if (
+            playerNew.x === playerNew.destX &&
+            playerNew.y === playerNew.destY
+          ) {
+            playerNew.destX = null;
+            playerNew.destY = null;
+          }
+        }
+      } else {
+        const tempGrid = grid.clone();
 
-        playerNew.direction = getDirection(
-          { x: playerNew.x, y: playerNew.y },
-          { x, y }
+        // add current players positions to the map grid
+        players.forEach((pl) => tempGrid.setWalkableAt(pl.x, pl.y, false));
+
+        const path = finder.findPath(
+          playerNew.x,
+          playerNew.y,
+          playerNew.destX,
+          playerNew.destY,
+          tempGrid
         );
 
-        playerNew.x = x;
-        playerNew.y = y;
+        if (path[1]) {
+          const [x, y] = path[1];
 
-        if (playerNew.destX === x && playerNew.destY === y) {
-          playerNew.destX = null;
-          playerNew.destY = null;
+          playerNew.direction = getDirection(
+            { x: playerNew.x, y: playerNew.y },
+            { x, y }
+          );
+          playerNew.nextX = x;
+          playerNew.nextY = y;
         }
       }
     }
@@ -66,7 +82,7 @@ setInterval(() => {
   });
 
   io.emit("playerMoving", players);
-}, 250);
+}, 50);
 
 io.on("connection", (socket) => {
   const availablePlayer = players.find((player) => !player.isOnline);
