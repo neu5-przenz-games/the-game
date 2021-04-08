@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import HealthBar from "./HealthBar";
 
 export const directions = {
   west: { offset: 0, x: -2, y: 0, opposite: "east" },
@@ -45,13 +46,15 @@ export const OFFSET = {
 };
 
 export default class Skeleton extends Phaser.GameObjects.Image {
-  constructor({ direction, isMainPlayer, motion, name, scene, x, y }) {
+  constructor({ direction, isMainPlayer, hp, motion, name, scene, x, y }) {
     super(scene, x + OFFSET.X, y + OFFSET.Y, "skeleton", direction.offset);
 
     this.name = name;
     this.destX = null;
     this.destY = null;
     this.isMainPlayer = isMainPlayer;
+
+    this.hp = new HealthBar(scene, x + OFFSET.X, y + OFFSET.Y, hp);
 
     this.motion = motion;
     this.anim = anims[motion];
@@ -60,12 +63,12 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.walkSpeed = 2;
     this.f = this.anim.startFrame;
 
-    this.depth = y + 64;
+    this.depth = y + OFFSET.Y;
 
     this.scene = scene;
 
     this.label = this.scene.add.text(x, y, this.name).setOrigin(0.5, -1.0);
-    this.label.depth = this.depth + 1;
+    this.label.depth = this.depth;
   }
 
   update() {
@@ -75,6 +78,10 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.nextDirection = null;
     }
 
+    this.depth = this.y + OFFSET.Y;
+    this.label.depth = this.depth;
+
     this.label.setPosition(this.x, this.y - this.displayHeight / 2);
+    this.hp.setPosition(this.x, this.y);
   }
 }
