@@ -15,7 +15,6 @@ const testHost = "http://localhost:5000/";
 chai.use(chaiHttp);
 chai.should();
 
-// fix me
 describe("Server socket tests", () => {
   beforeEach((done) => {
     socket = io(testHost, ioOptions);
