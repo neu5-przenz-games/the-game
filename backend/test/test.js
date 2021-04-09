@@ -1,55 +1,59 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-// const io = require("socket.io-client");
+const io = require("socket.io-client");
 const server = require("../index");
 
-// const ioOptions = {
-//   transports: ["websocket"],
-//   forceNew: true,
-//   reconnection: false,
-// };
+const ioOptions = {
+  transports: ["websocket"],
+  forceNew: true,
+  reconnection: false,
+};
 
-// let socket;
-// const testHost = "http://localhost:5000/";
+let socket;
+const testHost = "http://localhost:5000/";
 
 chai.use(chaiHttp);
 chai.should();
 
-// fix me
-// describe("Server socket tests", () => {
-//   beforeEach((done) => {
-//     socket = io(testHost, ioOptions);
-//     socket.on("connect", () => {
-//       done();
-//     });
-//   });
-//   afterEach((done) => {
-//     if (socket.connected) {
-//       socket.disconnect();
-//     }
-//     done();
-//   });
+describe("Server socket tests", () => {
+  beforeEach((done) => {
+    socket = io(testHost, ioOptions);
+    socket.on("connect", () => {
+      done();
+    });
+  });
+  afterEach((done) => {
+    if (socket.connected) {
+      socket.disconnect();
+    }
+    done();
+  });
 
-//   it("New player join and leave", (done) => {
-//     const newPlayer = io(testHost, ioOptions);
-//     socket.on("newPlayer", (newPlayermsg) => {
-//       newPlayermsg.should.have.keys(
-//         "direction",
-//         "isOnline",
-//         "name",
-//         "socketId",
-//         "x",
-//         "y"
-//       );
-//       newPlayer.disconnect();
+  it("New player join and leave", (done) => {
+    const newPlayer = io(testHost, ioOptions);
+    socket.on("newPlayer", (newPlayermsg) => {
+      newPlayermsg.should.have.keys(
+        "direction",
+        "isOnline",
+        "name",
+        "socketId",
+        "x",
+        "y",
+        "destX",
+        "destY",
+        "hp",
+        "nextX",
+        "nextY"
+      );
+      newPlayer.disconnect();
 
-//       socket.on("playerDisconnected", (playerDisconnectedMsg) => {
-//         playerDisconnectedMsg.name.should.have.lengthOf(7);
-//         done();
-//       });
-//     });
-//   });
-// });
+      socket.on("playerDisconnected", (playerDisconnectedMsg) => {
+        playerDisconnectedMsg.should.be.equal("player2");
+        done();
+      });
+    });
+  });
+});
 
 describe("Server HTTP tests", () => {
   it("Main page content", (done) => {
