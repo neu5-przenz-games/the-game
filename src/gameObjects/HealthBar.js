@@ -5,8 +5,8 @@ const RED = 0xff0000;
 const WHITE = 0xffffff;
 
 const BAR_WIDTH = 64;
-const BAR_HEIGHT = 8;
-const BAR_BORDER_WIDTH = 2;
+const BAR_HEIGHT = 4;
+const BAR_BORDER_WIDTH = 1;
 const BAR_BORDER_WIDTH_DOUBLE = BAR_BORDER_WIDTH * 2;
 
 const OFFSET = {
@@ -50,7 +50,7 @@ export default class HealthBar {
       this.x + BAR_BORDER_WIDTH,
       this.y + BAR_BORDER_WIDTH,
       BAR_WIDTH - BAR_BORDER_WIDTH_DOUBLE,
-      BAR_BORDER_WIDTH_DOUBLE
+      BAR_HEIGHT - BAR_BORDER_WIDTH_DOUBLE
     );
 
     // health
@@ -59,7 +59,7 @@ export default class HealthBar {
       this.x + BAR_BORDER_WIDTH,
       this.y + BAR_BORDER_WIDTH,
       Math.floor(this.p * this.value),
-      BAR_BORDER_WIDTH_DOUBLE
+      BAR_HEIGHT - BAR_BORDER_WIDTH_DOUBLE
     );
   }
 }
