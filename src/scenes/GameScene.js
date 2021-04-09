@@ -66,15 +66,11 @@ export default class Game extends Phaser.Scene {
     });
   }
 
-  initWorld() {
+  create() {
     initMap(this);
     initSockets(this);
     initClicking(this);
     initChatInputCapture(this);
-  }
-
-  create() {
-    this.initWorld();
   }
 
   update() {
