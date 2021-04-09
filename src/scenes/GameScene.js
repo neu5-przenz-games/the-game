@@ -167,6 +167,7 @@ export default class Game extends Phaser.Scene {
         new Skeleton({
           direction: directions[player.direction],
           isMainPlayer: player.socketId === this.socketId,
+          hp: player.hp,
           motion: "idle",
           name: player.name,
           scene: this,

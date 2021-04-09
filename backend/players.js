@@ -10,6 +10,7 @@ module.exports = [
     isOnline: false,
     socketId: null,
     direction: "east",
+    hp: 50,
   },
   {
     name: "player2",
@@ -22,6 +23,7 @@ module.exports = [
     isOnline: false,
     socketId: null,
     direction: "southEast",
+    hp: 80,
   },
   {
     name: "player3",
@@ -34,6 +36,7 @@ module.exports = [
     isOnline: false,
     socketId: null,
     direction: "south",
+    hp: 75,
   },
   {
     name: "player4",
@@ -44,6 +47,7 @@ module.exports = [
     isOnline: false,
     socketId: null,
     direction: "southWest",
+    hp: 100,
   },
   {
     name: "player5",
@@ -56,6 +60,7 @@ module.exports = [
     isOnline: false,
     socketId: null,
     direction: "west",
+    hp: 100,
   },
   {
     name: "player6",
@@ -68,5 +73,6 @@ module.exports = [
     isOnline: false,
     socketId: null,
     direction: "northWest",
+    hp: 100,
   },
 ];
