@@ -1,4 +1,5 @@
 import io from "socket.io-client";
+
 import UIProfile from "../ui/profile";
 import { OFFSET, directions } from "../gameObjects/Skeleton";
 import initPlayers from "./initPlayers";
@@ -39,12 +40,9 @@ export default (game) => {
   game.socket.on("playerMoving", (players) => {
     players.forEach((p) => {
       const player = game.players.find((pf) => pf.name === p.name);
-
-      const { x, y } = game.groundLayer.tileToWorldXY(p.x, p.y);
-
       player.nextDirection = directions[p.direction];
-      player.x = x + OFFSET.X;
-      player.y = y + OFFSET.Y;
+      player.x = p.x;
+      player.y = p.y;
     });
   });
 

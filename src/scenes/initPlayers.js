@@ -11,7 +11,7 @@ export default (game) => {
           motion: "idle",
           name: player.name,
           scene: game,
-          ...game.groundLayer.tileToWorldXY(player.x, player.y),
+          ...game.groundLayer.tileToWorldXY(player.tileX, player.tileY),
         })
       )
     )
