@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { OFFSET } from "../gameObjects/Skeleton";
+
 const markAndfadeOutTile = (tile) => {
   tile.setAlpha(0.6);
 
@@ -30,6 +32,8 @@ export default (game) => {
     clickedTile.x -= 1;
     clickedTile.y -= 1;
 
+    const dest = game.groundLayer.tileToWorldXY(clickedTile.x, clickedTile.y);
+
     if (clickedTile.x >= 0 && clickedTile.y >= 0) {
       markAndfadeOutTile(
         game.groundLayer.getTileAt(clickedTile.x, clickedTile.y)
@@ -42,8 +46,10 @@ export default (game) => {
       ) {
         game.socket.emit("playerWishToGo", {
           name: game.mainPlayerName,
-          x: clickedTile.x,
-          y: clickedTile.y,
+          tileX: clickedTile.x,
+          tileY: clickedTile.y,
+          destX: dest.x + OFFSET.X,
+          destY: dest.y + OFFSET.Y,
         });
       }
 

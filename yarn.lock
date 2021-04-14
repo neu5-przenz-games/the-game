@@ -886,6 +886,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@geckos.io/snapshot-interpolation@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@geckos.io/snapshot-interpolation/-/snapshot-interpolation-1.0.2.tgz#9381037ca699dcc349a3761ecebd61291213533f"
+  integrity sha512-gJnWTNBeBXaaKPKxCx7BkWZWjxajfVM4jltHr7BASvoptM4itMtlcztac+yuJqrOWbzsPHPg8YRfzXKciRP1ZA==
+
 "@iarna/toml@^2.2.0":
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"

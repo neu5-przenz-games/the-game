@@ -4,7 +4,7 @@
  *
  * Tiled map editor generates one-dimensional array for every layer.
  * In this script we take that array and we create two-dimensional array
- * in the phaser-like manner so it can be used on backend.
+ * in the phaser-like manner so it can be used on server.
  */
 const fs = require("fs");
 
