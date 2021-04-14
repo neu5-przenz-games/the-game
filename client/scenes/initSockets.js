@@ -1,7 +1,6 @@
 import io from "socket.io-client";
 
 import UIProfile from "../ui/profile";
-import { OFFSET, directions } from "../gameObjects/Skeleton";
 import initPlayers from "./initPlayers";
 
 const displayServerMessage = (game, msgArg) => {
@@ -37,13 +36,8 @@ export default (game) => {
     );
   });
 
-  game.socket.on("playerMoving", (players) => {
-    players.forEach((p) => {
-      const player = game.players.find((pf) => pf.name === p.name);
-      player.nextDirection = directions[p.direction];
-      player.x = p.x;
-      player.y = p.y;
-    });
+  game.socket.on("playerMoving", (snapshot) => {
+    game.SI.snapshot.add(snapshot);
   });
 
   game.socket.on("playerMessage", (message, playerName) => {

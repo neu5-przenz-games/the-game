@@ -157,12 +157,26 @@ const loop = () => {
     return playerNew;
   });
 
-  if (tick % 5 === 0) {
-    io.emit("playerMoving", players);
+  if (tick % 4 === 0) {
+    tick = 0;
+
+    const worldState = [];
+    players.forEach((player) => {
+      worldState.push({
+        id: player.name,
+        x: parseFloat(player.x.toFixed(2)),
+        y: parseFloat(player.y.toFixed(2)),
+        direction: player.direction,
+      });
+    });
+
+    const snapshot = SI.snapshot.create(worldState);
+    SI.vault.add(snapshot);
+    io.emit("playerMoving", snapshot);
   }
 };
 
-setInterval(loop, 1000 / 60);
+setInterval(loop, 1000 / 30);
 
 app.use(express.static("dist"));
 

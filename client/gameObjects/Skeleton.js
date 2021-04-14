@@ -71,16 +71,17 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.depth = this.depth;
   }
 
-  update() {
-    if (this.nextDirection) {
-      this.direction = this.nextDirection;
+  update(x, y, nextDirection) {
+    this.x = x;
+    this.y = y;
+
+    if (nextDirection) {
+      this.direction = directions[nextDirection];
       this.frame = this.texture.get(this.direction.offset);
-      this.nextDirection = null;
     }
 
     this.depth = this.y + OFFSET.Y;
     this.label.depth = this.depth;
-
     this.label.setPosition(this.x, this.y - this.displayHeight / 2);
     this.hp.setPosition(this.x, this.y);
   }

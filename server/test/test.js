@@ -37,11 +37,18 @@ describe("Server socket tests", () => {
         "isOnline",
         "name",
         "socketId",
+        "speed",
+        "tileX",
+        "tileY",
         "x",
         "y",
+        "destTileX",
+        "destTileY",
         "destX",
         "destY",
         "hp",
+        "nextTileX",
+        "nextTileY",
         "nextX",
         "nextY"
       );
