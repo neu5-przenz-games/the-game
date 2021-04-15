@@ -1,11 +1,11 @@
-import Skeleton, { directions } from "../gameObjects/Skeleton";
+import Skeleton from "../gameObjects/Skeleton";
 
 export default (game) => {
   game.setPlayers(
     game.playersFromServer.map((player) =>
       game.add.existing(
         new Skeleton({
-          direction: directions[player.direction],
+          direction: player.direction,
           isMainPlayer: player.socketId === game.socketId,
           hp: player.hp,
           motion: "idle",
