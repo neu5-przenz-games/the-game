@@ -30,38 +30,42 @@ const getDirection = (currentTile, nextTile) =>
     "1,-1": "east",
   }[[nextTile.x - currentTile.x, nextTile.y - currentTile.y].join()]);
 
+const TILE = 64;
+const TILE_HALF = TILE / 2;
+const TILE_QUARTER = TILE / 4;
+
 const directions = {
-  west: { x: -2, y: 0, opposite: "east", nextX: -64, nextY: 0 },
+  west: { x: -2, y: 0, opposite: "east", nextX: -TILE, nextY: 0 },
   northWest: {
     x: -2,
     y: -1,
     opposite: "southEast",
-    nextX: -32,
-    nextY: -16,
+    nextX: -TILE_HALF,
+    nextY: -TILE_QUARTER,
   },
-  north: { x: 0, y: -2, opposite: "south", nextX: 0, nextY: -32 },
+  north: { x: 0, y: -2, opposite: "south", nextX: 0, nextY: -TILE_HALF },
   northEast: {
     x: 2,
     y: -1,
     opposite: "southWest",
-    nextX: 32,
-    nextY: -16,
+    nextX: TILE_HALF,
+    nextY: -TILE_QUARTER,
   },
-  east: { x: 2, y: 0, opposite: "west", nextX: 64, nextY: 0 },
+  east: { x: 2, y: 0, opposite: "west", nextX: TILE, nextY: 0 },
   southEast: {
     x: 2,
     y: 1,
     opposite: "northWest",
-    nextX: 32,
-    nextY: 16,
+    nextX: TILE_HALF,
+    nextY: TILE_QUARTER,
   },
-  south: { x: 0, y: 2, opposite: "north", nextX: 0, nextY: 32 },
+  south: { x: 0, y: 2, opposite: "north", nextX: 0, nextY: TILE_HALF },
   southWest: {
     x: -2,
     y: 1,
     opposite: "northEast",
-    nextX: -32,
-    nextY: 16,
+    nextX: -TILE_HALF,
+    nextY: TILE_QUARTER,
   },
 };
 
@@ -150,6 +154,9 @@ const loop = () => {
           playerNew.nextTileY = y;
           playerNew.nextX = playerNew.x + directions[playerNew.direction].nextX;
           playerNew.nextY = playerNew.y + directions[playerNew.direction].nextY;
+
+          playerNew.x += directions[playerNew.direction].x * playerNew.speed;
+          playerNew.y += directions[playerNew.direction].y * playerNew.speed;
         }
       }
     }

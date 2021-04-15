@@ -2,20 +2,20 @@ import Phaser from "phaser";
 import HealthBar from "./HealthBar";
 
 export const directions = {
-  west: { offset: 0, x: -2, y: 0, opposite: "east" },
-  northWest: { offset: 32, x: -2, y: -1, opposite: "southEast" },
-  north: { offset: 64, x: 0, y: -2, opposite: "south" },
-  northEast: { offset: 96, x: 2, y: -1, opposite: "southWest" },
-  east: { offset: 128, x: 2, y: 0, opposite: "west" },
-  southEast: { offset: 160, x: 2, y: 1, opposite: "northWest" },
-  south: { offset: 192, x: 0, y: 2, opposite: "north" },
-  southWest: { offset: 224, x: -2, y: 1, opposite: "northEast" },
+  west: { offset: 0 },
+  northWest: { offset: 32 },
+  north: { offset: 64 },
+  northEast: { offset: 96 },
+  east: { offset: 128 },
+  southEast: { offset: 160 },
+  south: { offset: 192 },
+  southWest: { offset: 224 },
 };
 
 const anims = {
   idle: {
     startFrame: 0,
-    endFrame: 4,
+    endFrame: 3,
     speed: 0.2,
   },
   walk: {
@@ -40,6 +40,15 @@ const anims = {
   },
 };
 
+const MIN_TICK = 8;
+const MAX_TICK = 12;
+
+const getRandomInt = (min, max) => {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+};
+
 export const OFFSET = {
   X: 32,
   Y: 16,
@@ -47,12 +56,20 @@ export const OFFSET = {
 
 export default class Skeleton extends Phaser.GameObjects.Image {
   constructor({ direction, isMainPlayer, hp, motion, name, scene, x, y }) {
-    super(scene, x + OFFSET.X, y + OFFSET.Y, "skeleton", direction.offset);
+    super(
+      scene,
+      x + OFFSET.X,
+      y + OFFSET.Y,
+      "skeleton",
+      directions[direction].offset
+    );
 
     this.name = name;
     this.destX = null;
     this.destY = null;
     this.isMainPlayer = isMainPlayer;
+    this.tick = 0;
+    this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
     this.hp = new HealthBar(scene, x + OFFSET.X, y + OFFSET.Y, hp);
 
@@ -60,8 +77,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.anim = anims[motion];
     this.direction = directions[direction];
     this.speed = 0.15;
-    this.walkSpeed = 2;
     this.f = this.anim.startFrame;
+    this.frame = this.texture.get(this.direction.offset);
 
     this.depth = y + OFFSET.Y;
 
@@ -72,13 +89,42 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   }
 
   update(x, y, nextDirection) {
-    this.x = x;
-    this.y = y;
+    this.tick += 1;
+
+    if (this.x === x && this.y === y) {
+      if (this.motion !== "idle") {
+        this.motion = "idle";
+        this.anim = anims[this.motion];
+        this.f = this.anim.startFrame;
+      }
+    } else {
+      if (this.motion !== "walk") {
+        this.motion = "walk";
+        this.anim = anims[this.motion];
+        this.f = this.anim.startFrame;
+      }
+
+      this.x = x;
+      this.y = y;
+    }
+
+    if (this.tick === this.maxTick) {
+      this.tick = 0;
+      this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
+
+      if (this.f === this.anim.endFrame) {
+        this.f = this.anim.startFrame;
+      } else {
+        this.f += 1;
+      }
+    }
 
     if (nextDirection) {
       this.direction = directions[nextDirection];
       this.frame = this.texture.get(this.direction.offset);
     }
+
+    this.frame = this.texture.get(this.direction.offset + this.f);
 
     this.depth = this.y + OFFSET.Y;
     this.label.depth = this.depth;
