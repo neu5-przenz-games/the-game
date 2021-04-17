@@ -88,8 +88,22 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.depth = this.depth;
   }
 
-  update(x, y, nextDirection) {
+  isMoving() {
+    return this.motion === "walk";
+  }
+
+  hasDestination() {
+    return this.destTileX !== null && this.destTileY !== null;
+  }
+
+  update(x, y, nextDirection, tileX, tileY, destTileX, destTileY) {
     this.tick += 1;
+
+    this.destTileX = destTileX;
+    this.destTileY = destTileY;
+
+    this.tileX = tileX;
+    this.tileY = tileY;
 
     if (this.x === x && this.y === y) {
       if (this.motion !== "idle") {

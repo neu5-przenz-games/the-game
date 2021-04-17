@@ -43,4 +43,13 @@ export default (game) => {
   game.socket.on("playerMessage", (message, playerName) => {
     game.chat.addMessage(playerName, message.text);
   });
+
+  game.socket.on("connect", () => {
+    displayServerMessage(game, `Connected to server`);
+  });
+
+  game.socket.on("disconnect", () => {
+    // TODO(#86): properly handle disconnection from server
+    displayServerMessage(game, `Disconnected from server`);
+  });
 };

@@ -7,6 +7,7 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 const map = require("../public/assets/map/map.js"); // eslint-disable-line
+const { directions, getDirection } = require("./directions");
 let players = require("./players");
 
 const SI = new SnapshotInterpolation();
@@ -18,55 +19,19 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
-const getDirection = (currentTile, nextTile) =>
-  ({
-    "1,0": "southEast",
-    "1,1": "south",
-    "0,1": "southWest",
-    "-1,1": "west",
-    "-1,0": "northWest",
-    "-1,-1": "north",
-    "0,-1": "northEast",
-    "1,-1": "east",
-  }[[nextTile.x - currentTile.x, nextTile.y - currentTile.y].join()]);
+const getWalkableGrid = () => {
+  const tempGrid = grid.clone();
+  players.forEach((pl) => tempGrid.setWalkableAt(pl.tileX, pl.tileY, false));
+  return tempGrid;
+};
 
-const TILE = 64;
-const TILE_HALF = TILE / 2;
-const TILE_QUARTER = TILE / 4;
-
-const directions = {
-  west: { x: -2, y: 0, opposite: "east", nextX: -TILE, nextY: 0 },
-  northWest: {
-    x: -2,
-    y: -1,
-    opposite: "southEast",
-    nextX: -TILE_HALF,
-    nextY: -TILE_QUARTER,
-  },
-  north: { x: 0, y: -2, opposite: "south", nextX: 0, nextY: -TILE_HALF },
-  northEast: {
-    x: 2,
-    y: -1,
-    opposite: "southWest",
-    nextX: TILE_HALF,
-    nextY: -TILE_QUARTER,
-  },
-  east: { x: 2, y: 0, opposite: "west", nextX: TILE, nextY: 0 },
-  southEast: {
-    x: 2,
-    y: 1,
-    opposite: "northWest",
-    nextX: TILE_HALF,
-    nextY: TILE_QUARTER,
-  },
-  south: { x: 0, y: 2, opposite: "north", nextX: 0, nextY: TILE_HALF },
-  southWest: {
-    x: -2,
-    y: 1,
-    opposite: "northEast",
-    nextX: -TILE_HALF,
-    nextY: TILE_QUARTER,
-  },
+const isTileWalkable = (tileX, tileY) => {
+  return (
+    tileX >= 0 &&
+    tileY >= 0 &&
+    map[tileY][tileX] === 0 &&
+    getWalkableGrid().isWalkableAt(tileX, tileY)
+  );
 };
 
 io.on("connection", (socket) => {
@@ -79,15 +44,13 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("newPlayer", availablePlayer);
 
     socket.on("playerWishToGo", ({ destX, destY, name, tileX, tileY }) => {
-      if (tileX >= 0 && tileY >= 0) {
-        if (map[tileY][tileX] === 0) {
-          const p = players.find((player) => player.name === name);
-          if (p.tileX !== tileX || p.tileY !== tileY) {
-            p.destTileX = tileX;
-            p.destTileY = tileY;
-            p.destX = destX;
-            p.destY = destY;
-          }
+      if (isTileWalkable(tileX, tileY)) {
+        const p = players.find((player) => player.name === name);
+        if (p.tileX !== tileX || p.tileY !== tileY) {
+          p.destTileX = tileX;
+          p.destTileY = tileY;
+          p.destX = destX;
+          p.destY = destY;
         }
       }
     });
@@ -103,7 +66,8 @@ io.on("connection", (socket) => {
       io.emit("playerDisconnected", availablePlayer.name);
     });
   } else {
-    // there is no available players
+    // No available player slots
+    socket.disconnect();
   }
 });
 
@@ -113,7 +77,9 @@ const loop = () => {
   players = players.map((player) => {
     const playerNew = player;
 
+    // Destination is set
     if (playerNew.destTileX !== null && playerNew.destTileY !== null) {
+      // Next tile is set
       if (playerNew.nextTileX !== null && playerNew.nextTileY !== null) {
         playerNew.x += directions[playerNew.direction].x * playerNew.speed;
         playerNew.y += directions[playerNew.direction].y * playerNew.speed;
@@ -128,19 +94,12 @@ const loop = () => {
           playerNew.nextTileY = null;
         }
       } else {
-        const tempGrid = grid.clone();
-
-        // add current players positions to the map grid
-        players.forEach((pl) =>
-          tempGrid.setWalkableAt(pl.tileX, pl.tileY, false)
-        );
-
         const path = finder.findPath(
           playerNew.tileX,
           playerNew.tileY,
           playerNew.destTileX,
           playerNew.destTileY,
-          tempGrid
+          getWalkableGrid()
         );
 
         if (path[1]) {
@@ -159,6 +118,14 @@ const loop = () => {
           playerNew.y += directions[playerNew.direction].y * playerNew.speed;
         }
       }
+      // If destination is reached then clear it
+      if (
+        playerNew.tileX === playerNew.destTileX &&
+        playerNew.tileY === playerNew.destTileY
+      ) {
+        playerNew.destTileX = null;
+        playerNew.destTileY = null;
+      }
     }
 
     return playerNew;
@@ -174,6 +141,8 @@ const loop = () => {
         x: parseFloat(player.x.toFixed(2)),
         y: parseFloat(player.y.toFixed(2)),
         direction: player.direction,
+        destTileX: player.destTileX,
+        destTileY: player.destTileY,
       });
     });
 

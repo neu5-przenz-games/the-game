@@ -61,6 +61,16 @@ export default class Game extends Phaser.Scene {
     this.profile = profile;
   }
 
+  setDestinationMarker(x, y) {
+    const tile = this.groundLayer.getTileAt(x, y);
+    tile.setAlpha(0.5);
+  }
+
+  clearDestinationMarker(x, y) {
+    const tile = this.groundLayer.getTileAt(x, y);
+    tile.clearAlpha();
+  }
+
   preload() {
     this.load.image("tileset-outside", "./assets/tileset/outside.png");
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
@@ -87,7 +97,34 @@ export default class Game extends Phaser.Scene {
 
       state.forEach((player) => {
         const playerToUpdate = this.players.find((p) => p.name === player.id);
-        playerToUpdate.update(player.x, player.y, player.direction);
+        const currentTile = this.groundLayer.worldToTileXY(
+          player.x,
+          player.y,
+          true
+        );
+        playerToUpdate.update(
+          player.x,
+          player.y,
+          player.direction,
+          currentTile.x,
+          currentTile.y,
+          player.destTileX,
+          player.destTileY
+        );
+
+        if (playerToUpdate.isMainPlayer) {
+          if (playerToUpdate.hasDestination()) {
+            this.setDestinationMarker(
+              playerToUpdate.destTileX,
+              playerToUpdate.destTileY
+            );
+          } else if (playerToUpdate.isMoving()) {
+            this.clearDestinationMarker(
+              playerToUpdate.tileX,
+              playerToUpdate.tileY
+            );
+          }
+        }
       });
     }
   }
