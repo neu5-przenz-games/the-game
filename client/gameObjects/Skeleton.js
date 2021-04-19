@@ -120,9 +120,10 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     }
 
-    if (destTileX && destTileY) {
-      if (this.markedDestTile) {
-        this.markedDestTile.setAlpha(1);
+    if (destTileX !== null && destTileY !== null) {
+      // clear previous marker if it exists and if player is in movement
+      if (this.markedDestTile !== null) {
+        this.markedDestTile.clearAlpha();
         this.markedDestTile = null;
       }
 
@@ -130,8 +131,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
       tile.setAlpha(0.6);
       this.markedDestTile = tile;
-    } else if (this.markedDestTile) {
-      this.markedDestTile.setAlpha(1);
+    } else if (this.markedDestTile !== null) {
+      this.markedDestTile.clearAlpha();
       this.markedDestTile = null;
     }
 
