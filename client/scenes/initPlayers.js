@@ -20,6 +20,19 @@ export default (game) => {
     )
   );
 
+  game.players.forEach((player) => {
+    player.setInteractive();
+  });
+
+  game.input.on("gameobjectdown", (pointer, player) => {
+    if (game.mainPlayerName !== player.name) {
+      game.socket.emit("otherPlayerClicked", {
+        name: game.mainPlayerName,
+        toFollow: player.name,
+      });
+    }
+  });
+
   game.setMainPlayer(game.players.find((player) => player.isMainPlayer));
 
   game.cameras.main.startFollow(game.mainPlayer, true);

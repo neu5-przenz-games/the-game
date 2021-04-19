@@ -19,6 +19,85 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
+const getManhattanDistance = (currTile, destTile) =>
+  Math.abs(currTile.tileX - destTile.tileX) +
+  Math.abs(currTile.tileY - destTile.tileY);
+
+const TILE = 64;
+const TILE_HALF = TILE / 2;
+const TILE_QUARTER = TILE / 4;
+
+const getXYFromTile = (tileX, tileY) => ({
+  x: tileX * TILE_HALF - tileY * TILE_HALF,
+  y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
+});
+
+const getNeightbours = (tileX, tileY) => [
+  {
+    tileX: tileX + 1,
+    tileY,
+  },
+  {
+    tileX: tileX + 1,
+    tileY: tileY + 1,
+  },
+  {
+    tileX,
+    tileY: tileY + 1,
+  },
+  {
+    tileX: tileX - 1,
+    tileY: tileY + 1,
+  },
+  {
+    tileX: tileX - 1,
+    tileY,
+  },
+  {
+    tileX: tileX - 1,
+    tileY: tileY - 1,
+  },
+  {
+    tileX,
+    tileY: tileY - 1,
+  },
+  {
+    tileX: tileX + 1,
+    tileY: tileY - 1,
+  },
+];
+
+const setFollow = ({ player, playerToFollow, destTile, x, y }) => {
+  player.followTileX = playerToFollow.tileX;
+  player.followTileY = playerToFollow.tileY;
+  player.destTileX = destTile.tileX;
+  player.destTileY = destTile.tileY;
+  player.destX = x;
+  player.destY = y;
+};
+
+const getDestTile = (player, playerToFollow) =>
+  getNeightbours(playerToFollow.tileX, playerToFollow.tileY)
+    // filter out non-walkable tiles
+    .filter((tile) => map[tile.tileY][tile.tileX] === 0)
+    // return tile with the smallest manhattan distance
+    .reduce(
+      (savedTile, tile) => {
+        const distance = getManhattanDistance(
+          { tileX: player.tileX, tileY: player.tileY },
+          tile
+        );
+
+        return distance < savedTile.distance
+          ? {
+              ...tile,
+              distance,
+            }
+          : savedTile;
+      },
+      { distance: Infinity }
+    );
+
 io.on("connection", (socket) => {
   const availablePlayer = players.find((player) => !player.isOnline);
   if (availablePlayer) {
@@ -28,18 +107,41 @@ io.on("connection", (socket) => {
 
     socket.broadcast.emit("newPlayer", availablePlayer);
 
-    socket.on("playerWishToGo", ({ destX, destY, name, tileX, tileY }) => {
+    socket.on("playerWishToGo", ({ name, tileX, tileY }) => {
       if (tileX >= 0 && tileY >= 0) {
         if (map[tileY][tileX] === 0) {
-          const p = players.find((player) => player.name === name);
-          if (p.tileX !== tileX || p.tileY !== tileY) {
-            p.destTileX = tileX;
-            p.destTileY = tileY;
-            p.destX = destX;
-            p.destY = destY;
+          const player = players.find((p) => p.name === name);
+          if (player.tileX !== tileX || player.tileY !== tileY) {
+            player.destTileX = tileX;
+            player.destTileY = tileY;
+
+            const { x, y } = getXYFromTile(tileX, tileY);
+
+            player.destX = x;
+            player.destY = y;
+
+            if (player.follow) {
+              player.follow = null;
+              player.followTileX = null;
+              player.followTileY = null;
+            }
           }
         }
       }
+    });
+
+    socket.on("otherPlayerClicked", ({ name, toFollow }) => {
+      const playerToFollow = players.find((p) => p.name === toFollow);
+
+      const player = players.find((p) => p.name === name);
+
+      const destTile = getDestTile(player, playerToFollow);
+
+      const { x, y } = getXYFromTile(destTile.tileX, destTile.tileY);
+
+      player.follow = playerToFollow.name;
+
+      setFollow({ player, playerToFollow, destTile, x, y });
     });
 
     socket.on("chatMessage", (message) => {
@@ -97,6 +199,23 @@ const loop = () => {
         players.forEach((pl) =>
           tempGrid.setWalkableAt(pl.tileX, pl.tileY, false)
         );
+
+        if (playerNew.follow) {
+          const playerToFollow = players.find(
+            (p) => p.name === playerNew.follow
+          );
+
+          if (
+            playerToFollow.tileX !== playerNew.followTileX ||
+            playerToFollow.tileY !== playerNew.followTileY
+          ) {
+            const destTile = getDestTile(player, playerToFollow);
+
+            const { x, y } = getXYFromTile(destTile.tileX, destTile.tileY);
+
+            setFollow({ player, playerToFollow, destTile, x, y });
+          }
+        }
 
         const path = finder.findPath(
           playerNew.tileX,

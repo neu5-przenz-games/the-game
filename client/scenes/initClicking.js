@@ -11,8 +11,6 @@ export default (game) => {
     clickedTile.x -= 1;
     clickedTile.y -= 1;
 
-    const dest = game.groundLayer.tileToWorldXY(clickedTile.x, clickedTile.y);
-
     if (clickedTile.x >= 0 && clickedTile.y >= 0) {
       game.socket.emit("playerWishToGo", {
         name: game.mainPlayerName,

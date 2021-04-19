@@ -20,17 +20,17 @@ const anims = {
   },
   walk: {
     startFrame: 4,
-    endFrame: 12,
+    endFrame: 11,
     speed: 0.15,
   },
   attack: {
     startFrame: 12,
-    endFrame: 20,
+    endFrame: 19,
     speed: 0.11,
   },
   die: {
     startFrame: 20,
-    endFrame: 28,
+    endFrame: 27,
     speed: 0.2,
   },
   shoot: {
@@ -64,6 +64,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       directions[direction].offset
     );
 
+    this.x = x + OFFSET.X;
+    this.y = y + OFFSET.Y;
+
     this.name = name;
     this.destX = null;
     this.destY = null;
@@ -72,7 +75,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.tick = 0;
     this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
-    this.hp = new HealthBar(scene, x + OFFSET.X, y + OFFSET.Y, hp);
+    this.hp = new HealthBar(scene, this.x, this.y, hp);
 
     this.motion = motion;
     this.anim = anims[motion];
@@ -81,7 +84,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.f = this.anim.startFrame;
     this.frame = this.texture.get(this.direction.offset);
 
-    this.depth = y + OFFSET.Y;
+    this.depth = this.y;
 
     this.scene = scene;
 
@@ -92,7 +95,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   update(x, y, nextDirection, destTileX, destTileY) {
     this.tick += 1;
 
-    if (this.x === x && this.y === y) {
+    if (this.x === x + OFFSET.X && this.y === y + OFFSET.Y) {
       if (this.motion !== "idle") {
         this.motion = "idle";
         this.anim = anims[this.motion];
@@ -105,8 +108,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
         this.f = this.anim.startFrame;
       }
 
-      this.x = x;
-      this.y = y;
+      this.x = x + OFFSET.X;
+      this.y = y + OFFSET.Y;
     }
 
     if (this.tick === this.maxTick) {
