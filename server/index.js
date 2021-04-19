@@ -127,6 +127,16 @@ const loop = () => {
           playerNew.nextTileX = null;
           playerNew.nextTileY = null;
         }
+
+        if (
+          playerNew.x === playerNew.destX &&
+          playerNew.y === playerNew.destY
+        ) {
+          playerNew.destTileX = null;
+          playerNew.destTileY = null;
+          playerNew.destX = null;
+          playerNew.destY = null;
+        }
       } else {
         const tempGrid = grid.clone();
 
@@ -157,6 +167,10 @@ const loop = () => {
 
           playerNew.x += directions[playerNew.direction].x * playerNew.speed;
           playerNew.y += directions[playerNew.direction].y * playerNew.speed;
+        } else {
+          // player can't go there
+          playerNew.destTileX = null;
+          playerNew.destTileY = null;
         }
       }
     }
@@ -173,6 +187,8 @@ const loop = () => {
         id: player.name,
         x: parseFloat(player.x.toFixed(2)),
         y: parseFloat(player.y.toFixed(2)),
+        destTileX: player.destTileX,
+        destTileY: player.destTileY,
         direction: player.direction,
       });
     });

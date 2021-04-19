@@ -67,6 +67,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.name = name;
     this.destX = null;
     this.destY = null;
+    this.markedDestTile = null;
     this.isMainPlayer = isMainPlayer;
     this.tick = 0;
     this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
@@ -88,7 +89,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.depth = this.depth;
   }
 
-  update(x, y, nextDirection) {
+  update(x, y, nextDirection, destTileX, destTileY) {
     this.tick += 1;
 
     if (this.x === x && this.y === y) {
@@ -117,6 +118,21 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       } else {
         this.f += 1;
       }
+    }
+
+    if (destTileX && destTileY) {
+      if (this.markedDestTile) {
+        this.markedDestTile.setAlpha(1);
+        this.markedDestTile = null;
+      }
+
+      const tile = this.scene.groundLayer.getTileAt(destTileX, destTileY);
+
+      tile.setAlpha(0.6);
+      this.markedDestTile = tile;
+    } else if (this.markedDestTile) {
+      this.markedDestTile.setAlpha(1);
+      this.markedDestTile = null;
     }
 
     if (nextDirection) {

@@ -87,7 +87,13 @@ export default class Game extends Phaser.Scene {
 
       state.forEach((player) => {
         const playerToUpdate = this.players.find((p) => p.name === player.id);
-        playerToUpdate.update(player.x, player.y, player.direction);
+        playerToUpdate.update(
+          player.x,
+          player.y,
+          player.direction,
+          player.destTileX,
+          player.destTileY
+        );
       });
     }
   }
