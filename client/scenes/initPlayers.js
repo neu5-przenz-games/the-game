@@ -1,5 +1,8 @@
 import Skeleton from "../gameObjects/Skeleton";
 
+import initClicking from "./initClicking";
+import initChatInputCapture from "./initChatInputCapture";
+
 export default (game) => {
   game.setPlayers(
     game.playersFromServer.map((player) =>
@@ -20,4 +23,7 @@ export default (game) => {
   game.setMainPlayer(game.players.find((player) => player.isMainPlayer));
 
   game.cameras.main.startFollow(game.mainPlayer, true);
+
+  initClicking(game);
+  initChatInputCapture(game);
 };

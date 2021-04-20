@@ -3,8 +3,6 @@ import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
 import initMap from "./initMap";
 import initSockets from "./initSockets";
-import initClicking from "./initClicking";
-import initChatInputCapture from "./initChatInputCapture";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 
@@ -73,8 +71,6 @@ export default class Game extends Phaser.Scene {
   create() {
     initMap(this);
     initSockets(this);
-    initClicking(this);
-    initChatInputCapture(this);
   }
 
   update() {
