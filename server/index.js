@@ -7,6 +7,7 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 const map = require("../public/assets/map/map.js"); // eslint-disable-line
+const { directions, getDirection } = require("./directions");
 let players = require("./players");
 
 const SI = new SnapshotInterpolation();
@@ -17,57 +18,6 @@ const grid = new PF.Grid(map);
 const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
-
-const getDirection = (currentTile, nextTile) =>
-  ({
-    "1,0": "southEast",
-    "1,1": "south",
-    "0,1": "southWest",
-    "-1,1": "west",
-    "-1,0": "northWest",
-    "-1,-1": "north",
-    "0,-1": "northEast",
-    "1,-1": "east",
-  }[[nextTile.x - currentTile.x, nextTile.y - currentTile.y].join()]);
-
-const TILE = 64;
-const TILE_HALF = TILE / 2;
-const TILE_QUARTER = TILE / 4;
-
-const directions = {
-  west: { x: -2, y: 0, opposite: "east", nextX: -TILE, nextY: 0 },
-  northWest: {
-    x: -2,
-    y: -1,
-    opposite: "southEast",
-    nextX: -TILE_HALF,
-    nextY: -TILE_QUARTER,
-  },
-  north: { x: 0, y: -2, opposite: "south", nextX: 0, nextY: -TILE_HALF },
-  northEast: {
-    x: 2,
-    y: -1,
-    opposite: "southWest",
-    nextX: TILE_HALF,
-    nextY: -TILE_QUARTER,
-  },
-  east: { x: 2, y: 0, opposite: "west", nextX: TILE, nextY: 0 },
-  southEast: {
-    x: 2,
-    y: 1,
-    opposite: "northWest",
-    nextX: TILE_HALF,
-    nextY: TILE_QUARTER,
-  },
-  south: { x: 0, y: 2, opposite: "north", nextX: 0, nextY: TILE_HALF },
-  southWest: {
-    x: -2,
-    y: 1,
-    opposite: "northEast",
-    nextX: -TILE_HALF,
-    nextY: TILE_QUARTER,
-  },
-};
 
 io.on("connection", (socket) => {
   const availablePlayer = players.find((player) => !player.isOnline);
@@ -103,7 +53,8 @@ io.on("connection", (socket) => {
       io.emit("playerDisconnected", availablePlayer.name);
     });
   } else {
-    // there is no available players
+    // No available player slots
+    socket.disconnect();
   }
 });
 
@@ -113,7 +64,9 @@ const loop = () => {
   players = players.map((player) => {
     const playerNew = player;
 
+    // Destination is set
     if (playerNew.destTileX !== null && playerNew.destTileY !== null) {
+      // Next tile is set
       if (playerNew.nextTileX !== null && playerNew.nextTileY !== null) {
         playerNew.x += directions[playerNew.direction].x * playerNew.speed;
         playerNew.y += directions[playerNew.direction].y * playerNew.speed;
@@ -126,6 +79,16 @@ const loop = () => {
           playerNew.tileY = playerNew.nextTileY;
           playerNew.nextTileX = null;
           playerNew.nextTileY = null;
+        }
+
+        if (
+          playerNew.x === playerNew.destX &&
+          playerNew.y === playerNew.destY
+        ) {
+          playerNew.destTileX = null;
+          playerNew.destTileY = null;
+          playerNew.destX = null;
+          playerNew.destY = null;
         }
       } else {
         const tempGrid = grid.clone();
@@ -157,6 +120,10 @@ const loop = () => {
 
           playerNew.x += directions[playerNew.direction].x * playerNew.speed;
           playerNew.y += directions[playerNew.direction].y * playerNew.speed;
+        } else {
+          // player can't go there
+          playerNew.destTileX = null;
+          playerNew.destTileY = null;
         }
       }
     }
@@ -173,6 +140,8 @@ const loop = () => {
         id: player.name,
         x: parseFloat(player.x.toFixed(2)),
         y: parseFloat(player.y.toFixed(2)),
+        destTileX: player.destTileX,
+        destTileY: player.destTileY,
         direction: player.direction,
       });
     });
