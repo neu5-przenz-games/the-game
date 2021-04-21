@@ -120,7 +120,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     }
 
-    if (destTileX !== null && destTileY !== null) {
+    if (this.isMainPlayer && destTileX !== null && destTileY !== null) {
       // clear previous marker if it exists and if player is in movement
       if (
         this.markedDestTile !== null &&
