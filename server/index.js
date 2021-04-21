@@ -20,7 +20,7 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
-const setFollow = (player) => {
+const updateFollow = (player) => {
   const playerToFollow = players.find((p) => p.name === player.follow);
 
   if (
@@ -136,7 +136,7 @@ const loop = () => {
         );
 
         if (playerNew.follow) {
-          setFollow(playerNew);
+          updateFollow(playerNew);
         }
 
         const path = finder.findPath(
@@ -171,7 +171,7 @@ const loop = () => {
         }
       }
     } else if (playerNew.follow) {
-      setFollow(playerNew);
+      updateFollow(playerNew);
     }
 
     return playerNew;
