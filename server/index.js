@@ -7,7 +7,8 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 const map = require("../public/assets/map/map.js"); // eslint-disable-line
-const { directions, getDirection } = require("./directions");
+const { directions, getDirection } = require("./utils/directions");
+const { getDestTile, getXYFromTile } = require("./utils/algo");
 let players = require("./players");
 
 const SI = new SnapshotInterpolation();
@@ -19,84 +20,31 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
-const getManhattanDistance = (currTile, destTile) =>
-  Math.abs(currTile.tileX - destTile.tileX) +
-  Math.abs(currTile.tileY - destTile.tileY);
+const setFollow = (player) => {
+  const playerToFollow = players.find((p) => p.name === player.follow);
 
-const TILE = 64;
-const TILE_HALF = TILE / 2;
-const TILE_QUARTER = TILE / 4;
+  if (
+    playerToFollow.tileX !== player.followTileX ||
+    playerToFollow.tileY !== player.followTileY
+  ) {
+    const destTile = getDestTile(player, playerToFollow, map);
 
-const getXYFromTile = (tileX, tileY) => ({
-  x: tileX * TILE_HALF - tileY * TILE_HALF,
-  y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
-});
+    const { x, y } = getXYFromTile(destTile.tileX, destTile.tileY);
 
-const getNeightbours = (tileX, tileY) => [
-  {
-    tileX: tileX + 1,
-    tileY,
-  },
-  {
-    tileX: tileX + 1,
-    tileY: tileY + 1,
-  },
-  {
-    tileX,
-    tileY: tileY + 1,
-  },
-  {
-    tileX: tileX - 1,
-    tileY: tileY + 1,
-  },
-  {
-    tileX: tileX - 1,
-    tileY,
-  },
-  {
-    tileX: tileX - 1,
-    tileY: tileY - 1,
-  },
-  {
-    tileX,
-    tileY: tileY - 1,
-  },
-  {
-    tileX: tileX + 1,
-    tileY: tileY - 1,
-  },
-];
-
-const setFollow = ({ player, playerToFollow, destTile, x, y }) => {
-  player.followTileX = playerToFollow.tileX;
-  player.followTileY = playerToFollow.tileY;
-  player.destTileX = destTile.tileX;
-  player.destTileY = destTile.tileY;
-  player.destX = x;
-  player.destY = y;
+    player.followTileX = playerToFollow.tileX;
+    player.followTileY = playerToFollow.tileY;
+    player.destTileX = destTile.tileX;
+    player.destTileY = destTile.tileY;
+    player.destX = x;
+    player.destY = y;
+  }
 };
 
-const getDestTile = (player, playerToFollow) =>
-  getNeightbours(playerToFollow.tileX, playerToFollow.tileY)
-    // filter out non-walkable tiles
-    .filter((tile) => map[tile.tileY][tile.tileX] === 0)
-    // return tile with the smallest manhattan distance
-    .reduce(
-      (savedTile, tile) => {
-        const distance = getManhattanDistance(
-          { tileX: player.tileX, tileY: player.tileY },
-          tile
-        );
-
-        return distance < savedTile.distance
-          ? {
-              ...tile,
-              distance,
-            }
-          : savedTile;
-      },
-      { distance: Infinity }
-    );
+const resetFollowing = (player) => {
+  player.follow = null;
+  player.followTileX = null;
+  player.followTileY = null;
+};
 
 io.on("connection", (socket) => {
   const availablePlayer = players.find((player) => !player.isOnline);
@@ -108,40 +56,29 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("newPlayer", availablePlayer);
 
     socket.on("playerWishToGo", ({ name, tileX, tileY }) => {
-      if (tileX >= 0 && tileY >= 0) {
-        if (map[tileY][tileX] === 0) {
-          const player = players.find((p) => p.name === name);
-          if (player.tileX !== tileX || player.tileY !== tileY) {
-            player.destTileX = tileX;
-            player.destTileY = tileY;
+      if (tileX >= 0 && tileY >= 0 && map[tileY][tileX] === 0) {
+        const player = players.find((p) => p.name === name);
 
-            const { x, y } = getXYFromTile(tileX, tileY);
+        if (player.tileX !== tileX || player.tileY !== tileY) {
+          player.destTileX = tileX;
+          player.destTileY = tileY;
 
-            player.destX = x;
-            player.destY = y;
+          const { x, y } = getXYFromTile(tileX, tileY);
 
-            if (player.follow) {
-              player.follow = null;
-              player.followTileX = null;
-              player.followTileY = null;
-            }
+          player.destX = x;
+          player.destY = y;
+
+          if (player.follow) {
+            resetFollowing(player);
           }
         }
       }
     });
 
-    socket.on("otherPlayerClicked", ({ name, toFollow }) => {
-      const playerToFollow = players.find((p) => p.name === toFollow);
-
+    socket.on("followPlayer", ({ name, toFollow }) => {
       const player = players.find((p) => p.name === name);
 
-      const destTile = getDestTile(player, playerToFollow);
-
-      const { x, y } = getXYFromTile(destTile.tileX, destTile.tileY);
-
-      player.follow = playerToFollow.name;
-
-      setFollow({ player, playerToFollow, destTile, x, y });
+      player.follow = toFollow;
     });
 
     socket.on("chatMessage", (message) => {
@@ -177,8 +114,6 @@ const loop = () => {
           playerNew.x === playerNew.nextX &&
           playerNew.y === playerNew.nextY
         ) {
-          playerNew.tileX = playerNew.nextTileX;
-          playerNew.tileY = playerNew.nextTileY;
           playerNew.nextTileX = null;
           playerNew.nextTileY = null;
         }
@@ -201,20 +136,7 @@ const loop = () => {
         );
 
         if (playerNew.follow) {
-          const playerToFollow = players.find(
-            (p) => p.name === playerNew.follow
-          );
-
-          if (
-            playerToFollow.tileX !== playerNew.followTileX ||
-            playerToFollow.tileY !== playerNew.followTileY
-          ) {
-            const destTile = getDestTile(player, playerToFollow);
-
-            const { x, y } = getXYFromTile(destTile.tileX, destTile.tileY);
-
-            setFollow({ player, playerToFollow, destTile, x, y });
-          }
+          setFollow(playerNew);
         }
 
         const path = finder.findPath(
@@ -232,8 +154,11 @@ const loop = () => {
             { x: playerNew.tileX, y: playerNew.tileY },
             { x, y }
           );
+
           playerNew.nextTileX = x;
           playerNew.nextTileY = y;
+          playerNew.tileX = playerNew.nextTileX;
+          playerNew.tileY = playerNew.nextTileY;
           playerNew.nextX = playerNew.x + directions[playerNew.direction].nextX;
           playerNew.nextY = playerNew.y + directions[playerNew.direction].nextY;
 
@@ -245,6 +170,8 @@ const loop = () => {
           playerNew.destTileY = null;
         }
       }
+    } else if (playerNew.follow) {
+      setFollow(playerNew);
     }
 
     return playerNew;

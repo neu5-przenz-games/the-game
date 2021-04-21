@@ -1,9 +1,10 @@
 import Phaser from "phaser";
 
-import { OFFSET } from "../gameObjects/Skeleton";
-
 export default (game) => {
-  game.input.on(Phaser.Input.Events.POINTER_UP, (pointer) => {
+  game.input.on(Phaser.Input.Events.POINTER_UP, (pointer, obj) => {
+    // second parameter (obj) is an array with empty object if player is clicked
+    if (obj.length) return;
+
     const { worldX, worldY } = pointer;
 
     const clickedTile = game.groundLayer.worldToTileXY(worldX, worldY, true);
@@ -16,8 +17,15 @@ export default (game) => {
         name: game.mainPlayerName,
         tileX: clickedTile.x,
         tileY: clickedTile.y,
-        destX: dest.x + OFFSET.X,
-        destY: dest.y + OFFSET.Y,
+      });
+    }
+  });
+
+  game.input.on("gameobjectdown", (pointer, player) => {
+    if (game.mainPlayerName !== player.name) {
+      game.socket.emit("followPlayer", {
+        name: game.mainPlayerName,
+        toFollow: player.name,
       });
     }
   });
