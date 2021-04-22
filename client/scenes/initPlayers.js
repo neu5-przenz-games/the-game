@@ -20,6 +20,10 @@ export default (game) => {
     )
   );
 
+  game.players.forEach((player) => {
+    player.setInteractive();
+  });
+
   game.setMainPlayer(game.players.find((player) => player.isMainPlayer));
 
   game.cameras.main.startFollow(game.mainPlayer, true);

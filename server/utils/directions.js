@@ -1,6 +1,4 @@
-const TILE = 64;
-const TILE_HALF = TILE / 2;
-const TILE_QUARTER = TILE / 4;
+const { TILE, TILE_HALF, TILE_QUARTER } = require("./constants");
 
 const directions = {
   west: { x: -2, y: 0, opposite: "east", nextX: -TILE, nextY: 0 },

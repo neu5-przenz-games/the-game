@@ -7,7 +7,8 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 const map = require("../public/assets/map/map.js"); // eslint-disable-line
-const { directions, getDirection } = require("./directions");
+const { directions, getDirection } = require("./utils/directions");
+const { getDestTile, getXYFromTile } = require("./utils/algo");
 let players = require("./players");
 
 const SI = new SnapshotInterpolation();
@@ -19,6 +20,32 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
+const updateFollow = (player) => {
+  const playerToFollow = players.find((p) => p.name === player.follow);
+
+  if (
+    playerToFollow.tileX !== player.followTileX ||
+    playerToFollow.tileY !== player.followTileY
+  ) {
+    const destTile = getDestTile(player, playerToFollow, map);
+
+    const { x, y } = getXYFromTile(destTile.tileX, destTile.tileY);
+
+    player.followTileX = playerToFollow.tileX;
+    player.followTileY = playerToFollow.tileY;
+    player.destTileX = destTile.tileX;
+    player.destTileY = destTile.tileY;
+    player.destX = x;
+    player.destY = y;
+  }
+};
+
+const resetFollowing = (player) => {
+  player.follow = null;
+  player.followTileX = null;
+  player.followTileY = null;
+};
+
 io.on("connection", (socket) => {
   const availablePlayer = players.find((player) => !player.isOnline);
   if (availablePlayer) {
@@ -28,18 +55,30 @@ io.on("connection", (socket) => {
 
     socket.broadcast.emit("newPlayer", availablePlayer);
 
-    socket.on("playerWishToGo", ({ destX, destY, name, tileX, tileY }) => {
-      if (tileX >= 0 && tileY >= 0) {
-        if (map[tileY][tileX] === 0) {
-          const p = players.find((player) => player.name === name);
-          if (p.tileX !== tileX || p.tileY !== tileY) {
-            p.destTileX = tileX;
-            p.destTileY = tileY;
-            p.destX = destX;
-            p.destY = destY;
+    socket.on("playerWishToGo", ({ name, tileX, tileY }) => {
+      if (tileX >= 0 && tileY >= 0 && map[tileY][tileX] === 0) {
+        const player = players.find((p) => p.name === name);
+
+        if (player.tileX !== tileX || player.tileY !== tileY) {
+          player.destTileX = tileX;
+          player.destTileY = tileY;
+
+          const { x, y } = getXYFromTile(tileX, tileY);
+
+          player.destX = x;
+          player.destY = y;
+
+          if (player.follow) {
+            resetFollowing(player);
           }
         }
       }
+    });
+
+    socket.on("followPlayer", ({ name, toFollow }) => {
+      const player = players.find((p) => p.name === name);
+
+      player.follow = toFollow;
     });
 
     socket.on("chatMessage", (message) => {
@@ -75,8 +114,6 @@ const loop = () => {
           playerNew.x === playerNew.nextX &&
           playerNew.y === playerNew.nextY
         ) {
-          playerNew.tileX = playerNew.nextTileX;
-          playerNew.tileY = playerNew.nextTileY;
           playerNew.nextTileX = null;
           playerNew.nextTileY = null;
         }
@@ -98,6 +135,10 @@ const loop = () => {
           tempGrid.setWalkableAt(pl.tileX, pl.tileY, false)
         );
 
+        if (playerNew.follow) {
+          updateFollow(playerNew);
+        }
+
         const path = finder.findPath(
           playerNew.tileX,
           playerNew.tileY,
@@ -113,8 +154,11 @@ const loop = () => {
             { x: playerNew.tileX, y: playerNew.tileY },
             { x, y }
           );
+
           playerNew.nextTileX = x;
           playerNew.nextTileY = y;
+          playerNew.tileX = playerNew.nextTileX;
+          playerNew.tileY = playerNew.nextTileY;
           playerNew.nextX = playerNew.x + directions[playerNew.direction].nextX;
           playerNew.nextY = playerNew.y + directions[playerNew.direction].nextY;
 
@@ -126,6 +170,8 @@ const loop = () => {
           playerNew.destTileY = null;
         }
       }
+    } else if (playerNew.follow) {
+      updateFollow(playerNew);
     }
 
     return playerNew;
