@@ -14,7 +14,6 @@ const { Player } = require("./Player");
 
 const playersConfig = require("./players");
 
-// create players map
 const players = new Map();
 playersConfig.forEach((player) => {
   players.set(player.name, new Player(player));
@@ -29,7 +28,7 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
-const queueOfEvents = new Map();
+const events = new Map();
 
 io.on("connection", (socket) => {
   // this is temporarily, will be changed
@@ -66,11 +65,8 @@ io.on("connection", (socket) => {
             player.resetFollowing();
           }
 
-          if (queueOfEvents.has(player.name)) {
-            queueOfEvents.delete(player.name);
-          }
-
-          queueOfEvents.set(player.name, player);
+          events.delete(player.name);
+          events.set(player.name, player);
         }
       }
     });
@@ -81,11 +77,8 @@ io.on("connection", (socket) => {
 
       player.setFollowing(playerToFollow, map);
 
-      if (queueOfEvents.has(player.name)) {
-        queueOfEvents.delete(player.name);
-      }
-
-      queueOfEvents.set(player.name, player);
+      events.delete(player.name);
+      events.set(player.name, player);
     });
 
     socket.on("chatMessage", ({ name, text }) => {
@@ -106,79 +99,77 @@ io.on("connection", (socket) => {
 const loop = () => {
   tick += 1;
 
-  if (queueOfEvents.size) {
-    queueOfEvents.forEach((player) => {
-      // Destination is set
-      if (player.destTile !== null) {
-        // Next tile is set
-        if (player.nextTile !== null) {
-          player.x += directions[player.direction].x * player.speed;
-          player.y += directions[player.direction].y * player.speed;
+  events.forEach((player) => {
+    // Destination is set
+    if (player.destTile !== null) {
+      // Next tile is set
+      if (player.nextTile !== null) {
+        player.x += directions[player.direction].x * player.speed;
+        player.y += directions[player.direction].y * player.speed;
 
-          if (player.x === player.next.x && player.y === player.next.y) {
-            player.nextTile = null;
-          }
+        if (player.x === player.next.x && player.y === player.next.y) {
+          player.nextTile = null;
+        }
 
-          // player has reached its destination
-          if (player.x === player.dest.x && player.y === player.dest.y) {
-            player.destTile = null;
-            player.dest = null;
+        // player has reached its destination
+        if (player.x === player.dest.x && player.y === player.dest.y) {
+          player.destTile = null;
+          player.dest = null;
 
-            if (player.isFollowing === false) {
-              queueOfEvents.delete(player.name);
-            }
-          }
-        } else {
-          const tempGrid = grid.clone();
-
-          // add current players positions to the map grid
-          players.forEach((pl) =>
-            tempGrid.setWalkableAt(
-              pl.positionTile.tileX,
-              pl.positionTile.tileY,
-              false
-            )
-          );
-
-          if (player.isFollowing) {
-            player.updateFollowing(map);
-          }
-
-          const path = finder.findPath(
-            player.positionTile.tileX,
-            player.positionTile.tileY,
-            player.destTile.tileX,
-            player.destTile.tileY,
-            tempGrid
-          );
-
-          if (path[1]) {
-            const [x, y] = path[1];
-
-            player.direction = getDirection(player.positionTile, {
-              tileX: x,
-              tileY: y,
-            });
-
-            player.nextTile = { tileX: x, tileY: y };
-            player.positionTile = player.nextTile;
-            player.next = {
-              x: player.x + directions[player.direction].nextX,
-              y: player.y + directions[player.direction].nextY,
-            };
-
-            player.x += directions[player.direction].x * player.speed;
-            player.y += directions[player.direction].y * player.speed;
-          } else {
-            // player can't go there
-            player.destTile = null;
+          if (player.isFollowing === false) {
+            events.delete(player.name);
           }
         }
-      } else if (player.isFollowing) {
-        player.updateFollowing(map);
+      } else {
+        const tempGrid = grid.clone();
+
+        // add current players positions to the map grid
+        players.forEach((pl) =>
+          tempGrid.setWalkableAt(
+            pl.positionTile.tileX,
+            pl.positionTile.tileY,
+            false
+          )
+        );
+
+        if (player.isFollowing) {
+          player.updateFollowing(map);
+        }
+
+        const path = finder.findPath(
+          player.positionTile.tileX,
+          player.positionTile.tileY,
+          player.destTile.tileX,
+          player.destTile.tileY,
+          tempGrid
+        );
+
+        if (path[1]) {
+          const [x, y] = path[1];
+
+          player.direction = getDirection(player.positionTile, {
+            tileX: x,
+            tileY: y,
+          });
+
+          player.nextTile = { tileX: x, tileY: y };
+          player.positionTile = player.nextTile;
+          player.next = {
+            x: player.x + directions[player.direction].nextX,
+            y: player.y + directions[player.direction].nextY,
+          };
+
+          player.x += directions[player.direction].x * player.speed;
+          player.y += directions[player.direction].y * player.speed;
+        } else {
+          // player can't go there
+          player.destTile = null;
+        }
       }
-    });
-  }
+    } else if (player.isFollowing) {
+      player.updateFollowing(map);
+    }
+  });
 
   if (tick % 4 === 0) {
     tick = 0;

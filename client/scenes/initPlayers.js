@@ -1,6 +1,6 @@
 import Skeleton from "../gameObjects/Skeleton";
 
-import initClicking from "./initClicking";
+import initEventsCapturing from "./initEventsCapturing";
 
 export default (game, players) => {
   game.setPlayers(
@@ -28,5 +28,5 @@ export default (game, players) => {
 
   game.cameras.main.startFollow(game.mainPlayer, true);
 
-  initClicking(game);
+  initEventsCapturing(game);
 };
