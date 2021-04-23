@@ -45,7 +45,12 @@ const getDirection = (currentTile, nextTile) =>
     "-1,-1": "north",
     "0,-1": "northEast",
     "1,-1": "east",
-  }[[nextTile.x - currentTile.x, nextTile.y - currentTile.y].join()]);
+  }[
+    [
+      nextTile.tileX - currentTile.tileX,
+      nextTile.tileY - currentTile.tileY,
+    ].join()
+  ]);
 
 module.exports = {
   directions,

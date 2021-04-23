@@ -38,19 +38,17 @@ describe("Server socket tests", () => {
         "name",
         "socketId",
         "speed",
-        "tileX",
-        "tileY",
+        "positionTile",
+        "dest",
+        "destTile",
         "x",
         "y",
-        "destTileX",
-        "destTileY",
-        "destX",
-        "destY",
+        "isFollowing",
+        "followedPlayer",
+        "followTile",
+        "next",
         "hp",
-        "nextTileX",
-        "nextTileY",
-        "nextX",
-        "nextY"
+        "nextTile"
       );
       newPlayer.disconnect();
 

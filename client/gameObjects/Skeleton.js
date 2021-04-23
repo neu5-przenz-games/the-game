@@ -68,8 +68,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.y = y + OFFSET.Y;
 
     this.name = name;
-    this.destX = null;
-    this.destY = null;
+    this.dest = { x: null, y: null };
     this.markedDestTile = null;
     this.isMainPlayer = isMainPlayer;
     this.tick = 0;
@@ -80,7 +79,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.motion = motion;
     this.anim = anims[motion];
     this.direction = directions[direction];
-    this.speed = 0.15;
     this.f = this.anim.startFrame;
     this.frame = this.texture.get(this.direction.offset);
 
@@ -88,11 +86,14 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.scene = scene;
 
-    this.label = this.scene.add.text(x, y, this.name).setOrigin(0.5, -1.0);
+    this.label = this.scene.add
+      .text(this.x, this.y, this.name)
+      .setOrigin(0.5, -1.0)
+      .setPosition(this.x, this.y - this.displayHeight / 2);
     this.label.depth = this.depth;
   }
 
-  update(x, y, nextDirection, destTileX, destTileY) {
+  update({ x, y, destTile, direction }) {
     this.tick += 1;
 
     if (this.x === x + OFFSET.X && this.y === y + OFFSET.Y) {
@@ -123,18 +124,21 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     }
 
-    if (this.isMainPlayer && destTileX !== null && destTileY !== null) {
+    if (this.isMainPlayer && destTile !== null) {
       // clear previous marker if it exists and if player is in movement
       if (
         this.markedDestTile !== null &&
-        (this.markedDestTile.x !== destTileX ||
-          this.markedDestTile.y !== destTileY)
+        (this.markedDestTile.x !== destTile.tileX ||
+          this.markedDestTile.y !== destTile.tileY)
       ) {
         this.markedDestTile.clearAlpha();
         this.markedDestTile = null;
       }
 
-      const tile = this.scene.groundLayer.getTileAt(destTileX, destTileY);
+      const tile = this.scene.groundLayer.getTileAt(
+        destTile.tileX,
+        destTile.tileY
+      );
 
       tile.setAlpha(0.6);
       this.markedDestTile = tile;
@@ -143,8 +147,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.markedDestTile = null;
     }
 
-    if (nextDirection) {
-      this.direction = directions[nextDirection];
+    if (direction) {
+      this.direction = directions[direction];
       this.frame = this.texture.get(this.direction.offset);
     }
 

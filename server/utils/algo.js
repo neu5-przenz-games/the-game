@@ -45,14 +45,20 @@ const getXYFromTile = (tileX, tileY) => ({
 });
 
 const getDestTile = (player, playerToFollow, map) =>
-  getNeightbours(playerToFollow.tileX, playerToFollow.tileY)
+  getNeightbours(
+    playerToFollow.positionTile.tileX,
+    playerToFollow.positionTile.tileY
+  )
     // filter out non-walkable tiles
     .filter((tile) => map[tile.tileY][tile.tileX] === 0)
     // return tile with the smallest manhattan distance
     .reduce(
       (savedTile, tile) => {
         const distance = getManhattanDistance(
-          { tileX: player.tileX, tileY: player.tileY },
+          {
+            tileX: player.positionTile.tileX,
+            tileY: player.positionTile.tileY,
+          },
           tile
         );
 
