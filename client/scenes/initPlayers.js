@@ -1,20 +1,20 @@
 import Skeleton from "../gameObjects/Skeleton";
 
-import initClicking from "./initClicking";
-import initChatInputCapture from "./initChatInputCapture";
+import initEventsCapturing from "./initEventsCapturing";
 
-export default (game) => {
+export default (game, players) => {
   game.setPlayers(
-    game.playersFromServer.map((player) =>
+    players.map((player) =>
       game.add.existing(
         new Skeleton({
           direction: player.direction,
-          isMainPlayer: player.socketId === game.socketId,
+          isMainPlayer: player.name === game.mainPlayerName,
           hp: player.hp,
           motion: "idle",
           name: player.name,
           scene: game,
-          ...game.groundLayer.tileToWorldXY(player.tileX, player.tileY),
+          x: player.x,
+          y: player.y,
         })
       )
     )
@@ -24,10 +24,9 @@ export default (game) => {
     player.setInteractive();
   });
 
-  game.setMainPlayer(game.players.find((player) => player.isMainPlayer));
+  game.setMainPlayer(game.players.get(game.mainPlayerName));
 
   game.cameras.main.startFollow(game.mainPlayer, true);
 
-  initClicking(game);
-  initChatInputCapture(game);
+  initEventsCapturing(game);
 };

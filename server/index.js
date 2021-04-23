@@ -8,8 +8,16 @@ const io = require("socket.io")(server);
 
 const map = require("../public/assets/map/map.js"); // eslint-disable-line
 const { directions, getDirection } = require("./utils/directions");
-const { getDestTile, getXYFromTile } = require("./utils/algo");
-let players = require("./players");
+const { getXYFromTile } = require("./utils/algo");
+
+const { Player } = require("./Player");
+
+const playersConfig = require("./players");
+
+const players = new Map();
+playersConfig.forEach((player) => {
+  players.set(player.name, new Player(player));
+});
 
 const SI = new SnapshotInterpolation();
 let tick = 0;
@@ -20,70 +28,61 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
-const updateFollow = (player) => {
-  const playerToFollow = players.find((p) => p.name === player.follow);
-
-  if (
-    playerToFollow.tileX !== player.followTileX ||
-    playerToFollow.tileY !== player.followTileY
-  ) {
-    const destTile = getDestTile(player, playerToFollow, map);
-
-    const { x, y } = getXYFromTile(destTile.tileX, destTile.tileY);
-
-    player.followTileX = playerToFollow.tileX;
-    player.followTileY = playerToFollow.tileY;
-    player.destTileX = destTile.tileX;
-    player.destTileY = destTile.tileY;
-    player.destX = x;
-    player.destY = y;
-  }
-};
-
-const resetFollowing = (player) => {
-  player.follow = null;
-  player.followTileX = null;
-  player.followTileY = null;
-};
+const events = new Map();
 
 io.on("connection", (socket) => {
-  const availablePlayer = players.find((player) => !player.isOnline);
+  // this is temporarily, will be changed
+  let availablePlayer = null;
+  players.forEach((player) => {
+    if (availablePlayer === null && player.isOnline === false) {
+      availablePlayer = player;
+    }
+  });
+
   if (availablePlayer) {
-    availablePlayer.isOnline = true;
-    availablePlayer.socketId = socket.id;
-    socket.emit("currentPlayers", players, socket.id);
+    availablePlayer.setOnline(socket.id);
+
+    socket.emit(
+      "currentPlayers",
+      Array.from(players, ([name, value]) => ({ name, ...value })),
+      socket.id
+    );
 
     socket.broadcast.emit("newPlayer", availablePlayer);
 
     socket.on("playerWishToGo", ({ name, tileX, tileY }) => {
       if (tileX >= 0 && tileY >= 0 && map[tileY][tileX] === 0) {
-        const player = players.find((p) => p.name === name);
+        const player = players.get(name);
 
-        if (player.tileX !== tileX || player.tileY !== tileY) {
-          player.destTileX = tileX;
-          player.destTileY = tileY;
+        if (
+          player.positionTile.tileX !== tileX ||
+          player.positionTile.tileY !== tileY
+        ) {
+          player.destTile = { tileX, tileY };
+          player.dest = getXYFromTile(tileX, tileY);
 
-          const { x, y } = getXYFromTile(tileX, tileY);
-
-          player.destX = x;
-          player.destY = y;
-
-          if (player.follow) {
-            resetFollowing(player);
+          if (player.isFollowing) {
+            player.resetFollowing();
           }
+
+          events.delete(player.name);
+          events.set(player.name, player);
         }
       }
     });
 
-    socket.on("followPlayer", ({ name, toFollow }) => {
-      const player = players.find((p) => p.name === name);
+    socket.on("followPlayer", ({ name, nameToFollow }) => {
+      const player = players.get(name);
+      const playerToFollow = players.get(nameToFollow);
 
-      player.follow = toFollow;
+      player.setFollowing(playerToFollow, map);
+
+      events.delete(player.name);
+      events.set(player.name, player);
     });
 
-    socket.on("chatMessage", (message) => {
-      const p = players.find((player) => player.socketId === socket.id);
-      socket.broadcast.emit("playerMessage", message, p.name);
+    socket.on("chatMessage", ({ name, text }) => {
+      socket.broadcast.emit("playerMessage", text, name);
     });
 
     socket.on("disconnect", () => {
@@ -100,81 +99,76 @@ io.on("connection", (socket) => {
 const loop = () => {
   tick += 1;
 
-  players = players.map((player) => {
-    const playerNew = player;
-
+  events.forEach((player) => {
     // Destination is set
-    if (playerNew.destTileX !== null && playerNew.destTileY !== null) {
+    if (player.destTile !== null) {
       // Next tile is set
-      if (playerNew.nextTileX !== null && playerNew.nextTileY !== null) {
-        playerNew.x += directions[playerNew.direction].x * playerNew.speed;
-        playerNew.y += directions[playerNew.direction].y * playerNew.speed;
+      if (player.nextTile !== null) {
+        player.x += directions[player.direction].x * player.speed;
+        player.y += directions[player.direction].y * player.speed;
 
-        if (
-          playerNew.x === playerNew.nextX &&
-          playerNew.y === playerNew.nextY
-        ) {
-          playerNew.nextTileX = null;
-          playerNew.nextTileY = null;
+        if (player.x === player.next.x && player.y === player.next.y) {
+          player.nextTile = null;
         }
 
-        if (
-          playerNew.x === playerNew.destX &&
-          playerNew.y === playerNew.destY
-        ) {
-          playerNew.destTileX = null;
-          playerNew.destTileY = null;
-          playerNew.destX = null;
-          playerNew.destY = null;
+        // player has reached its destination
+        if (player.x === player.dest.x && player.y === player.dest.y) {
+          player.destTile = null;
+          player.dest = null;
+
+          if (player.isFollowing === false) {
+            events.delete(player.name);
+          }
         }
       } else {
         const tempGrid = grid.clone();
 
         // add current players positions to the map grid
         players.forEach((pl) =>
-          tempGrid.setWalkableAt(pl.tileX, pl.tileY, false)
+          tempGrid.setWalkableAt(
+            pl.positionTile.tileX,
+            pl.positionTile.tileY,
+            false
+          )
         );
 
-        if (playerNew.follow) {
-          updateFollow(playerNew);
+        if (player.isFollowing) {
+          player.updateFollowing(map);
         }
 
         const path = finder.findPath(
-          playerNew.tileX,
-          playerNew.tileY,
-          playerNew.destTileX,
-          playerNew.destTileY,
+          player.positionTile.tileX,
+          player.positionTile.tileY,
+          player.destTile.tileX,
+          player.destTile.tileY,
           tempGrid
         );
 
         if (path[1]) {
           const [x, y] = path[1];
 
-          playerNew.direction = getDirection(
-            { x: playerNew.tileX, y: playerNew.tileY },
-            { x, y }
-          );
+          player.direction = getDirection(player.positionTile, {
+            tileX: x,
+            tileY: y,
+          });
 
-          playerNew.nextTileX = x;
-          playerNew.nextTileY = y;
-          playerNew.tileX = playerNew.nextTileX;
-          playerNew.tileY = playerNew.nextTileY;
-          playerNew.nextX = playerNew.x + directions[playerNew.direction].nextX;
-          playerNew.nextY = playerNew.y + directions[playerNew.direction].nextY;
+          player.nextTile = { tileX: x, tileY: y };
+          player.positionTile = player.nextTile;
+          player.next = {
+            x: player.x + directions[player.direction].nextX,
+            y: player.y + directions[player.direction].nextY,
+          };
 
-          playerNew.x += directions[playerNew.direction].x * playerNew.speed;
-          playerNew.y += directions[playerNew.direction].y * playerNew.speed;
+          player.x += directions[player.direction].x * player.speed;
+          player.y += directions[player.direction].y * player.speed;
         } else {
           // player can't go there
-          playerNew.destTileX = null;
-          playerNew.destTileY = null;
+          player.destTile = null;
         }
       }
-    } else if (playerNew.follow) {
-      updateFollow(playerNew);
+    } else if (player.isFollowing) {
+      player.updateFollowing(map);
     }
-
-    return playerNew;
   });
 
   if (tick % 4 === 0) {
@@ -184,17 +178,17 @@ const loop = () => {
     players.forEach((player) => {
       worldState.push({
         id: player.name,
-        x: parseFloat(player.x.toFixed(2)),
-        y: parseFloat(player.y.toFixed(2)),
-        destTileX: player.destTileX,
-        destTileY: player.destTileY,
+        name: player.name,
+        x: player.x,
+        y: player.y,
+        destTile: player.destTile,
         direction: player.direction,
       });
     });
 
     const snapshot = SI.snapshot.create(worldState);
     SI.vault.add(snapshot);
-    io.emit("playerMoving", snapshot);
+    io.emit("playersUpdate", snapshot);
   }
 };
 

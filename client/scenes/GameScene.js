@@ -17,8 +17,7 @@ export default class Game extends Phaser.Scene {
     this.mainPlayer = null;
     this.mainPlayerName = null;
     this.groundLayer = null;
-    this.playersFromServer = [];
-    this.players = [];
+    this.players = new Map();
     this.playerList = new UIPlayerStatusList();
     this.profile = null;
     this.chat = new UIChat();
@@ -40,11 +39,9 @@ export default class Game extends Phaser.Scene {
   }
 
   setPlayers(players) {
-    this.players = players;
-  }
-
-  setPlayersFromServer(playersFromServer) {
-    this.playersFromServer = playersFromServer;
+    players.forEach((player) => {
+      this.players.set(player.name, player);
+    });
   }
 
   setMainPlayer(mainPlayer) {
@@ -74,7 +71,7 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
-    if (this.players.length) {
+    if (this.players.size) {
       const snap = this.SI.calcInterpolation("x y");
       if (!snap) return;
 
@@ -82,14 +79,8 @@ export default class Game extends Phaser.Scene {
       if (!state) return;
 
       state.forEach((player) => {
-        const playerToUpdate = this.players.find((p) => p.name === player.id);
-        playerToUpdate.update(
-          player.x,
-          player.y,
-          player.direction,
-          player.destTileX,
-          player.destTileY
-        );
+        const playerToUpdate = this.players.get(player.id);
+        playerToUpdate.update(player);
       });
     }
   }

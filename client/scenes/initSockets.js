@@ -22,26 +22,29 @@ export default (game) => {
 
   game.socket.on("currentPlayers", (players, socketId) => {
     game.setSocketId(socketId);
-    game.setPlayersFromServer(players);
+
     game.setMainPlayerName(
-      game.playersFromServer.find((player) => player.socketId === game.socketId)
-        .name
+      players.find((player) => player.socketId === game.socketId).name
     );
+
     game.setProfile(new UIProfile(game.mainPlayerName));
-    initPlayers(game);
+
+    initPlayers(game, players);
+
     game.playerList.rebuild(players);
+
     displayServerMessage(
       game,
       `Current players: ${game.playerList.activeCount}`
     );
   });
 
-  game.socket.on("playerMoving", (snapshot) => {
+  game.socket.on("playersUpdate", (snapshot) => {
     game.SI.snapshot.add(snapshot);
   });
 
   game.socket.on("playerMessage", (message, playerName) => {
-    game.chat.addMessage(playerName, message.text);
+    game.chat.addMessage(playerName, message);
   });
 
   game.socket.on("connect", () => {
