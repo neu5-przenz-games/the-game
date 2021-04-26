@@ -7,12 +7,9 @@ class Player {
     y,
     positionTile,
     dest,
-    destTile,
-    isFollowing,
     followedPlayer,
     followTile,
     next,
-    nextTile,
     speed,
     isOnline,
     socketId,
@@ -26,12 +23,9 @@ class Player {
     this.y = y;
     this.positionTile = positionTile;
     this.dest = dest;
-    this.destTile = destTile;
-    this.isFollowing = isFollowing;
     this.followedPlayer = followedPlayer;
     this.followTile = followTile;
     this.next = next;
-    this.nextTile = nextTile;
 
     this.direction = direction;
     this.speed = speed;
@@ -49,15 +43,18 @@ class Player {
   }
 
   setFollowing(playerToFollow, map) {
-    this.isFollowing = true;
     this.followedPlayer = playerToFollow;
     this.followTile = {
       tileX: playerToFollow.positionTile.tileX,
       tileY: playerToFollow.positionTile.tileY,
     };
 
-    this.destTile = getDestTile(this, this.followedPlayer, map);
-    this.dest = getXYFromTile(this.destTile.tileX, this.destTile.tileY);
+    const destTile = getDestTile(this, this.followedPlayer, map);
+
+    this.dest = {
+      ...getXYFromTile(destTile.tileX, destTile.tileY),
+      tile: destTile,
+    };
   }
 
   updateFollowing(map) {
@@ -70,7 +67,6 @@ class Player {
   }
 
   resetFollowing() {
-    this.isFollowing = false;
     this.followedPlayer = null;
     this.followTile = null;
   }

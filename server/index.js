@@ -58,10 +58,12 @@ io.on("connection", (socket) => {
           player.positionTile.tileX !== tileX ||
           player.positionTile.tileY !== tileY
         ) {
-          player.destTile = { tileX, tileY };
-          player.dest = getXYFromTile(tileX, tileY);
+          player.dest = {
+            ...getXYFromTile(tileX, tileY),
+            tile: { tileX, tileY },
+          };
 
-          if (player.isFollowing) {
+          if (player.followedPlayer) {
             player.resetFollowing();
           }
 
@@ -101,22 +103,21 @@ const loop = () => {
 
   events.forEach((player) => {
     // Destination is set
-    if (player.destTile !== null) {
+    if (player.dest !== null) {
       // Next tile is set
-      if (player.nextTile !== null) {
+      if (player.next !== null) {
         player.x += directions[player.direction].x * player.speed;
         player.y += directions[player.direction].y * player.speed;
 
         if (player.x === player.next.x && player.y === player.next.y) {
-          player.nextTile = null;
+          player.next = null;
         }
 
         // player has reached its destination
         if (player.x === player.dest.x && player.y === player.dest.y) {
-          player.destTile = null;
           player.dest = null;
 
-          if (player.isFollowing === false) {
+          if (player.followedPlayer === null) {
             events.delete(player.name);
           }
         }
@@ -132,15 +133,15 @@ const loop = () => {
           )
         );
 
-        if (player.isFollowing) {
+        if (player.followedPlayer) {
           player.updateFollowing(map);
         }
 
         const path = finder.findPath(
           player.positionTile.tileX,
           player.positionTile.tileY,
-          player.destTile.tileX,
-          player.destTile.tileY,
+          player.dest.tile.tileX,
+          player.dest.tile.tileY,
           tempGrid
         );
 
@@ -152,21 +153,21 @@ const loop = () => {
             tileY: y,
           });
 
-          player.nextTile = { tileX: x, tileY: y };
-          player.positionTile = player.nextTile;
           player.next = {
             x: player.x + directions[player.direction].nextX,
             y: player.y + directions[player.direction].nextY,
+            tile: { tileX: x, tileY: y },
           };
+          player.positionTile = player.next.tile;
 
           player.x += directions[player.direction].x * player.speed;
           player.y += directions[player.direction].y * player.speed;
         } else {
           // player can't go there
-          player.destTile = null;
+          player.dest = null;
         }
       }
-    } else if (player.isFollowing) {
+    } else if (player.followedPlayer) {
       player.updateFollowing(map);
     }
   });
@@ -181,7 +182,7 @@ const loop = () => {
         name: player.name,
         x: player.x,
         y: player.y,
-        destTile: player.destTile,
+        destTile: player.dest && player.dest.tile,
         direction: player.direction,
       });
     });

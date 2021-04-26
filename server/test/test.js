@@ -40,15 +40,12 @@ describe("Server socket tests", () => {
         "speed",
         "positionTile",
         "dest",
-        "destTile",
         "x",
         "y",
-        "isFollowing",
         "followedPlayer",
         "followTile",
         "next",
-        "hp",
-        "nextTile"
+        "hp"
       );
       newPlayer.disconnect();
 
