@@ -37,6 +37,10 @@ export default class HealthBar {
     this.draw();
   }
 
+  updateValue(value) {
+    this.value = value;
+  }
+
   draw() {
     this.bar.clear();
 

@@ -93,24 +93,44 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.depth = this.depth;
   }
 
-  update({ x, y, destTile, direction }) {
+  isFighting() {
+    return [12, 13, 14, 15, 16, 17, 18].includes(this.f);
+  }
+
+  setMotion(motion) {
+    this.motion = motion;
+    this.anim = anims[this.motion];
+    this.f = this.anim.startFrame;
+  }
+
+  update({ x, y, destTile, direction, attack, isDead, isWalking, hp }) {
     this.tick += 1;
 
-    if (this.x === x + OFFSET.X && this.y === y + OFFSET.Y) {
-      if (this.motion !== "idle") {
-        this.motion = "idle";
-        this.anim = anims[this.motion];
-        this.f = this.anim.startFrame;
-      }
-    } else {
-      if (this.motion !== "walk") {
-        this.motion = "walk";
-        this.anim = anims[this.motion];
-        this.f = this.anim.startFrame;
-      }
-
+    if (this.x !== x + OFFSET.X || this.y !== y + OFFSET.Y) {
       this.x = x + OFFSET.X;
       this.y = y + OFFSET.Y;
+    }
+
+    if (attack) {
+      if (this.motion !== "attack") {
+        this.setMotion("attack");
+      }
+    } else if (isDead) {
+      if (this.motion !== "die") {
+        this.setMotion("die");
+
+        if (this.isMainPlayer) {
+          this.scene.profile.toggleRespawnButton(true);
+        }
+      }
+    } else if (isWalking && !this.isFighting()) {
+      if (this.motion !== "walk") {
+        this.setMotion("walk");
+      }
+    } else if (!attack && !isWalking && !isDead && !this.isFighting()) {
+      if (this.motion !== "idle") {
+        this.setMotion("idle");
+      }
     }
 
     if (this.tick === this.maxTick) {
@@ -118,7 +138,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
       if (this.f === this.anim.endFrame) {
-        this.f = this.anim.startFrame;
+        if (this.motion !== "attack" && this.motion !== "die") {
+          this.f = this.anim.startFrame;
+        }
       } else {
         this.f += 1;
       }
@@ -157,6 +179,10 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.depth = this.y + OFFSET.Y;
     this.label.depth = this.depth;
     this.label.setPosition(this.x, this.y - this.displayHeight / 2);
+
+    if (this.hp !== hp) {
+      this.hp.updateValue(hp);
+    }
     this.hp.setPosition(this.x, this.y);
   }
 }
