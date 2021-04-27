@@ -33,7 +33,11 @@ describe("Server socket tests", () => {
     const newPlayer = io(testHost, ioOptions);
     socket.on("newPlayer", (newPlayermsg) => {
       newPlayermsg.should.have.keys(
+        "attack",
+        "attackDelay",
+        "attackMaxDelay",
         "direction",
+        "fightingPlayer",
         "isOnline",
         "name",
         "socketId",
@@ -45,7 +49,9 @@ describe("Server socket tests", () => {
         "followedPlayer",
         "followTile",
         "next",
-        "hp"
+        "hp",
+        "isDead",
+        "isWalking"
       );
       newPlayer.disconnect();
 

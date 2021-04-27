@@ -1,4 +1,8 @@
-const { getDestTile, getXYFromTile } = require("./utils/algo");
+const {
+  getDestTile,
+  getXYFromTile,
+  getManhattanDistance,
+} = require("./utils/algo");
 
 class Player {
   constructor({
@@ -7,8 +11,14 @@ class Player {
     y,
     positionTile,
     dest,
+    isWalking,
+    isDead,
+    fightingPlayer,
     followedPlayer,
     followTile,
+    attack,
+    attackDelay,
+    attackMaxDelay,
     next,
     speed,
     isOnline,
@@ -23,8 +33,14 @@ class Player {
     this.y = y;
     this.positionTile = positionTile;
     this.dest = dest;
+    this.isWalking = isWalking;
+    this.isDead = isDead;
+    this.fightingPlayer = fightingPlayer;
     this.followedPlayer = followedPlayer;
     this.followTile = followTile;
+    this.attack = attack;
+    this.attackDelay = attackDelay;
+    this.attackMaxDelay = attackMaxDelay;
     this.next = next;
 
     this.direction = direction;
@@ -57,6 +73,37 @@ class Player {
     };
   }
 
+  setFighting(playerToFight) {
+    this.fightingPlayer = playerToFight;
+  }
+
+  canAttack(fightingPlayer) {
+    return (
+      this.attackDelay >= this.attackMaxDelay &&
+      this.fightingPlayer.isDead === false &&
+      getManhattanDistance(this.positionTile, fightingPlayer.positionTile) <= 2
+    );
+  }
+
+  gotHit(damage) {
+    this.hp -= damage;
+
+    if (this.hp < 0) {
+      this.hp = 0;
+    }
+
+    if (this.hp === 0) {
+      this.isDead = true;
+      this.resetFollowing();
+      this.resetFighting();
+    }
+  }
+
+  respawn() {
+    this.isDead = false;
+    this.hp = 100;
+  }
+
   updateFollowing(map) {
     if (
       this.followedPlayer.positionTile.tileX !== this.followTile.tileX ||
@@ -64,6 +111,10 @@ class Player {
     ) {
       this.setFollowing(this.followedPlayer, map);
     }
+  }
+
+  resetFighting() {
+    this.fightingPlayer = null;
   }
 
   resetFollowing() {

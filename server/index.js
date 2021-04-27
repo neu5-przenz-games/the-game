@@ -54,6 +54,10 @@ io.on("connection", (socket) => {
       if (tileX >= 0 && tileY >= 0 && map[tileY][tileX] === 0) {
         const player = players.get(name);
 
+        if (player.isDead) {
+          return;
+        }
+
         if (
           player.positionTile.tileX !== tileX ||
           player.positionTile.tileY !== tileY
@@ -75,12 +79,27 @@ io.on("connection", (socket) => {
 
     socket.on("followPlayer", ({ name, nameToFollow }) => {
       const player = players.get(name);
+
+      if (player.isDead) {
+        return;
+      }
+
       const playerToFollow = players.get(nameToFollow);
 
       player.setFollowing(playerToFollow, map);
 
+      player.setFighting(playerToFollow, map);
+
       events.delete(player.name);
       events.set(player.name, player);
+    });
+
+    socket.on("respawnPlayer", ({ name }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.respawn();
+      }
     });
 
     socket.on("chatMessage", ({ name, text }) => {
@@ -116,8 +135,12 @@ const loop = () => {
         // player has reached its destination
         if (player.x === player.dest.x && player.y === player.dest.y) {
           player.dest = null;
+          player.isWalking = false;
 
-          if (player.followedPlayer === null) {
+          if (
+            player.followedPlayer === null &&
+            player.fightingPlayer === null
+          ) {
             events.delete(player.name);
           }
         }
@@ -160,6 +183,7 @@ const loop = () => {
           };
           player.positionTile = player.next.tile;
 
+          player.isWalking = true;
           player.x += directions[player.direction].x * player.speed;
           player.y += directions[player.direction].y * player.speed;
         } else {
@@ -169,6 +193,19 @@ const loop = () => {
       }
     } else if (player.followedPlayer) {
       player.updateFollowing(map);
+    }
+
+    if (player.fightingPlayer) {
+      if (player.canAttack(player.fightingPlayer)) {
+        player.attackDelay = 0;
+        player.attack = true;
+
+        player.fightingPlayer.gotHit(25);
+      }
+    }
+
+    if (player.attackDelay < 100) {
+      player.attackDelay += 1;
     }
   });
 
@@ -180,11 +217,16 @@ const loop = () => {
       worldState.push({
         id: player.name,
         name: player.name,
+        isWalking: player.isWalking,
+        isDead: player.isDead,
+        attack: player.attack,
         x: player.x,
         y: player.y,
+        hp: player.hp,
         destTile: player.dest && player.dest.tile,
         direction: player.direction,
       });
+      player.attack = false;
     });
 
     const snapshot = SI.snapshot.create(worldState);
