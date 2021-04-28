@@ -13,9 +13,9 @@ class Player {
     dest,
     isWalking,
     isDead,
-    fightingPlayer,
-    followedPlayer,
-    followTile,
+    settings,
+    selectedPlayer,
+    selectedPlayerTile,
     attack,
     attackDelay,
     attackMaxDelay,
@@ -35,9 +35,10 @@ class Player {
     this.dest = dest;
     this.isWalking = isWalking;
     this.isDead = isDead;
-    this.fightingPlayer = fightingPlayer;
-    this.followedPlayer = followedPlayer;
-    this.followTile = followTile;
+    this.settings = settings;
+    this.selectedPlayer = selectedPlayer;
+    this.selectedPlayerTile = selectedPlayerTile;
+
     this.attack = attack;
     this.attackDelay = attackDelay;
     this.attackMaxDelay = attackMaxDelay;
@@ -58,30 +59,18 @@ class Player {
     this.socketId = socketId;
   }
 
-  setFollowing(playerToFollow, map) {
-    this.followedPlayer = playerToFollow;
-    this.followTile = {
-      tileX: playerToFollow.positionTile.tileX,
-      tileY: playerToFollow.positionTile.tileY,
-    };
-
-    const destTile = getDestTile(this, this.followedPlayer, map);
-
-    this.dest = {
-      ...getXYFromTile(destTile.tileX, destTile.tileY),
-      tile: destTile,
-    };
+  setSelectedObject(player) {
+    this.selectedPlayer = player;
   }
 
-  setFighting(playerToFight) {
-    this.fightingPlayer = playerToFight;
-  }
-
-  canAttack(fightingPlayer) {
+  canAttack() {
     return (
       this.attackDelay >= this.attackMaxDelay &&
-      this.fightingPlayer.isDead === false &&
-      getManhattanDistance(this.positionTile, fightingPlayer.positionTile) <= 2
+      this.selectedPlayer.isDead === false &&
+      getManhattanDistance(
+        this.positionTile,
+        this.selectedPlayer.positionTile
+      ) <= 2
     );
   }
 
@@ -94,8 +83,28 @@ class Player {
 
     if (this.hp === 0) {
       this.isDead = true;
-      this.resetFollowing();
-      this.resetFighting();
+      this.resetSelected();
+    }
+  }
+
+  updateFollowing(map) {
+    if (
+      this.selectedPlayerTile === null ||
+      this.selectedPlayer.positionTile.tileX !==
+        this.selectedPlayerTile.tileX ||
+      this.selectedPlayer.positionTile.tileY !== this.selectedPlayerTile.tileY
+    ) {
+      this.selectedPlayerTile = {
+        tileX: this.selectedPlayer.positionTile.tileX,
+        tileY: this.selectedPlayer.positionTile.tileY,
+      };
+
+      const destTile = getDestTile(this, this.selectedPlayer, map);
+
+      this.dest = {
+        ...getXYFromTile(destTile.tileX, destTile.tileY),
+        tile: destTile,
+      };
     }
   }
 
@@ -104,22 +113,9 @@ class Player {
     this.hp = 100;
   }
 
-  updateFollowing(map) {
-    if (
-      this.followedPlayer.positionTile.tileX !== this.followTile.tileX ||
-      this.followedPlayer.positionTile.tileY !== this.followTile.tileY
-    ) {
-      this.setFollowing(this.followedPlayer, map);
-    }
-  }
-
-  resetFighting() {
-    this.fightingPlayer = null;
-  }
-
-  resetFollowing() {
-    this.followedPlayer = null;
-    this.followTile = null;
+  resetSelected() {
+    this.selectedPlayer = null;
+    this.selectedPlayerTile = null;
   }
 }
 

@@ -23,9 +23,9 @@ export default (game) => {
 
   game.input.on("gameobjectdown", (pointer, player) => {
     if (game.mainPlayerName !== player.name) {
-      game.socket.emit("followPlayer", {
+      game.socket.emit("selectPlayer", {
         name: game.mainPlayerName,
-        nameToFollow: player.name,
+        selectedPlayerName: player.name,
       });
     }
   });

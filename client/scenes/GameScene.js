@@ -58,6 +58,10 @@ export default class Game extends Phaser.Scene {
 
   preload() {
     this.load.image("tileset-outside", "./assets/tileset/outside.png");
+
+    this.load.image("tile-selected", "./assets/gfx/tile-selected.png");
+    this.load.image("tile-fight", "./assets/gfx/tile-fight.png");
+
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
     this.load.spritesheet("skeleton", "./assets/character/skeleton.png", {
       frameWidth: 128,
