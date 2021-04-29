@@ -56,7 +56,17 @@ export const OFFSET = {
 };
 
 export default class Skeleton extends Phaser.GameObjects.Image {
-  constructor({ direction, isMainPlayer, hp, motion, name, scene, x, y }) {
+  constructor({
+    direction,
+    isMainPlayer,
+    hp,
+    isDead,
+    motion,
+    name,
+    scene,
+    x,
+    y,
+  }) {
     super(
       scene,
       x + OFFSET.X,
@@ -72,6 +82,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.dest = { x: null, y: null };
     this.markedDestTile = null;
     this.isMainPlayer = isMainPlayer;
+    this.isDead = isDead;
     this.tick = 0;
     this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
@@ -120,6 +131,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   }) {
     this.tick += 1;
 
+    this.isDead = isDead;
+
     if (attack) {
       if (this.motion !== "attack") {
         this.setMotion("attack");
@@ -127,10 +140,11 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     } else if (isDead) {
       if (this.motion !== "die") {
         this.setMotion("die");
+      }
 
-        if (this.isMainPlayer) {
-          this.scene.profile.toggleRespawnButton(true);
-        }
+      if (this.isMainPlayer) {
+        this.scene.profile.toggleRespawnButton(true);
+        this.scene.resetSelectedObject();
       }
     } else if (isWalking && !this.isFighting()) {
       if (this.motion !== "walk") {
