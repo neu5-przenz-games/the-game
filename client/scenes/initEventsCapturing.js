@@ -24,7 +24,7 @@ export default (game) => {
   });
 
   game.input.on("gameobjectdown", (pointer, player) => {
-    if (game.mainPlayerName !== player.name) {
+    if (game.mainPlayerName !== player.name && !game.mainPlayer.isDead) {
       game.setSelectedObject({
         name: player.name,
         type: player.constructor.name,
