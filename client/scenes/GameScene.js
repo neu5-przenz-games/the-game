@@ -20,6 +20,8 @@ export default class Game extends Phaser.Scene {
     this.players = new Map();
     this.playerList = new UIPlayerStatusList();
     this.profile = null;
+    this.settings = null;
+    this.selectedObject = null;
     this.chat = new UIChat();
     this.socket = null;
     this.socketId = null;
@@ -52,12 +54,28 @@ export default class Game extends Phaser.Scene {
     this.mainPlayerName = mainPlayerName;
   }
 
+  setSettings(settings) {
+    this.settings = settings;
+  }
+
+  setSelectedObject(selectedObject) {
+    this.selectedObject = selectedObject;
+  }
+
   setProfile(profile) {
     this.profile = profile;
   }
 
+  resetSelectedObject() {
+    this.selectedObject = null;
+  }
+
   preload() {
     this.load.image("tileset-outside", "./assets/tileset/outside.png");
+
+    this.load.image("tile-selected", "./assets/gfx/tile-selected.png");
+    this.load.image("tile-fight", "./assets/gfx/tile-fight.png");
+
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
     this.load.spritesheet("skeleton", "./assets/character/skeleton.png", {
       frameWidth: 128,

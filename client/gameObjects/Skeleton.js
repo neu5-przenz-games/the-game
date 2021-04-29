@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import HealthBar from "./HealthBar";
+import { TileSelected, TileFight } from "./Tile";
 
 export const directions = {
   west: { offset: 0 },
@@ -76,6 +77,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.hp = new HealthBar(scene, this.x, this.y, hp);
 
+    this.tileSelected = new TileSelected(scene, this.x, this.y);
+    this.tileFight = new TileFight(scene, this.x, this.y);
+
     this.motion = motion;
     this.anim = anims[motion];
     this.direction = directions[direction];
@@ -103,13 +107,18 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.f = this.anim.startFrame;
   }
 
-  update({ x, y, destTile, direction, attack, isDead, isWalking, hp }) {
+  update({
+    x,
+    y,
+    destTile,
+    direction,
+    attack,
+    isDead,
+    isWalking,
+    selectedPlayer,
+    hp,
+  }) {
     this.tick += 1;
-
-    if (this.x !== x + OFFSET.X || this.y !== y + OFFSET.Y) {
-      this.x = x + OFFSET.X;
-      this.y = y + OFFSET.Y;
-    }
 
     if (attack) {
       if (this.motion !== "attack") {
@@ -146,7 +155,24 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     }
 
-    if (this.isMainPlayer && destTile !== null) {
+    if (
+      this.scene.selectedObject &&
+      this.scene.selectedObject.type === this.constructor.name &&
+      this.scene.selectedObject.name === this.name
+    ) {
+      if (this.scene.settings.fight) {
+        this.tileFight.toggleVisible(true);
+        this.tileSelected.toggleVisible(false);
+      } else {
+        this.tileSelected.toggleVisible(true);
+        this.tileFight.toggleVisible(false);
+      }
+    } else {
+      this.tileSelected.toggleVisible(false);
+      this.tileFight.toggleVisible(false);
+    }
+
+    if (this.isMainPlayer && selectedPlayer === null && destTile !== null) {
       // clear previous marker if it exists and if player is in movement
       if (
         this.markedDestTile !== null &&
@@ -169,6 +195,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.markedDestTile = null;
     }
 
+    // player changed direction
     if (direction) {
       this.direction = directions[direction];
       this.frame = this.texture.get(this.direction.offset);
@@ -176,13 +203,23 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.frame = this.texture.get(this.direction.offset + this.f);
 
-    this.depth = this.y + OFFSET.Y;
-    this.label.depth = this.depth;
-    this.label.setPosition(this.x, this.y - this.displayHeight / 2);
+    // player moved
+    if (this.x !== x + OFFSET.X || this.y !== y + OFFSET.Y) {
+      this.x = x + OFFSET.X;
+      this.y = y + OFFSET.Y;
+
+      this.depth = this.y + OFFSET.Y;
+      this.label.depth = this.depth;
+      this.label.setPosition(this.x, this.y - this.displayHeight / 2);
+
+      this.tileSelected.setPosition(this.x, this.y);
+      this.tileFight.setPosition(this.x, this.y);
+    }
 
     if (this.hp.value !== hp) {
       this.hp.updateValue(hp);
     }
+
     this.hp.setPosition(this.x, this.y);
   }
 }

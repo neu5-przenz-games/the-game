@@ -67,8 +67,8 @@ io.on("connection", (socket) => {
             tile: { tileX, tileY },
           };
 
-          if (player.followedPlayer) {
-            player.resetFollowing();
+          if (player.selectedPlayer) {
+            player.resetSelected();
           }
 
           events.delete(player.name);
@@ -77,21 +77,39 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("followPlayer", ({ name, nameToFollow }) => {
+    socket.on("selectPlayer", ({ name, selectedPlayerName }) => {
       const player = players.get(name);
 
       if (player.isDead) {
         return;
       }
 
-      const playerToFollow = players.get(nameToFollow);
+      const playerToSelect = players.get(selectedPlayerName);
 
-      player.setFollowing(playerToFollow, map);
+      player.setSelectedObject(playerToSelect);
 
-      player.setFighting(playerToFollow, map);
+      if (player.settings.follow) {
+        player.updateFollowing(map);
+      }
 
       events.delete(player.name);
       events.set(player.name, player);
+    });
+
+    socket.on("settings:follow", ({ name, value }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.setSettingsFollow(value);
+      }
+    });
+
+    socket.on("settings:fight", ({ name, value }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.setSettingsFight(value);
+      }
     });
 
     socket.on("respawnPlayer", ({ name }) => {
@@ -137,10 +155,7 @@ const loop = () => {
           player.dest = null;
           player.isWalking = false;
 
-          if (
-            player.followedPlayer === null &&
-            player.fightingPlayer === null
-          ) {
+          if (player.selectedPlayer === null) {
             events.delete(player.name);
           }
         }
@@ -191,16 +206,16 @@ const loop = () => {
           player.dest = null;
         }
       }
-    } else if (player.followedPlayer) {
-      player.updateFollowing(map);
     }
 
-    if (player.fightingPlayer) {
-      if (player.canAttack(player.fightingPlayer)) {
+    if (player.selectedPlayer && player.settings.follow) {
+      player.updateFollowing(map);
+
+      if (player.settings.fight && player.canAttack()) {
         player.attackDelay = 0;
         player.attack = true;
 
-        player.fightingPlayer.gotHit(25);
+        player.selectedPlayer.gotHit(25);
       }
     }
 
@@ -217,6 +232,7 @@ const loop = () => {
       worldState.push({
         id: player.name,
         name: player.name,
+        selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
         isWalking: player.isWalking,
         isDead: player.isDead,
         attack: player.attack,
