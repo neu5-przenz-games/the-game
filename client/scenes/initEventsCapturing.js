@@ -5,6 +5,8 @@ export default (game) => {
     // second parameter (obj) is an array with empty object if player is clicked
     if (obj.length) return;
 
+    game.resetSelectedObject();
+
     const { worldX, worldY } = pointer;
 
     const clickedTile = game.groundLayer.worldToTileXY(worldX, worldY, true);
@@ -23,6 +25,11 @@ export default (game) => {
 
   game.input.on("gameobjectdown", (pointer, player) => {
     if (game.mainPlayerName !== player.name) {
+      game.setSelectedObject({
+        name: player.name,
+        type: player.constructor.name,
+      });
+
       game.socket.emit("selectPlayer", {
         name: game.mainPlayerName,
         selectedPlayerName: player.name,

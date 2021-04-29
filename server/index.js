@@ -96,6 +96,22 @@ io.on("connection", (socket) => {
       events.set(player.name, player);
     });
 
+    socket.on("settings:follow", ({ name, value }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.setSettingsFollow(value);
+      }
+    });
+
+    socket.on("settings:fight", ({ name, value }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.setSettingsFight(value);
+      }
+    });
+
     socket.on("respawnPlayer", ({ name }) => {
       const player = players.get(name);
 
@@ -192,7 +208,7 @@ const loop = () => {
       }
     }
 
-    if (player.selectedPlayer) {
+    if (player.selectedPlayer && player.settings.follow) {
       player.updateFollowing(map);
 
       if (player.settings.fight && player.canAttack()) {
@@ -217,7 +233,6 @@ const loop = () => {
         id: player.name,
         name: player.name,
         selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
-        fight: player.settings.fight,
         isWalking: player.isWalking,
         isDead: player.isDead,
         attack: player.attack,

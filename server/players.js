@@ -9,7 +9,7 @@ module.exports = [
     isDead: false,
     settings: {
       dropSelectedOnMove: true,
-      follow: false,
+      follow: true,
       fight: false,
     },
     selectedPlayer: null,

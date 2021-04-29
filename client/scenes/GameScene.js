@@ -20,6 +20,8 @@ export default class Game extends Phaser.Scene {
     this.players = new Map();
     this.playerList = new UIPlayerStatusList();
     this.profile = null;
+    this.settings = null;
+    this.selectedObject = null;
     this.chat = new UIChat();
     this.socket = null;
     this.socketId = null;
@@ -52,8 +54,20 @@ export default class Game extends Phaser.Scene {
     this.mainPlayerName = mainPlayerName;
   }
 
+  setSettings(settings) {
+    this.settings = settings;
+  }
+
+  setSelectedObject(selectedObject) {
+    this.selectedObject = selectedObject;
+  }
+
   setProfile(profile) {
     this.profile = profile;
+  }
+
+  resetSelectedObject() {
+    this.selectedObject = null;
   }
 
   preload() {

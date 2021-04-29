@@ -63,6 +63,14 @@ class Player {
     this.selectedPlayer = player;
   }
 
+  setSettingsFollow(value) {
+    this.settings.follow = value;
+  }
+
+  setSettingsFight(value) {
+    this.settings.fight = value;
+  }
+
   canAttack() {
     return (
       this.attackDelay >= this.attackMaxDelay &&

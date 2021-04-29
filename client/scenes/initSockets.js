@@ -21,6 +21,22 @@ export default (game) => {
     game.playerList.playerInactive(name);
   });
 
+  const followCb = (name, value) => {
+    game.socket.emit("settings:follow", {
+      name,
+      value,
+    });
+    game.settings.follow = value;
+  };
+
+  const fightCb = (name, value) => {
+    game.socket.emit("settings:fight", {
+      name,
+      value,
+    });
+    game.settings.fight = value;
+  };
+
   const respawnCb = (name) => {
     game.socket.emit("respawnPlayer", {
       name,
@@ -38,11 +54,18 @@ export default (game) => {
     game.playerList.rebuild(players);
 
     game.setPlayers(
-      players.map((player) =>
-        game.add.existing(
+      players.map((player) => {
+        let isMainPlayer = false;
+        if (player.name === game.mainPlayerName) {
+          isMainPlayer = true;
+
+          game.setSettings(player.settings);
+        }
+
+        return game.add.existing(
           new Skeleton({
             direction: player.direction,
-            isMainPlayer: player.name === game.mainPlayerName,
+            isMainPlayer,
             hp: player.hp,
             isDead: player.isDead,
             motion: "idle",
@@ -51,8 +74,8 @@ export default (game) => {
             x: player.x,
             y: player.y,
           })
-        )
-      )
+        );
+      })
     );
 
     game.players.forEach((player) => {
@@ -61,7 +84,13 @@ export default (game) => {
 
     game.setMainPlayer(game.players.get(game.mainPlayerName));
 
-    game.setProfile(new UIProfile(game.mainPlayer, respawnCb));
+    game.setProfile(
+      new UIProfile(game.mainPlayerName, game.settings, {
+        followCb,
+        fightCb,
+        respawnCb,
+      })
+    );
 
     game.cameras.main.startFollow(game.mainPlayer, true);
 

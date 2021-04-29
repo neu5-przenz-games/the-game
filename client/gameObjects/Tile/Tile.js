@@ -6,6 +6,7 @@ export default class Tile {
   constructor(scene, x, y, image) {
     this.image = scene.add.image(x, y + OFFSET.Y, image);
     this.image.setVisible(false);
+    this.image.setAlpha(0.5);
   }
 
   setPosition(x, y) {

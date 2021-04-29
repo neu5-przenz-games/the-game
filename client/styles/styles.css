@@ -45,6 +45,11 @@ body {
   font-weight: bold;
 }
 
+.profile-wrapper__settings {
+  display: flex;
+  flex-direction: column;
+}
+
 [class$="__header"] {
   font-variant: small-caps;
 }

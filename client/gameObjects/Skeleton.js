@@ -97,10 +97,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.depth = this.depth;
   }
 
-  static selectedPlayer = null;
-
-  static fightTile = false;
-
   isFighting() {
     return [12, 13, 14, 15, 16, 17, 18].includes(this.f);
   }
@@ -117,7 +113,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     destTile,
     direction,
     attack,
-    fight,
     isDead,
     isWalking,
     selectedPlayer,
@@ -160,15 +155,21 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     }
 
-    if (this.isMainPlayer) {
-      Skeleton.selectedPlayer = selectedPlayer;
-      Skeleton.fightTile = fight;
-    }
-
-    if (Skeleton.fightTile) {
-      this.tileFight.toggleVisible(this.name === Skeleton.selectedPlayer);
+    if (
+      this.scene.selectedObject &&
+      this.scene.selectedObject.type === this.constructor.name &&
+      this.scene.selectedObject.name === this.name
+    ) {
+      if (this.scene.settings.fight) {
+        this.tileFight.toggleVisible(true);
+        this.tileSelected.toggleVisible(false);
+      } else {
+        this.tileSelected.toggleVisible(true);
+        this.tileFight.toggleVisible(false);
+      }
     } else {
-      this.tileSelected.toggleVisible(this.name === Skeleton.selectedPlayer);
+      this.tileSelected.toggleVisible(false);
+      this.tileFight.toggleVisible(false);
     }
 
     if (this.isMainPlayer && selectedPlayer === null && destTile !== null) {
