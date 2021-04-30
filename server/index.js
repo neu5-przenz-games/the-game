@@ -191,16 +191,21 @@ const loop = () => {
             tileY: y,
           });
 
-          player.next = {
-            x: player.x + directions[player.direction].nextX,
-            y: player.y + directions[player.direction].nextY,
-            tile: { tileX: x, tileY: y },
-          };
-          player.positionTile = player.next.tile;
+          if (
+            player.selectedPlayer === null ||
+            (player.selectedPlayer && player.settings.follow)
+          ) {
+            player.next = {
+              x: player.x + directions[player.direction].nextX,
+              y: player.y + directions[player.direction].nextY,
+              tile: { tileX: x, tileY: y },
+            };
+            player.positionTile = player.next.tile;
 
-          player.isWalking = true;
-          player.x += directions[player.direction].x * player.speed;
-          player.y += directions[player.direction].y * player.speed;
+            player.isWalking = true;
+            player.x += directions[player.direction].x * player.speed;
+            player.y += directions[player.direction].y * player.speed;
+          }
         } else {
           // player can't go there
           player.dest = null;
@@ -208,7 +213,7 @@ const loop = () => {
       }
     }
 
-    if (player.selectedPlayer && player.settings.follow) {
+    if (player.selectedPlayer) {
       player.updateFollowing(map);
 
       if (player.settings.fight && player.canAttack()) {
