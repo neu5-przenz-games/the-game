@@ -39,6 +39,7 @@ describe("Server socket tests", () => {
         "direction",
         "isOnline",
         "name",
+        "equipment",
         "socketId",
         "speed",
         "positionTile",

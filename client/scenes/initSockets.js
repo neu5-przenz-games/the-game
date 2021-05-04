@@ -37,6 +37,14 @@ export default (game) => {
     game.settings.fight = value;
   };
 
+  const weaponCb = (name, value) => {
+    game.socket.emit("equipment:weapon", {
+      name,
+      value,
+    });
+    game.weapon = value;
+  };
+
   const respawnCb = (name) => {
     game.socket.emit("respawnPlayer", {
       name,
@@ -60,6 +68,7 @@ export default (game) => {
           isMainPlayer = true;
 
           game.setSettings(player.settings);
+          game.setWeapon(player.equipment.weapon);
         }
 
         return game.add.existing(
@@ -85,9 +94,13 @@ export default (game) => {
     game.setMainPlayer(game.players.get(game.mainPlayerName));
 
     game.setProfile(
-      new UIProfile(game.mainPlayerName, game.settings, {
+      new UIProfile({
+        name: game.mainPlayerName,
+        weapon: game.weapon,
+        settings: game.settings,
         followCb,
         fightCb,
+        weaponCb,
         respawnCb,
       })
     );
