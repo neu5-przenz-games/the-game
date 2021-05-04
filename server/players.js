@@ -7,10 +7,13 @@ module.exports = [
     dest: null,
     isWalking: false,
     isDead: false,
+    equipment: {
+      weapon: "sword",
+    },
     settings: {
       dropSelectedOnMove: true,
       follow: true,
-      fight: false,
+      fight: true,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -32,10 +35,13 @@ module.exports = [
     dest: null,
     isWalking: false,
     isDead: false,
+    equipment: {
+      weapon: "bow",
+    },
     settings: {
       dropSelectedOnMove: true,
       follow: false,
-      fight: false,
+      fight: true,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -57,10 +63,13 @@ module.exports = [
     dest: null,
     isWalking: false,
     isDead: false,
+    equipment: {
+      weapon: "sword",
+    },
     settings: {
       dropSelectedOnMove: true,
       follow: false,
-      fight: true,
+      fight: false,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -82,10 +91,13 @@ module.exports = [
     dest: null,
     isWalking: false,
     isDead: false,
+    equipment: {
+      weapon: "sword",
+    },
     settings: {
       dropSelectedOnMove: true,
       follow: false,
-      fight: true,
+      fight: false,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -107,10 +119,13 @@ module.exports = [
     dest: null,
     isWalking: false,
     isDead: false,
+    equipment: {
+      weapon: "sword",
+    },
     settings: {
       dropSelectedOnMove: true,
       follow: false,
-      fight: true,
+      fight: false,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -132,10 +147,13 @@ module.exports = [
     dest: null,
     isWalking: false,
     isDead: false,
+    equipment: {
+      weapon: "sword",
+    },
     settings: {
       dropSelectedOnMove: true,
       follow: false,
-      fight: true,
+      fight: false,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,

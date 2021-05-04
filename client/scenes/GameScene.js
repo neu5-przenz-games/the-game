@@ -58,6 +58,10 @@ export default class Game extends Phaser.Scene {
     this.settings = settings;
   }
 
+  setWeapon(weapon) {
+    this.weapon = weapon;
+  }
+
   setSelectedObject(selectedObject) {
     this.selectedObject = selectedObject;
   }

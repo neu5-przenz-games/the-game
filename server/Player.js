@@ -13,6 +13,7 @@ class Player {
     dest,
     isWalking,
     isDead,
+    equipment,
     settings,
     selectedPlayer,
     selectedPlayerTile,
@@ -35,6 +36,7 @@ class Player {
     this.dest = dest;
     this.isWalking = isWalking;
     this.isDead = isDead;
+    this.equipment = equipment;
     this.settings = settings;
     this.selectedPlayer = selectedPlayer;
     this.selectedPlayerTile = selectedPlayerTile;
@@ -71,14 +73,26 @@ class Player {
     this.settings.fight = value;
   }
 
+  setWeapon(value) {
+    this.equipment.weapon = value;
+  }
+
+  inRange() {
+    const range = this.equipment.weapon === "sword" ? 2 : 10;
+
+    return (
+      getManhattanDistance(
+        this.positionTile,
+        this.selectedPlayer.positionTile
+      ) <= range
+    );
+  }
+
   canAttack() {
     return (
       this.attackDelay >= this.attackMaxDelay &&
       this.selectedPlayer.isDead === false &&
-      getManhattanDistance(
-        this.positionTile,
-        this.selectedPlayer.positionTile
-      ) <= 2
+      this.inRange()
     );
   }
 

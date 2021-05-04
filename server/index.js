@@ -112,6 +112,14 @@ io.on("connection", (socket) => {
       }
     });
 
+    socket.on("equipment:weapon", ({ name, value }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.setWeapon(value);
+      }
+    });
+
     socket.on("respawnPlayer", ({ name }) => {
       const player = players.get(name);
 
@@ -220,7 +228,9 @@ const loop = () => {
         player.attackDelay = 0;
         player.attack = true;
 
-        player.selectedPlayer.gotHit(25);
+        player.selectedPlayer.gotHit(
+          player.equipment.weapon === "sword" ? 20 : 15
+        );
       }
     }
 
@@ -238,6 +248,7 @@ const loop = () => {
         id: player.name,
         name: player.name,
         selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
+        weapon: player.equipment.weapon,
         isWalking: player.isWalking,
         isDead: player.isDead,
         attack: player.attack,

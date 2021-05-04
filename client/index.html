@@ -16,25 +16,37 @@
                 <h2>The game</h2>
                 <div class="profile-wrapper__hello"></div>
                 <div class="profile-wrapper__settings">
-                    <label>
-                        Follow <input class="profile-wrapper__follow-checkbox" type="checkbox" />
-                    </label>
-                    <label>
-                        Fight <input class="profile-wrapper__fight-checkbox" type="checkbox" />
-                    </label>
-                    <button class="profile-wrapper__respawn-button" disabled>Respawn</button>
+                    <fieldset>
+                        <legend>Settings</legend>
+                        <label>
+                            Follow <input class="profile-wrapper__follow-checkbox" type="checkbox" />
+                        </label>
+                        <label>
+                            Fight <input class="profile-wrapper__fight-checkbox" type="checkbox" />
+                        </label>
+                        <button class="profile-wrapper__respawn-button" disabled>Respawn</button>
+                    </fieldset>
                 </div>
-                <div class = "stats">
-                    <div class = "stats__header">
+                <div class="stats">
+                    <div class="stats__header">
                         Stats
                     </div>
                 </div>
-                <div class = "equipement">
-                    <div class = "equipement__header">
+                <div class="equipement">
+                    <div class="equipement__header">
                         Equipment
                     </div>
+                    <fieldset>
+                        <legend>Weapon</legend>
+                        <label>
+                            Sword <input class="equipement__weapon-radio" name="weapon" value="sword" type="radio" />
+                        </label>
+                        <label>
+                            Bow <input class="equipement__weapon-radio" name="weapon" value="bow" type="radio" />
+                        </label>
+                    </fieldset>
                 </div>
-                <div class ="player-list">
+                <div class="player-list">
                     <div class="player-list-active__header">
                         Active players
                         <div class="player-list-active__count">(0)</div>

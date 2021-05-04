@@ -36,7 +36,7 @@ const anims = {
   },
   shoot: {
     startFrame: 28,
-    endFrame: 32,
+    endFrame: 31,
     speed: 0.1,
   },
 };
@@ -109,7 +109,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   }
 
   isFighting() {
-    return [12, 13, 14, 15, 16, 17, 18].includes(this.f);
+    return [12, 13, 14, 15, 16, 17, 18, 28, 29, 30].includes(this.f);
   }
 
   setMotion(motion) {
@@ -124,6 +124,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     destTile,
     direction,
     attack,
+    weapon,
     isDead,
     isWalking,
     selectedPlayer,
@@ -134,8 +135,12 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.isDead = isDead;
 
     if (attack) {
-      if (this.motion !== "attack") {
-        this.setMotion("attack");
+      if (weapon === "sword") {
+        if (this.motion !== "attack") {
+          this.setMotion("attack");
+        }
+      } else if (this.motion !== "shoot") {
+        this.setMotion("shoot");
       }
     } else if (isDead) {
       if (this.motion !== "die") {
@@ -161,7 +166,11 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
       if (this.f === this.anim.endFrame) {
-        if (this.motion !== "attack" && this.motion !== "die") {
+        if (
+          this.motion !== "attack" &&
+          this.motion !== "shoot" &&
+          this.motion !== "die"
+        ) {
           this.f = this.anim.startFrame;
         }
       } else {
