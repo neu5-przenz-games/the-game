@@ -226,7 +226,7 @@ const loop = () => {
 
       if (player.settings.fight && player.canAttack()) {
         player.attackDelay = 0;
-        player.attack = true;
+        player.attack = player.selectedPlayer.name;
 
         player.selectedPlayer.gotHit(
           player.equipment.weapon === "sword" ? 20 : 15
@@ -258,7 +258,7 @@ const loop = () => {
         destTile: player.dest && player.dest.tile,
         direction: player.direction,
       });
-      player.attack = false;
+      player.attack = null;
     });
 
     const snapshot = SI.snapshot.create(worldState);

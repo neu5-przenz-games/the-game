@@ -151,7 +151,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.isDead = isDead;
 
-    if (attack) {
+    if (attack !== null) {
       if (weapon === "sword") {
         if (this.motion !== "attack") {
           this.setMotion("attack");
@@ -159,7 +159,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       } else if (this.motion !== "shoot") {
         this.setMotion("shoot");
 
-        const player = this.scene.players.get(selectedPlayer);
+        const player = this.scene.players.get(attack);
 
         this.arrow.setPosition(x + OFFSET.X, y + OFFSET.Y).setVisible(true);
 
