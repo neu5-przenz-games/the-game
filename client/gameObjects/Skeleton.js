@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import HealthBar from "./HealthBar";
 import { TileSelected, TileFight } from "./Tile";
+import Arrow from "./Arrow";
 
 export const directions = {
   west: { offset: 0 },
@@ -91,6 +92,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.tileSelected = new TileSelected(scene, this.x, this.y);
     this.tileFight = new TileFight(scene, this.x, this.y);
 
+    this.arrow = new Arrow(scene, this.x, this.y);
+    scene.add.existing(this.arrow);
+
     this.motion = motion;
     this.anim = anims[motion];
     this.direction = directions[direction];
@@ -110,6 +114,19 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
   isFighting() {
     return [12, 13, 14, 15, 16, 17, 18, 28, 29, 30].includes(this.f);
+  }
+
+  shoot(x, y) {
+    this.scene.tweens.add({
+      targets: this.arrow,
+      x,
+      y,
+      ease: "Linear",
+      duration: 250,
+      onComplete(tween, targets) {
+        targets[0].setVisible(false);
+      },
+    });
   }
 
   setMotion(motion) {
@@ -141,6 +158,18 @@ export default class Skeleton extends Phaser.GameObjects.Image {
         }
       } else if (this.motion !== "shoot") {
         this.setMotion("shoot");
+
+        const player = this.scene.players.get(selectedPlayer);
+
+        this.arrow.setPosition(x + OFFSET.X, y + OFFSET.Y).setVisible(true);
+
+        this.arrow.setAngle(
+          Phaser.Math.RadToDeg(
+            Phaser.Math.Angle.Between(this.x, this.y, player.x, player.y)
+          )
+        );
+
+        this.shoot(player.x, player.y);
       }
     } else if (isDead) {
       if (this.motion !== "die") {
