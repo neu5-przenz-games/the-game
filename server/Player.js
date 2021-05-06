@@ -1,7 +1,7 @@
 const {
+  getChebyshevDistance,
   getDestTile,
   getXYFromTile,
-  getManhattanDistance,
 } = require("./utils/algo");
 
 class Player {
@@ -73,15 +73,19 @@ class Player {
     this.settings.fight = value;
   }
 
+  setSettingsShowRange(value) {
+    this.settings.showRange = value;
+  }
+
   setWeapon(value) {
     this.equipment.weapon = value;
   }
 
   inRange() {
-    const range = this.equipment.weapon === "sword" ? 2 : 10;
+    const range = this.equipment.weapon === "sword" ? 1 : 5;
 
     return (
-      getManhattanDistance(
+      getChebyshevDistance(
         this.positionTile,
         this.selectedPlayer.positionTile
       ) <= range

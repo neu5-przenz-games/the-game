@@ -1,4 +1,5 @@
 import TileFight from "./Fight";
+import TileMarked from "./Marked";
 import TileSelected from "./Selected";
 
-export { TileFight, TileSelected };
+export { TileFight, TileMarked, TileSelected };

@@ -5,6 +5,7 @@ export default class UIProfile {
     settings,
     followCb,
     fightCb,
+    showRangeCb,
     weaponCb,
     respawnCb,
   }) {
@@ -22,6 +23,9 @@ export default class UIProfile {
     const [fightCheckbox] = document.getElementsByClassName(
       "profile-wrapper__fight-checkbox"
     );
+    const [showRange] = document.getElementsByClassName(
+      "profile-wrapper__range-checkbox"
+    );
     const [...weaponRadio] = document.getElementsByClassName(
       "equipement__weapon-radio"
     );
@@ -29,10 +33,12 @@ export default class UIProfile {
     this.respawnButton = respawnButton;
     this.followCheckbox = followCheckbox;
     this.fightCheckbox = fightCheckbox;
+    this.showRange = showRange;
     this.weaponRadio = weaponRadio;
 
     this.followCheckbox.checked = settings.follow;
     this.fightCheckbox.checked = settings.fight;
+    this.showRange.checked = settings.showRange;
 
     this.handleRadio = (ev) => {
       weaponCb(name, ev.target.value);
@@ -52,6 +58,10 @@ export default class UIProfile {
 
     this.fightCheckbox.onchange = () => {
       fightCb(name, this.fightCheckbox.checked);
+    };
+
+    this.showRange.onchange = () => {
+      showRangeCb(name, this.showRange.checked);
     };
 
     this.respawnButton.onclick = () => {
