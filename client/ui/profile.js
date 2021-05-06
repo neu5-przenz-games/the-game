@@ -41,18 +41,13 @@ export default class UIProfile {
     this.showRange.checked = settings.showRange;
 
     this.handleRadio = (ev) => {
-      const { value } = ev.target;
-      weaponCb(name, value);
-
-      this.showRange.disabled = value === "sword";
+      weaponCb(name, ev.target.value);
     };
 
     this.weaponRadio.forEach((radio) => {
       if (radio.value === weapon) {
         radio.checked = true;
       }
-
-      this.showRange.disabled = weapon === "sword";
 
       radio.onchange = this.handleRadio;
     });

@@ -105,7 +105,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.scene = scene;
 
-    this.range = [];
+    this.rangeTiles = [];
 
     this.label = this.scene.add
       .text(this.x, this.y, this.name)
@@ -114,29 +114,31 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.depth = this.depth;
   }
 
-  setAlphaRange(alpha = 1) {
-    this.range.forEach((tile) => {
+  setAlphaTiles(alpha = 1) {
+    this.rangeTiles.forEach((tile) => {
       tile.setAlpha(alpha);
     });
   }
 
   showRange() {
-    this.setAlphaRange();
+    this.setAlphaTiles();
+
+    const range = this.scene.weapon === "sword" ? 1 : 5;
 
     const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
-    this.range = this.scene.groundLayer.getTilesWithin(
-      vec.x - 5,
-      vec.y - 5,
-      11,
-      11
+    this.rangeTiles = this.scene.groundLayer.getTilesWithin(
+      vec.x - range,
+      vec.y - range,
+      range * 2 + 1,
+      range * 2 + 1
     );
 
-    this.setAlphaRange(0.8);
+    this.setAlphaTiles(0.8);
   }
 
   hideRange() {
-    this.setAlphaRange();
-    this.range = [];
+    this.setAlphaTiles();
+    this.rangeTiles = [];
   }
 
   isFighting() {
@@ -294,7 +296,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     }
 
     if (this.isMainPlayer) {
-      if (this.scene.settings.showRange && this.scene.weapon === "bow") {
+      if (this.scene.settings.showRange) {
         this.showRange();
       } else {
         this.hideRange();
