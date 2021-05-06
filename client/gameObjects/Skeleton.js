@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import HealthBar from "./HealthBar";
-import { TileSelected, TileFight } from "./Tile";
+import { TileMarked, TileFight, TileSelected } from "./Tile";
 import Arrow from "./Arrow";
 
 export const directions = {
@@ -81,7 +81,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.name = name;
     this.dest = { x: null, y: null };
-    this.markedDestTile = null;
     this.isMainPlayer = isMainPlayer;
     this.isDead = isDead;
     this.tick = 0;
@@ -89,6 +88,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.hp = new HealthBar(scene, this.x, this.y, hp);
 
+    this.tileMarked = new TileMarked(scene);
     this.tileSelected = new TileSelected(scene, this.x, this.y);
     this.tileFight = new TileFight(scene, this.x, this.y);
 
@@ -105,11 +105,38 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.scene = scene;
 
+    this.range = [];
+
     this.label = this.scene.add
       .text(this.x, this.y, this.name)
       .setOrigin(0.5, -1.0)
       .setPosition(this.x, this.y - this.displayHeight / 2);
     this.label.depth = this.depth;
+  }
+
+  setAlphaRange(alpha = 1) {
+    this.range.forEach((tile) => {
+      tile.setAlpha(alpha);
+    });
+  }
+
+  showRange() {
+    this.setAlphaRange();
+
+    const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
+    this.range = this.scene.groundLayer.getTilesWithin(
+      vec.x - 5,
+      vec.y - 5,
+      11,
+      11
+    );
+
+    this.setAlphaRange(0.8);
+  }
+
+  hideRange() {
+    this.setAlphaRange();
+    this.range = [];
   }
 
   isFighting() {
@@ -227,24 +254,22 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     if (this.isMainPlayer && selectedPlayer === null && destTile !== null) {
       // clear previous marker if it exists and if player is in movement
       if (
-        this.markedDestTile !== null &&
-        (this.markedDestTile.x !== destTile.tileX ||
-          this.markedDestTile.y !== destTile.tileY)
+        this.tileMarked.visible === true &&
+        (this.tileMarked.tileX !== destTile.tileX ||
+          this.tileMarked.tileY !== destTile.tileY)
       ) {
-        this.markedDestTile.clearAlpha();
-        this.markedDestTile = null;
+        this.tileMarked.toggleVisible(false);
       }
 
-      const tile = this.scene.groundLayer.getTileAt(
+      const tile = this.scene.groundLayer.tileToWorldXY(
         destTile.tileX,
         destTile.tileY
       );
 
-      tile.setAlpha(0.6);
-      this.markedDestTile = tile;
-    } else if (this.markedDestTile !== null) {
-      this.markedDestTile.clearAlpha();
-      this.markedDestTile = null;
+      this.tileMarked.setPosition(tile.x + OFFSET.X, tile.y + OFFSET.Y);
+      this.tileMarked.toggleVisible(true, tile);
+    } else {
+      this.tileMarked.toggleVisible(false);
     }
 
     // player changed direction
@@ -266,6 +291,14 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
       this.tileSelected.setPosition(this.x, this.y);
       this.tileFight.setPosition(this.x, this.y);
+    }
+
+    if (this.isMainPlayer) {
+      if (this.scene.settings.showRange && this.scene.weapon === "bow") {
+        this.showRange();
+      } else {
+        this.hideRange();
+      }
     }
 
     if (this.hp.value !== hp) {

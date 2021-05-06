@@ -12,7 +12,7 @@ const { getXYFromTile } = require("./utils/algo");
 
 const { Player } = require("./Player");
 
-const playersConfig = require("./players");
+const playersConfig = require("./mocks/players");
 
 const players = new Map();
 playersConfig.forEach((player) => {
@@ -109,6 +109,14 @@ io.on("connection", (socket) => {
 
       if (player) {
         player.setSettingsFight(value);
+      }
+    });
+
+    socket.on("settings:showRange", ({ name, value }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.setSettingsShowRange(value);
       }
     });
 

@@ -37,6 +37,14 @@ export default (game) => {
     game.settings.fight = value;
   };
 
+  const showRangeCb = (name, value) => {
+    game.socket.emit("settings:showRange", {
+      name,
+      value,
+    });
+    game.settings.showRange = value;
+  };
+
   const weaponCb = (name, value) => {
     game.socket.emit("equipment:weapon", {
       name,
@@ -100,6 +108,7 @@ export default (game) => {
         settings: game.settings,
         followCb,
         fightCb,
+        showRangeCb,
         weaponCb,
         respawnCb,
       })

@@ -1,8 +1,11 @@
 const { TILE_HALF, TILE_QUARTER } = require("./constants");
 
-const getManhattanDistance = (currTile, destTile) =>
-  Math.abs(currTile.tileX - destTile.tileX) +
-  Math.abs(currTile.tileY - destTile.tileY);
+const getChebyshevDistance = (currTile, destTile) => {
+  const distX = Math.abs(currTile.tileX - destTile.tileX);
+  const distY = Math.abs(currTile.tileY - destTile.tileY);
+
+  return Math.max(distX, distY);
+};
 
 const getNeightbours = (tileX, tileY) => [
   {
@@ -54,7 +57,7 @@ const getDestTile = (player, playerToFollow, map) =>
     // return tile with the smallest manhattan distance
     .reduce(
       (savedTile, tile) => {
-        const distance = getManhattanDistance(
+        const distance = getChebyshevDistance(
           {
             tileX: player.positionTile.tileX,
             tileY: player.positionTile.tileY,
@@ -73,8 +76,8 @@ const getDestTile = (player, playerToFollow, map) =>
     );
 
 module.exports = {
+  getChebyshevDistance,
   getDestTile,
-  getManhattanDistance,
   getNeightbours,
   getXYFromTile,
 };
