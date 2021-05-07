@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import io from "socket.io-client";
 
 import Skeleton from "../gameObjects/Skeleton";
@@ -96,7 +97,15 @@ export default (game) => {
     );
 
     game.players.forEach((player) => {
-      player.setInteractive();
+      player.setInteractive(
+        new Phaser.Geom.Rectangle(
+          player.constructor.hitBoxSize.width / 2,
+          player.constructor.hitBoxSize.height / 2,
+          player.constructor.hitBoxSize.width,
+          player.constructor.hitBoxSize.height
+        ),
+        Phaser.Geom.Rectangle.Contains
+      );
     });
 
     game.setMainPlayer(game.players.get(game.mainPlayerName));
