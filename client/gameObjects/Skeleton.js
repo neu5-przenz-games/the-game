@@ -109,10 +109,17 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.label = this.scene.add
       .text(this.x, this.y, this.name)
-      .setOrigin(0.5, -1.0)
-      .setPosition(this.x, this.y - this.displayHeight / 2);
+      .setOrigin(0.5, 2)
+      .setPosition(this.x, this.y - Skeleton.LABEL_OFFSET_Y);
     this.label.depth = this.depth;
   }
+
+  static hitBoxSize = {
+    width: 64,
+    height: 80,
+  };
+
+  static LABEL_OFFSET_Y = 8;
 
   setAlphaTiles(alpha = 1) {
     this.rangeTiles.forEach((tile) => {
@@ -253,25 +260,33 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.tileFight.toggleVisible(false);
     }
 
-    if (this.isMainPlayer && selectedPlayer === null && destTile !== null) {
-      // clear previous marker if it exists and if player is in movement
-      if (
-        this.tileMarked.visible === true &&
-        (this.tileMarked.tileX !== destTile.tileX ||
-          this.tileMarked.tileY !== destTile.tileY)
-      ) {
+    if (this.isMainPlayer) {
+      if (selectedPlayer === null && destTile !== null) {
+        // clear previous marker if it exists and if player is in movement
+        if (
+          this.tileMarked.visible === true &&
+          (this.tileMarked.tileX !== destTile.tileX ||
+            this.tileMarked.tileY !== destTile.tileY)
+        ) {
+          this.tileMarked.toggleVisible(false);
+        }
+
+        const tile = this.scene.groundLayer.tileToWorldXY(
+          destTile.tileX,
+          destTile.tileY
+        );
+
+        this.tileMarked.setPosition(tile.x + OFFSET.X, tile.y + OFFSET.Y);
+        this.tileMarked.toggleVisible(true, tile);
+      } else {
         this.tileMarked.toggleVisible(false);
       }
 
-      const tile = this.scene.groundLayer.tileToWorldXY(
-        destTile.tileX,
-        destTile.tileY
-      );
-
-      this.tileMarked.setPosition(tile.x + OFFSET.X, tile.y + OFFSET.Y);
-      this.tileMarked.toggleVisible(true, tile);
-    } else {
-      this.tileMarked.toggleVisible(false);
+      if (this.scene.settings.showRange) {
+        this.showRange();
+      } else {
+        this.hideRange();
+      }
     }
 
     // player changed direction
@@ -289,18 +304,10 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
       this.depth = this.y + OFFSET.Y;
       this.label.depth = this.depth;
-      this.label.setPosition(this.x, this.y - this.displayHeight / 2);
+      this.label.setPosition(this.x, this.y - Skeleton.LABEL_OFFSET_Y);
 
       this.tileSelected.setPosition(this.x, this.y);
       this.tileFight.setPosition(this.x, this.y);
-    }
-
-    if (this.isMainPlayer) {
-      if (this.scene.settings.showRange) {
-        this.showRange();
-      } else {
-        this.hideRange();
-      }
     }
 
     if (this.hp.value !== hp) {

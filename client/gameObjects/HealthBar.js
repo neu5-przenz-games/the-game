@@ -11,7 +11,7 @@ const BAR_BORDER_WIDTH_DOUBLE = BAR_BORDER_WIDTH * 2;
 
 const OFFSET = {
   X: -32,
-  Y: -64,
+  Y: -56,
 };
 
 export default class HealthBar {
