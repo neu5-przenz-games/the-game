@@ -112,6 +112,17 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - Skeleton.LABEL_OFFSET_Y);
     this.label.depth = this.depth;
+
+    if (process.env.NODE_ENV === "development") {
+      this.DEBUG_bounds = this.getBounds();
+      this.DEBUG_hitBox = this.scene.add.rectangle(
+        this.DEBUG_bounds.x + Skeleton.hitBoxSize.width,
+        this.DEBUG_bounds.y + Skeleton.hitBoxSize.height,
+        Skeleton.hitBoxSize.width,
+        Skeleton.hitBoxSize.height
+      );
+      this.graphics = this.scene.add.graphics();
+    }
   }
 
   static hitBoxSize = {
@@ -315,5 +326,23 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     }
 
     this.hp.setPosition(this.x, this.y);
+
+    if (process.env.NODE_ENV === "development") {
+      if (this.scene.DEBUG.toggleHitBox) {
+        this.graphics.clear();
+        this.DEBUG_bounds = this.getBounds();
+        this.DEBUG_hitBox.setPosition(
+          this.DEBUG_bounds.x + Skeleton.hitBoxSize.width,
+          this.DEBUG_bounds.y + Skeleton.hitBoxSize.height
+        );
+        this.graphics.lineStyle(1, 0xff0000);
+        this.graphics.strokeRectShape(this.DEBUG_bounds);
+        this.DEBUG_hitBox.setStrokeStyle(2, 0x1a65ac);
+        this.DEBUG_hitBox.visible = true;
+      } else {
+        this.graphics.clear();
+        this.DEBUG_hitBox.visible = false;
+      }
+    }
   }
 }
