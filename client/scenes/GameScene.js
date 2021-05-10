@@ -8,6 +8,8 @@ import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 
 import UIChat from "../ui/chat";
 
+import DEBUG_MENU from "../ui/debugMenu";
+
 const FPS = 30;
 
 export default class Game extends Phaser.Scene {
@@ -26,6 +28,17 @@ export default class Game extends Phaser.Scene {
     this.socket = null;
     this.socketId = null;
     this.SI = new SnapshotInterpolation(FPS);
+
+    this.DEBUG =
+      process.env.NODE_ENV === "development"
+        ? {
+            toggleHitBox: false,
+          }
+        : {};
+
+    if (process.env.NODE_ENV === "development") {
+      DEBUG_MENU(this);
+    }
   }
 
   setGroundLayer(groundLayer) {
