@@ -30,9 +30,9 @@ module.exports = [
   },
   {
     name: "player2",
-    x: 64,
-    y: 352,
-    positionTile: { tileX: 12, tileY: 10 },
+    x: 32,
+    y: 336,
+    positionTile: { tileX: 11, tileY: 10 },
     dest: null,
     isWalking: false,
     isDead: false,

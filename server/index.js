@@ -84,16 +84,18 @@ io.on("connection", (socket) => {
         return;
       }
 
-      const playerToSelect = players.get(selectedPlayerName);
+      if (selectedPlayerName) {
+        const playerToSelect = players.get(selectedPlayerName);
 
-      player.setSelectedObject(playerToSelect);
+        player.setSelectedObject(playerToSelect);
 
-      if (player.settings.follow) {
-        player.updateFollowing(map);
+        if (player.settings.follow) {
+          player.updateFollowing(map);
+        }
+
+        events.delete(player.name);
+        events.set(player.name, player);
       }
-
-      events.delete(player.name);
-      events.set(player.name, player);
     });
 
     socket.on("settings:follow", ({ name, value }) => {
