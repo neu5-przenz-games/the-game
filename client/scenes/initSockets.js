@@ -99,10 +99,10 @@ export default (game) => {
     game.players.forEach((player) => {
       player.setInteractive(
         new Phaser.Geom.Rectangle(
-          player.constructor.hitBoxSize.width / 2,
-          player.constructor.hitBoxSize.height / 2,
-          player.constructor.hitBoxSize.width,
-          player.constructor.hitBoxSize.height
+          player.constructor.hitAreaSize.width / 2,
+          player.constructor.hitAreaSize.height / 2,
+          player.constructor.hitAreaSize.width,
+          player.constructor.hitAreaSize.height
         ),
         Phaser.Geom.Rectangle.Contains
       );

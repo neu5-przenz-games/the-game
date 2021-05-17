@@ -30,13 +30,6 @@ export default class Game extends Phaser.Scene {
     this.socketId = null;
     this.SI = new SnapshotInterpolation(FPS);
 
-    this.DEBUG =
-      process.env.NODE_ENV === "development"
-        ? {
-            toggleHitBox: false,
-          }
-        : {};
-
     if (process.env.NODE_ENV === "development") {
       DEBUG_MENU(this);
     }
