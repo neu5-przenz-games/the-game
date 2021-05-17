@@ -16,8 +16,25 @@ const layerCollides = require("../public/assets/map/map.json").layers.find(
 
 const buildings = require("../public/assets/map/buildings.js");
 
-const buildingX = buildings[0].collides.x;
-const buildingY = buildings[0].collides.y;
+const buildingCollides = {
+  x: [],
+  y: [],
+};
+
+buildings.forEach((building) => {
+  const {
+    collides: { getStartingTile, size },
+  } = building;
+
+  const startingTile = getStartingTile(building.position);
+
+  for (let sizeX = 0; sizeX < size.x; sizeX += 1) {
+    buildingCollides.x.push(startingTile.x + sizeX);
+  }
+  for (let sizeY = 0; sizeY < size.y; sizeY += 1) {
+    buildingCollides.y.push(startingTile.y + sizeY);
+  }
+});
 
 const arr = [];
 
@@ -27,7 +44,7 @@ for (let y = 0, idx = 0; y < layerCollides.width; y += 1) {
     const tileId = layerCollides.data[idx];
     arr[y][x] = tileId === 0 ? 0 : 1;
 
-    if (buildingX.includes(x) && buildingY.includes(y)) {
+    if (buildingCollides.x.includes(x) && buildingCollides.y.includes(y)) {
       arr[y][x] = 1;
     }
 
