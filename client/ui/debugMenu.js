@@ -48,20 +48,36 @@ export default (game) => {
   const DEBUGContent = document.createElement("div");
   DEBUGContent.classList.add("DEBUG_Content");
 
-  const DEBUGToggleHitBox = document.createElement("button");
-  DEBUGToggleHitBox.innerText = "Toggle hitbox";
+  const DEBUGFieldset = document.createElement("fieldset");
+  const DEBUGFieldsetLegend = document.createElement("legend");
+  DEBUGFieldsetLegend.innerText = "debug settings";
+
+  const DEBUGHitAreaLabel = document.createElement("label");
+  DEBUGHitAreaLabel.innerText = "Show hit area of objects";
+  const DEBUGHitAreaCheckbox = document.createElement("input");
+  DEBUGHitAreaCheckbox.type = "checkbox";
+  DEBUGHitAreaLabel.appendChild(DEBUGHitAreaCheckbox);
 
   document.body.appendChild(DEBUGContainer);
   DEBUGContainer.appendChild(DEBUGToggleBtn);
   DEBUGContainer.appendChild(DEBUGContent);
 
-  DEBUGContent.appendChild(DEBUGToggleHitBox);
+  DEBUGContent.appendChild(DEBUGFieldset);
+  DEBUGFieldset.appendChild(DEBUGFieldsetLegend);
+
+  DEBUGFieldset.appendChild(DEBUGHitAreaLabel);
 
   DEBUGToggleBtn.onclick = () => {
     DEBUGContainer.classList.toggle("show");
   };
 
-  DEBUGToggleHitBox.onclick = () => {
-    game.DEBUG.toggleHitBox = !game.DEBUG.toggleHitBox;
+  DEBUGHitAreaCheckbox.onchange = () => {
+    game.input._list.forEach((obj) => { // eslint-disable-line
+      if (DEBUGHitAreaCheckbox.checked) {
+        game.input.enableDebug(obj);
+      } else {
+        game.input.removeDebug(obj);
+      }
+    });
   };
 };
