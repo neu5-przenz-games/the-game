@@ -42,6 +42,48 @@ const getNeightbours = (tileX, tileY) => [
   },
 ];
 
+const getRandomInt = (min, max) => {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+};
+
+const getRespawnTile = (map, building, players, sizeToIncrease = 3) => {
+  const { startingTile, size } = building;
+  const position = {
+    x: startingTile.x - (sizeToIncrease - 1),
+    y: startingTile.y - (sizeToIncrease - 1),
+  };
+  const increasedSize = {
+    x: size.x + sizeToIncrease,
+    y: size.y + sizeToIncrease,
+  };
+
+  const respawnRange = [];
+  const currentPlayersPositions = [];
+
+  players.forEach((player) => {
+    currentPlayersPositions.push(player.positionTile);
+  });
+
+  for (let sizeX = 0; sizeX < increasedSize.x; sizeX += 1) {
+    for (let sizeY = 0; sizeY < increasedSize.y; sizeY += 1) {
+      const y = position.y + sizeY;
+      const x = position.x + sizeX;
+      if (
+        map[y][x] === 0 &&
+        currentPlayersPositions.every(
+          (pos) => pos.tileX !== x || pos.tileY !== y
+        )
+      ) {
+        respawnRange.push({ x, y });
+      }
+    }
+  }
+
+  return respawnRange[getRandomInt(0, respawnRange.length - 1)];
+};
+
 const getXYFromTile = (tileX, tileY) => ({
   x: tileX * TILE_HALF - tileY * TILE_HALF,
   y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
@@ -79,5 +121,6 @@ module.exports = {
   getChebyshevDistance,
   getDestTile,
   getNeightbours,
+  getRespawnTile,
   getXYFromTile,
 };

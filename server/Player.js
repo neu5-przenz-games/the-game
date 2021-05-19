@@ -7,8 +7,6 @@ const {
 class Player {
   constructor({
     name,
-    x,
-    y,
     positionTile,
     dest,
     isWalking,
@@ -30,30 +28,35 @@ class Player {
     this.name = name;
 
     // movement
-    this.x = x;
-    this.y = y;
     this.positionTile = positionTile;
     this.dest = dest;
     this.isWalking = isWalking;
     this.isDead = isDead;
+    this.direction = direction;
+    this.speed = speed;
+    this.next = next;
+
+    // settings
     this.equipment = equipment;
     this.settings = settings;
     this.selectedPlayer = selectedPlayer;
     this.selectedPlayerTile = selectedPlayerTile;
 
+    // properties
     this.attack = attack;
     this.attackDelay = attackDelay;
     this.attackMaxDelay = attackMaxDelay;
-    this.next = next;
-
-    this.direction = direction;
-    this.speed = speed;
-
-    // game properties
     this.hp = hp;
 
+    // technical info
     this.socketId = socketId;
     this.isOnline = isOnline;
+
+    // generated
+    const { x, y } = getXYFromTile(positionTile.tileX, positionTile.tileY);
+    this.x = x;
+    this.y = y;
+    this.toRespawn = false;
   }
 
   setOnline(socketId) {
@@ -134,9 +137,15 @@ class Player {
     }
   }
 
-  respawn() {
+  respawn(respawnTile) {
     this.isDead = false;
+    this.toRespawn = false;
     this.hp = 100;
+
+    const respawnXY = getXYFromTile(respawnTile.x, respawnTile.y);
+    this.positionTile = { tileX: respawnTile.x, tileY: respawnTile.y };
+    this.x = respawnXY.x;
+    this.y = respawnXY.y;
   }
 
   resetSelected() {

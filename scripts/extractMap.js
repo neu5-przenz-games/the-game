@@ -22,11 +22,7 @@ const buildingCollides = {
 };
 
 buildings.forEach((building) => {
-  const {
-    collides: { getStartingTile, size },
-  } = building;
-
-  const startingTile = getStartingTile(building.position);
+  const { startingTile, size } = building;
 
   for (let sizeX = 0; sizeX < size.x; sizeX += 1) {
     buildingCollides.x.push(startingTile.x + sizeX);
