@@ -6,9 +6,10 @@ const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
-const map = require("../public/assets/map/map.js"); // eslint-disable-line
+const map = require("../public/assets/map/map.js");
+const buildings = require("../public/assets/map/buildings.js");
 const { directions, getDirection } = require("./utils/directions");
-const { getXYFromTile } = require("./utils/algo");
+const { getRespawnTile, getXYFromTile } = require("./utils/algo");
 
 const { Player } = require("./Player");
 
@@ -134,7 +135,8 @@ io.on("connection", (socket) => {
       const player = players.get(name);
 
       if (player) {
-        player.respawn();
+        player.toRespawn = true;
+        events.set(player.name, player);
       }
     });
 
@@ -246,6 +248,22 @@ const loop = () => {
 
     if (player.attackDelay < 100) {
       player.attackDelay += 1;
+    }
+
+    if (player.toRespawn) {
+      const respawnTile = getRespawnTile(
+        map,
+        buildings.find((b) => b.name === player.settings.respawnBuilding),
+        players
+      );
+
+      if (respawnTile) {
+        player.respawn(respawnTile);
+      } else {
+        // fallback for no place to respawn
+      }
+
+      events.delete(player.name);
     }
   });
 
