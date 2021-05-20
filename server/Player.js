@@ -118,10 +118,10 @@ class Player {
 
   canAttack({ PF, finder, map }) {
     return (
-      noObstacles({ PF, finder, map, player: this }) &&
       this.attackDelay >= this.attackMaxDelay &&
       this.selectedPlayer.isDead === false &&
-      this.inRange()
+      this.inRange() &&
+      noObstacles({ PF, finder, map, player: this })
     );
   }
 
