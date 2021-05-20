@@ -236,7 +236,7 @@ const loop = () => {
     if (player.selectedPlayer) {
       player.updateFollowing(map);
 
-      if (player.settings.fight && player.canAttack()) {
+      if (player.settings.fight && player.canAttack({ PF, finder, map })) {
         player.attackDelay = 0;
         player.attack = player.selectedPlayer.name;
 
