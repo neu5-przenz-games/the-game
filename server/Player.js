@@ -4,6 +4,27 @@ const {
   getXYFromTile,
 } = require("./utils/algo");
 
+const noObstacles = ({ PF, finder, map, player }) => {
+  let noObstacle = true;
+
+  if (player.equipment.weapon === "bow") {
+    const combatGrid = new PF.Grid(map.length, map.length);
+    const combatPath = finder
+      .findPath(
+        player.positionTile.tileX,
+        player.positionTile.tileY,
+        player.selectedPlayer.positionTile.tileX,
+        player.selectedPlayer.positionTile.tileY,
+        combatGrid
+      )
+      .slice(1, -1);
+
+    noObstacle = combatPath.every(([x, y]) => map[y][x] === 0);
+  }
+
+  return noObstacle;
+};
+
 class Player {
   constructor({
     name,
@@ -95,8 +116,9 @@ class Player {
     );
   }
 
-  canAttack() {
+  canAttack({ PF, finder, map }) {
     return (
+      noObstacles({ PF, finder, map, player: this }) &&
       this.attackDelay >= this.attackMaxDelay &&
       this.selectedPlayer.isDead === false &&
       this.inRange()
