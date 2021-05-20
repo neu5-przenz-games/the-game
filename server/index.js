@@ -236,7 +236,24 @@ const loop = () => {
     if (player.selectedPlayer) {
       player.updateFollowing(map);
 
-      if (player.settings.fight && player.canAttack()) {
+      let noObstacles = true;
+
+      if (player.equipment.weapon === "bow") {
+        const combatGrid = new PF.Grid(map.length, map.length);
+        const combatPath = finder
+          .findPath(
+            player.positionTile.tileX,
+            player.positionTile.tileY,
+            player.selectedPlayer.positionTile.tileX,
+            player.selectedPlayer.positionTile.tileY,
+            combatGrid
+          )
+          .slice(1, -1);
+
+        noObstacles = combatPath.every(([x, y]) => map[y][x] === 0);
+      }
+
+      if (player.settings.fight && noObstacles && player.canAttack()) {
         player.attackDelay = 0;
         player.attack = player.selectedPlayer.name;
 
