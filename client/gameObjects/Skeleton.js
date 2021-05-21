@@ -282,6 +282,14 @@ export default class Skeleton extends Phaser.GameObjects.Image {
         this.tileMarked.toggleVisible(false);
       }
 
+      if (selectedPlayer) {
+        this.scene.profile.enableSelectionButton();
+        this.scene.profile.setSelectedName(selectedPlayer);
+      } else {
+        this.scene.profile.resetSelectedName();
+        this.scene.profile.disableSelectionButton();
+      }
+
       if (this.scene.settings.showRange) {
         this.showRange();
       } else {

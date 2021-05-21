@@ -61,6 +61,14 @@ export default (game) => {
     game.profile.toggleRespawnButton(false);
   };
 
+  const dropSelectionCb = (name) => {
+    game.socket.emit("dropSelection", {
+      name,
+    });
+    game.resetSelectedObject();
+    game.profile.disableSelectionButton();
+  };
+
   game.socket.on("currentPlayers", (players, socketId) => {
     game.setSocketId(socketId);
 
@@ -120,6 +128,7 @@ export default (game) => {
         showRangeCb,
         weaponCb,
         respawnCb,
+        dropSelectionCb,
       })
     );
 
