@@ -131,6 +131,14 @@ io.on("connection", (socket) => {
       }
     });
 
+    socket.on("dropSelection", ({ name }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.resetSelected();
+      }
+    });
+
     socket.on("respawnPlayer", ({ name }) => {
       const player = players.get(name);
 
@@ -234,7 +242,9 @@ const loop = () => {
     }
 
     if (player.selectedPlayer) {
-      player.updateFollowing(map);
+      if (player.settings.follow) {
+        player.updateFollowing(map);
+      }
 
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {
         player.attackDelay = 0;

@@ -8,6 +8,7 @@ export default class UIProfile {
     showRangeCb,
     weaponCb,
     respawnCb,
+    dropSelectionCb,
   }) {
     const [profileHello] = document.getElementsByClassName(
       "profile-wrapper__hello"
@@ -29,12 +30,18 @@ export default class UIProfile {
     const [...weaponRadio] = document.getElementsByClassName(
       "equipement__weapon-radio"
     );
+    const [selectedName] = document.getElementsByClassName("selected__name");
+    const [dropSelectionButton] = document.getElementsByClassName(
+      "selected__drop-button"
+    );
 
     this.respawnButton = respawnButton;
     this.followCheckbox = followCheckbox;
     this.fightCheckbox = fightCheckbox;
     this.showRange = showRange;
     this.weaponRadio = weaponRadio;
+    this.selectedName = selectedName;
+    this.dropSelectionButton = dropSelectionButton;
 
     this.followCheckbox.checked = settings.follow;
     this.fightCheckbox.checked = settings.fight;
@@ -67,6 +74,26 @@ export default class UIProfile {
     this.respawnButton.onclick = () => {
       respawnCb(name);
     };
+
+    this.dropSelectionButton.onclick = () => {
+      dropSelectionCb(name);
+    };
+  }
+
+  setSelectedName(name) {
+    this.selectedName.innerText = name;
+  }
+
+  resetSelectedName() {
+    this.selectedName.innerText = "";
+  }
+
+  enableSelectionButton() {
+    this.dropSelectionButton.disabled = false;
+  }
+
+  disableSelectionButton() {
+    this.dropSelectionButton.disabled = true;
   }
 
   toggleRespawnButton(value) {
