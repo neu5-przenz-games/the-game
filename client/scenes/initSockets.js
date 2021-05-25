@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import io from "socket.io-client";
 
 import Skeleton from "../gameObjects/Skeleton";
+import HitText from "../gameObjects/HitText";
 import UIProfile from "../ui/profile";
 import initEventsCapturing from "./initEventsCapturing";
 
@@ -139,6 +140,18 @@ export default (game) => {
 
   game.socket.on("playersUpdate", (snapshot) => {
     game.SI.snapshot.add(snapshot);
+  });
+
+  game.socket.on("player:hit", ({ name, value }) => {
+    const player = game.players.get(name);
+
+    HitText({
+      scene: game,
+      x: player.x,
+      y: player.y,
+      depth: player.depth,
+      value,
+    });
   });
 
   game.socket.on("player:dead", (name) => {

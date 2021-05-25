@@ -250,9 +250,14 @@ const loop = () => {
         player.attackDelay = 0;
         player.attack = player.selectedPlayer.name;
 
-        player.selectedPlayer.gotHit(
-          player.equipment.weapon === "sword" ? 20 : 15
-        );
+        const hit = player.equipment.weapon === "sword" ? 20 : 15;
+
+        player.selectedPlayer.gotHit(hit);
+
+        io.emit("player:hit", {
+          name: player.selectedPlayer.name,
+          value: hit,
+        });
 
         if (player.selectedPlayer.isDead) {
           io.to(player.selectedPlayer.socketId).emit(
