@@ -79,6 +79,8 @@ export default class Game extends Phaser.Scene {
 
   resetSelectedObject() {
     this.selectedObject = null;
+    this.profile.disableSelectionButton();
+    this.profile.resetSelectedName();
   }
 
   preload() {

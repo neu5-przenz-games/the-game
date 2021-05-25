@@ -5,8 +5,6 @@ export default (game) => {
     // second parameter (obj) is an array with empty object if player is clicked
     if (obj.length) return;
 
-    game.resetSelectedObject();
-
     const { worldX, worldY } = pointer;
 
     const clickedTile = game.groundLayer.worldToTileXY(worldX, worldY, true);
@@ -15,6 +13,8 @@ export default (game) => {
     clickedTile.y -= 1;
 
     if (clickedTile.x >= 0 && clickedTile.y >= 0) {
+      game.resetSelectedObject();
+
       game.socket.emit("playerWishToGo", {
         name: game.mainPlayerName,
         tileX: clickedTile.x,
@@ -23,17 +23,26 @@ export default (game) => {
     }
   });
 
-  game.input.on("gameobjectdown", (pointer, player) => {
-    if (game.mainPlayerName !== player.name && !game.mainPlayer.isDead) {
+  game.input.on("gameobjectdown", (pointer, obj) => {
+    if (
+      game.mainPlayerName !== obj.name &&
+      !game.mainPlayer.isDead &&
+      obj.constructor.name === "Skeleton"
+    ) {
       game.setSelectedObject({
-        name: player.name,
-        type: player.constructor.name,
+        name: obj.name,
+        type: obj.constructor.name,
       });
+
+      game.profile.enableSelectionButton();
+      game.profile.setSelectedName(obj.name);
 
       game.socket.emit("selectPlayer", {
         name: game.mainPlayerName,
-        selectedPlayerName: player.name,
+        selectedPlayerName: obj.name,
       });
+    } else {
+      game.resetSelectedObject();
     }
   });
 

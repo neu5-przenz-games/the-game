@@ -66,7 +66,6 @@ export default (game) => {
       name,
     });
     game.resetSelectedObject();
-    game.profile.disableSelectionButton();
   };
 
   game.socket.on("currentPlayers", (players, socketId) => {
@@ -94,7 +93,6 @@ export default (game) => {
             isMainPlayer,
             hp: player.hp,
             isDead: player.isDead,
-            motion: "idle",
             name: player.name,
             scene: game,
             x: player.x,
@@ -116,11 +114,13 @@ export default (game) => {
       );
     });
 
-    game.setMainPlayer(game.players.get(game.mainPlayerName));
+    const mainPlayer = game.players.get(game.mainPlayerName);
+    game.setMainPlayer(mainPlayer);
 
     game.setProfile(
       new UIProfile({
         name: game.mainPlayerName,
+        isDead: mainPlayer.isDead,
         weapon: game.weapon,
         settings: game.settings,
         followCb,
@@ -139,6 +139,15 @@ export default (game) => {
 
   game.socket.on("playersUpdate", (snapshot) => {
     game.SI.snapshot.add(snapshot);
+  });
+
+  game.socket.on("player:dead", (name) => {
+    const player = game.players.get(name);
+
+    if (player.isMainPlayer) {
+      game.profile.toggleRespawnButton(true);
+      game.resetSelectedObject();
+    }
   });
 
   game.socket.on("playerMessage", (message, playerName) => {

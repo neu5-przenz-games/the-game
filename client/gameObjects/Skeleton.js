@@ -57,17 +57,7 @@ export const OFFSET = {
 };
 
 export default class Skeleton extends Phaser.GameObjects.Image {
-  constructor({
-    direction,
-    isMainPlayer,
-    hp,
-    isDead,
-    motion,
-    name,
-    scene,
-    x,
-    y,
-  }) {
+  constructor({ direction, isMainPlayer, hp, isDead, name, scene, x, y }) {
     super(
       scene,
       x + OFFSET.X,
@@ -95,17 +85,25 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.arrow = new Arrow(scene, this.x, this.y);
     scene.add.existing(this.arrow);
 
-    this.motion = motion;
-    this.anim = anims[motion];
     this.direction = directions[direction];
-    this.f = this.anim.startFrame;
-    this.frame = this.texture.get(this.direction.offset);
 
     this.depth = this.y;
 
     this.scene = scene;
 
     this.rangeTiles = [];
+
+    if (isDead) {
+      this.motion = "die";
+      this.anim = anims[this.motion];
+      this.f = this.anim.endFrame;
+    } else {
+      this.motion = "idle";
+      this.anim = anims[this.motion];
+      this.f = this.anim.startFrame;
+    }
+
+    this.frame = this.texture.get(this.direction.offset);
 
     this.label = this.scene.add
       .text(this.x, this.y, this.name)
@@ -211,11 +209,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       if (this.motion !== "die") {
         this.setMotion("die");
       }
-
-      if (this.isMainPlayer) {
-        this.scene.profile.toggleRespawnButton(true);
-        this.scene.resetSelectedObject();
-      }
     } else if (isWalking && !this.isFighting()) {
       if (this.motion !== "walk") {
         this.setMotion("walk");
@@ -280,14 +273,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
         this.tileMarked.toggleVisible(true, tile);
       } else {
         this.tileMarked.toggleVisible(false);
-      }
-
-      if (selectedPlayer) {
-        this.scene.profile.enableSelectionButton();
-        this.scene.profile.setSelectedName(selectedPlayer);
-      } else {
-        this.scene.profile.resetSelectedName();
-        this.scene.profile.disableSelectionButton();
       }
 
       if (this.scene.settings.showRange) {

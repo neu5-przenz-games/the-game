@@ -1,6 +1,7 @@
 export default class UIProfile {
   constructor({
     name,
+    isDead,
     weapon,
     settings,
     followCb,
@@ -46,6 +47,8 @@ export default class UIProfile {
     this.followCheckbox.checked = settings.follow;
     this.fightCheckbox.checked = settings.fight;
     this.showRange.checked = settings.showRange;
+
+    this.respawnButton.disabled = !isDead;
 
     this.handleRadio = (ev) => {
       weaponCb(name, ev.target.value);
