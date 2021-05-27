@@ -14,7 +14,8 @@ export default (game) => {
       game,
       buildingPosition.x,
       buildingPosition.y,
-      building.type
+      building.type,
+      building.name
     );
 
     game.add.existing(house);

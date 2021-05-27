@@ -253,6 +253,13 @@ const loop = () => {
         player.selectedPlayer.gotHit(
           player.equipment.weapon === "sword" ? 20 : 15
         );
+
+        if (player.selectedPlayer.isDead) {
+          io.to(player.selectedPlayer.socketId).emit(
+            "player:dead",
+            player.selectedPlayer.name
+          );
+        }
       }
     }
 
