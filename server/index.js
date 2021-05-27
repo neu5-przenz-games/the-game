@@ -7,7 +7,7 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 const map = require("../public/assets/map/map.js");
-const buildings = require("../public/assets/map/buildings.js");
+const gameObjects = require("../public/assets/map/gameObjects.js");
 const { directions, getDirection } = require("./utils/directions");
 const { getRespawnTile, getXYFromTile } = require("./utils/algo");
 
@@ -275,7 +275,7 @@ const loop = () => {
     if (player.toRespawn) {
       const respawnTile = getRespawnTile(
         map,
-        buildings.find((b) => b.name === player.settings.respawnBuilding),
+        gameObjects.find((b) => b.name === player.settings.respawnBuilding),
         players
       );
 

@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
 import initMap from "./initMap";
-import initBuildings from "./initBuildings";
+import initGameObjects from "./initGameObjects";
 import initSockets from "./initSockets";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList";
@@ -86,7 +86,9 @@ export default class Game extends Phaser.Scene {
   preload() {
     this.load.image("tileset-outside", "./assets/tileset/outside.png");
 
-    this.load.image("house", "./assets/gfx/house.png");
+    this.load.image("House", "./assets/gfx/house.png");
+    this.load.image("Tree", "./assets/gfx/tree.png");
+    this.load.image("Ore", "./assets/gfx/ore-copper.png");
 
     this.load.image("tile-marked", "./assets/gfx/tile-marked.png");
     this.load.image("tile-selected", "./assets/gfx/tile-selected.png");
@@ -103,7 +105,7 @@ export default class Game extends Phaser.Scene {
 
   create() {
     initMap(this);
-    initBuildings(this);
+    initGameObjects(this);
     initSockets(this);
   }
 
