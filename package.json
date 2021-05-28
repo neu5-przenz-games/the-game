@@ -8,11 +8,54 @@
   "engines": {
     "node": "14.15.x"
   },
-  "scripts": {
-    "start": "node index.js"
-  },
   "dependencies": {
+    "@geckos.io/snapshot-interpolation": "^1.0.2",
     "express": "^4.17.1",
+    "pathfinding": "^0.4.18",
+    "phaser": "^3.52.0",
     "socket.io": "^3.1.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "chai": "^4.3.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "mocha": "^8.3.0",
+    "nodemon": "^2.0.7",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-clean-easy": "^1.0.2",
+    "parcel-plugin-static-files-copy": "^2.5.1",
+    "prettier": "^2.2.1",
+    "socket.io-client": "^3.1.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "client/*"
+    ],
+    "delay": "1000"
+  },
+  "parcelCleanPaths": [
+    "dist"
+  ],
+  "staticFiles": {
+    "staticPath": "public",
+    "watcherGlob": "**"
+  },
+  "scripts": {
+    "prebuild": "yarn extract:map",
+    "build": "if test \"$NODE_ENV\" = \"production\"; then yarn build:prod; else yarn build:dev; fi",
+    "build:prod": "NODE_ENV=production parcel build client/index.html",
+    "build:dev": "NODE_ENV=development parcel build client/index.html --no-minify",
+    "predev": "yarn extract:map",
+    "dev": "parcel watch client/index.html",
+    "extract:map": "node ./scripts/extractMap.js",
+    "lint": "eslint '**/*.js'",
+    "lint:fix": "npm run lint -- --fix",
+    "serve": "nodemon server/index.js",
+    "test": "mocha server/test --exit"
   }
 }

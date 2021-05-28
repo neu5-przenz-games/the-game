@@ -1,0 +1,9 @@
+language: node_js
+
+before_script:
+  - yarn lint;
+  - if [ "$TRAVIS_BRANCH" = "main" ]; then
+      yarn build;
+    else
+      yarn build:dev;
+    fi

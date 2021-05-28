@@ -1,0 +1,124 @@
+html,
+body {
+  font-family: Arial;
+  margin: 0;
+  padding: 0;
+  background: steelblue;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.settings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+.settings.show {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.mobile-nav {
+  display: inline-block;
+}
+.mobile-nav-button {
+  border: none;
+  background: rgba(255, 255, 255, 0.7);
+  margin: 10px;
+  padding: 10px;
+}
+
+.profile-wrapper {
+  background: rgba(255, 255, 255, 0.6);
+  display: none;
+  padding: 10px;
+}
+.settings.show .profile-wrapper {
+  display: block;
+}
+
+.profile-wrapper__hello {
+  font-weight: bold;
+}
+
+.profile-wrapper__settings {
+  display: flex;
+  flex-direction: column;
+}
+
+[class$="__header"] {
+  font-variant: small-caps;
+}
+
+[class$="__content"] {
+  font-size: smaller;
+}
+
+[class^="player-list-"][class$="__count"] {
+  font-size: smaller;
+}
+
+[class^="player-list-"][class$="__header"] {
+  display: flex;
+}
+
+[class^="player-list-"][class$="__content"] {
+  padding: 0 15px;
+  margin-top: 0;
+  max-height: 20%;
+  overflow: auto;
+}
+
+.chat {
+  height: 200px;
+}
+
+.chat__content {
+  height: 85%;
+  overflow: auto;
+}
+
+.chat__input {
+  width: 100%;
+}
+
+.chat__messages {
+  padding: 0 10px;
+  margin: 0;
+}
+
+.chat__messages li {
+  display: block;
+}
+
+.chat-message__server {
+  font-style: italic;
+  color: dimgray;
+}
+
+@media only screen and (min-width: 1366px) {
+  .wrapper {
+    width: 1366px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+  }
+  .settings {
+    position: relative;
+    background: none;
+    width: 100%;
+  }
+  .mobile-nav {
+    display: none;
+  }
+  .profile-wrapper {
+    display: block;
+  }
+  .chat {
+    height: 400px;
+  }
+}
