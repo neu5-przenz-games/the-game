@@ -50,6 +50,7 @@ describe("Server socket tests", () => {
         "toRespawn",
         "selectedPlayer",
         "selectedPlayerTile",
+        "selectionToDrop",
         "settings",
         "next",
         "hp",
