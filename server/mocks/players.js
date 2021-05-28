@@ -2,6 +2,7 @@ module.exports = [
   {
     name: "player1",
     positionTile: { tileX: 13, tileY: 6 },
+    size: { tileX: 1, tileY: 1 },
     dest: null,
     isWalking: false,
     isDead: false,
@@ -10,7 +11,7 @@ module.exports = [
     },
     settings: {
       dropSelectedOnMove: true,
-      follow: false,
+      follow: true,
       fight: true,
       showRange: false,
       respawnBuilding: "house1",
@@ -30,6 +31,7 @@ module.exports = [
   {
     name: "player2",
     positionTile: { tileX: 11, tileY: 10 },
+    size: { tileX: 1, tileY: 1 },
     dest: null,
     isWalking: false,
     isDead: false,
@@ -58,6 +60,7 @@ module.exports = [
   {
     name: "player3",
     positionTile: { tileX: 19, tileY: 9 },
+    size: { tileX: 1, tileY: 1 },
     dest: null,
     isWalking: false,
     isDead: false,
@@ -86,6 +89,7 @@ module.exports = [
   {
     name: "player4",
     positionTile: { tileX: 14, tileY: 12 },
+    size: { tileX: 1, tileY: 1 },
     dest: null,
     isWalking: false,
     isDead: false,
@@ -114,6 +118,7 @@ module.exports = [
   {
     name: "player5",
     positionTile: { tileX: 12, tileY: 17 },
+    size: { tileX: 1, tileY: 1 },
     dest: null,
     isWalking: false,
     isDead: false,
@@ -142,6 +147,7 @@ module.exports = [
   {
     name: "player6",
     positionTile: { tileX: 5, tileY: 12 },
+    size: { tileX: 1, tileY: 1 },
     dest: null,
     isWalking: false,
     isDead: false,

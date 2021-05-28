@@ -1,6 +1,9 @@
-const getStartingTile = ({ x, y }) => ({ x, y });
+const getStartingTile = ({ tileX, tileY }) => ({ tileX, tileY });
 
-const getStartingTileHouse = ({ x, y }) => ({ x: x - 2, y });
+const getStartingTileHouse = ({ tileX, tileY }) => ({
+  tileX: tileX - 2,
+  tileY,
+});
 
 const getStartingTileTree = getStartingTile;
 
@@ -8,46 +11,46 @@ module.exports = [
   {
     name: "house1",
     type: "House",
-    tile: { x: 14, y: 8 },
+    positionTile: { tileX: 14, tileY: 8 },
     startingTile: getStartingTileHouse,
-    size: { x: 4, y: 3 },
+    size: { tileX: 4, tileY: 3 },
   },
   {
     name: "house2",
     type: "House",
-    tile: { x: 15, y: 30 },
+    positionTile: { tileX: 15, tileY: 30 },
     startingTile: getStartingTileHouse,
-    size: { x: 4, y: 3 },
+    size: { tileX: 4, tileY: 3 },
   },
   {
     name: "tree1",
     type: "Tree",
-    tile: { x: 17, y: 4 },
+    positionTile: { tileX: 17, tileY: 4 },
     startingTile: getStartingTileTree,
-    size: { x: 1, y: 1 },
+    size: { tileX: 1, tileY: 1 },
   },
   {
     name: "tree2",
     type: "Tree",
-    tile: { x: 20, y: 20 },
+    positionTile: { tileX: 20, tileY: 20 },
     startingTile: getStartingTileTree,
-    size: { x: 1, y: 1 },
+    size: { tileX: 1, tileY: 1 },
   },
   {
     name: "ore-copper-1",
     type: "Ore",
-    tile: { x: 20, y: 12 },
+    positionTile: { tileX: 20, tileY: 12 },
     startingTile: getStartingTileTree,
-    size: { x: 1, y: 1 },
+    size: { tileX: 1, tileY: 1 },
   },
   {
     name: "ore-copper-2",
     type: "Ore",
-    tile: { x: 16, y: 23 },
+    positionTile: { tileX: 16, tileY: 23 },
     startingTile: getStartingTileTree,
-    size: { x: 1, y: 1 },
+    size: { tileX: 1, tileY: 1 },
   },
 ].map((gameObject) => ({
   ...gameObject,
-  startingTile: gameObject.startingTile(gameObject.tile),
+  startingTile: gameObject.startingTile(gameObject.positionTile),
 }));

@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import Skeleton from "../gameObjects/Skeleton";
 import HitText from "../gameObjects/HitText";
 import UIProfile from "../ui/profile";
-import initEventsCapturing from "./initEventsCapturing";
+import inputs from "./inputs";
 
 const displayServerMessage = (game, msgArg) => {
   game.chat.addServerMessage(msgArg);
@@ -135,7 +135,7 @@ export default (game) => {
 
     game.cameras.main.startFollow(game.mainPlayer, true);
 
-    initEventsCapturing(game);
+    inputs(game);
   });
 
   game.socket.on("playersUpdate", (snapshot) => {

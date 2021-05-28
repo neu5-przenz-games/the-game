@@ -25,11 +25,7 @@ export default (game) => {
   });
 
   game.input.on("gameobjectdown", (pointer, obj) => {
-    if (
-      game.mainPlayerName !== obj.name &&
-      !game.mainPlayer.isDead &&
-      obj.constructor.name === Skeleton.name
-    ) {
+    if (game.mainPlayerName !== obj.name && !game.mainPlayer.isDead) {
       game.setSelectedObject({
         name: obj.name,
         type: obj.constructor.name,
@@ -40,7 +36,8 @@ export default (game) => {
 
       game.socket.emit("selectPlayer", {
         name: game.mainPlayerName,
-        selectedPlayerName: obj.name,
+        selectedObjectName: obj.name,
+        type: obj.constructor.name,
       });
     } else {
       game.resetSelectedObject();

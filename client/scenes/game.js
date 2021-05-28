@@ -1,9 +1,9 @@
 import Phaser from "phaser";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
-import initMap from "./initMap";
-import initGameObjects from "./initGameObjects";
-import initSockets from "./initSockets";
+import initMap from "../inits/map";
+import initGameObjects from "../inits/gameObjects";
+import sockets from "../events/sockets";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList";
 
@@ -106,7 +106,7 @@ export default class Game extends Phaser.Scene {
   create() {
     initMap(this);
     initGameObjects(this);
-    initSockets(this);
+    sockets(this);
   }
 
   update() {

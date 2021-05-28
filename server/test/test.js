@@ -44,6 +44,7 @@ describe("Server socket tests", () => {
         "speed",
         "positionTile",
         "dest",
+        "size",
         "x",
         "y",
         "toRespawn",

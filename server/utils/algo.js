@@ -7,59 +7,24 @@ const getChebyshevDistance = (currTile, destTile) => {
   return Math.max(distX, distY);
 };
 
-const getNeightbours = (tileX, tileY) => [
-  {
-    tileX: tileX + 1,
-    tileY,
-  },
-  {
-    tileX: tileX + 1,
-    tileY: tileY + 1,
-  },
-  {
-    tileX,
-    tileY: tileY + 1,
-  },
-  {
-    tileX: tileX - 1,
-    tileY: tileY + 1,
-  },
-  {
-    tileX: tileX - 1,
-    tileY,
-  },
-  {
-    tileX: tileX - 1,
-    tileY: tileY - 1,
-  },
-  {
-    tileX,
-    tileY: tileY - 1,
-  },
-  {
-    tileX: tileX + 1,
-    tileY: tileY - 1,
-  },
-];
-
 const getRandomInt = (min, max) => {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 };
 
-const getRespawnTile = (map, building, players, sizeToIncrease = 3) => {
-  const { startingTile, size } = building;
+const getSurroundingTiles = ({ map, obj, players, sizeToIncrease = 2 }) => {
+  const { startingTile, size } = obj;
   const position = {
-    x: startingTile.x - (sizeToIncrease - 1),
-    y: startingTile.y - (sizeToIncrease - 1),
+    x: startingTile.tileX - (sizeToIncrease - 1),
+    y: startingTile.tileY - (sizeToIncrease - 1),
   };
   const increasedSize = {
-    x: size.x + sizeToIncrease,
-    y: size.y + sizeToIncrease,
+    x: size.tileX + sizeToIncrease,
+    y: size.tileY + sizeToIncrease,
   };
 
-  const respawnRange = [];
+  const tiles = [];
   const currentPlayersPositions = [];
 
   players.forEach((player) => {
@@ -76,12 +41,18 @@ const getRespawnTile = (map, building, players, sizeToIncrease = 3) => {
           (pos) => pos.tileX !== x || pos.tileY !== y
         )
       ) {
-        respawnRange.push({ x, y });
+        tiles.push({ tileX: x, tileY: y });
       }
     }
   }
 
-  return respawnRange[getRandomInt(0, respawnRange.length - 1)];
+  return tiles;
+};
+
+const getRespawnTile = (options) => {
+  const respawnTiles = getSurroundingTiles(options);
+
+  return respawnTiles[getRandomInt(0, respawnTiles.length - 1)];
 };
 
 const getXYFromTile = (tileX, tileY) => ({
@@ -89,38 +60,33 @@ const getXYFromTile = (tileX, tileY) => ({
   y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
 });
 
-const getDestTile = (player, playerToFollow, map) =>
-  getNeightbours(
-    playerToFollow.positionTile.tileX,
-    playerToFollow.positionTile.tileY
-  )
-    // filter out non-walkable tiles
-    .filter((tile) => map[tile.tileY][tile.tileX] === 0)
-    // return tile with the smallest manhattan distance
-    .reduce(
-      (savedTile, tile) => {
-        const distance = getChebyshevDistance(
-          {
-            tileX: player.positionTile.tileX,
-            tileY: player.positionTile.tileY,
-          },
-          tile
-        );
+const getDestTile = (player, options) => {
+  const tiles = getSurroundingTiles(options);
 
-        return distance < savedTile.distance
-          ? {
-              ...tile,
-              distance,
-            }
-          : savedTile;
-      },
-      { distance: Infinity }
-    );
+  return tiles.reduce(
+    (savedTile, tile) => {
+      const distance = getChebyshevDistance(
+        {
+          tileX: player.positionTile.tileX,
+          tileY: player.positionTile.tileY,
+        },
+        tile
+      );
+
+      return distance < savedTile.distance
+        ? {
+            ...tile,
+            distance,
+          }
+        : savedTile;
+    },
+    { distance: Infinity }
+  );
+};
 
 module.exports = {
   getChebyshevDistance,
   getDestTile,
-  getNeightbours,
   getRespawnTile,
   getXYFromTile,
 };
