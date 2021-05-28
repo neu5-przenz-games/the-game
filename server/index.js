@@ -63,14 +63,15 @@ io.on("connection", (socket) => {
           player.positionTile.tileX !== tileX ||
           player.positionTile.tileY !== tileY
         ) {
+          if (player.selectedPlayer) {
+            player.selectedPlayer = null;
+            player.selectedPlayerTile = null;
+          }
+
           player.dest = {
             ...getXYFromTile(tileX, tileY),
             tile: { tileX, tileY },
           };
-
-          if (player.selectedPlayer) {
-            player.resetSelected();
-          }
 
           events.delete(player.name);
           events.set(player.name, player);
@@ -194,6 +195,15 @@ const loop = () => {
           }
         }
       } else {
+        if (player.selectionToDrop) {
+          player.selectionToDrop = false;
+          player.dest = null;
+          player.selectedPlayer = null;
+          player.selectedPlayerTile = null;
+
+          return;
+        }
+
         const tempGrid = grid.clone();
 
         // add current players positions to the map grid
