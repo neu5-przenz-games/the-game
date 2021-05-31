@@ -63,7 +63,7 @@ const getXYFromTile = (tileX, tileY) => ({
 const getDestTile = (player, options) => {
   const tiles = getSurroundingTiles(options);
 
-  return tiles.reduce(
+  const destTile = tiles.reduce(
     (savedTile, tile) => {
       const distance = getChebyshevDistance(
         {
@@ -82,6 +82,8 @@ const getDestTile = (player, options) => {
     },
     { distance: Infinity }
   );
+
+  return destTile.distance !== 1 ? destTile : {};
 };
 
 module.exports = {

@@ -112,12 +112,14 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.depth = this.depth;
   }
 
+  static LABEL_OFFSET_Y = 8;
+
+  static TYPE = "Skeleton";
+
   static hitAreaSize = {
     width: 64,
     height: 80,
   };
-
-  static LABEL_OFFSET_Y = 8;
 
   setAlphaTiles(alpha = 1) {
     this.rangeTiles.forEach((tile) => {
@@ -238,7 +240,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     if (
       this.scene.selectedObject &&
-      this.scene.selectedObject.type === this.constructor.name &&
+      this.scene.selectedObject.type === this.constructor.TYPE &&
       this.scene.selectedObject.name === this.name
     ) {
       if (this.scene.settings.fight) {

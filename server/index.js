@@ -216,7 +216,7 @@ const loop = () => {
         );
 
         if (player.followedPlayer) {
-          player.updateFollowing(map);
+          player.updateFollowing(map, players);
         }
 
         const path = finder.findPath(
@@ -259,7 +259,7 @@ const loop = () => {
 
     if (player.selectedPlayer) {
       if (player.settings.follow) {
-        player.updateFollowing(map);
+        player.updateFollowing(map, players);
       }
 
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {

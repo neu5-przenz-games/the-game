@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import Skeleton from "../gameObjects/Skeleton";
 
 export default (game) => {
   game.input.on(Phaser.Input.Events.POINTER_UP, (pointer, obj) => {
@@ -28,7 +27,7 @@ export default (game) => {
     if (game.mainPlayerName !== obj.name && !game.mainPlayer.isDead) {
       game.setSelectedObject({
         name: obj.name,
-        type: obj.constructor.name,
+        type: obj.constructor.TYPE,
       });
 
       game.profile.enableSelectionButton();
@@ -37,7 +36,7 @@ export default (game) => {
       game.socket.emit("selectPlayer", {
         name: game.mainPlayerName,
         selectedObjectName: obj.name,
-        type: obj.constructor.name,
+        type: obj.constructor.TYPE,
       });
     } else {
       game.resetSelectedObject();

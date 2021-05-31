@@ -169,13 +169,15 @@ class Player {
         players,
       });
 
-      this.dest = {
-        ...getXYFromTile(tileX, tileY),
-        tile: {
-          tileX,
-          tileY,
-        },
-      };
+      if (tileX && tileY) {
+        this.dest = {
+          ...getXYFromTile(tileX, tileY),
+          tile: {
+            tileX,
+            tileY,
+          },
+        };
+      }
     }
   }
 
