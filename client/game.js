@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import GameScene from "./scenes/GameScene";
+import Game from "./scenes/game";
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
@@ -28,7 +28,7 @@ const config = {
       gravity: 0,
     },
   },
-  scene: [GameScene],
+  scene: [Game],
 };
 
 export default new Phaser.Game(config);

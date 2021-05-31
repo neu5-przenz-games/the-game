@@ -14,8 +14,8 @@ const TYPES = {
 export default (game) => {
   gameObjects.forEach((gameObject) => {
     const objectWorldXY = game.groundLayer.tileToWorldXY(
-      gameObject.tile.x,
-      gameObject.tile.y
+      gameObject.positionTile.tileX,
+      gameObject.positionTile.tileY
     );
 
     const Type = TYPES[gameObject.type];

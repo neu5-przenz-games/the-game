@@ -16,22 +16,6 @@ const layerCollides = require("../public/assets/map/map.json").layers.find(
 
 const gameObjects = require("../public/assets/map/gameObjects.js");
 
-const gameObjectsCollides = {
-  x: [],
-  y: [],
-};
-
-gameObjects.forEach((gameObject) => {
-  const { startingTile, size } = gameObject;
-
-  for (let sizeX = 0; sizeX < size.x; sizeX += 1) {
-    gameObjectsCollides.x.push(startingTile.x + sizeX);
-  }
-  for (let sizeY = 0; sizeY < size.y; sizeY += 1) {
-    gameObjectsCollides.y.push(startingTile.y + sizeY);
-  }
-});
-
 const arr = [];
 
 for (let y = 0, idx = 0; y < layerCollides.width; y += 1) {
@@ -40,16 +24,22 @@ for (let y = 0, idx = 0; y < layerCollides.width; y += 1) {
     const tileId = layerCollides.data[idx];
     arr[y][x] = tileId === 0 ? 0 : 1;
 
-    if (
-      gameObjectsCollides.x.includes(x) &&
-      gameObjectsCollides.y.includes(y)
-    ) {
-      arr[y][x] = 1;
-    }
-
     idx += 1;
   }
 }
+
+gameObjects.forEach((gameObject) => {
+  const { startingTile, size } = gameObject;
+
+  for (let sizeX = 0; sizeX < size.tileX; sizeX += 1) {
+    for (let sizeY = 0; sizeY < size.tileY; sizeY += 1) {
+      const y = startingTile.tileY + sizeY;
+      const x = startingTile.tileX + sizeX;
+
+      arr[y][x] = 1;
+    }
+  }
+});
 
 fs.writeFile(
   "./public/assets/map/map.js",

@@ -29,6 +29,7 @@ class Player {
   constructor({
     name,
     positionTile,
+    size,
     dest,
     isWalking,
     isDead,
@@ -36,6 +37,7 @@ class Player {
     settings,
     selectedPlayer,
     selectedPlayerTile,
+    dropSelection,
     attack,
     attackDelay,
     attackMaxDelay,
@@ -50,12 +52,14 @@ class Player {
 
     // movement
     this.positionTile = positionTile;
+    this.size = size;
     this.dest = dest;
     this.isWalking = isWalking;
     this.isDead = isDead;
     this.direction = direction;
     this.speed = speed;
     this.next = next;
+    this.dropSelection = dropSelection;
 
     // settings
     this.equipment = equipment;
@@ -138,7 +142,7 @@ class Player {
     }
   }
 
-  updateFollowing(map) {
+  updateFollowing(map, players) {
     if (
       this.selectedPlayerTile === null ||
       this.selectedPlayer.positionTile.tileX !==
@@ -150,12 +154,30 @@ class Player {
         tileY: this.selectedPlayer.positionTile.tileY,
       };
 
-      const destTile = getDestTile(this, this.selectedPlayer, map);
+      let obj = this.selectedPlayer;
 
-      this.dest = {
-        ...getXYFromTile(destTile.tileX, destTile.tileY),
-        tile: destTile,
-      };
+      if (this.selectedPlayer.startingTile === undefined) {
+        obj = {
+          ...obj,
+          startingTile: obj.positionTile,
+        };
+      }
+
+      const { tileX, tileY } = getDestTile(this, {
+        map,
+        obj,
+        players,
+      });
+
+      if (tileX && tileY) {
+        this.dest = {
+          ...getXYFromTile(tileX, tileY),
+          tile: {
+            tileX,
+            tileY,
+          },
+        };
+      }
     }
   }
 
@@ -164,15 +186,14 @@ class Player {
     this.toRespawn = false;
     this.hp = 100;
 
-    const respawnXY = getXYFromTile(respawnTile.x, respawnTile.y);
-    this.positionTile = { tileX: respawnTile.x, tileY: respawnTile.y };
+    const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
+    this.positionTile = respawnTile;
     this.x = respawnXY.x;
     this.y = respawnXY.y;
   }
 
   resetSelected() {
-    this.selectedPlayer = null;
-    this.selectedPlayerTile = null;
+    this.dropSelection = true;
   }
 }
 

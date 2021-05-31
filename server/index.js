@@ -63,14 +63,15 @@ io.on("connection", (socket) => {
           player.positionTile.tileX !== tileX ||
           player.positionTile.tileY !== tileY
         ) {
+          if (player.selectedPlayer) {
+            player.selectedPlayer = null;
+            player.selectedPlayerTile = null;
+          }
+
           player.dest = {
             ...getXYFromTile(tileX, tileY),
             tile: { tileX, tileY },
           };
-
-          if (player.selectedPlayer) {
-            player.resetSelected();
-          }
 
           events.delete(player.name);
           events.set(player.name, player);
@@ -78,25 +79,31 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("selectPlayer", ({ name, selectedPlayerName }) => {
+    socket.on("selectPlayer", ({ name, selectedObjectName, type }) => {
       const player = players.get(name);
 
       if (player.isDead) {
         return;
       }
 
-      if (selectedPlayerName) {
-        const playerToSelect = players.get(selectedPlayerName);
+      if (type === "Skeleton") {
+        const selectedPlayer = players.get(selectedObjectName);
 
-        player.setSelectedObject(playerToSelect);
+        player.setSelectedObject(selectedPlayer);
+      } else {
+        const selectedObject = gameObjects.find(
+          (obj) => obj.name === selectedObjectName
+        );
 
-        if (player.settings.follow) {
-          player.updateFollowing(map);
-        }
-
-        events.delete(player.name);
-        events.set(player.name, player);
+        player.setSelectedObject(selectedObject);
       }
+
+      if (player.settings.follow) {
+        player.updateFollowing(map, players);
+      }
+
+      events.delete(player.name);
+      events.set(player.name, player);
     });
 
     socket.on("settings:follow", ({ name, value }) => {
@@ -188,6 +195,15 @@ const loop = () => {
           }
         }
       } else {
+        if (player.dropSelection) {
+          player.dropSelection = false;
+          player.dest = null;
+          player.selectedPlayer = null;
+          player.selectedPlayerTile = null;
+
+          return;
+        }
+
         const tempGrid = grid.clone();
 
         // add current players positions to the map grid
@@ -200,7 +216,7 @@ const loop = () => {
         );
 
         if (player.followedPlayer) {
-          player.updateFollowing(map);
+          player.updateFollowing(map, players);
         }
 
         const path = finder.findPath(
@@ -243,7 +259,7 @@ const loop = () => {
 
     if (player.selectedPlayer) {
       if (player.settings.follow) {
-        player.updateFollowing(map);
+        player.updateFollowing(map, players);
       }
 
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {
@@ -273,11 +289,14 @@ const loop = () => {
     }
 
     if (player.toRespawn) {
-      const respawnTile = getRespawnTile(
+      const respawnTile = getRespawnTile({
         map,
-        gameObjects.find((b) => b.name === player.settings.respawnBuilding),
-        players
-      );
+        obj: gameObjects.find(
+          (b) => b.name === player.settings.respawnBuilding
+        ),
+        players,
+        sizeToIncrease: 3,
+      });
 
       if (respawnTile) {
         player.respawn(respawnTile);
