@@ -195,8 +195,8 @@ const loop = () => {
           }
         }
       } else {
-        if (player.selectionToDrop) {
-          player.selectionToDrop = false;
+        if (player.dropSelection) {
+          player.dropSelection = false;
           player.dest = null;
           player.selectedPlayer = null;
           player.selectedPlayerTile = null;

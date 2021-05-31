@@ -37,7 +37,7 @@ class Player {
     settings,
     selectedPlayer,
     selectedPlayerTile,
-    selectionToDrop,
+    dropSelection,
     attack,
     attackDelay,
     attackMaxDelay,
@@ -59,7 +59,7 @@ class Player {
     this.direction = direction;
     this.speed = speed;
     this.next = next;
-    this.selectionToDrop = selectionToDrop;
+    this.dropSelection = dropSelection;
 
     // settings
     this.equipment = equipment;
@@ -193,7 +193,7 @@ class Player {
   }
 
   resetSelected() {
-    this.selectionToDrop = true;
+    this.dropSelection = true;
   }
 }
 
