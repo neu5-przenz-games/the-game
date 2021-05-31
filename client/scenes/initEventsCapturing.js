@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Skeleton from "../gameObjects/Skeleton";
 
 export default (game) => {
   game.input.on(Phaser.Input.Events.POINTER_UP, (pointer, obj) => {
@@ -27,7 +28,7 @@ export default (game) => {
     if (
       game.mainPlayerName !== obj.name &&
       !game.mainPlayer.isDead &&
-      obj.constructor.name === "Skeleton"
+      obj.constructor.name === Skeleton.name
     ) {
       game.setSelectedObject({
         name: obj.name,
