@@ -7,7 +7,7 @@ module.exports = [
     isWalking: false,
     isDead: false,
     equipment: {
-      weapon: "bow",
+      weapon: "sword",
     },
     settings: {
       dropSelectedOnMove: true,

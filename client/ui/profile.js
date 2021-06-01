@@ -1,3 +1,9 @@
+const WEAPON_PATH = "/assets/gfx/";
+const WEAPONS = {
+  bow: "bow.png",
+  sword: "sword.png",
+};
+
 export default class UIProfile {
   constructor({
     name,
@@ -7,7 +13,6 @@ export default class UIProfile {
     followCb,
     fightCb,
     showRangeCb,
-    weaponCb,
     respawnCb,
     dropSelectionCb,
   }) {
@@ -28,19 +33,26 @@ export default class UIProfile {
     const [showRange] = document.getElementsByClassName(
       "profile-wrapper__range-checkbox"
     );
-    const [...weaponRadio] = document.getElementsByClassName(
-      "equipement__weapon-radio"
-    );
     const [selectedName] = document.getElementsByClassName("selected__name");
     const [dropSelectionButton] = document.getElementsByClassName(
       "selected__drop-button"
     );
 
+    const [equipmentWeapon] = document.getElementsByClassName(
+      "equipement__weapon"
+    );
+
+    if (weapon) {
+      const weaponImg = document.createElement("img");
+      equipmentWeapon.innerText = "";
+      weaponImg.src = WEAPON_PATH.concat(WEAPONS[weapon]);
+      equipmentWeapon.appendChild(weaponImg);
+    }
+
     this.respawnButton = respawnButton;
     this.followCheckbox = followCheckbox;
     this.fightCheckbox = fightCheckbox;
     this.showRange = showRange;
-    this.weaponRadio = weaponRadio;
     this.selectedName = selectedName;
     this.dropSelectionButton = dropSelectionButton;
 
@@ -49,18 +61,6 @@ export default class UIProfile {
     this.showRange.checked = settings.showRange;
 
     this.respawnButton.disabled = !isDead;
-
-    this.handleRadio = (ev) => {
-      weaponCb(name, ev.target.value);
-    };
-
-    this.weaponRadio.forEach((radio) => {
-      if (radio.value === weapon) {
-        radio.checked = true;
-      }
-
-      radio.onchange = this.handleRadio;
-    });
 
     this.followCheckbox.onchange = () => {
       followCb(name, this.followCheckbox.checked);
