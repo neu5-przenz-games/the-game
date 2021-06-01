@@ -62,8 +62,8 @@ body {
 .equipement__shield {
   grid-area: shield;
 }
-.equipement__legs {
-  grid-area: legs;
+.equipement__pants {
+  grid-area: pants;
 }
 .equipement__boots {
   grid-area: boots;
@@ -81,7 +81,7 @@ body {
   grid-template-areas:
     ". helmet ."
     "weapon armor shield"
-    ". legs ."
+    ". pants ."
     ". boots backpack";
 }
 
