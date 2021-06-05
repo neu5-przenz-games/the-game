@@ -85,6 +85,7 @@ export default (game) => {
             direction: player.direction,
             isMainPlayer,
             hp: player.hp,
+            energy: player.energy,
             isDead: player.isDead,
             name: player.name,
             scene: game,
@@ -152,6 +153,11 @@ export default (game) => {
       game.profile.toggleRespawnButton(true);
       game.resetSelectedObject();
     }
+    displayServerMessage(game, `You are dead ☠`);
+  });
+
+  game.socket.on("player:energy", (value) => {
+    game.mainPlayer.energy.updateValue(value);
   });
 
   game.socket.on("playerMessage", (message, playerName) => {

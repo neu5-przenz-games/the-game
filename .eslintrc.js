@@ -14,5 +14,6 @@ module.exports = {
   rules: {
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "no-param-reassign": ["error", { props: false }],
+    "sort-imports": ["error", { ignoreDeclarationSort: true }],
   },
 };

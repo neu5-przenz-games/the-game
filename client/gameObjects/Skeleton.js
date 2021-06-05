@@ -1,6 +1,6 @@
 import Phaser from "phaser";
-import HealthBar from "./HealthBar";
-import { TileMarked, TileFight, TileSelected } from "./Tile";
+import { EnergyBar, HealthBar } from "./Bar";
+import { TileFight, TileMarked, TileSelected } from "./Tile";
 import Arrow from "./Arrow";
 
 export const directions = {
@@ -45,6 +45,12 @@ const anims = {
 const MIN_TICK = 8;
 const MAX_TICK = 12;
 
+const HEALTH_BAR_OFFSET_X = -32;
+const HEALTH_BAR_OFFSET_Y = -56;
+
+const ENERGY_BAR_OFFSET_X = -32;
+const ENERGY_BAR_OFFSET_Y = -50;
+
 const getRandomInt = (min, max) => {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
@@ -57,7 +63,17 @@ export const OFFSET = {
 };
 
 export default class Skeleton extends Phaser.GameObjects.Image {
-  constructor({ direction, isMainPlayer, hp, isDead, name, scene, x, y }) {
+  constructor({
+    direction,
+    isMainPlayer,
+    hp,
+    energy,
+    isDead,
+    name,
+    scene,
+    x,
+    y,
+  }) {
     super(
       scene,
       x + OFFSET.X,
@@ -76,7 +92,23 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.tick = 0;
     this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
-    this.hp = new HealthBar(scene, this.x, this.y, hp);
+    this.hp = new HealthBar(
+      scene,
+      this.x,
+      this.y,
+      HEALTH_BAR_OFFSET_X,
+      HEALTH_BAR_OFFSET_Y,
+      hp
+    );
+    this.energy = new EnergyBar(
+      scene,
+      this.x,
+      this.y,
+      ENERGY_BAR_OFFSET_X,
+      ENERGY_BAR_OFFSET_Y,
+      energy,
+      isMainPlayer
+    );
 
     this.tileMarked = new TileMarked(scene);
     this.tileSelected = new TileSelected(scene, this.x, this.y);
@@ -255,6 +287,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.tileFight.toggleVisible(false);
     }
 
+    // Handle Main player only
     if (this.isMainPlayer) {
       if (selectedPlayer === null && destTile !== null) {
         // clear previous marker if it exists and if player is in movement
@@ -281,6 +314,13 @@ export default class Skeleton extends Phaser.GameObjects.Image {
         this.showRange();
       } else {
         this.hideRange();
+      }
+    } else if (!this.isMainPlayer) {
+      // Handle other players only
+      if (this.isDead) {
+        this.hp.hide();
+      } else {
+        this.hp.show();
       }
     }
 
@@ -310,5 +350,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     }
 
     this.hp.setPosition(this.x, this.y);
+    this.energy.setPosition(this.x, this.y);
   }
 }

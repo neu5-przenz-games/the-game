@@ -28,6 +28,7 @@ module.exports = [
     socketId: null,
     direction: "east",
     hp: 100,
+    energy: 100,
   },
   {
     name: "player2",
@@ -58,6 +59,7 @@ module.exports = [
     socketId: null,
     direction: "southEast",
     hp: 100,
+    energy: 100,
   },
   {
     name: "player3",
@@ -88,6 +90,7 @@ module.exports = [
     socketId: null,
     direction: "south",
     hp: 100,
+    energy: 100,
   },
   {
     name: "player4",
@@ -118,6 +121,7 @@ module.exports = [
     socketId: null,
     direction: "southWest",
     hp: 100,
+    energy: 100,
   },
   {
     name: "player5",
@@ -148,6 +152,7 @@ module.exports = [
     socketId: null,
     direction: "west",
     hp: 100,
+    energy: 100,
   },
   {
     name: "player6",
@@ -178,5 +183,6 @@ module.exports = [
     socketId: null,
     direction: "northWest",
     hp: 100,
+    energy: 100,
   },
 ];
