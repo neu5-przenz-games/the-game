@@ -169,7 +169,7 @@ export default (game) => {
   });
 
   game.socket.on("disconnect", () => {
-    // TODO(#86): properly handle disconnection from server
     displayServerMessage(game, `Disconnected from server`);
+    game.removePlayers();
   });
 };

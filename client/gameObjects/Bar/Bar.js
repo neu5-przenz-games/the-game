@@ -75,4 +75,8 @@ export default class Bar {
       BAR_HEIGHT - BAR_BORDER_WIDTH_DOUBLE
     );
   }
+
+  destroy() {
+    this.bar.destroy();
+  }
 }
