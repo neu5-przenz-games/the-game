@@ -256,6 +256,7 @@ const loop = () => {
 
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {
         player.attackDelay = 0;
+        player.energyUse("attack");
         player.attack = player.selectedPlayer.name;
 
         const hit = player.equipment.weapon === "sword" ? 20 : 15;
@@ -273,6 +274,7 @@ const loop = () => {
             player.selectedPlayer.name
           );
         }
+        io.to(player.socketId).emit("player:energy", player.energy);
       }
     }
 
@@ -292,6 +294,7 @@ const loop = () => {
 
       if (respawnTile) {
         player.respawn(respawnTile);
+        io.to(player.socketId).emit("player:energy", player.energy);
       } else {
         // fallback for no place to respawn
       }
@@ -327,8 +330,16 @@ const loop = () => {
     io.emit("playersUpdate", snapshot);
   }
 };
-
 setInterval(loop, 1000 / 30);
+
+const mainPlayerUpdateLoop = () => {
+  players.forEach((player) => {
+    if (player.energyRegenerate()) {
+      io.to(player.socketId).emit("player:energy", player.energy);
+    }
+  });
+};
+setInterval(mainPlayerUpdateLoop, 1000);
 
 app.use(express.static("dist"));
 

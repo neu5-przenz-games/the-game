@@ -25,6 +25,10 @@ const noObstacles = ({ PF, finder, map, player }) => {
   return noObstacle;
 };
 
+const ENERGY_ATTACK_USE = 15;
+const ENERGY_REGEN_RATE = 3;
+const ENERGY_MAX = 100;
+
 class Player {
   constructor({
     name,
@@ -47,6 +51,7 @@ class Player {
     socketId,
     direction,
     hp,
+    energy,
   }) {
     this.name = name;
 
@@ -72,6 +77,7 @@ class Player {
     this.attackDelay = attackDelay;
     this.attackMaxDelay = attackMaxDelay;
     this.hp = hp;
+    this.energy = energy;
 
     // technical info
     this.socketId = socketId;
@@ -125,6 +131,7 @@ class Player {
       this.attackDelay >= this.attackMaxDelay &&
       this.selectedPlayer.isDead === false &&
       this.inRange() &&
+      this.energy >= ENERGY_ATTACK_USE &&
       noObstacles({ PF, finder, map, player: this })
     );
   }
@@ -137,6 +144,7 @@ class Player {
     }
 
     if (this.hp === 0) {
+      this.energy = 0;
       this.isDead = true;
       this.resetSelected();
     }
@@ -181,10 +189,28 @@ class Player {
     }
   }
 
+  energyUse(type) {
+    if (type === "attack" && this.energy >= ENERGY_ATTACK_USE) {
+      this.energy -= ENERGY_ATTACK_USE;
+    }
+  }
+
+  energyRegenerate() {
+    if (!this.isDead && this.energy < ENERGY_MAX) {
+      this.energy += ENERGY_REGEN_RATE;
+      if (this.energy > ENERGY_MAX) {
+        this.energy = ENERGY_MAX;
+      }
+      return true;
+    }
+    return false;
+  }
+
   respawn(respawnTile) {
     this.isDead = false;
     this.toRespawn = false;
     this.hp = 100;
+    this.energy = ENERGY_MAX;
 
     const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
     this.positionTile = respawnTile;

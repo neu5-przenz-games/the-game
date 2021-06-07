@@ -1,55 +1,64 @@
 import Phaser from "phaser";
-
-const BLACK = 0x000000;
-const RED = 0xff0000;
-const WHITE = 0xffffff;
+import COLOR from "../../constants";
 
 const BAR_WIDTH = 64;
 const BAR_HEIGHT = 4;
 const BAR_BORDER_WIDTH = 1;
 const BAR_BORDER_WIDTH_DOUBLE = BAR_BORDER_WIDTH * 2;
 
-const OFFSET = {
-  X: -32,
-  Y: -56,
-};
-
-export default class HealthBar {
-  constructor(scene, x, y, value) {
+export default class Bar {
+  constructor(scene, x, y, xOffset, yOffset, value, color, drawBar = true) {
     this.bar = new Phaser.GameObjects.Graphics(scene);
 
-    this.x = x + OFFSET.X;
-    this.y = y + OFFSET.Y;
+    this.offsetX = xOffset;
+    this.offsetY = yOffset;
+    this.x = x + this.offsetX;
+    this.y = y + this.offsetY;
     this.bar.depth = y;
     this.value = value;
     this.p = (BAR_WIDTH - BAR_BORDER_WIDTH_DOUBLE) / 100;
+    this.valueColor = color;
+    this.drawBar = drawBar;
 
-    this.draw();
+    if (this.drawBar) {
+      this.draw();
+    }
 
     scene.add.existing(this.bar);
   }
 
   setPosition(x, y) {
-    this.x = x + OFFSET.X;
-    this.y = y + OFFSET.Y;
+    this.x = x + this.offsetX;
+    this.y = y + this.offsetY;
     this.bar.depth = y;
 
-    this.draw();
+    if (this.drawBar) {
+      this.draw();
+    }
   }
 
   updateValue(value) {
     this.value = value;
   }
 
+  hide() {
+    this.drawBar = false;
+    this.bar.clear();
+  }
+
+  show() {
+    this.drawBar = true;
+  }
+
   draw() {
     this.bar.clear();
 
     // border
-    this.bar.fillStyle(BLACK);
+    this.bar.fillStyle(COLOR.BLACK);
     this.bar.fillRect(this.x, this.y, BAR_WIDTH, BAR_HEIGHT);
 
     // bar
-    this.bar.fillStyle(WHITE);
+    this.bar.fillStyle(COLOR.WHITE);
     this.bar.fillRect(
       this.x + BAR_BORDER_WIDTH,
       this.y + BAR_BORDER_WIDTH,
@@ -57,8 +66,8 @@ export default class HealthBar {
       BAR_HEIGHT - BAR_BORDER_WIDTH_DOUBLE
     );
 
-    // health
-    this.bar.fillStyle(RED);
+    // value
+    this.bar.fillStyle(this.valueColor);
     this.bar.fillRect(
       this.x + BAR_BORDER_WIDTH,
       this.y + BAR_BORDER_WIDTH,

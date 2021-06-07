@@ -54,6 +54,7 @@ describe("Server socket tests", () => {
         "settings",
         "next",
         "hp",
+        "energy",
         "isDead",
         "isWalking"
       );
