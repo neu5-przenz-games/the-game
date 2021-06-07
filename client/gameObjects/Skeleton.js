@@ -352,4 +352,12 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.hp.setPosition(this.x, this.y);
     this.energy.setPosition(this.x, this.y);
   }
+
+  destroy() {
+    this.arrow.destroy();
+    this.label.destroy();
+    this.hp.destroy();
+    this.energy.destroy();
+    super.destroy();
+  }
 }

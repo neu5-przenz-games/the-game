@@ -53,6 +53,14 @@ export default class Game extends Phaser.Scene {
     });
   }
 
+  removePlayers() {
+    this.players.forEach((player) => {
+      player.destroy();
+    });
+    this.players.clear();
+    this.playerList.clear();
+  }
+
   setMainPlayer(mainPlayer) {
     this.mainPlayer = mainPlayer;
   }
