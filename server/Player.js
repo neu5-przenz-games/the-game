@@ -45,6 +45,7 @@ class Player {
     attack,
     attackDelay,
     attackMaxDelay,
+    energyRegenDelay,
     next,
     speed,
     isOnline,
@@ -76,6 +77,7 @@ class Player {
     this.attack = attack;
     this.attackDelay = attackDelay;
     this.attackMaxDelay = attackMaxDelay;
+    this.energyRegenDelay = energyRegenDelay;
     this.hp = hp;
     this.energy = energy;
 
@@ -196,8 +198,14 @@ class Player {
   }
 
   energyRegenerate() {
-    if (!this.isDead && this.energy < ENERGY_MAX) {
+    if (
+      this.energyRegenDelay >= 30 &&
+      !this.isDead &&
+      this.energy < ENERGY_MAX
+    ) {
       this.energy += ENERGY_REGEN_RATE;
+      this.energyRegenDelay = 0;
+
       if (this.energy > ENERGY_MAX) {
         this.energy = ENERGY_MAX;
       }

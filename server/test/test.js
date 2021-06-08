@@ -36,6 +36,7 @@ describe("Server socket tests", () => {
         "attack",
         "attackDelay",
         "attackMaxDelay",
+        "energyRegenDelay",
         "direction",
         "isOnline",
         "name",
