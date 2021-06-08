@@ -15,6 +15,8 @@ const { Player } = require("./Player");
 
 const playersConfig = require("./mocks/players");
 
+const FRAME_IN_MS = 1000 / 30;
+
 const players = new Map();
 playersConfig.forEach((player) => {
   players.set(player.name, new Player(player));
@@ -241,7 +243,7 @@ const loop = () => {
       }
 
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {
-        player.attackDelay = 0;
+        player.attackDelayTicks = 0;
         player.energyUse("attack");
         player.attack = player.selectedPlayer.name;
 
@@ -286,11 +288,11 @@ const loop = () => {
       io.to(player.socketId).emit("player:energy", player.energy);
     }
 
-    if (player.attackDelay < 100) {
-      player.attackDelay += 1;
+    if (player.attackDelayTicks < player.attackDelayMaxTicks) {
+      player.attackDelayTicks += 1;
     }
-    if (player.energyRegenDelay < 30) {
-      player.energyRegenDelay += 1;
+    if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
+      player.energyRegenDelayTicks += 1;
     }
   });
 
@@ -324,7 +326,7 @@ const loop = () => {
   tick += 1;
 };
 
-setInterval(loop, 1000 / 30);
+setInterval(loop, FRAME_IN_MS);
 
 app.use(express.static("dist"));
 

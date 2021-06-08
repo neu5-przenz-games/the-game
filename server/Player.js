@@ -43,9 +43,10 @@ class Player {
     selectedPlayerTile,
     dropSelection,
     attack,
-    attackDelay,
-    attackMaxDelay,
-    energyRegenDelay,
+    attackDelayTicks,
+    attackDelayMaxTicks,
+    energyRegenDelayTicks,
+    energyRegenDelayMaxTicks,
     next,
     speed,
     isOnline,
@@ -75,9 +76,10 @@ class Player {
 
     // properties
     this.attack = attack;
-    this.attackDelay = attackDelay;
-    this.attackMaxDelay = attackMaxDelay;
-    this.energyRegenDelay = energyRegenDelay;
+    this.attackDelayTicks = attackDelayTicks;
+    this.attackDelayMaxTicks = attackDelayMaxTicks;
+    this.energyRegenDelayTicks = energyRegenDelayTicks;
+    this.energyRegenDelayMaxTicks = energyRegenDelayMaxTicks;
     this.hp = hp;
     this.energy = energy;
 
@@ -130,7 +132,7 @@ class Player {
 
   canAttack({ PF, finder, map }) {
     return (
-      this.attackDelay >= this.attackMaxDelay &&
+      this.attackDelayTicks >= this.attackDelayMaxTicks &&
       this.selectedPlayer.isDead === false &&
       this.inRange() &&
       this.energy >= ENERGY_ATTACK_USE &&
@@ -199,12 +201,12 @@ class Player {
 
   energyRegenerate() {
     if (
-      this.energyRegenDelay >= 30 &&
+      this.energyRegenDelayTicks >= this.energyRegenDelayMaxTicks &&
       !this.isDead &&
       this.energy < ENERGY_MAX
     ) {
       this.energy += ENERGY_REGEN_RATE;
-      this.energyRegenDelay = 0;
+      this.energyRegenDelayTicks = 0;
 
       if (this.energy > ENERGY_MAX) {
         this.energy = ENERGY_MAX;
