@@ -15,21 +15,20 @@ const { Player } = require("./Player");
 
 const playersConfig = require("./mocks/players");
 
+const FRAME_IN_MS = 1000 / 30;
+
 const players = new Map();
 playersConfig.forEach((player) => {
   players.set(player.name, new Player(player));
 });
 
 const SI = new SnapshotInterpolation();
-let tick = 0;
 
 const grid = new PF.Grid(map);
 
 const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
-
-const events = new Map();
 
 io.on("connection", (socket) => {
   // this is temporarily, will be changed
@@ -72,9 +71,6 @@ io.on("connection", (socket) => {
             ...getXYFromTile(tileX, tileY),
             tile: { tileX, tileY },
           };
-
-          events.delete(player.name);
-          events.set(player.name, player);
         }
       }
     });
@@ -101,9 +97,6 @@ io.on("connection", (socket) => {
       if (player.settings.follow) {
         player.updateFollowing(map, players);
       }
-
-      events.delete(player.name);
-      events.set(player.name, player);
     });
 
     socket.on("settings:follow", ({ name, value }) => {
@@ -143,7 +136,6 @@ io.on("connection", (socket) => {
 
       if (player) {
         player.toRespawn = true;
-        events.set(player.name, player);
       }
     });
 
@@ -162,10 +154,10 @@ io.on("connection", (socket) => {
   }
 });
 
-const loop = () => {
-  tick += 1;
+let tick = 0;
 
-  events.forEach((player) => {
+const loop = () => {
+  players.forEach((player) => {
     // Destination is set
     if (player.dest !== null) {
       // Next tile is set
@@ -181,10 +173,6 @@ const loop = () => {
         if (player.x === player.dest.x && player.y === player.dest.y) {
           player.dest = null;
           player.isWalking = false;
-
-          if (player.selectedPlayer === null) {
-            events.delete(player.name);
-          }
         }
       } else {
         if (player.dropSelection) {
@@ -255,7 +243,7 @@ const loop = () => {
       }
 
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {
-        player.attackDelay = 0;
+        player.attackDelayTicks = 0;
         player.energyUse("attack");
         player.attack = player.selectedPlayer.name;
 
@@ -278,10 +266,6 @@ const loop = () => {
       }
     }
 
-    if (player.attackDelay < 100) {
-      player.attackDelay += 1;
-    }
-
     if (player.toRespawn) {
       const respawnTile = getRespawnTile({
         map,
@@ -298,8 +282,17 @@ const loop = () => {
       } else {
         // fallback for no place to respawn
       }
+    }
 
-      events.delete(player.name);
+    if (player.energyRegenerate()) {
+      io.to(player.socketId).emit("player:energy", player.energy);
+    }
+
+    if (player.attackDelayTicks < player.attackDelayMaxTicks) {
+      player.attackDelayTicks += 1;
+    }
+    if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
+      player.energyRegenDelayTicks += 1;
     }
   });
 
@@ -329,17 +322,11 @@ const loop = () => {
     SI.vault.add(snapshot);
     io.emit("playersUpdate", snapshot);
   }
-};
-setInterval(loop, 1000 / 30);
 
-const mainPlayerUpdateLoop = () => {
-  players.forEach((player) => {
-    if (player.energyRegenerate()) {
-      io.to(player.socketId).emit("player:energy", player.energy);
-    }
-  });
+  tick += 1;
 };
-setInterval(mainPlayerUpdateLoop, 1000);
+
+setInterval(loop, FRAME_IN_MS);
 
 app.use(express.static("dist"));
 

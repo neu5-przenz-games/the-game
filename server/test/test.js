@@ -34,8 +34,10 @@ describe("Server socket tests", () => {
     socket.on("newPlayer", (newPlayermsg) => {
       newPlayermsg.should.have.keys(
         "attack",
-        "attackDelay",
-        "attackMaxDelay",
+        "attackDelayTicks",
+        "attackDelayMaxTicks",
+        "energyRegenDelayTicks",
+        "energyRegenDelayMaxTicks",
         "direction",
         "isOnline",
         "name",
