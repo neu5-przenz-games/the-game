@@ -10,6 +10,7 @@ const map = require("../public/assets/map/map.js");
 const gameObjects = require("../public/assets/map/gameObjects.js");
 const { directions, getDirection } = require("./utils/directions");
 const { getRespawnTile, getXYFromTile } = require("./utils/algo");
+const { getHitType } = require("./utils/hitText");
 
 const { Player } = require("./Player");
 
@@ -253,7 +254,7 @@ const loop = () => {
 
         io.emit("player:hit", {
           name: player.selectedPlayer.name,
-          value: hit,
+          hitType: getHitType(hit),
         });
 
         if (player.selectedPlayer.isDead) {
