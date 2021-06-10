@@ -1,37 +1,10 @@
-const HIT_TYPES = {
-  NORMAL: {
-    color: "#FFE62B",
-    text: "got hit",
-  },
-  HARD: {
-    color: "#FF942B",
-    text: "that's hard!",
-  },
-  CRITICAL: {
-    color: "#FF0000",
-    text: "ohh my!!!",
-  },
-};
-
-const getHitTextStyle = (value) => {
-  if (value >= 40) {
-    return HIT_TYPES.CRITICAL;
-  }
-  if (value >= 20) {
-    return HIT_TYPES.HARD;
-  }
-  return HIT_TYPES.NORMAL;
-};
-
 const OFFSET_Y = 44;
 
-export default ({ scene, x, y, depth, value }) => {
-  const textStyle = getHitTextStyle(value);
-
+export default ({ scene, x, y, depth, hitType }) => {
   const hitText = scene.add
-    .text(x, y, textStyle.text, {
+    .text(x, y, hitType.text, {
       font: "12px Verdana",
-      fill: textStyle.color,
+      fill: hitType.color,
     })
     .setOrigin(0.5, 2)
     .setPosition(x, y - OFFSET_Y);

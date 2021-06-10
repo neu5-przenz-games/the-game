@@ -134,7 +134,7 @@ export default (game) => {
     game.SI.snapshot.add(snapshot);
   });
 
-  game.socket.on("player:hit", ({ name, value }) => {
+  game.socket.on("player:hit", ({ name, hitType }) => {
     const player = game.players.get(name);
 
     HitText({
@@ -142,7 +142,7 @@ export default (game) => {
       x: player.x,
       y: player.y,
       depth: player.depth,
-      value,
+      hitType,
     });
   });
 
