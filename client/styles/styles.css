@@ -85,7 +85,7 @@ body {
     ". boots backpack";
 }
 
-.equipement__backpack {
+.backpack__items {
   display: grid;
   grid-template-columns: 64px 64px 64px 64px;
   grid-template-rows: auto;
@@ -95,7 +95,8 @@ body {
   overflow-y: scroll;
 }
 
-.equipement__item {
+.equipement__item,
+.backpack__item {
   width: 64px;
   height: 64px;
   border: 1px solid black;
@@ -103,6 +104,19 @@ body {
   color: #666;
   text-align: center;
   line-height: 64px;
+  position: relative;
+}
+
+.backpack__item-quantity {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  line-height: 12px;
+  color: #fff;
+}
+
+.hidden {
+  display: none;
 }
 
 [class$="__header"] {

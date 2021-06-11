@@ -34,13 +34,16 @@ describe("Server socket tests", () => {
     socket.on("newPlayer", (newPlayermsg) => {
       newPlayermsg.should.have.keys(
         "attack",
+        "action",
         "attackDelayTicks",
         "attackDelayMaxTicks",
+        "backpack",
         "energyRegenDelayTicks",
         "energyRegenDelayMaxTicks",
         "direction",
         "isOnline",
         "name",
+        "displayName",
         "equipment",
         "socketId",
         "speed",

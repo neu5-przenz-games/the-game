@@ -1,6 +1,7 @@
 module.exports = [
   {
     name: "player1",
+    displayName: "player 1",
     positionTile: { tileX: 13, tileY: 6 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -8,6 +9,10 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+    },
+    backpack: {
+      slots: 1,
+      items: [{ name: "wood", quantity: 1 }],
     },
     settings: {
       dropSelectedOnMove: true,
@@ -18,6 +23,7 @@ module.exports = [
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
+    action: null,
     dropSelection: false,
     attack: null,
     attackDelayTicks: 30,
@@ -34,6 +40,7 @@ module.exports = [
   },
   {
     name: "player2",
+    displayName: "player 2",
     positionTile: { tileX: 11, tileY: 10 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -41,6 +48,10 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "bow",
+    },
+    backpack: {
+      slots: 4,
+      items: [],
     },
     settings: {
       dropSelectedOnMove: true,
@@ -51,6 +62,7 @@ module.exports = [
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
+    action: null,
     dropSelection: false,
     attack: null,
     attackDelayTicks: 30,
@@ -67,6 +79,7 @@ module.exports = [
   },
   {
     name: "player3",
+    displayName: "player 3",
     positionTile: { tileX: 19, tileY: 9 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -74,6 +87,10 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+    },
+    backpack: {
+      slots: 4,
+      items: [],
     },
     settings: {
       dropSelectedOnMove: true,
@@ -84,6 +101,7 @@ module.exports = [
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
+    action: null,
     dropSelection: false,
     attack: null,
     attackDelayTicks: 30,
@@ -100,6 +118,7 @@ module.exports = [
   },
   {
     name: "player4",
+    displayName: "player 4",
     positionTile: { tileX: 14, tileY: 12 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -107,6 +126,10 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+    },
+    backpack: {
+      slots: 4,
+      items: [],
     },
     settings: {
       dropSelectedOnMove: true,
@@ -117,6 +140,7 @@ module.exports = [
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
+    action: null,
     dropSelection: false,
     attack: null,
     attackDelayTicks: 30,
@@ -133,6 +157,7 @@ module.exports = [
   },
   {
     name: "player5",
+    displayName: "player 5",
     positionTile: { tileX: 12, tileY: 17 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -140,6 +165,10 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+    },
+    backpack: {
+      slots: 4,
+      items: [],
     },
     settings: {
       dropSelectedOnMove: true,
@@ -150,6 +179,7 @@ module.exports = [
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
+    action: null,
     dropSelection: false,
     attack: null,
     attackDelayTicks: 30,
@@ -166,6 +196,7 @@ module.exports = [
   },
   {
     name: "player6",
+    displayName: "player 6",
     positionTile: { tileX: 5, tileY: 12 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -173,6 +204,10 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+    },
+    backpack: {
+      slots: 4,
+      items: [],
     },
     settings: {
       dropSelectedOnMove: true,
@@ -183,6 +218,7 @@ module.exports = [
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
+    action: null,
     dropSelection: false,
     attack: null,
     attackDelayTicks: 30,

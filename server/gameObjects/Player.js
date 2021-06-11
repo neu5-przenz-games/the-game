@@ -2,7 +2,7 @@ const {
   getChebyshevDistance,
   getDestTile,
   getXYFromTile,
-} = require("./utils/algo");
+} = require("../utils/algo");
 
 const noObstacles = ({ PF, finder, map, player }) => {
   let noObstacle = true;
@@ -25,6 +25,8 @@ const noObstacles = ({ PF, finder, map, player }) => {
   return noObstacle;
 };
 
+const ENERGY_ACTION_USE = 50;
+
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
@@ -32,16 +34,19 @@ const ENERGY_MAX = 100;
 class Player {
   constructor({
     name,
+    displayName,
     positionTile,
     size,
     dest,
     isWalking,
     isDead,
     equipment,
+    backpack,
     settings,
     selectedPlayer,
     selectedPlayerTile,
     dropSelection,
+    action,
     attack,
     attackDelayTicks,
     attackDelayMaxTicks,
@@ -56,6 +61,7 @@ class Player {
     energy,
   }) {
     this.name = name;
+    this.displayName = displayName;
 
     // movement
     this.positionTile = positionTile;
@@ -70,11 +76,13 @@ class Player {
 
     // settings
     this.equipment = equipment;
+    this.backpack = backpack;
     this.settings = settings;
     this.selectedPlayer = selectedPlayer;
     this.selectedPlayerTile = selectedPlayerTile;
 
     // properties
+    this.action = action;
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
     this.attackDelayMaxTicks = attackDelayMaxTicks;
@@ -92,6 +100,27 @@ class Player {
     this.x = x;
     this.y = y;
     this.toRespawn = false;
+  }
+
+  addToBackpack(newItem, action) {
+    const item = this.backpack.items.find((i) => i.name === newItem);
+
+    if (item) {
+      item.quantity += 1;
+      this.energyUse(action);
+    } else {
+      if (this.backpack.slots === this.backpack.items.length) {
+        return false;
+      }
+
+      this.backpack.items.push({
+        name: newItem,
+        quantity: 1,
+      });
+      this.energyUse(action);
+    }
+
+    return true;
   }
 
   setOnline(socketId) {
@@ -119,9 +148,7 @@ class Player {
     this.equipment.weapon = value;
   }
 
-  inRange() {
-    const range = this.equipment.weapon === "sword" ? 1 : 5;
-
+  inRange(range) {
     return (
       getChebyshevDistance(
         this.positionTile,
@@ -134,10 +161,14 @@ class Player {
     return (
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
       this.selectedPlayer.isDead === false &&
-      this.inRange() &&
+      this.inRange(this.equipment.weapon === "sword" ? 1 : 5) &&
       this.energy >= ENERGY_ATTACK_USE &&
       noObstacles({ PF, finder, map, player: this })
     );
+  }
+
+  canPerformAction() {
+    return this.inRange(1) && this.energy >= ENERGY_ACTION_USE;
   }
 
   gotHit(damage) {
@@ -194,9 +225,11 @@ class Player {
   }
 
   energyUse(type) {
-    if (type === "attack" && this.energy >= ENERGY_ATTACK_USE) {
-      this.energy -= ENERGY_ATTACK_USE;
-    }
+    this.energy -= {
+      attack: ENERGY_ATTACK_USE,
+      chop: ENERGY_ACTION_USE,
+      mine: ENERGY_ACTION_USE,
+    }[type];
   }
 
   energyRegenerate() {
