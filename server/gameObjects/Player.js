@@ -102,12 +102,11 @@ class Player {
     this.toRespawn = false;
   }
 
-  addToBackpack(newItem, action) {
+  addToBackpack(newItem) {
     const item = this.backpack.items.find((i) => i.name === newItem);
 
     if (item) {
       item.quantity += 1;
-      this.energyUse(action);
     } else {
       if (this.backpack.slots === this.backpack.items.length) {
         return false;
@@ -117,7 +116,6 @@ class Player {
         name: newItem,
         quantity: 1,
       });
-      this.energyUse(action);
     }
 
     return true;

@@ -181,7 +181,6 @@ export default (game) => {
   });
 
   game.socket.on("player:backpack", (value) => {
-    console.log("backpack");
     game.setBackpack(value);
   });
 

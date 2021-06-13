@@ -166,11 +166,13 @@ io.on("connection", (socket) => {
       const item = getItem(player.selectedPlayer);
 
       if (!player.canPerformAction()) {
-        // send message that action can't be performed
+        // @TODO: send message that action can't be performed #164
         return;
       }
 
-      if (item && player.addToBackpack(item, player.action)) {
+      if (item && player.addToBackpack(item)) {
+        this.energyUse(player.action);
+
         io.to(player.socketId).emit("player:backpack", player.backpack);
       }
     });
