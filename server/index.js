@@ -171,7 +171,7 @@ io.on("connection", (socket) => {
       }
 
       if (item && player.addToBackpack(item)) {
-        this.energyUse(player.action);
+        player.energyUse(player.action);
 
         io.to(player.socketId).emit("player:backpack", player.backpack);
       }
