@@ -24,6 +24,7 @@ export default class Game extends Phaser.Scene {
     this.playerList = new UIPlayerStatusList();
     this.profile = null;
     this.settings = null;
+    this.backpack = null;
     this.selectedObject = null;
     this.chat = new UIChat();
     this.socket = null;
@@ -77,6 +78,10 @@ export default class Game extends Phaser.Scene {
     this.weapon = weapon;
   }
 
+  setBackpack(backpack) {
+    this.profile.setBackpack(backpack);
+  }
+
   setSelectedObject(selectedObject) {
     this.selectedObject = selectedObject;
   }
@@ -89,11 +94,13 @@ export default class Game extends Phaser.Scene {
     this.selectedObject = null;
     this.profile.disableSelectionButton();
     this.profile.resetSelectedName();
+    this.profile.resetActionButton();
   }
 
   preload() {
     this.load.image("tileset-outside", "./assets/tileset/outside.png");
 
+    // objects
     this.load.image("House", "./assets/gfx/house.png");
     this.load.image("Tree", "./assets/gfx/tree.png");
     this.load.image("Ore", "./assets/gfx/ore-copper.png");

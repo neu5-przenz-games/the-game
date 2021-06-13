@@ -12,7 +12,8 @@ const { directions, getDirection } = require("./utils/directions");
 const { getRespawnTile, getXYFromTile } = require("./utils/algo");
 const { getHitType } = require("./utils/hitText");
 
-const { Player } = require("./Player");
+const { Player } = require("./gameObjects/Player");
+const { getAction, getItem } = require("./gameObjects/Item");
 
 const playersConfig = require("./mocks/players");
 
@@ -83,6 +84,8 @@ io.on("connection", (socket) => {
         return;
       }
 
+      player.action = null;
+
       if (type === "Skeleton") {
         const selectedPlayer = players.get(selectedObjectName);
 
@@ -93,11 +96,20 @@ io.on("connection", (socket) => {
         );
 
         player.setSelectedObject(selectedObject);
+
+        const action = getAction(selectedObject);
+        if (action) {
+          player.action = action;
+        }
       }
 
       if (player.settings.follow) {
         player.updateFollowing(map, players);
       }
+
+      io.to(player.socketId).emit("player:action", {
+        name: player.action,
+      });
     });
 
     socket.on("settings:follow", ({ name, value }) => {
@@ -137,6 +149,31 @@ io.on("connection", (socket) => {
 
       if (player) {
         player.toRespawn = true;
+      }
+    });
+
+    socket.on("dropSelection", ({ name }) => {
+      const player = players.get(name);
+
+      if (player) {
+        player.resetSelected();
+      }
+    });
+
+    socket.on("action:start", ({ name }) => {
+      const player = players.get(name);
+
+      const item = getItem(player.selectedPlayer);
+
+      if (!player.canPerformAction()) {
+        // @TODO: send message that action can't be performed #164
+        return;
+      }
+
+      if (item && player.addToBackpack(item)) {
+        player.energyUse(player.action);
+
+        io.to(player.socketId).emit("player:backpack", player.backpack);
       }
     });
 
@@ -304,9 +341,10 @@ const loop = () => {
     players.forEach((player) => {
       worldState.push({
         id: player.name,
-        name: player.name,
+        displayName: player.displayName,
         selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
         weapon: player.equipment.weapon,
+        backpack: player.backpack,
         isWalking: player.isWalking,
         isDead: player.isDead,
         attack: player.attack,

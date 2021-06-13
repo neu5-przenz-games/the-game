@@ -61,6 +61,12 @@ export default (game) => {
     game.resetSelectedObject();
   };
 
+  const actionCb = (name) => {
+    game.socket.emit("action:start", {
+      name,
+    });
+  };
+
   game.socket.on("currentPlayers", (players, socketId) => {
     game.setSocketId(socketId);
 
@@ -70,6 +76,8 @@ export default (game) => {
 
     game.playerList.rebuild(players);
 
+    let backpack = null;
+
     game.setPlayers(
       players.map((player) => {
         let isMainPlayer = false;
@@ -78,6 +86,7 @@ export default (game) => {
 
           game.setSettings(player.settings);
           game.setWeapon(player.equipment.weapon);
+          backpack = player.backpack;
         }
 
         return game.add.existing(
@@ -88,6 +97,7 @@ export default (game) => {
             energy: player.energy,
             isDead: player.isDead,
             name: player.name,
+            displayName: player.displayName,
             scene: game,
             x: player.x,
             y: player.y,
@@ -117,11 +127,13 @@ export default (game) => {
         isDead: mainPlayer.isDead,
         weapon: game.weapon,
         settings: game.settings,
+        backpack,
         followCb,
         fightCb,
         showRangeCb,
         respawnCb,
         dropSelectionCb,
+        actionCb,
       })
     );
 
@@ -158,6 +170,18 @@ export default (game) => {
 
   game.socket.on("player:energy", (value) => {
     game.mainPlayer.energy.updateValue(value);
+  });
+
+  game.socket.on("player:action", ({ name }) => {
+    if (name) {
+      game.profile.setActionButton(name);
+    } else {
+      game.profile.resetActionButton();
+    }
+  });
+
+  game.socket.on("player:backpack", (value) => {
+    game.setBackpack(value);
   });
 
   game.socket.on("playerMessage", (message, playerName) => {

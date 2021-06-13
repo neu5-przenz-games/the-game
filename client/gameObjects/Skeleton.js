@@ -70,6 +70,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     energy,
     isDead,
     name,
+    displayName,
     scene,
     x,
     y,
@@ -86,6 +87,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.y = y + OFFSET.Y;
 
     this.name = name;
+    this.displayName = displayName;
     this.dest = { x: null, y: null };
     this.isMainPlayer = isMainPlayer;
     this.isDead = isDead;
@@ -138,7 +140,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.frame = this.texture.get(this.direction.offset);
 
     this.label = this.scene.add
-      .text(this.x, this.y, this.name)
+      .text(this.x, this.y, this.displayName)
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - Skeleton.LABEL_OFFSET_Y);
     this.label.depth = this.depth;

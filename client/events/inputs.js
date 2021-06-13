@@ -31,7 +31,7 @@ export default (game) => {
       });
 
       game.profile.enableSelectionButton();
-      game.profile.setSelectedName(obj.name);
+      game.profile.setSelectedName(obj.displayName);
 
       game.socket.emit("selectPlayer", {
         name: game.mainPlayerName,

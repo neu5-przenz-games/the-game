@@ -25,7 +25,8 @@ export default (game) => {
       objectWorldXY.x,
       objectWorldXY.y,
       gameObject.type,
-      gameObject.name
+      gameObject.name,
+      gameObject.displayName
     );
 
     game.add.existing(object);
