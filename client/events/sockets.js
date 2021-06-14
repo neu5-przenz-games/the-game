@@ -85,7 +85,7 @@ export default (game) => {
           isMainPlayer = true;
 
           game.setSettings(player.settings);
-          game.setWeapon(player.equipment.weapon);
+          game.setEquipment(player.equipment);
           backpack = player.backpack;
         }
 
@@ -125,7 +125,7 @@ export default (game) => {
       new UIProfile({
         name: game.mainPlayerName,
         isDead: mainPlayer.isDead,
-        weapon: game.weapon,
+        equipment: game.equipment,
         settings: game.settings,
         backpack,
         followCb,

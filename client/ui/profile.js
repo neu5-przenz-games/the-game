@@ -3,6 +3,9 @@ const WEAPONS = {
   bow: "bow.png",
   sword: "sword.png",
 };
+const BACKPACKS = {
+  bag: "bag.png",
+};
 const ITEMS = {
   wood: "wood.png",
   "copper ore": "copper-ore.png",
@@ -12,7 +15,7 @@ export default class UIProfile {
   constructor({
     name,
     isDead,
-    weapon,
+    equipment,
     backpack,
     settings,
     followCb,
@@ -50,15 +53,25 @@ export default class UIProfile {
     const [equipmentWeapon] = document.getElementsByClassName(
       "equipement__weapon"
     );
+    const [equipmentBackpack] = document.getElementsByClassName(
+      "equipement__backpack"
+    );
 
     const [backpackSlots] = document.getElementsByClassName("backpack__slots");
     const [backpackItems] = document.getElementsByClassName("backpack__items");
 
-    if (weapon) {
+    if (equipment.weapon) {
       const weaponImg = document.createElement("img");
       equipmentWeapon.innerText = "";
-      weaponImg.src = GFX_PATH.concat(WEAPONS[weapon]);
+      weaponImg.src = GFX_PATH.concat(WEAPONS[equipment.weapon]);
       equipmentWeapon.appendChild(weaponImg);
+    }
+
+    if (equipment.backpack) {
+      const backpackImg = document.createElement("img");
+      equipmentBackpack.innerText = "";
+      backpackImg.src = GFX_PATH.concat(BACKPACKS[equipment.backpack]);
+      equipmentBackpack.appendChild(backpackImg);
     }
 
     this.respawnButton = respawnButton;
