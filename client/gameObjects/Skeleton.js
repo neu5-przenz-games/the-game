@@ -164,7 +164,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   showRange() {
     this.setAlphaTiles();
 
-    const range = this.scene.weapon === "sword" ? 1 : 5;
+    const range = this.scene.equipment.weapon === "sword" ? 1 : 5;
 
     const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
     this.rangeTiles = this.scene.groundLayer.getTilesWithin(
@@ -211,7 +211,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     destTile,
     direction,
     attack,
-    weapon,
+    equipment,
     isDead,
     isWalking,
     selectedPlayer,
@@ -222,7 +222,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.isDead = isDead;
 
     if (attack !== null) {
-      if (weapon === "sword") {
+      if (equipment.weapon === "sword") {
         if (this.motion !== "attack") {
           this.setMotion("attack");
         }
