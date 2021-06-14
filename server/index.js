@@ -343,7 +343,7 @@ const loop = () => {
         id: player.name,
         displayName: player.displayName,
         selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
-        weapon: player.equipment.weapon,
+        equipment: player.equipment,
         backpack: player.backpack,
         isWalking: player.isWalking,
         isDead: player.isDead,

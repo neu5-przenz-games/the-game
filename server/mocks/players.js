@@ -9,9 +9,10 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+      backpack: "bag",
     },
     backpack: {
-      slots: 1,
+      slots: 4,
       items: [{ name: "wood", quantity: 1 }],
     },
     settings: {
@@ -48,6 +49,7 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "bow",
+      backpack: "bag",
     },
     backpack: {
       slots: 4,
@@ -87,6 +89,7 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+      backpack: "bag",
     },
     backpack: {
       slots: 4,
@@ -126,6 +129,7 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+      backpack: "bag",
     },
     backpack: {
       slots: 4,
@@ -165,6 +169,7 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+      backpack: "bag",
     },
     backpack: {
       slots: 4,
@@ -204,6 +209,7 @@ module.exports = [
     isDead: false,
     equipment: {
       weapon: "sword",
+      backpack: "bag",
     },
     backpack: {
       slots: 4,
