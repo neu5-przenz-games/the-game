@@ -47,6 +47,8 @@ class Player {
     selectedPlayerTile,
     dropSelection,
     action,
+    actionDurationTicks,
+    actionDurationMaxTicks,
     attack,
     attackDelayTicks,
     attackDelayMaxTicks,
@@ -83,6 +85,8 @@ class Player {
 
     // properties
     this.action = action;
+    this.actionDurationTicks = actionDurationTicks;
+    this.actionDurationMaxTicks = actionDurationMaxTicks;
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
     this.attackDelayMaxTicks = attackDelayMaxTicks;

@@ -27,10 +27,10 @@ export default class Bar {
     scene.add.existing(this.bar);
   }
 
-  setPosition(x, y) {
+  setPosition(x, y, depth) {
     this.x = x + this.offsetX;
     this.y = y + this.offsetY;
-    this.bar.depth = y;
+    this.bar.depth = depth;
 
     if (this.drawBar) {
       this.draw();

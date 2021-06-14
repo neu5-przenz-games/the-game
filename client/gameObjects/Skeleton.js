@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { EnergyBar, HealthBar } from "./Bar";
+import { EnergyBar, HealthBar, ProgressBar } from "./Bar";
 import { TileFight, TileMarked, TileSelected } from "./Tile";
 import Arrow from "./Arrow";
 
@@ -51,6 +51,9 @@ const HEALTH_BAR_OFFSET_Y = -56;
 const ENERGY_BAR_OFFSET_X = -32;
 const ENERGY_BAR_OFFSET_Y = -50;
 
+const PROGRESS_BAR_OFFSET_X = -32;
+const PROGRESS_BAR_OFFSET_Y = 48;
+
 const getRandomInt = (min, max) => {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
@@ -94,7 +97,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.tick = 0;
     this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
-    this.hp = new HealthBar(
+    this.healthBar = new HealthBar(
       scene,
       this.x,
       this.y,
@@ -102,7 +105,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       HEALTH_BAR_OFFSET_Y,
       hp
     );
-    this.energy = new EnergyBar(
+
+    this.energyBar = new EnergyBar(
       scene,
       this.x,
       this.y,
@@ -110,6 +114,16 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       ENERGY_BAR_OFFSET_Y,
       energy,
       isMainPlayer
+    );
+
+    this.progressBar = new ProgressBar(
+      scene,
+      this.x,
+      this.y,
+      PROGRESS_BAR_OFFSET_X,
+      PROGRESS_BAR_OFFSET_Y,
+      0,
+      false
     );
 
     this.tileMarked = new TileMarked(scene);
@@ -197,6 +211,14 @@ export default class Skeleton extends Phaser.GameObjects.Image {
         targets[0].setVisible(false);
       },
     });
+  }
+
+  actionStart(duration) {
+    this.progressBar.startCounter(duration);
+  }
+
+  actionEnd() {
+    this.progressBar.resetCounter();
   }
 
   setMotion(motion) {
@@ -320,9 +342,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     } else if (!this.isMainPlayer) {
       // Handle other players only
       if (this.isDead) {
-        this.hp.hide();
+        this.healthBar.hide();
       } else {
-        this.hp.show();
+        this.healthBar.show();
       }
     }
 
@@ -347,19 +369,25 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.tileFight.setPosition(this.x, this.y);
     }
 
-    if (this.hp.value !== hp) {
-      this.hp.updateValue(hp);
+    if (this.healthBar.value !== hp) {
+      this.healthBar.updateValue(hp);
     }
 
-    this.hp.setPosition(this.x, this.y);
-    this.energy.setPosition(this.x, this.y);
+    this.healthBar.setPosition(this.x, this.y, this.depth);
+    this.energyBar.setPosition(this.x, this.y, this.depth);
+    this.progressBar.setPosition(this.x, this.y, this.depth);
+
+    if (this.progressBar.counter) {
+      this.progressBar.updateValue(this.progressBar.counter.getValue());
+    }
   }
 
   destroy() {
     this.arrow.destroy();
     this.label.destroy();
-    this.hp.destroy();
-    this.energy.destroy();
+    this.healthBar.destroy();
+    this.energyBar.destroy();
+    this.progressBar.destroy();
     super.destroy();
   }
 }

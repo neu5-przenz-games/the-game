@@ -168,8 +168,8 @@ export default (game) => {
     displayServerMessage(game, `You are dead ☠`);
   });
 
-  game.socket.on("player:energy", (value) => {
-    game.mainPlayer.energy.updateValue(value);
+  game.socket.on("player:energy:update", (value) => {
+    game.mainPlayer.energyBar.updateValue(value);
   });
 
   game.socket.on("player:action", ({ name }) => {
@@ -180,7 +180,15 @@ export default (game) => {
     }
   });
 
-  game.socket.on("player:backpack", (value) => {
+  game.socket.on("action:progress", (duration) => {
+    game.mainPlayer.actionStart(duration);
+  });
+
+  game.socket.on("action:end", () => {
+    game.mainPlayer.actionEnd();
+  });
+
+  game.socket.on("backpack:add", (value) => {
     game.setBackpack(value);
   });
 

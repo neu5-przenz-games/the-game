@@ -1,4 +1,5 @@
-import HealthBar from "./HealthBar";
 import EnergyBar from "./EnergyBar";
+import HealthBar from "./HealthBar";
+import ProgressBar from "./ProgressBar";
 
-export { HealthBar, EnergyBar };
+export { EnergyBar, HealthBar, ProgressBar };

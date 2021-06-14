@@ -1,0 +1,28 @@
+import Bar from "./Bar";
+import COLOR from "../../constants";
+
+export default class ProgressBar extends Bar {
+  constructor(scene, x, y, xOffset, yOffset, value, drawBar) {
+    super(scene, x, y, xOffset, yOffset, value, COLOR.GREEN, drawBar);
+
+    this.scene = scene;
+    this.counter = null;
+  }
+
+  startCounter(duration, from = 0, to = 100) {
+    this.updateValue(from);
+    this.show();
+
+    this.counter = this.scene.tweens.addCounter({
+      from,
+      to,
+      duration,
+    });
+  }
+
+  resetCounter() {
+    this.hide();
+
+    this.counter = null;
+  }
+}
