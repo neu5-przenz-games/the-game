@@ -69,10 +69,7 @@ io.on("connection", (socket) => {
             player.selectedPlayerTile = null;
           }
 
-          // action is in progress
-          if (player.action && player.actionDurationTicks !== null) {
-            player.actionDurationTicks = null;
-            player.actionDurationMax = null;
+          if (player.resetActionDuration()) {
             io.to(player.socketId).emit("action:end");
           }
 
@@ -91,10 +88,7 @@ io.on("connection", (socket) => {
         return;
       }
 
-      // action is in progress
-      if (player.action && player.actionDurationTicks !== null) {
-        player.actionDurationTicks = null;
-        player.actionDurationMax = null;
+      if (player.resetActionDuration()) {
         io.to(player.socketId).emit("action:end");
       }
 
@@ -121,7 +115,7 @@ io.on("connection", (socket) => {
         player.updateFollowing(map, players);
       }
 
-      io.to(player.socketId).emit("player:action", {
+      io.to(player.socketId).emit("action:button:set", {
         name: player.action,
       });
     });
@@ -166,7 +160,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("action:start", ({ name }) => {
+    socket.on("action:button:clicked", ({ name }) => {
       const player = players.get(name);
 
       if (!player.canPerformAction()) {
@@ -181,8 +175,8 @@ io.on("connection", (socket) => {
 
       player.energyUse(player.action);
       io.to(player.socketId).emit(
-        "action:progress",
-        Math.floor(durationTicks * FRAME_IN_MS)
+        "action:start",
+        Math.ceil(durationTicks * FRAME_IN_MS)
       );
     });
 
@@ -341,20 +335,17 @@ const loop = () => {
     if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
       player.energyRegenDelayTicks += 1;
     }
+    if (
+      Number.isInteger(player.actionDurationTicks) &&
+      player.actionDurationTicks < player.actionDurationMaxTicks
+    ) {
+      player.actionDurationTicks += 1;
+    } else if (player.resetActionDuration()) {
+      io.to(player.socketId).emit("action:end");
 
-    if (player.action && player.actionDurationTicks !== null) {
-      if (player.actionDurationTicks < player.actionDurationMaxTicks) {
-        player.actionDurationTicks += 1;
-      } else {
-        player.actionDurationTicks = null;
-        player.actionDurationMax = null;
-
-        const item = getItem(player.selectedPlayer);
-        if (item && player.addToBackpack(item)) {
-          io.to(player.socketId).emit("backpack:add", player.backpack);
-        }
-
-        io.to(player.socketId).emit("action:end");
+      const item = getItem(player.selectedPlayer);
+      if (item && player.addToBackpack(item)) {
+        io.to(player.socketId).emit("backpack:add", player.backpack);
       }
     }
   });

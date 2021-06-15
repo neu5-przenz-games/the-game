@@ -116,7 +116,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       isMainPlayer
     );
 
-    this.progressBar = new ProgressBar(
+    this.actionProgressBar = new ProgressBar(
       scene,
       this.x,
       this.y,
@@ -214,11 +214,11 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   }
 
   actionStart(duration) {
-    this.progressBar.startCounter(duration);
+    this.actionProgressBar.startCounter(duration);
   }
 
   actionEnd() {
-    this.progressBar.resetCounter();
+    this.actionProgressBar.resetCounter();
   }
 
   setMotion(motion) {
@@ -375,10 +375,12 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.healthBar.setPosition(this.x, this.y, this.depth);
     this.energyBar.setPosition(this.x, this.y, this.depth);
-    this.progressBar.setPosition(this.x, this.y, this.depth);
+    this.actionProgressBar.setPosition(this.x, this.y, this.depth);
 
-    if (this.progressBar.counter) {
-      this.progressBar.updateValue(this.progressBar.counter.getValue());
+    if (this.actionProgressBar.counter) {
+      this.actionProgressBar.updateValue(
+        this.actionProgressBar.counter.getValue()
+      );
     }
   }
 
@@ -387,7 +389,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label.destroy();
     this.healthBar.destroy();
     this.energyBar.destroy();
-    this.progressBar.destroy();
+    this.actionProgressBar.destroy();
     super.destroy();
   }
 }

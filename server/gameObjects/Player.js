@@ -269,6 +269,17 @@ class Player {
     this.y = respawnXY.y;
   }
 
+  resetActionDuration() {
+    if (Number.isInteger(this.actionDurationTicks)) {
+      this.actionDurationTicks = null;
+      this.actionDurationMax = null;
+
+      return true;
+    }
+
+    return false;
+  }
+
   resetSelected() {
     this.dropSelection = true;
   }

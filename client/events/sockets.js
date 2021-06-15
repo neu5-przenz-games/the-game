@@ -62,7 +62,7 @@ export default (game) => {
   };
 
   const actionCb = (name) => {
-    game.socket.emit("action:start", {
+    game.socket.emit("action:button:clicked", {
       name,
     });
   };
@@ -173,7 +173,7 @@ export default (game) => {
     game.mainPlayer.energyBar.updateValue(value);
   });
 
-  game.socket.on("player:action", ({ name }) => {
+  game.socket.on("action:button:set", ({ name }) => {
     if (name) {
       game.profile.setActionButton(name);
     } else {
@@ -181,7 +181,7 @@ export default (game) => {
     }
   });
 
-  game.socket.on("action:progress", (duration) => {
+  game.socket.on("action:start", (duration) => {
     game.mainPlayer.actionStart(duration);
   });
 
