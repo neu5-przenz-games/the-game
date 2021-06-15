@@ -20,6 +20,12 @@ export default class ProgressBar extends Bar {
     });
   }
 
+  update() {
+    if (this.counter !== null) {
+      this.updateValue(this.counter.getValue());
+    }
+  }
+
   resetCounter() {
     this.hide();
 

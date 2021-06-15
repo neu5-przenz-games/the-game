@@ -377,11 +377,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.energyBar.setPosition(this.x, this.y, this.depth);
     this.actionProgressBar.setPosition(this.x, this.y, this.depth);
 
-    if (this.actionProgressBar.counter) {
-      this.actionProgressBar.updateValue(
-        this.actionProgressBar.counter.getValue()
-      );
-    }
+    this.actionProgressBar.update();
   }
 
   destroy() {
