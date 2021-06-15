@@ -24,6 +24,10 @@ export default (game) => {
   });
 
   game.input.on("gameobjectdown", (pointer, obj) => {
+    if (game.UIsettings.classList.contains("show")) {
+      return;
+    }
+
     if (game.mainPlayerName !== obj.name && !game.mainPlayer.isDead) {
       game.setSelectedObject({
         name: obj.name,
