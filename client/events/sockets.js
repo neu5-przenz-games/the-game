@@ -98,6 +98,7 @@ export default (game) => {
             isDead: player.isDead,
             name: player.name,
             displayName: player.displayName,
+            fraction: player.fraction,
             scene: game,
             x: player.x,
             y: player.y,

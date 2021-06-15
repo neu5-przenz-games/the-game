@@ -9,16 +9,16 @@ const getStartingTileTree = getStartingTile;
 
 module.exports = [
   {
-    name: "house1",
-    displayName: "house",
+    name: "house_dire",
+    displayName: "Dire Sanctuary",
     type: "House",
     positionTile: { tileX: 14, tileY: 8 },
     startingTile: getStartingTileHouse,
     size: { tileX: 4, tileY: 3 },
   },
   {
-    name: "house2",
-    displayName: "house",
+    name: "house_radiant",
+    displayName: "Radiant Sanctuary",
     type: "House",
     positionTile: { tileX: 15, tileY: 30 },
     startingTile: getStartingTileHouse,
