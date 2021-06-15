@@ -166,14 +166,6 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("dropSelection", ({ name }) => {
-      const player = players.get(name);
-
-      if (player) {
-        player.resetSelected();
-      }
-    });
-
     socket.on("action:start", ({ name }) => {
       const player = players.get(name);
 

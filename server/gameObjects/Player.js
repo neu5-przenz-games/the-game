@@ -184,6 +184,12 @@ class Player {
       this.energy = 0;
       this.isDead = true;
       this.resetSelected();
+
+      if (this.action && this.actionDurationTicks !== null) {
+        this.action = null;
+        this.actionDurationTicks = null;
+        this.actionDurationMax = null;
+      }
     }
   }
 

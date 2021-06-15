@@ -163,6 +163,7 @@ export default (game) => {
 
     if (player.isMainPlayer) {
       game.profile.toggleRespawnButton(true);
+      game.mainPlayer.actionEnd();
       game.resetSelectedObject();
     }
     displayServerMessage(game, `You are dead ☠`);
