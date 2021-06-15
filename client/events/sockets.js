@@ -62,7 +62,7 @@ export default (game) => {
   };
 
   const actionCb = (name) => {
-    game.socket.emit("action:start", {
+    game.socket.emit("action:button:clicked", {
       name,
     });
   };
@@ -163,16 +163,17 @@ export default (game) => {
 
     if (player.isMainPlayer) {
       game.profile.toggleRespawnButton(true);
+      game.mainPlayer.actionEnd();
       game.resetSelectedObject();
     }
     displayServerMessage(game, `You are dead ☠`);
   });
 
-  game.socket.on("player:energy", (value) => {
-    game.mainPlayer.energy.updateValue(value);
+  game.socket.on("player:energy:update", (value) => {
+    game.mainPlayer.energyBar.updateValue(value);
   });
 
-  game.socket.on("player:action", ({ name }) => {
+  game.socket.on("action:button:set", ({ name }) => {
     if (name) {
       game.profile.setActionButton(name);
     } else {
@@ -180,7 +181,15 @@ export default (game) => {
     }
   });
 
-  game.socket.on("player:backpack", (value) => {
+  game.socket.on("action:start", (duration) => {
+    game.mainPlayer.actionStart(duration);
+  });
+
+  game.socket.on("action:end", () => {
+    game.mainPlayer.actionEnd();
+  });
+
+  game.socket.on("backpack:add", (value) => {
     game.setBackpack(value);
   });
 

@@ -13,7 +13,7 @@ const { getRespawnTile, getXYFromTile } = require("./utils/algo");
 const { getHitType } = require("./utils/hitText");
 
 const { Player } = require("./gameObjects/Player");
-const { getAction, getItem } = require("./gameObjects/Item");
+const { getAction, getDuration, getItem } = require("./gameObjects/Item");
 
 const playersConfig = require("./mocks/players");
 
@@ -69,6 +69,10 @@ io.on("connection", (socket) => {
             player.selectedPlayerTile = null;
           }
 
+          if (player.resetActionDuration()) {
+            io.to(player.socketId).emit("action:end");
+          }
+
           player.dest = {
             ...getXYFromTile(tileX, tileY),
             tile: { tileX, tileY },
@@ -82,6 +86,10 @@ io.on("connection", (socket) => {
 
       if (player.isDead) {
         return;
+      }
+
+      if (player.resetActionDuration()) {
+        io.to(player.socketId).emit("action:end");
       }
 
       player.action = null;
@@ -107,7 +115,7 @@ io.on("connection", (socket) => {
         player.updateFollowing(map, players);
       }
 
-      io.to(player.socketId).emit("player:action", {
+      io.to(player.socketId).emit("action:button:set", {
         name: player.action,
       });
     });
@@ -152,29 +160,24 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("dropSelection", ({ name }) => {
+    socket.on("action:button:clicked", ({ name }) => {
       const player = players.get(name);
-
-      if (player) {
-        player.resetSelected();
-      }
-    });
-
-    socket.on("action:start", ({ name }) => {
-      const player = players.get(name);
-
-      const item = getItem(player.selectedPlayer);
 
       if (!player.canPerformAction()) {
         // @TODO: send message that action can't be performed #164
         return;
       }
 
-      if (item && player.addToBackpack(item)) {
-        player.energyUse(player.action);
+      const durationTicks = getDuration(player.selectedPlayer);
 
-        io.to(player.socketId).emit("player:backpack", player.backpack);
-      }
+      player.actionDurationTicks = 0;
+      player.actionDurationMaxTicks = durationTicks;
+
+      player.energyUse(player.action);
+      io.to(player.socketId).emit(
+        "action:start",
+        Math.ceil(durationTicks * FRAME_IN_MS)
+      );
     });
 
     socket.on("chatMessage", ({ name, text }) => {
@@ -300,7 +303,7 @@ const loop = () => {
             player.selectedPlayer.name
           );
         }
-        io.to(player.socketId).emit("player:energy", player.energy);
+        io.to(player.socketId).emit("player:energy:update", player.energy);
       }
     }
 
@@ -316,14 +319,14 @@ const loop = () => {
 
       if (respawnTile) {
         player.respawn(respawnTile);
-        io.to(player.socketId).emit("player:energy", player.energy);
+        io.to(player.socketId).emit("player:energy:update", player.energy);
       } else {
         // fallback for no place to respawn
       }
     }
 
     if (player.energyRegenerate()) {
-      io.to(player.socketId).emit("player:energy", player.energy);
+      io.to(player.socketId).emit("player:energy:update", player.energy);
     }
 
     if (player.attackDelayTicks < player.attackDelayMaxTicks) {
@@ -331,6 +334,19 @@ const loop = () => {
     }
     if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
       player.energyRegenDelayTicks += 1;
+    }
+    if (
+      Number.isInteger(player.actionDurationTicks) &&
+      player.actionDurationTicks < player.actionDurationMaxTicks
+    ) {
+      player.actionDurationTicks += 1;
+    } else if (player.resetActionDuration()) {
+      io.to(player.socketId).emit("action:end");
+
+      const item = getItem(player.selectedPlayer);
+      if (item && player.addToBackpack(item)) {
+        io.to(player.socketId).emit("backpack:add", player.backpack);
+      }
     }
   });
 

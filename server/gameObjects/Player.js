@@ -47,6 +47,8 @@ class Player {
     selectedPlayerTile,
     dropSelection,
     action,
+    actionDurationTicks,
+    actionDurationMaxTicks,
     attack,
     attackDelayTicks,
     attackDelayMaxTicks,
@@ -83,6 +85,8 @@ class Player {
 
     // properties
     this.action = action;
+    this.actionDurationTicks = actionDurationTicks;
+    this.actionDurationMaxTicks = actionDurationMaxTicks;
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
     this.attackDelayMaxTicks = attackDelayMaxTicks;
@@ -180,6 +184,12 @@ class Player {
       this.energy = 0;
       this.isDead = true;
       this.resetSelected();
+
+      if (this.action && this.actionDurationTicks !== null) {
+        this.action = null;
+        this.actionDurationTicks = null;
+        this.actionDurationMax = null;
+      }
     }
   }
 
@@ -257,6 +267,17 @@ class Player {
     this.positionTile = respawnTile;
     this.x = respawnXY.x;
     this.y = respawnXY.y;
+  }
+
+  resetActionDuration() {
+    if (Number.isInteger(this.actionDurationTicks)) {
+      this.actionDurationTicks = null;
+      this.actionDurationMax = null;
+
+      return true;
+    }
+
+    return false;
   }
 
   resetSelected() {

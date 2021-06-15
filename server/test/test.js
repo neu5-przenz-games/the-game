@@ -35,6 +35,8 @@ describe("Server socket tests", () => {
       newPlayermsg.should.have.keys(
         "attack",
         "action",
+        "actionDurationTicks",
+        "actionDurationMaxTicks",
         "attackDelayTicks",
         "attackDelayMaxTicks",
         "backpack",
