@@ -158,14 +158,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.frame = this.texture.get(this.direction.offset);
 
     this.label = this.scene.add
-      .text(
-        this.x,
-        this.y,
-        `[${this.fraction.charAt(0)}] ${this.displayName}`,
-        {
-          font: "12px Verdana",
-        }
-      )
+      .text(this.x, this.y, this.getName(), {
+        font: "12px Verdana",
+      })
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - LABEL_OFFSET_Y);
     this.label.depth = this.depth;
@@ -177,6 +172,10 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     width: 64,
     height: 80,
   };
+
+  getName() {
+    return `[${this.fraction.charAt(0)}] ${this.displayName}`;
+  }
 
   setAlphaTiles(alpha = 1) {
     this.rangeTiles.forEach((tile) => {

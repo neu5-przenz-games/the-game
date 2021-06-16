@@ -1,8 +1,15 @@
+const { FRACTIONS } = require("../fractions");
+
+const radiantFraction = FRACTIONS[0].name;
+const radiantHouse = FRACTIONS[0].houses[0];
+const direFraction = FRACTIONS[1].name;
+const direHouse = FRACTIONS[1].houses[0];
+
 module.exports = [
   {
     name: "player1",
     displayName: "player 1",
-    fraction: "Radiant",
+    fraction: radiantFraction,
     positionTile: { tileX: 13, tileY: 6 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -21,7 +28,7 @@ module.exports = [
       follow: true,
       fight: true,
       showRange: false,
-      respawnBuilding: "house_radiant",
+      respawnBuilding: radiantHouse,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -45,7 +52,7 @@ module.exports = [
   {
     name: "player2",
     displayName: "player 2",
-    fraction: "Dire",
+    fraction: direFraction,
     positionTile: { tileX: 11, tileY: 10 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -64,7 +71,7 @@ module.exports = [
       follow: false,
       fight: true,
       showRange: false,
-      respawnBuilding: "house_dire",
+      respawnBuilding: direHouse,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -88,7 +95,7 @@ module.exports = [
   {
     name: "player3",
     displayName: "player 3",
-    fraction: "Radiant",
+    fraction: radiantFraction,
     positionTile: { tileX: 19, tileY: 9 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -107,7 +114,7 @@ module.exports = [
       follow: false,
       fight: false,
       showRange: false,
-      respawnBuilding: "house_radiant",
+      respawnBuilding: radiantHouse,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -131,7 +138,7 @@ module.exports = [
   {
     name: "player4",
     displayName: "player 4",
-    fraction: "Dire",
+    fraction: direFraction,
     positionTile: { tileX: 14, tileY: 12 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -150,7 +157,7 @@ module.exports = [
       follow: false,
       fight: false,
       showRange: false,
-      respawnBuilding: "house_dire",
+      respawnBuilding: direHouse,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -174,7 +181,7 @@ module.exports = [
   {
     name: "player5",
     displayName: "player 5",
-    fraction: "Radiant",
+    fraction: radiantFraction,
     positionTile: { tileX: 12, tileY: 17 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -193,7 +200,7 @@ module.exports = [
       follow: false,
       fight: false,
       showRange: false,
-      respawnBuilding: "house_radiant",
+      respawnBuilding: radiantHouse,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
@@ -217,7 +224,7 @@ module.exports = [
   {
     name: "player6",
     displayName: "player 6",
-    fraction: "Dire",
+    fraction: direFraction,
     positionTile: { tileX: 5, tileY: 12 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
@@ -236,7 +243,7 @@ module.exports = [
       follow: false,
       fight: false,
       showRange: false,
-      respawnBuilding: "house_dire",
+      respawnBuilding: direHouse,
     },
     selectedPlayer: null,
     selectedPlayerTile: null,
