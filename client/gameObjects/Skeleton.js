@@ -158,7 +158,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.frame = this.texture.get(this.direction.offset);
 
     this.label = this.scene.add
-      .text(this.x, this.y, this.getName(), {
+      .text(this.x, this.y, this.getDisplayName(), {
         font: "12px Verdana",
       })
       .setOrigin(0.5, 2)
@@ -173,7 +173,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     height: 80,
   };
 
-  getName() {
+  getDisplayName() {
     return `[${this.fraction.charAt(0)}] ${this.displayName}`;
   }
 

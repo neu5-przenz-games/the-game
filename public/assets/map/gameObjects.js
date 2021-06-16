@@ -23,7 +23,7 @@ module.exports = [
   },
   {
     name: radiantHouse.name,
-    displayName: radiantHouse.name,
+    displayName: radiantHouse.displayName,
     type: "House",
     positionTile: { tileX: 15, tileY: 30 },
     startingTile: getStartingTileHouse,
