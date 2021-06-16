@@ -39,5 +39,16 @@ export default (game) => {
     } else {
       object.setInteractive();
     }
+
+    if (gameObject.displayName && gameObject.type === "House") {
+      const HOUSE_LABEL_OFFSET = 50;
+      const label = object.scene.add
+        .text(object.x, object.y, object.displayName, {
+          font: "12px Verdana",
+        })
+        .setOrigin(0.5, 2)
+        .setPosition(object.x, object.y - HOUSE_LABEL_OFFSET);
+      label.depth = object.depth;
+    }
   });
 };

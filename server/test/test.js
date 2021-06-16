@@ -47,6 +47,7 @@ describe("Server socket tests", () => {
         "name",
         "displayName",
         "equipment",
+        "fraction",
         "socketId",
         "speed",
         "positionTile",

@@ -46,10 +46,12 @@ const MIN_TICK = 8;
 const MAX_TICK = 12;
 
 const HEALTH_BAR_OFFSET_X = -32;
-const HEALTH_BAR_OFFSET_Y = -56;
+const HEALTH_BAR_OFFSET_Y = -36;
 
 const ENERGY_BAR_OFFSET_X = -32;
-const ENERGY_BAR_OFFSET_Y = -50;
+const ENERGY_BAR_OFFSET_Y = -30;
+
+const LABEL_OFFSET_Y = 25;
 
 const PROGRESS_BAR_OFFSET_X = -32;
 const PROGRESS_BAR_OFFSET_Y = 48;
@@ -74,6 +76,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     isDead,
     name,
     displayName,
+    fraction,
     scene,
     x,
     y,
@@ -91,6 +94,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.name = name;
     this.displayName = displayName;
+    this.fraction = fraction;
     this.dest = { x: null, y: null };
     this.isMainPlayer = isMainPlayer;
     this.isDead = isDead;
@@ -154,13 +158,13 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.frame = this.texture.get(this.direction.offset);
 
     this.label = this.scene.add
-      .text(this.x, this.y, this.displayName)
+      .text(this.x, this.y, this.getDisplayName(), {
+        font: "12px Verdana",
+      })
       .setOrigin(0.5, 2)
-      .setPosition(this.x, this.y - Skeleton.LABEL_OFFSET_Y);
+      .setPosition(this.x, this.y - LABEL_OFFSET_Y);
     this.label.depth = this.depth;
   }
-
-  static LABEL_OFFSET_Y = 8;
 
   static TYPE = "Skeleton";
 
@@ -168,6 +172,10 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     width: 64,
     height: 80,
   };
+
+  getDisplayName() {
+    return `[${this.fraction.charAt(0)}] ${this.displayName}`;
+  }
 
   setAlphaTiles(alpha = 1) {
     this.rangeTiles.forEach((tile) => {
@@ -363,7 +371,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
       this.depth = this.y + OFFSET.Y;
       this.label.depth = this.depth;
-      this.label.setPosition(this.x, this.y - Skeleton.LABEL_OFFSET_Y);
+      this.label.setPosition(this.x, this.y - LABEL_OFFSET_Y);
 
       this.tileSelected.setPosition(this.x, this.y);
       this.tileFight.setPosition(this.x, this.y);

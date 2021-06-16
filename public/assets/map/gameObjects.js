@@ -1,3 +1,5 @@
+const { FRACTIONS } = require("../../../server/fractions");
+
 const getStartingTile = ({ tileX, tileY }) => ({ tileX, tileY });
 
 const getStartingTileHouse = ({ tileX, tileY }) => ({
@@ -7,18 +9,21 @@ const getStartingTileHouse = ({ tileX, tileY }) => ({
 
 const getStartingTileTree = getStartingTile;
 
+const direHouse = FRACTIONS[1].houses[0];
+const radiantHouse = FRACTIONS[0].houses[0];
+
 module.exports = [
   {
-    name: "house1",
-    displayName: "house",
+    name: direHouse.name,
+    displayName: direHouse.displayName,
     type: "House",
     positionTile: { tileX: 14, tileY: 8 },
     startingTile: getStartingTileHouse,
     size: { tileX: 4, tileY: 3 },
   },
   {
-    name: "house2",
-    displayName: "house",
+    name: radiantHouse.name,
+    displayName: radiantHouse.displayName,
     type: "House",
     positionTile: { tileX: 15, tileY: 30 },
     startingTile: getStartingTileHouse,

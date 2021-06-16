@@ -26,7 +26,6 @@ const noObstacles = ({ PF, finder, map, player }) => {
 };
 
 const ENERGY_ACTION_USE = 50;
-
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
@@ -35,6 +34,7 @@ class Player {
   constructor({
     name,
     displayName,
+    fraction,
     positionTile,
     size,
     dest,
@@ -64,6 +64,7 @@ class Player {
   }) {
     this.name = name;
     this.displayName = displayName;
+    this.fraction = fraction;
 
     // movement
     this.positionTile = positionTile;
