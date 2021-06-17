@@ -80,6 +80,7 @@ export default class Game extends Phaser.Scene {
 
   setEquipment(equipment) {
     this.equipment = equipment;
+    this.profile.setEquipment(equipment);
   }
 
   setBackpack(backpack) {

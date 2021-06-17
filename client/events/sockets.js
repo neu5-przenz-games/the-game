@@ -13,6 +13,7 @@ const displayServerMessage = (game, msgArg) => {
 export default (game) => {
   game.setSocket(io());
 
+  // @TODO: Refactor socket names #172
   game.socket.on("newPlayer", (newPlayer) => {
     displayServerMessage(game, `New player connected: ${newPlayer.name}`);
     game.playerList.playerActive(newPlayer.name);
@@ -67,6 +68,20 @@ export default (game) => {
     });
   };
 
+  const itemActionsCb = ({
+    name,
+    actionName,
+    itemName,
+    whichItemFromBackpack,
+  }) => {
+    game.socket.emit("action:item", {
+      name,
+      actionName,
+      itemName,
+      whichItemFromBackpack,
+    });
+  };
+
   game.socket.on("currentPlayers", (players, socketId) => {
     game.setSocketId(socketId);
 
@@ -76,6 +91,7 @@ export default (game) => {
 
     game.playerList.rebuild(players);
 
+    let equipment = null;
     let backpack = null;
 
     game.setPlayers(
@@ -85,7 +101,8 @@ export default (game) => {
           isMainPlayer = true;
 
           game.setSettings(player.settings);
-          game.setEquipment(player.equipment);
+
+          equipment = player.equipment;
           backpack = player.backpack;
         }
 
@@ -126,7 +143,7 @@ export default (game) => {
       new UIProfile({
         name: game.mainPlayerName,
         isDead: mainPlayer.isDead,
-        equipment: game.equipment,
+        equipment,
         settings: game.settings,
         backpack,
         followCb,
@@ -135,6 +152,7 @@ export default (game) => {
         respawnCb,
         dropSelectionCb,
         actionCb,
+        itemActionsCb,
       })
     );
 
@@ -190,8 +208,13 @@ export default (game) => {
     game.mainPlayer.actionEnd();
   });
 
-  game.socket.on("backpack:add", (value) => {
-    game.setBackpack(value);
+  game.socket.on("backpack:add", (backpack, equipment) => {
+    if (backpack) {
+      game.setBackpack(backpack);
+    }
+    if (equipment) {
+      game.setEquipment(equipment);
+    }
   });
 
   game.socket.on("playerMessage", (message, playerName) => {

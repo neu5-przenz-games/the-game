@@ -50,6 +50,7 @@ io.on("connection", (socket) => {
       socket.id
     );
 
+    // @TODO: Refactor socket names #172
     socket.broadcast.emit("newPlayer", availablePlayer);
 
     socket.on("playerWishToGo", ({ name, tileX, tileY }) => {
@@ -179,6 +180,36 @@ io.on("connection", (socket) => {
         Math.ceil(durationTicks * FRAME_IN_MS)
       );
     });
+
+    socket.on(
+      "action:item",
+      ({ name, actionName, itemName, whichItemFromBackpack }) => {
+        const player = players.get(name);
+
+        if (!player) {
+          return;
+        }
+
+        if (actionName === "move to backpack") {
+          if (player.moveToBackpack(itemName, whichItemFromBackpack)) {
+            io.to(player.socketId).emit(
+              "backpack:add",
+              player.backpack,
+              player.equipment
+            );
+          }
+        }
+        if (actionName === "move to equipment") {
+          if (player.moveToEquipment(itemName)) {
+            io.to(player.socketId).emit(
+              "backpack:add",
+              player.backpack,
+              player.equipment
+            );
+          }
+        }
+      }
+    );
 
     socket.on("chatMessage", ({ name, text }) => {
       socket.broadcast.emit("playerMessage", text, name);

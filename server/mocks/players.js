@@ -16,12 +16,15 @@ module.exports = [
     isWalking: false,
     isDead: false,
     equipment: {
-      weapon: "sword",
       backpack: "bag",
     },
     backpack: {
       slots: 4,
-      items: [{ name: "wood", quantity: 1 }],
+      items: [
+        { name: "wood", quantity: 1 },
+        { name: "sword", quantity: 1 },
+        { name: "bow", quantity: 1 },
+      ],
     },
     settings: {
       dropSelectedOnMove: true,

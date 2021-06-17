@@ -4,6 +4,11 @@ const {
   getXYFromTile,
 } = require("../utils/algo");
 
+const ITEMS = {
+  bow: "weapon",
+  sword: "weapon",
+};
+
 const noObstacles = ({ PF, finder, map, player }) => {
   let noObstacle = true;
 
@@ -107,6 +112,10 @@ class Player {
     this.toRespawn = false;
   }
 
+  getFromBackpack(itemName) {
+    return this.backpack.items.find((item) => item.name === itemName);
+  }
+
   addToBackpack(newItem) {
     const item = this.backpack.items.find((i) => i.name === newItem);
 
@@ -124,6 +133,84 @@ class Player {
     }
 
     return true;
+  }
+
+  moveToBackpack(itemName, whichItemFromBackpack) {
+    const item = this.equipment[whichItemFromBackpack];
+
+    if (
+      itemName === item &&
+      this.addToBackpack(item) &&
+      this.removeFromEquipment(itemName, whichItemFromBackpack)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  removeFromBackpack(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (item) {
+      if (item.quantity > 1) {
+        item.quantity -= 1;
+      } else {
+        this.backpack.items = this.backpack.items.reduce(
+          (backpack, currentItem) => {
+            if (currentItem.name !== itemName) {
+              backpack.push(currentItem);
+            }
+            return backpack;
+          },
+          []
+        );
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
+  addToEquipment(newItem) {
+    const item = ITEMS[newItem];
+
+    if (!item) {
+      return false;
+    }
+
+    const itemFromEquipment = this.equipment[item];
+
+    if (itemFromEquipment && !this.moveToBackpack(itemFromEquipment, item)) {
+      return false;
+    }
+
+    this.equipment[ITEMS[newItem]] = newItem;
+
+    return true;
+  }
+
+  moveToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (
+      item &&
+      this.addToEquipment(item.name) &&
+      this.removeFromBackpack(itemName)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  removeFromEquipment(itemName, whichItemFromBackpack) {
+    const item = this.equipment[whichItemFromBackpack];
+
+    if (itemName === item && delete this.equipment[whichItemFromBackpack]) {
+      return true;
+    }
+    return false;
   }
 
   setOnline(socketId) {

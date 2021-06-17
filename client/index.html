@@ -42,19 +42,38 @@
                         Stats
                     </div>
                 </div>
-                <div class="equipement">
-                    <div class="equipement__header">
+                <div class="equipment">
+                    <div class="equipment__actions hidden">
+                        <span class="equipment__item-name"></span>
+                        <button 
+                            class="equipment__actions-button equipment__action-button"
+                            data-action="close"
+                        >
+                            close
+                        </button>
+                        <button 
+                            class="equipment__actions-button equipment__action-button"
+                            data-action="move to backpack"
+                        >
+                            move to backpack
+                        </button>
+                        <button 
+                            class="equipment__actions-button equipment__action-button"
+                            data-action="move to equipment"
+                        >
+                            wear it
+                        </button>
+                        <button 
+                            class="equipment__actions-button equipment__action-button"
+                            data-action="destroy"
+                        >
+                            destroy
+                        </button>
+                    </div>
+                    <div class="equipment__header">
                         Equipment
                     </div>
-                    <div class="equipement__personal">
-                        <div class="equipement__item equipement__helmet">helmet</div>
-                        <div class="equipement__item equipement__weapon">weapon</div>
-                        <div class="equipement__item equipement__armor">armor</div>
-                        <div class="equipement__item equipement__shield">shield</div>
-                        <div class="equipement__item equipement__pants">pants</div>
-                        <div class="equipement__item equipement__boots">boots</div>
-                        <div class="equipement__item equipement__backpack">backpack</div>
-                    </div>
+                    <div class="equipment__personal"></div>
                     <h5 class="backpack__slots"></h5>
                     <div class="backpack__items"></div>
                 </div>
