@@ -45,6 +45,8 @@ export default (game) => {
       const label = object.scene.add
         .text(object.x, object.y, object.displayName, {
           font: "12px Verdana",
+          stroke: "#333",
+          strokeThickness: 2,
         })
         .setOrigin(0.5, 2)
         .setPosition(object.x, object.y - HOUSE_LABEL_OFFSET);

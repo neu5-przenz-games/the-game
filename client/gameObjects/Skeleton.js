@@ -160,6 +160,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.label = this.scene.add
       .text(this.x, this.y, this.getDisplayName(), {
         font: "12px Verdana",
+        stroke: "#333",
+        strokeThickness: 2,
       })
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - LABEL_OFFSET_Y);
