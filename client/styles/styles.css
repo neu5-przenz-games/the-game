@@ -50,29 +50,52 @@ body {
   flex-direction: column;
 }
 
-.equipement__helmet {
+.equipment {
+  position: relative;
+}
+
+.equipment__actions {
+  width: 300px;
+  position: absolute;
+  background-color: #fff;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.equipment__item-name {
+  width: 240px;
+}
+
+.equipment__actions-button {
+  width: 240px;
+  margin: 4px;
+}
+
+.equipment__helmet {
   grid-area: helmet;
 }
-.equipement__weapon {
+.equipment__weapon {
   grid-area: weapon;
 }
-.equipement__armor {
+.equipment__armor {
   grid-area: armor;
 }
-.equipement__shield {
+.equipment__shield {
   grid-area: shield;
 }
-.equipement__pants {
+.equipment__pants {
   grid-area: pants;
 }
-.equipement__boots {
+.equipment__boots {
   grid-area: boots;
 }
-.equipement__backpack {
+.equipment__backpack {
   grid-area: backpack;
 }
 
-.equipement__personal {
+.equipment__personal {
   display: grid;
   max-width: 214px;
   grid-template-columns: auto;
@@ -95,7 +118,7 @@ body {
   overflow-y: scroll;
 }
 
-.equipement__item,
+.equipment__item,
 .backpack__item {
   width: 64px;
   height: 64px;

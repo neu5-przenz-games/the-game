@@ -188,6 +188,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   showRange() {
     this.setAlphaTiles();
 
+    // @TODO: Implement fist fighting if there is no weapon worn #171
     const range = this.scene.equipment.weapon === "sword" ? 1 : 5;
 
     const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
@@ -254,6 +255,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.isDead = isDead;
 
     if (attack !== null) {
+      // @TODO: Implement fist fighting if there is no weapon worn #171
       if (equipment.weapon === "sword") {
         if (this.motion !== "attack") {
           this.setMotion("attack");

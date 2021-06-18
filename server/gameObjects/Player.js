@@ -4,6 +4,11 @@ const {
   getXYFromTile,
 } = require("../utils/algo");
 
+const ITEMS = {
+  bow: "weapon",
+  sword: "weapon",
+};
+
 const noObstacles = ({ PF, finder, map, player }) => {
   let noObstacle = true;
 
@@ -107,6 +112,10 @@ class Player {
     this.toRespawn = false;
   }
 
+  getFromBackpack(itemName) {
+    return this.backpack.items.find((item) => item.name === itemName);
+  }
+
   addToBackpack(newItem) {
     const item = this.backpack.items.find((i) => i.name === newItem);
 
@@ -124,6 +133,95 @@ class Player {
     }
 
     return true;
+  }
+
+  moveToBackpack(itemName, equipmentItemType) {
+    const item = this.equipment[equipmentItemType];
+
+    if (itemName !== item) {
+      return false;
+    }
+
+    if (!this.addToBackpack(itemName)) {
+      return false;
+    }
+    if (!this.removeFromEquipment(itemName, equipmentItemType)) {
+      this.removeFromBackpack(itemName);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  removeFromBackpack(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (!item) {
+      return false;
+    }
+
+    if (item.quantity > 1) {
+      item.quantity -= 1;
+    } else {
+      this.backpack.items = this.backpack.items.reduce(
+        (backpack, currentItem) => {
+          if (currentItem.name !== itemName) {
+            backpack.push(currentItem);
+          }
+          return backpack;
+        },
+        []
+      );
+    }
+
+    return true;
+  }
+
+  addToEquipment(newItem) {
+    const item = ITEMS[newItem];
+
+    if (!item) {
+      return false;
+    }
+
+    const itemFromEquipment = this.equipment[item];
+
+    if (itemFromEquipment && !this.moveToBackpack(itemFromEquipment, item)) {
+      return false;
+    }
+
+    this.equipment[ITEMS[newItem]] = newItem;
+
+    return true;
+  }
+
+  moveToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (!item) {
+      return false;
+    }
+
+    if (!this.addToEquipment(itemName)) {
+      return false;
+    }
+    if (!this.removeFromBackpack(itemName)) {
+      this.removeFromEquipment(itemName, ITEMS[itemName]);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  removeFromEquipment(itemName, equipmentItemType) {
+    const item = this.equipment[equipmentItemType];
+
+    if (itemName === item && delete this.equipment[equipmentItemType]) {
+      return true;
+    }
+    return false;
   }
 
   setOnline(socketId) {
