@@ -148,6 +148,9 @@ export default class UIProfile {
       }
 
       ({
+        [ITEM_ACTION.CLOSE]: () => {
+          // do nothing
+        },
         [ITEM_ACTION.DESTROY]: () => {
           // @TODO: Implement item destroy action #170
         },
