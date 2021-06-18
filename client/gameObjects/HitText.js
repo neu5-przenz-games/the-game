@@ -5,6 +5,8 @@ export default ({ scene, x, y, depth, hitType }) => {
     .text(x, y, hitType.text, {
       font: "12px Verdana",
       fill: hitType.color,
+      stroke: "#333",
+      strokeThickness: 1,
     })
     .setOrigin(0.5, 2)
     .setPosition(x, y - OFFSET_Y);
