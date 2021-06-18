@@ -1,3 +1,5 @@
+import ITEM_ACTION from "../../shared/itemActions.json";
+
 const GFX_PATH = "/assets/gfx/";
 
 const ITEMS = {
@@ -95,8 +97,8 @@ export default class UIProfile {
 
     this.respawnButton.disabled = !isDead;
 
-    this.itemName = "";
-    this.whichItemFromBackpack = "";
+    this.selectedItemName = null;
+    this.equipmentItemType = null;
 
     this.backpackSlots.innerText = `Backpack slots - ${backpack.slots}`;
 
@@ -129,38 +131,44 @@ export default class UIProfile {
 
     this.equipmentWrapper.onclick = (ev) => {
       const el = ev.target;
-      const { itemName, whichItemFromBackpack } = el.dataset;
+      const { itemName, equipmentItemType } = el.dataset;
 
       if (itemName) {
-        this.itemName = itemName;
-        this.whichItemFromBackpack = whichItemFromBackpack;
+        this.selectedItemName = itemName;
+        this.equipmentItemType = equipmentItemType;
         this.showItemActions();
       }
     };
 
     this.equipmentItemActions.onclick = (ev) => {
-      const { action } = ev.target.dataset;
+      const { actionName } = ev.target.dataset;
 
-      if (action === "close") {
-        this.hideItemActions();
-      } else if (action === "move to backpack") {
-        itemActionsCb({
-          name,
-          actionName: action,
-          itemName: this.itemName,
-          whichItemFromBackpack: this.whichItemFromBackpack,
-        });
-        this.hideItemActions();
-      } else if (action === "move to equipment") {
-        itemActionsCb({
-          name,
-          actionName: action,
-          itemName: this.itemName,
-        });
-        this.hideItemActions();
-      } else if (action === "destroy") {
-        // @TODO: Implement item destroy action #170
+      if (!actionName) {
+        return;
       }
+
+      ({
+        [ITEM_ACTION.DESTROY]: () => {
+          // @TODO: Implement item destroy action #170
+        },
+        [ITEM_ACTION.MOVE_TO_BACKPACK]: () => {
+          itemActionsCb({
+            name,
+            actionName,
+            itemName: this.selectedItemName,
+            equipmentItemType: this.equipmentItemType,
+          });
+        },
+        [ITEM_ACTION.MOVE_TO_EQUIPMENT]: () => {
+          itemActionsCb({
+            name,
+            actionName,
+            itemName: this.selectedItemName,
+          });
+        },
+      }[actionName]());
+
+      this.hideItemActions();
     };
   }
 
@@ -174,11 +182,12 @@ export default class UIProfile {
       div.classList.add("equipment__item", `equipment__${name}`);
 
       const itemName = equipment[name];
+
       if (itemName) {
         const itemImg = document.createElement("img");
         itemImg.src = GFX_PATH.concat(ITEMS[itemName]);
-        itemImg.dataset.itemName = equipment.weapon;
-        itemImg.dataset.whichItemFromBackpack = name;
+        itemImg.dataset.itemName = itemName;
+        itemImg.dataset.equipmentItemType = name;
         div.appendChild(itemImg);
       } else {
         div.innerText = name;
@@ -253,13 +262,13 @@ export default class UIProfile {
   }
 
   showItemActions() {
-    this.equipmentItemName.innerText = this.itemName;
+    this.equipmentItemName.innerText = this.selectedItemName;
     this.equipmentItemActions.classList.remove("hidden");
   }
 
   hideItemActions() {
-    this.itemName = "";
-    this.equipmentItemName.innerText = this.itemName;
+    this.selectedItemName = null;
+    this.equipmentItemType = null;
     this.equipmentItemActions.classList.add("hidden");
   }
 }

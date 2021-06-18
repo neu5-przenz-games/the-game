@@ -15,6 +15,8 @@ const { getHitType } = require("./utils/hitText");
 const { Player } = require("./gameObjects/Player");
 const { getAction, getDuration, getItem } = require("./gameObjects/Item");
 
+const ITEM_ACTION = require("../shared/itemActions.json");
+
 const playersConfig = require("./mocks/players");
 
 const FRAME_IN_MS = 1000 / 30;
@@ -183,31 +185,36 @@ io.on("connection", (socket) => {
 
     socket.on(
       "action:item",
-      ({ name, actionName, itemName, whichItemFromBackpack }) => {
+      ({ name, actionName, itemName, equipmentItemType }) => {
         const player = players.get(name);
 
         if (!player) {
           return;
         }
 
-        if (actionName === "move to backpack") {
-          if (player.moveToBackpack(itemName, whichItemFromBackpack)) {
-            io.to(player.socketId).emit(
-              "backpack:add",
-              player.backpack,
-              player.equipment
-            );
-          }
-        }
-        if (actionName === "move to equipment") {
-          if (player.moveToEquipment(itemName)) {
-            io.to(player.socketId).emit(
-              "backpack:add",
-              player.backpack,
-              player.equipment
-            );
-          }
-        }
+        ({
+          [ITEM_ACTION.DESTROY]: () => {
+            // @TODO: Implement item destroy action #170
+          },
+          [ITEM_ACTION.MOVE_TO_BACKPACK]: () => {
+            if (player.moveToBackpack(itemName, equipmentItemType)) {
+              io.to(player.socketId).emit(
+                "backpack:add",
+                player.backpack,
+                player.equipment
+              );
+            }
+          },
+          [ITEM_ACTION.MOVE_TO_EQUIPMENT]: () => {
+            if (player.moveToEquipment(itemName)) {
+              io.to(player.socketId).emit(
+                "backpack:add",
+                player.backpack,
+                player.equipment
+              );
+            }
+          },
+        }[actionName]());
       }
     );
 

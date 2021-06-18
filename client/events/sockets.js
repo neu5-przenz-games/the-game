@@ -68,17 +68,12 @@ export default (game) => {
     });
   };
 
-  const itemActionsCb = ({
-    name,
-    actionName,
-    itemName,
-    whichItemFromBackpack,
-  }) => {
+  const itemActionsCb = ({ name, actionName, itemName, equipmentItemType }) => {
     game.socket.emit("action:item", {
       name,
       actionName,
       itemName,
-      whichItemFromBackpack,
+      equipmentItemType,
     });
   };
 
