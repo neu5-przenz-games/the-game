@@ -349,10 +349,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       }
     } else if (!this.isMainPlayer) {
       // Handle other players only
-      if (this.isDead) {
+      if (this.isDead || this.fraction !== this.scene.mainPlayer.fraction) {
         this.healthBar.hide();
-      } else {
-        this.healthBar.show();
       }
     }
 
