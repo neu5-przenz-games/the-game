@@ -349,7 +349,7 @@ const loop = () => {
       const respawnTile = getRespawnTile({
         map,
         obj: gameObjects.find(
-          (b) => b.name === player.settings.respawnBuilding
+          (b) => b.name === player.settings.respawnBuilding.name
         ),
         players,
         sizeToIncrease: 3,
