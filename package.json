@@ -1,7 +1,7 @@
 {
   "name": "the-game",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "index.mjs",
   "repository": "https://github.com/neu5-przenz-games/the-game",
   "author": "neu5",
   "license": "MIT",
@@ -56,7 +56,7 @@
     "extract:map": "node ./scripts/extractMap.mjs",
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",
-    "serve": "nodemon server/index.js",
+    "serve": "nodemon server/index.mjs",
     "test": "mocha server/test --exit"
   }
 }

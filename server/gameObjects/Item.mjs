@@ -20,8 +20,4 @@ const getDuration = (go) => ITEMS[go.type].durationTicks;
 
 const getItem = (go) => ITEMS[go.type].item;
 
-export {
-  getAction,
-  getDuration,
-  getItem,
-};
+export { getAction, getDuration, getItem };

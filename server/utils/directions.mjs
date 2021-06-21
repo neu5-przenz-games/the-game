@@ -52,7 +52,4 @@ const getDirection = (currentTile, nextTile) =>
     ].join()
   ]);
 
-export {
-  directions,
-  getDirection,
-};
+export { directions, getDirection };

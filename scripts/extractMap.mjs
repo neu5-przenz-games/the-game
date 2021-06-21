@@ -14,7 +14,9 @@ const map = readFileSync("public/assets/map/map.json", "utf8");
 
 const LAYER_NAME = "Collides";
 
-const layerCollides = JSON.parse(map).layers.find((layer) => layer.name === LAYER_NAME);
+const layerCollides = JSON.parse(map).layers.find(
+  (layer) => layer.name === LAYER_NAME
+);
 
 const arr = [];
 

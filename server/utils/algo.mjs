@@ -86,9 +86,4 @@ const getDestTile = (player, options) => {
   return destTile.distance !== 1 ? destTile : {};
 };
 
-export {
-  getChebyshevDistance,
-  getDestTile,
-  getRespawnTile,
-  getXYFromTile,
-};
+export { getChebyshevDistance, getDestTile, getRespawnTile, getXYFromTile };

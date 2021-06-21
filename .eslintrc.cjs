@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   env: {
     browser: true,
     es6: true,
@@ -10,6 +10,9 @@ export default {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: "module",
+    ecmaFeatures: {
+      modules: true,
+    },
   },
   plugins: ["import"],
   rules: {
