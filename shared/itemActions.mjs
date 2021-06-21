@@ -1,4 +1,4 @@
-{
+export default {
     "CLOSE": "CLOSE",
     "DESTROY": "DESTROY",
     "MOVE_TO_BACKPACK": "MOVE_TO_BACKPACK",

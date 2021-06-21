@@ -1,4 +1,4 @@
-import ITEM_ACTION from "../../shared/itemActions.json";
+import ITEM_ACTION from "../../shared/itemActions.mjs";
 
 const GFX_PATH = "/assets/gfx/";
 

@@ -1,23 +1,26 @@
-const express = require("express");
-const { SnapshotInterpolation } = require("@geckos.io/snapshot-interpolation");
-const PF = require("pathfinding");
+import express from "express";
+import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
+import PF from "pathfinding";
+
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+import map from "../public/assets/map/map.mjs";
+import gameObjects from "../shared/gameObjects.mjs";
+import { directions, getDirection } from "./utils/directions.mjs";
+import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
+import { getHitType } from "./utils/hitText.mjs";
+
+import Player from "./gameObjects/Player.mjs";
+import { getAction, getDuration, getItem } from "./gameObjects/Item.mjs";
+
+import ITEM_ACTION from "../shared/itemActions.mjs";
+
+import playersConfig from "./mocks/players.mjs";
 
 const app = express();
-const server = require("http").Server(app);
-const io = require("socket.io")(server);
-
-const map = require("../public/assets/map/map.js");
-const gameObjects = require("../public/assets/map/gameObjects.js");
-const { directions, getDirection } = require("./utils/directions");
-const { getRespawnTile, getXYFromTile } = require("./utils/algo");
-const { getHitType } = require("./utils/hitText");
-
-const { Player } = require("./gameObjects/Player");
-const { getAction, getDuration, getItem } = require("./gameObjects/Item");
-
-const ITEM_ACTION = require("../shared/itemActions.json");
-
-const playersConfig = require("./mocks/players");
+const httpServer = createServer(app);
+const io = new Server(httpServer);
 
 const FRAME_IN_MS = 1000 / 30;
 
@@ -427,4 +430,4 @@ app.get("/", (req, res) => {
   res.sendFile("index.html", { root: "./dist" });
 });
 
-module.exports = server.listen(process.env.PORT || 5000);
+export default httpServer.listen(process.env.PORT || 5000);

@@ -3,7 +3,7 @@ import House from "../gameObjects/House";
 import Tree from "../gameObjects/Tree";
 import Ore from "../gameObjects/Ore";
 
-import gameObjects from "../../public/assets/map/gameObjects";
+import gameObjects from "../../shared/gameObjects.mjs";
 
 const TYPES = {
   House,

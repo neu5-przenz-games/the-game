@@ -1,4 +1,4 @@
-const { TILE_HALF, TILE_QUARTER } = require("./constants");
+import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
 
 const getChebyshevDistance = (currTile, destTile) => {
   const distX = Math.abs(currTile.tileX - destTile.tileX);
@@ -86,7 +86,7 @@ const getDestTile = (player, options) => {
   return destTile.distance !== 1 ? destTile : {};
 };
 
-module.exports = {
+export {
   getChebyshevDistance,
   getDestTile,
   getRespawnTile,

@@ -1,4 +1,4 @@
-const { TILE, TILE_HALF, TILE_QUARTER } = require("./constants");
+import { TILE, TILE_HALF, TILE_QUARTER } from "./constants.mjs";
 
 const directions = {
   west: { x: -2, y: 0, opposite: "east", nextX: -TILE, nextY: 0 },
@@ -52,7 +52,7 @@ const getDirection = (currentTile, nextTile) =>
     ].join()
   ]);
 
-module.exports = {
+export {
   directions,
   getDirection,
 };

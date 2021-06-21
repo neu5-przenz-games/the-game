@@ -6,15 +6,15 @@
  * In this script we take that array and we create two-dimensional array
  * in the phaser-like manner so it can be used on server.
  */
-const fs = require("fs");
+import { readFileSync, writeFileSync } from "fs";
+
+import gameObjects from "../shared/gameObjects.mjs";
+
+const map = readFileSync("public/assets/map/map.json", "utf8");
 
 const LAYER_NAME = "Collides";
 
-const layerCollides = require("../public/assets/map/map.json").layers.find(
-  (layer) => layer.name === LAYER_NAME
-);
-
-const gameObjects = require("../public/assets/map/gameObjects.js");
+const layerCollides = JSON.parse(map).layers.find((layer) => layer.name === LAYER_NAME);
 
 const arr = [];
 
@@ -41,9 +41,9 @@ gameObjects.forEach((gameObject) => {
   }
 });
 
-fs.writeFile(
-  "./public/assets/map/map.js",
-  `module.exports = ${JSON.stringify(arr)};`,
+writeFileSync(
+  "./public/assets/map/map.mjs",
+  `export default ${JSON.stringify(arr)};`,
   (err) => {
     if (err) return console.log(err);
 
