@@ -17,9 +17,4 @@ const HIT_TYPES = {
   },
 };
 
-module.exports = {
-  HIT_TYPES,
-  TILE,
-  TILE_HALF,
-  TILE_QUARTER,
-};
+export { HIT_TYPES, TILE, TILE_HALF, TILE_QUARTER };

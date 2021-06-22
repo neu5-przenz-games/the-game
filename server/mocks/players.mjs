@@ -1,11 +1,11 @@
-const { FRACTIONS } = require("../fractions");
+import FRACTIONS from "../../shared/fractions.mjs";
 
 const radiantFraction = FRACTIONS[0].name;
 const radiantHouse = FRACTIONS[0].houses[0];
 const direFraction = FRACTIONS[1].name;
 const direHouse = FRACTIONS[1].houses[0];
 
-module.exports = [
+export default [
   {
     name: "player1",
     displayName: "player 1",

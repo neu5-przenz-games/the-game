@@ -1,4 +1,4 @@
-const { FRACTIONS } = require("../../../server/fractions");
+import FRACTIONS from "./fractions.mjs";
 
 const getStartingTile = ({ tileX, tileY }) => ({ tileX, tileY });
 
@@ -12,7 +12,7 @@ const getStartingTileTree = getStartingTile;
 const direHouse = FRACTIONS[1].houses[0];
 const radiantHouse = FRACTIONS[0].houses[0];
 
-module.exports = [
+export default [
   {
     name: direHouse.name,
     displayName: direHouse.displayName,

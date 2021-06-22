@@ -20,8 +20,4 @@ const getDuration = (go) => ITEMS[go.type].durationTicks;
 
 const getItem = (go) => ITEMS[go.type].item;
 
-module.exports = {
-  getAction,
-  getDuration,
-  getItem,
-};
+export { getAction, getDuration, getItem };

@@ -1,7 +1,7 @@
-const chai = require("chai");
-const chaiHttp = require("chai-http");
-const io = require("socket.io-client");
-const server = require("../index");
+import chai from "chai";
+import chaiHttp from "chai-http";
+import io from "socket.io-client";
+import server from "../index.mjs";
 
 const ioOptions = {
   transports: ["websocket"],

@@ -1,4 +1,4 @@
-const FRACTIONS = [
+export default [
   {
     name: "Radiant",
     houses: [{ name: "house_radiant", displayName: "Radiant Sanctuary" }],
@@ -8,7 +8,3 @@ const FRACTIONS = [
     houses: [{ name: "house_dire", displayName: "Dire Sanctuary" }],
   },
 ];
-
-module.exports = {
-  FRACTIONS,
-};

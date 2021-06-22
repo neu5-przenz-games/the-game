@@ -1,6 +1,6 @@
-const { HIT_TYPES } = require("./constants");
+import { HIT_TYPES } from "./constants.mjs";
 
-const getHitType = (value) => {
+export default (value) => {
   if (value >= 40) {
     return HIT_TYPES.CRITICAL;
   }
@@ -8,8 +8,4 @@ const getHitType = (value) => {
     return HIT_TYPES.HARD;
   }
   return HIT_TYPES.NORMAL;
-};
-
-module.exports = {
-  getHitType,
 };

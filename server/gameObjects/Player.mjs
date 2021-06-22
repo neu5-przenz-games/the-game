@@ -1,8 +1,8 @@
-const {
+import {
   getChebyshevDistance,
   getDestTile,
   getXYFromTile,
-} = require("../utils/algo");
+} from "../utils/algo.mjs";
 
 const ITEMS = {
   bow: "weapon",
@@ -35,7 +35,7 @@ const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
 
-class Player {
+export default class Player {
   constructor({
     name,
     displayName,
@@ -383,7 +383,3 @@ class Player {
     this.dropSelection = true;
   }
 }
-
-module.exports = {
-  Player,
-};
