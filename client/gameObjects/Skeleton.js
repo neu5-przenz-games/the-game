@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { GAME_ITEMS } from "../../shared/index.mjs";
 import { EnergyBar, HealthBar, ProgressBar } from "./Bar";
 import { TileFight, TileMarked, TileSelected } from "./Tile";
 import Arrow from "./Arrow";
@@ -189,7 +190,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.setAlphaTiles();
 
     // @TODO: Implement fist fighting if there is no weapon worn #171
-    const range = this.scene.equipment.weapon === "sword" ? 1 : 5;
+    const currentWeapon =
+      GAME_ITEMS[this.scene.equipment && this.scene.equipment.weapon];
+    const range = currentWeapon ? currentWeapon.weapon.range : 1; // falback for no weapon
 
     const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
     this.rangeTiles = this.scene.groundLayer.getTilesWithin(

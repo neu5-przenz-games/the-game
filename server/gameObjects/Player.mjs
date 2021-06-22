@@ -4,10 +4,7 @@ import {
   getXYFromTile,
 } from "../utils/algo.mjs";
 
-const ITEMS = {
-  bow: "weapon",
-  sword: "weapon",
-};
+import { GAME_ITEMS, ITEM_TYPES } from "../../shared/index.mjs";
 
 const noObstacles = ({ PF, finder, map, player }) => {
   let noObstacle = true;
@@ -178,20 +175,25 @@ export default class Player {
     return true;
   }
 
-  addToEquipment(newItem) {
-    const item = ITEMS[newItem];
+  addToEquipment(itemId) {
+    const item = GAME_ITEMS[itemId];
 
-    if (!item) {
+    if (
+      !item ||
+      ![ITEM_TYPES.BACKPACK, ITEM_TYPES.WEAPON].includes(item.type)
+    ) {
       return false;
     }
 
-    const itemFromEquipment = this.equipment[item];
-
-    if (itemFromEquipment && !this.moveToBackpack(itemFromEquipment, item)) {
+    const itemFromEquipment = this.equipment[item.type];
+    if (
+      itemFromEquipment &&
+      !this.moveToBackpack(itemFromEquipment, item.type)
+    ) {
       return false;
     }
 
-    this.equipment[ITEMS[newItem]] = newItem;
+    this.equipment[item.type] = itemId;
 
     return true;
   }
@@ -207,7 +209,7 @@ export default class Player {
       return false;
     }
     if (!this.removeFromBackpack(itemName)) {
-      this.removeFromEquipment(itemName, ITEMS[itemName]);
+      this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
 
       return false;
     }

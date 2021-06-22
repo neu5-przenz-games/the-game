@@ -1,14 +1,12 @@
-import ITEM_ACTION from "../../shared/itemActions.mjs";
+import { GAME_ITEMS, ITEM_ACTIONS, ITEM_TYPES } from "../../shared/index.mjs";
+import { createBtn } from "./utils/index.mjs";
 
 const GFX_PATH = "/assets/gfx/";
 
-const ITEMS = {
-  bag: "bag.png",
-  bow: "bow.png",
-  "copper ore": "copper-ore.png",
-  sword: "sword.png",
-  wood: "wood.png",
-};
+const actionClassNames = [
+  "equipment__actions-button",
+  "equipment__action-button",
+];
 
 export default class UIProfile {
   constructor({
@@ -56,9 +54,6 @@ export default class UIProfile {
       "equipment__personal"
     );
 
-    const [equipmentItemName] = document.getElementsByClassName(
-      "equipment__item-name"
-    );
     const [equipmentItemActions] = document.getElementsByClassName(
       "equipment__actions"
     );
@@ -89,7 +84,6 @@ export default class UIProfile {
     this.equipmentWrapper = equipmentWrapper;
     this.equipmentItems = equipmentItems;
     this.equipmentItemActions = equipmentItemActions;
-    this.equipmentItemName = equipmentItemName;
 
     this.followCheckbox.checked = settings.follow;
     this.fightCheckbox.checked = settings.fight;
@@ -136,7 +130,7 @@ export default class UIProfile {
       if (itemName) {
         this.selectedItemName = itemName;
         this.equipmentItemType = equipmentItemType;
-        this.showItemActions();
+        this.showItemActions(Boolean(equipmentItemType));
       }
     };
 
@@ -148,13 +142,13 @@ export default class UIProfile {
       }
 
       ({
-        [ITEM_ACTION.CLOSE]: () => {
+        [ITEM_ACTIONS.CLOSE]: () => {
           // do nothing
         },
-        [ITEM_ACTION.DESTROY]: () => {
+        [ITEM_ACTIONS.DESTROY]: () => {
           // @TODO: Implement item destroy action #170
         },
-        [ITEM_ACTION.MOVE_TO_BACKPACK]: () => {
+        [ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
           itemActionsCb({
             name,
             actionName,
@@ -162,7 +156,7 @@ export default class UIProfile {
             equipmentItemType: this.equipmentItemType,
           });
         },
-        [ITEM_ACTION.MOVE_TO_EQUIPMENT]: () => {
+        [ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
           itemActionsCb({
             name,
             actionName,
@@ -188,7 +182,7 @@ export default class UIProfile {
 
       if (itemName) {
         const itemImg = document.createElement("img");
-        itemImg.src = GFX_PATH.concat(ITEMS[itemName]);
+        itemImg.src = GFX_PATH.concat(GAME_ITEMS[itemName].imgURL);
         itemImg.dataset.itemName = itemName;
         itemImg.dataset.equipmentItemType = name;
         div.appendChild(itemImg);
@@ -215,7 +209,7 @@ export default class UIProfile {
         const item = items[i];
 
         const itemImg = document.createElement("img");
-        itemImg.src = GFX_PATH.concat(ITEMS[item.name]);
+        itemImg.src = GFX_PATH.concat(GAME_ITEMS[item.name].imgURL);
         itemImg.dataset.itemName = item.name;
 
         const quantity = document.createElement("div");
@@ -232,6 +226,56 @@ export default class UIProfile {
     }
 
     this.backpackItems.appendChild(fragment);
+  }
+
+  setItemActionMenu(isInEquipment) {
+    this.equipmentItemActions.textContent = "";
+
+    const fragment = new DocumentFragment();
+
+    const itemNameSpan = document.createElement("span");
+    itemNameSpan.classList.add("equipment__item-name");
+    itemNameSpan.innerText = this.selectedItemName;
+    fragment.appendChild(itemNameSpan);
+
+    const btnClose = createBtn({
+      classNames: actionClassNames,
+      datasets: [{ name: "actionName", value: ITEM_ACTIONS.CLOSE }],
+      text: "close",
+    });
+    fragment.appendChild(btnClose);
+
+    const item = GAME_ITEMS[this.selectedItemName];
+    if (item) {
+      if (isInEquipment) {
+        const btnMoveToBackpack = createBtn({
+          classNames: actionClassNames,
+          datasets: [
+            { name: "actionName", value: ITEM_ACTIONS.MOVE_TO_BACKPACK },
+          ],
+          text: "move to backpack",
+        });
+        fragment.appendChild(btnMoveToBackpack);
+      } else if ([ITEM_TYPES.BACKPACK, ITEM_TYPES.WEAPON].includes(item.type)) {
+        const btnWearIt = createBtn({
+          classNames: actionClassNames,
+          datasets: [
+            { name: "actionName", value: ITEM_ACTIONS.MOVE_TO_EQUIPMENT },
+          ],
+          text: "wear it",
+        });
+        fragment.appendChild(btnWearIt);
+      }
+    }
+
+    const btnDestroy = createBtn({
+      classNames: actionClassNames,
+      datasets: [{ name: "actionName", value: ITEM_ACTIONS.DESTROY }],
+      text: "destroy",
+    });
+    fragment.appendChild(btnDestroy);
+
+    this.equipmentItemActions.appendChild(fragment);
   }
 
   setSelectedName(name) {
@@ -264,8 +308,8 @@ export default class UIProfile {
     this.respawnButton.disabled = !value;
   }
 
-  showItemActions() {
-    this.equipmentItemName.innerText = this.selectedItemName;
+  showItemActions(isInEquipment) {
+    this.setItemActionMenu(isInEquipment);
     this.equipmentItemActions.classList.remove("hidden");
   }
 
