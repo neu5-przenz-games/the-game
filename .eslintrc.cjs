@@ -18,6 +18,7 @@ module.exports = {
   rules: {
     "import/no-unresolved": 2,
     "import/no-commonjs": 2,
+    "import/prefer-default-export": 1,
     "import/extensions": [2, "ignorePackages"],
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "no-param-reassign": ["error", { props: false }],

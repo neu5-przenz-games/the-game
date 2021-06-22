@@ -6,15 +6,14 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 import map from "../public/assets/map/map.mjs";
-import gameObjects from "../shared/gameObjects.mjs";
+import { GAME_ITEMS, ITEM_ACTIONS, gameObjects } from "../shared/index.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";
 
 import Player from "./gameObjects/Player.mjs";
-import { getAction, getDuration, getItem } from "./gameObjects/Item.mjs";
 
-import ITEM_ACTION from "../shared/itemActions.mjs";
+import { getAction, getDuration, getItem } from "./gameObjects/Item.mjs";
 
 import playersConfig from "./mocks/players.mjs";
 
@@ -196,10 +195,10 @@ io.on("connection", (socket) => {
         }
 
         ({
-          [ITEM_ACTION.DESTROY]: () => {
+          [ITEM_ACTIONS.DESTROY]: () => {
             // @TODO: Implement item destroy action #170
           },
-          [ITEM_ACTION.MOVE_TO_BACKPACK]: () => {
+          [ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
             if (player.moveToBackpack(itemName, equipmentItemType)) {
               io.to(player.socketId).emit(
                 "backpack:add",
@@ -208,7 +207,7 @@ io.on("connection", (socket) => {
               );
             }
           },
-          [ITEM_ACTION.MOVE_TO_EQUIPMENT]: () => {
+          [ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
             if (player.moveToEquipment(itemName)) {
               io.to(player.socketId).emit(
                 "backpack:add",
@@ -329,7 +328,10 @@ const loop = () => {
         player.energyUse("attack");
         player.attack = player.selectedPlayer.name;
 
-        const hit = player.equipment.weapon === "sword" ? 20 : 15;
+        const currentWeapon = GAME_ITEMS[player.equipment.weapon];
+
+        // @TODO: implement fist fighting #171
+        const hit = currentWeapon ? currentWeapon.weapon.attack : 5; // fallback for no weapon
 
         player.selectedPlayer.gotHit(hit);
 

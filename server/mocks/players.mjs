@@ -1,4 +1,4 @@
-import FRACTIONS from "../../shared/fractions.mjs";
+import { FRACTIONS } from "../../shared/index.mjs";
 
 const radiantFraction = FRACTIONS[0].name;
 const radiantHouse = FRACTIONS[0].houses[0];
