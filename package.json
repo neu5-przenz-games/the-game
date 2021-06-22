@@ -6,7 +6,7 @@
   "author": "neu5",
   "license": "MIT",
   "engines": {
-    "node": "16.3.x"
+    "node": "^16"
   },
   "type": "module",
   "dependencies": {
