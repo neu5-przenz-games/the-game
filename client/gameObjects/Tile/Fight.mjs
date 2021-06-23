@@ -1,4 +1,4 @@
-import Tile from "./Tile";
+import Tile from "./Tile.mjs";
 
 export default class TileFight extends Tile {
   constructor(scene, x, y) {

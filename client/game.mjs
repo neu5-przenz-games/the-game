@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import Game from "./scenes/game";
+import Game from "./scenes/game.mjs";
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;

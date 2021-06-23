@@ -4,4 +4,13 @@ import gameObjects from "./gameObjects.mjs";
 import ITEM_ACTIONS from "./itemActions.mjs";
 import ITEM_TYPES from "./itemTypes.mjs";
 
-export { FRACTIONS, GAME_ITEMS, gameObjects, ITEM_ACTIONS, ITEM_TYPES };
+const getCurrentWeapon = (itemId) => GAME_ITEMS[itemId] || GAME_ITEMS.fist;
+
+export {
+  getCurrentWeapon,
+  FRACTIONS,
+  GAME_ITEMS,
+  gameObjects,
+  ITEM_ACTIONS,
+  ITEM_TYPES,
+};

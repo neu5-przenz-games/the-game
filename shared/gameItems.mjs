@@ -27,6 +27,15 @@ export default {
       sword: () => {},
     },
   },
+  fist: {
+    id: "fist",
+    displayName: "fist",
+    type: ITEM_TYPES.WEAPON,
+    weapon: {
+      attack: 5,
+      range: 1,
+    },
+  },
   sword: {
     id: "sword",
     displayName: "sword",

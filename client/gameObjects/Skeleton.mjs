@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import { GAME_ITEMS } from "../../shared/index.mjs";
-import { EnergyBar, HealthBar, ProgressBar } from "./Bar";
-import { TileFight, TileMarked, TileSelected } from "./Tile";
-import Arrow from "./Arrow";
+import { getCurrentWeapon } from "../../shared/index.mjs";
+import { EnergyBar, HealthBar, ProgressBar } from "./Bar/index.mjs";
+import { TileFight, TileMarked, TileSelected } from "./Tile/index.mjs";
+import Arrow from "./Arrow.mjs";
 
 export const directions = {
   west: { offset: 0 },
@@ -167,6 +167,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - LABEL_OFFSET_Y);
     this.label.depth = this.depth;
+
+    this.d = 0;
   }
 
   static TYPE = "Skeleton";
@@ -189,10 +191,9 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   showRange() {
     this.setAlphaTiles();
 
-    // @TODO: Implement fist fighting if there is no weapon worn #171
-    const currentWeapon =
-      GAME_ITEMS[this.scene.equipment && this.scene.equipment.weapon];
-    const range = currentWeapon ? currentWeapon.weapon.range : 1; // falback for no weapon
+    const { range } = getCurrentWeapon(
+      this.scene.equipment && this.scene.equipment.weapon
+    ).weapon;
 
     const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
     this.rangeTiles = this.scene.groundLayer.getTilesWithin(
@@ -255,11 +256,12 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   }) {
     this.tick += 1;
 
+    const currentWeapon = getCurrentWeapon(equipment.weapon);
+
     this.isDead = isDead;
 
     if (attack !== null) {
-      // @TODO: Implement fist fighting if there is no weapon worn #171
-      if (equipment.weapon === "sword") {
+      if (currentWeapon.weapon.range < 2) {
         if (this.motion !== "attack") {
           this.setMotion("attack");
         }

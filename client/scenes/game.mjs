@@ -1,15 +1,15 @@
 import Phaser from "phaser";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
-import initMap from "../inits/map";
-import initGameObjects from "../inits/gameObjects";
-import sockets from "../events/sockets";
+import initMap from "../inits/map.mjs";
+import initGameObjects from "../inits/gameObjects.mjs";
+import sockets from "../events/sockets.mjs";
 
-import UIPlayerStatusList from "../ui/playerList/playerStatusList";
+import UIPlayerStatusList from "../ui/playerList/playerStatusList.mjs";
 
-import UIChat from "../ui/chat";
+import UIChat from "../ui/chat.mjs";
 
-import DEBUG_MENU from "../ui/debugMenu";
+import DEBUG_MENU from "../ui/debugMenu.mjs";
 
 const FPS = 30;
 

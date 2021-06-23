@@ -1,7 +1,7 @@
 import Phaser from "phaser";
-import House from "../gameObjects/House";
-import Tree from "../gameObjects/Tree";
-import Ore from "../gameObjects/Ore";
+import House from "../gameObjects/House.mjs";
+import Tree from "../gameObjects/Tree.mjs";
+import Ore from "../gameObjects/Ore.mjs";
 
 import gameObjects from "../../shared/gameObjects.mjs";
 

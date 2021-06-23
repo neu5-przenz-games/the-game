@@ -6,7 +6,11 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 import map from "../public/assets/map/map.mjs";
-import { GAME_ITEMS, ITEM_ACTIONS, gameObjects } from "../shared/index.mjs";
+import {
+  ITEM_ACTIONS,
+  gameObjects,
+  getCurrentWeapon,
+} from "../shared/index.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";
@@ -49,7 +53,7 @@ io.on("connection", (socket) => {
     availablePlayer.setOnline(socket.id);
 
     socket.emit(
-      "currentPlayers",
+      "players:init",
       Array.from(players, ([name, value]) => ({ name, ...value })),
       socket.id
     );
@@ -328,10 +332,7 @@ const loop = () => {
         player.energyUse("attack");
         player.attack = player.selectedPlayer.name;
 
-        const currentWeapon = GAME_ITEMS[player.equipment.weapon];
-
-        // @TODO: implement fist fighting #171
-        const hit = currentWeapon ? currentWeapon.weapon.attack : 5; // fallback for no weapon
+        const hit = getCurrentWeapon(player.equipment.weapon).weapon.attack;
 
         player.selectedPlayer.gotHit(hit);
 
@@ -400,10 +401,8 @@ const loop = () => {
     players.forEach((player) => {
       worldState.push({
         id: player.name,
-        displayName: player.displayName,
-        selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
         equipment: player.equipment,
-        backpack: player.backpack,
+        selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
         isWalking: player.isWalking,
         isDead: player.isDead,
         attack: player.attack,
@@ -418,7 +417,7 @@ const loop = () => {
 
     const snapshot = SI.snapshot.create(worldState);
     SI.vault.add(snapshot);
-    io.emit("playersUpdate", snapshot);
+    io.emit("players:update", snapshot);
   }
 
   tick += 1;
