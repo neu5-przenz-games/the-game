@@ -77,7 +77,7 @@ export default (game) => {
     });
   };
 
-  game.socket.on("players:init", (players, socketId) => {
+  game.socket.on("players:list", (players, socketId) => {
     game.setSocketId(socketId);
 
     game.setMainPlayerName(

@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
     availablePlayer.setOnline(socket.id);
 
     socket.emit(
-      "players:init",
+      "players:list",
       Array.from(players, ([name, value]) => ({ name, ...value })),
       socket.id
     );

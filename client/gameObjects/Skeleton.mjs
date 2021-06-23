@@ -167,8 +167,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - LABEL_OFFSET_Y);
     this.label.depth = this.depth;
-
-    this.d = 0;
   }
 
   static TYPE = "Skeleton";
@@ -256,12 +254,10 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   }) {
     this.tick += 1;
 
-    const currentWeapon = getCurrentWeapon(equipment.weapon);
-
     this.isDead = isDead;
 
     if (attack !== null) {
-      if (currentWeapon.weapon.range < 2) {
+      if (getCurrentWeapon(equipment.weapon).weapon.range < 2) {
         if (this.motion !== "attack") {
           this.setMotion("attack");
         }
