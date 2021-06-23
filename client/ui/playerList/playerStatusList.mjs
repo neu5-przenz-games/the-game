@@ -1,4 +1,4 @@
-import UIPlayerList from "./playerList";
+import UIPlayerList from "./playerList.mjs";
 
 export default class UIPlayerStatusList {
   constructor() {

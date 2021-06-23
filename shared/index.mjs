@@ -1,7 +1,16 @@
-import FRACTIONS from "./fractions.mjs";
-import GAME_ITEMS from "./gameItems.mjs";
 import gameObjects from "./gameObjects.mjs";
+import GAME_ITEMS from "./gameItems.mjs";
 import ITEM_ACTIONS from "./itemActions.mjs";
 import ITEM_TYPES from "./itemTypes.mjs";
+import FRACTIONS from "./fractions.mjs";
 
-export { FRACTIONS, GAME_ITEMS, gameObjects, ITEM_ACTIONS, ITEM_TYPES };
+const getCurrentWeapon = (itemId) => GAME_ITEMS[itemId] || GAME_ITEMS.fist;
+
+export {
+  gameObjects,
+  getCurrentWeapon,
+  GAME_ITEMS,
+  ITEM_ACTIONS,
+  ITEM_TYPES,
+  FRACTIONS,
+};

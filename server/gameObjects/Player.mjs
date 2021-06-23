@@ -4,7 +4,11 @@ import {
   getXYFromTile,
 } from "../utils/algo.mjs";
 
-import { GAME_ITEMS, ITEM_TYPES } from "../../shared/index.mjs";
+import {
+  GAME_ITEMS,
+  ITEM_TYPES,
+  getCurrentWeapon,
+} from "../../shared/index.mjs";
 
 const noObstacles = ({ PF, finder, map, player }) => {
   let noObstacle = true;
@@ -264,7 +268,7 @@ export default class Player {
     return (
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
       this.selectedPlayer.isDead === false &&
-      this.inRange(this.equipment.weapon === "sword" ? 1 : 5) &&
+      this.inRange(getCurrentWeapon(this.equipment.weapon).weapon.range) &&
       this.energy >= ENERGY_ATTACK_USE &&
       noObstacles({ PF, finder, map, player: this })
     );

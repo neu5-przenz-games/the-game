@@ -1,10 +1,10 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
-import Skeleton from "../gameObjects/Skeleton";
-import HitText from "../gameObjects/HitText";
-import UIProfile from "../ui/profile";
-import inputs from "./inputs";
+import Skeleton from "../gameObjects/Skeleton.mjs";
+import HitText from "../gameObjects/HitText.mjs";
+import UIProfile from "../ui/profile.mjs";
+import inputs from "./inputs.mjs";
 
 const displayServerMessage = (game, msgArg) => {
   game.chat.addServerMessage(msgArg);
@@ -77,7 +77,7 @@ export default (game) => {
     });
   };
 
-  game.socket.on("currentPlayers", (players, socketId) => {
+  game.socket.on("players:list", (players, socketId) => {
     game.setSocketId(socketId);
 
     game.setMainPlayerName(
@@ -156,7 +156,7 @@ export default (game) => {
     inputs(game);
   });
 
-  game.socket.on("playersUpdate", (snapshot) => {
+  game.socket.on("players:update", (snapshot) => {
     game.SI.snapshot.add(snapshot);
   });
 

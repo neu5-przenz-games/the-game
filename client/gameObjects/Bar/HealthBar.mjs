@@ -1,5 +1,5 @@
-import Bar from "./Bar";
-import COLOR from "../../constants";
+import Bar from "./Bar.mjs";
+import COLOR from "../../constants/index.mjs";
 
 export default class HealthBar extends Bar {
   constructor(scene, x, y, xOffset, yOffset, value, drawBar) {
