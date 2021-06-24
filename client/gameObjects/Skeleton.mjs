@@ -167,8 +167,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - LABEL_OFFSET_Y);
     this.label.depth = this.depth;
-
-    this.d = 0;
   }
 
   static TYPE = "Skeleton";
@@ -255,11 +253,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     hp,
   }) {
     this.tick += 1;
-    this.d += 1;
-
-    if (this.isMainPlayer && this.d % 30 === 0) {
-      console.log(isWalking);
-    }
 
     this.isDead = isDead;
 
