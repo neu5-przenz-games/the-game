@@ -58,10 +58,9 @@ io.on("connection", (socket) => {
       socket.id
     );
 
-    // @TODO: Refactor socket names #172
-    socket.broadcast.emit("newPlayer", availablePlayer);
+    socket.broadcast.emit("player:new", availablePlayer);
 
-    socket.on("playerWishToGo", ({ name, tileX, tileY }) => {
+    socket.on("player:go", ({ name, tileX, tileY }) => {
       if (tileX >= 0 && tileY >= 0 && map[tileY][tileX] === 0) {
         const player = players.get(name);
 
@@ -90,7 +89,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("selectPlayer", ({ name, selectedObjectName, type }) => {
+    socket.on("player:selection:add", ({ name, selectedObjectName, type }) => {
       const player = players.get(name);
 
       if (player.isDead) {
@@ -155,7 +154,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("dropSelection", ({ name }) => {
+    socket.on("player:selection:drop", ({ name }) => {
       const player = players.get(name);
 
       if (player) {
@@ -163,7 +162,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("respawnPlayer", ({ name }) => {
+    socket.on("player:respawn", ({ name }) => {
       const player = players.get(name);
 
       if (player) {
@@ -226,14 +225,14 @@ io.on("connection", (socket) => {
       }
     );
 
-    socket.on("chatMessage", ({ name, text }) => {
-      socket.broadcast.emit("playerMessage", text, name);
+    socket.on("player:message:send", ({ name, text }) => {
+      socket.broadcast.emit("chat:message:add", text, name);
     });
 
     socket.on("disconnect", () => {
       availablePlayer.isOnline = false;
       availablePlayer.socketId = null;
-      io.emit("playerDisconnected", availablePlayer.name);
+      io.emit("player:disconnected", availablePlayer.name);
     });
   } else {
     // No available player slots

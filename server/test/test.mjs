@@ -31,7 +31,7 @@ describe("Server socket tests", () => {
 
   it("New player join and leave", (done) => {
     const newPlayer = io(testHost, ioOptions);
-    socket.on("newPlayer", (newPlayermsg) => {
+    socket.on("player:new", (newPlayermsg) => {
       newPlayermsg.should.have.keys(
         "attack",
         "action",
@@ -68,7 +68,7 @@ describe("Server socket tests", () => {
       );
       newPlayer.disconnect();
 
-      socket.on("playerDisconnected", (playerDisconnectedMsg) => {
+      socket.on("player:disconnected", (playerDisconnectedMsg) => {
         playerDisconnectedMsg.should.be.equal("player2");
         done();
       });

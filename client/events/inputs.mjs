@@ -15,7 +15,7 @@ export default (game) => {
     if (clickedTile.x >= 0 && clickedTile.y >= 0) {
       game.resetSelectedObject();
 
-      game.socket.emit("playerWishToGo", {
+      game.socket.emit("player:go", {
         name: game.mainPlayerName,
         tileX: clickedTile.x,
         tileY: clickedTile.y,
@@ -37,7 +37,7 @@ export default (game) => {
       game.profile.enableSelectionButton();
       game.profile.setSelectedName(obj.displayName);
 
-      game.socket.emit("selectPlayer", {
+      game.socket.emit("player:selection:add", {
         name: game.mainPlayerName,
         selectedObjectName: obj.name,
         type: obj.constructor.TYPE,
@@ -49,7 +49,7 @@ export default (game) => {
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && game.chat.message) {
-      game.socket.emit("chatMessage", {
+      game.socket.emit("player:message:send", {
         name: game.mainPlayerName,
         text: game.chat.message,
       });
