@@ -13,13 +13,12 @@ const displayServerMessage = (game, msgArg) => {
 export default (game) => {
   game.setSocket(io());
 
-  // @TODO: Refactor socket names #172
-  game.socket.on("newPlayer", (newPlayer) => {
+  game.socket.on("player:new", (newPlayer) => {
     displayServerMessage(game, `New player connected: ${newPlayer.name}`);
     game.playerList.playerActive(newPlayer.name);
   });
 
-  game.socket.on("playerDisconnected", (name) => {
+  game.socket.on("player:disconnected", (name) => {
     displayServerMessage(game, `Player has left: ${name}`);
     game.playerList.playerInactive(name);
   });
@@ -49,14 +48,14 @@ export default (game) => {
   };
 
   const respawnCb = (name) => {
-    game.socket.emit("respawnPlayer", {
+    game.socket.emit("player:respawn", {
       name,
     });
     game.profile.toggleRespawnButton(false);
   };
 
   const dropSelectionCb = (name) => {
-    game.socket.emit("dropSelection", {
+    game.socket.emit("player:selection:drop", {
       name,
     });
     game.resetSelectedObject();
@@ -212,7 +211,7 @@ export default (game) => {
     }
   });
 
-  game.socket.on("playerMessage", (message, playerName) => {
+  game.socket.on("chat:message:add", (message, playerName) => {
     game.chat.addMessage(playerName, message);
   });
 
