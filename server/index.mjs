@@ -102,6 +102,7 @@ io.on("connection", (socket) => {
       }
 
       player.action = null;
+      player.isWalking = false;
 
       if (type === "Skeleton") {
         const selectedPlayer = players.get(selectedObjectName);
@@ -133,6 +134,7 @@ io.on("connection", (socket) => {
       const player = players.get(name);
 
       if (player) {
+        player.isWalking = false;
         player.setSettingsFollow(value);
       }
     });
