@@ -37,7 +37,7 @@ export default (game) => {
       game.profile.enableSelectionButton();
       game.profile.setSelectedName(obj.displayName);
 
-      game.socket.emit("player:select", {
+      game.socket.emit("player:selection:add", {
         name: game.mainPlayerName,
         selectedObjectName: obj.name,
         type: obj.constructor.TYPE,

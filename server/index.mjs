@@ -89,7 +89,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    socket.on("player:select", ({ name, selectedObjectName, type }) => {
+    socket.on("player:selection:add", ({ name, selectedObjectName, type }) => {
       const player = players.get(name);
 
       if (player.isDead) {
