@@ -202,7 +202,7 @@ export default (game) => {
     game.mainPlayer.actionEnd();
   });
 
-  game.socket.on("backpack:add", (backpack, equipment) => {
+  game.socket.on("items:update", (backpack, equipment) => {
     if (backpack) {
       game.setBackpack(backpack);
     }

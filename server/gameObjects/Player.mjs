@@ -164,16 +164,8 @@ export default class Player {
 
     if (item.quantity > 1) {
       item.quantity -= 1;
-    } else {
-      this.backpack.items = this.backpack.items.reduce(
-        (backpack, currentItem) => {
-          if (currentItem.name !== itemName) {
-            backpack.push(currentItem);
-          }
-          return backpack;
-        },
-        []
-      );
+    } else if (!this.destroyItemFromBackpack(itemName)) {
+      return false;
     }
 
     return true;
@@ -222,12 +214,7 @@ export default class Player {
   }
 
   removeFromEquipment(itemName, equipmentItemType) {
-    const item = this.equipment[equipmentItemType];
-
-    if (itemName === item && delete this.equipment[equipmentItemType]) {
-      return true;
-    }
-    return false;
+    return this.destroyItemFromEquipment(itemName, equipmentItemType);
   }
 
   setOnline(socketId) {
@@ -357,6 +344,38 @@ export default class Player {
       if (this.energy > ENERGY_MAX) {
         this.energy = ENERGY_MAX;
       }
+      return true;
+    }
+    return false;
+  }
+
+  destroyItem(itemName, equipmentItemType) {
+    return equipmentItemType
+      ? this.destroyItemFromEquipment(itemName, equipmentItemType)
+      : this.destroyItemFromBackpack(itemName);
+  }
+
+  destroyItemFromBackpack(itemName) {
+    try {
+      this.backpack.items = this.backpack.items.reduce(
+        (backpack, currentItem) => {
+          if (currentItem.name !== itemName) {
+            backpack.push(currentItem);
+          }
+          return backpack;
+        },
+        []
+      );
+      return true;
+    } catch (err) {
+      throw new Error(`Cannot destroy ${itemName} from backpack.`);
+    }
+  }
+
+  destroyItemFromEquipment(itemName, equipmentItemType) {
+    const item = this.equipment[equipmentItemType];
+
+    if (itemName === item && delete this.equipment[equipmentItemType]) {
       return true;
     }
     return false;

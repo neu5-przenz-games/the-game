@@ -59,7 +59,12 @@ export default class UIEquipment {
           // do nothing
         },
         [ITEM_ACTIONS.DESTROY]: () => {
-          // @TODO: Implement item destroy action #170
+          itemActionsCb({
+            name,
+            actionName,
+            itemName: this.selectedItemName,
+            equipmentItemType: this.equipmentItemType,
+          });
         },
         [ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
           itemActionsCb({

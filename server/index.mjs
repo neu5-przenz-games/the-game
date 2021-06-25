@@ -201,12 +201,18 @@ io.on("connection", (socket) => {
 
         ({
           [ITEM_ACTIONS.DESTROY]: () => {
-            // @TODO: Implement item destroy action #170
+            if (player.destroyItem(itemName, equipmentItemType)) {
+              io.to(player.socketId).emit(
+                "items:update",
+                player.backpack,
+                player.equipment
+              );
+            }
           },
           [ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
             if (player.moveToBackpack(itemName, equipmentItemType)) {
               io.to(player.socketId).emit(
-                "backpack:add",
+                "items:update",
                 player.backpack,
                 player.equipment
               );
@@ -215,7 +221,7 @@ io.on("connection", (socket) => {
           [ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
             if (player.moveToEquipment(itemName)) {
               io.to(player.socketId).emit(
-                "backpack:add",
+                "items:update",
                 player.backpack,
                 player.equipment
               );
@@ -390,7 +396,7 @@ const loop = () => {
 
       const item = getItem(player.selectedPlayer);
       if (item && player.addToBackpack(item)) {
-        io.to(player.socketId).emit("backpack:add", player.backpack);
+        io.to(player.socketId).emit("items:update", player.backpack);
       }
     }
   });
