@@ -1,0 +1,33 @@
+@import "./main";
+
+@import "./mixins";
+
+@import "../profile";
+@import "../sections/settings";
+@import "../sections/equipment";
+@import "../sections/backpack";
+@import "../chat";
+
+.hidden {
+  display: none;
+}
+
+@media only screen and (min-width: 1366px) {
+  .wrapper {
+    width: 1366px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+  }
+  .settings {
+    position: relative;
+    background: none;
+    width: 100%;
+  }
+  .mobile-nav {
+    display: none;
+  }
+  .profile-wrapper {
+    display: block;
+  }
+}

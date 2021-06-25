@@ -1,0 +1,21 @@
+.backpack {
+  &__items {
+    display: grid;
+    grid-template-columns: 64px 64px 64px 64px;
+    grid-template-rows: auto;
+    column-gap: 8px;
+    row-gap: 4px;
+    height: 140px;
+    overflow-y: scroll;
+  }
+  &__item {
+    @include item;
+  }
+  &__item-quantity {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    line-height: 12px;
+    color: #fff;
+  }
+}
