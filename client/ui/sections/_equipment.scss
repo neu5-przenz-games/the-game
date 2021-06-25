@@ -1,0 +1,61 @@
+.equipment {
+  position: relative;
+
+  &__actions {
+    width: 300px;
+    position: absolute;
+    background-color: #fff;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__item-name {
+    width: 240px;
+  }
+
+  &__actions-button {
+    width: 240px;
+    margin: 4px;
+  }
+
+  &__helmet {
+    grid-area: helmet;
+  }
+  &__weapon {
+    grid-area: weapon;
+  }
+  &__armor {
+    grid-area: armor;
+  }
+  &__shield {
+    grid-area: shield;
+  }
+  &__pants {
+    grid-area: pants;
+  }
+  &__boots {
+    grid-area: boots;
+  }
+  &__backpack {
+    grid-area: backpack;
+  }
+
+  &__personal {
+    display: grid;
+    max-width: 214px;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    gap: 4px;
+    grid-template-areas:
+      ". helmet ."
+      "weapon armor shield"
+      ". pants ."
+      ". boots backpack";
+  }
+
+  &__item {
+    @include item;
+  }
+}

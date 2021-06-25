@@ -1,0 +1,48 @@
+[class$="__header"] {
+  font-variant: small-caps;
+}
+
+[class$="__content"] {
+  font-size: smaller;
+}
+
+[class^="player-list-"][class$="__count"] {
+  font-size: smaller;
+}
+
+[class^="player-list-"][class$="__header"] {
+  display: flex;
+}
+
+[class^="player-list-"][class$="__content"] {
+  padding: 0 15px;
+  margin-top: 0;
+  max-height: 20%;
+  overflow: auto;
+}
+
+.chat {
+  &__content {
+    overflow: auto;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__messages {
+    padding: 0 10px;
+    margin: 0;
+
+    li {
+      display: block;
+    }
+  }
+}
+
+.chat-message {
+  &__server {
+    font-style: italic;
+    color: dimgray;
+  }
+}
