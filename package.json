@@ -58,6 +58,6 @@
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",
     "serve": "nodemon server/index.mjs",
-    "test": "mocha server/test --exit"
+    "test": "PORT=1234 mocha server/test --exit"
   }
 }
