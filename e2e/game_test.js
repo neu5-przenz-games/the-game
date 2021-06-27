@@ -2,9 +2,9 @@ module.exports = {
   test: (client) => {
     client
       .url("http://localhost:5000/")
-      .waitForElementVisible(".settings", 10 * 1000)
+      .waitForElementVisible(".settings")
       .click(".settings")
-      .waitForElementVisible(".profile-wrapper__follow-checkbox", 10 * 1000)
+      .waitForElementVisible(".profile-wrapper__follow-checkbox")
       .click(".profile-wrapper__follow-checkbox")
       .end();
   },
