@@ -10,12 +10,12 @@ const ioOptions = {
 };
 
 let socket;
-const testHost = "http://localhost:5000/";
+const testHost = `http://localhost:${process.env.PORT}/`;
 
 chai.use(chaiHttp);
 chai.should();
 
-describe("Server socket tests", () => {
+describe("Player", () => {
   beforeEach((done) => {
     socket = io(testHost, ioOptions);
     socket.on("connect", () => {
@@ -29,10 +29,11 @@ describe("Server socket tests", () => {
     done();
   });
 
-  it("New player join and leave", (done) => {
-    const newPlayer = io(testHost, ioOptions);
-    socket.on("player:new", (newPlayermsg) => {
-      newPlayermsg.should.have.keys(
+  it("should have correct properties", (done) => {
+    const socketClient = io(testHost, ioOptions);
+
+    socket.on("player:new", (player) => {
+      player.should.have.keys(
         "attack",
         "action",
         "actionDurationTicks",
@@ -66,12 +67,22 @@ describe("Server socket tests", () => {
         "isDead",
         "isWalking"
       );
-      newPlayer.disconnect();
 
-      socket.on("player:disconnected", (playerDisconnectedMsg) => {
-        playerDisconnectedMsg.should.be.equal("player2");
+      socketClient.disconnect();
+      done();
+    });
+  });
+
+  it("should disconnect correctly", (done) => {
+    const socketClient = io(testHost, ioOptions);
+
+    socket.on("player:new", () => {
+      socket.on("player:disconnected", (playerName) => {
+        playerName.should.be.equal("player2");
         done();
       });
+
+      socketClient.disconnect();
     });
   });
 });
