@@ -1,9 +1,6 @@
 language: node_js
 node_js:
   - 16
-services:
-  - xvfb
-dist: trusty
 addons:
   chrome: stable
 before_script:
