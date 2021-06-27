@@ -8,7 +8,6 @@
   "engines": {
     "node": "^16"
   },
-  "type": "module",
   "dependencies": {
     "@geckos.io/snapshot-interpolation": "^1.0.2",
     "express": "^4.17.1",
@@ -20,12 +19,14 @@
     "babel-eslint": "^10.1.0",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
+    "chromedriver": "^91.0.1",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
     "mocha": "^8.3.0",
+    "nightwatch": "^1.7.6",
     "nodemon": "^2.0.7",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-clean-easy": "^1.0.2",
@@ -58,6 +59,9 @@
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",
     "serve": "nodemon server/index.mjs",
-    "test": "PORT=1234 mocha server/test --exit"
+    "test:unit": "PORT=1234 mocha server/test --exit",
+    "pretest:e2e": "yarn serve &",
+    "test:e2e": "nightwatch",
+    "test": "yarn test:unit && yarn test:e2e"
   }
 }
