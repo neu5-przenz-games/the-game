@@ -12,5 +12,3 @@ before_script:
     fi
   - CHROMEDRIVER_VERSION=LATEST_91 npm install chromedriver --save-dev
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9922 http://localhost &
-script:
-  - xvfb-run npm test
