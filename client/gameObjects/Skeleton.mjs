@@ -176,6 +176,14 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     height: 80,
   };
 
+  getIsDead() {
+    return this.isDead;
+  }
+
+  getCurrentPositionTile() {
+    return { tileX: this.x, tileY: this.y };
+  }
+
   getDisplayName() {
     return `[${this.fraction.charAt(0)}] ${this.displayName}`;
   }

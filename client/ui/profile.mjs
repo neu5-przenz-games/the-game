@@ -93,6 +93,6 @@ export default class UIProfile {
   }
 
   toggleRespawnButton(value) {
-    this.respawnButton.disabled = !value;
+    this.UISettings.toggleRespawnButton(value);
   }
 }

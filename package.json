@@ -37,7 +37,8 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "client/*"
+      "client/*",
+      "package.json"
     ],
     "delay": "1000"
   },
@@ -58,10 +59,12 @@
     "extract:map": "node ./scripts/extractMap.mjs",
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",
-    "serve": "nodemon server/index.mjs",
+    "serve:dev": "NODE_ENV=development nodemon server/index.mjs",
+    "serve": "node server/index.mjs",
     "test:unit": "PORT=1234 mocha server/test --exit",
-    "pretest:e2e": "yarn serve &",
+    "pretest:e2e": "NODE_ENV=development yarn serve &",
     "test:e2e": "nightwatch",
-    "test": "yarn test:unit && yarn test:e2e"
+    "test": "yarn test:unit && yarn test:e2e",
+    "posttest:e2e": "killall -9 node"
   }
 }

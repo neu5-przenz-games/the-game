@@ -48,4 +48,8 @@ export default class UISettings {
       respawnCb(name);
     };
   }
+
+  toggleRespawnButton(value) {
+    this.respawnButton.disabled = !value;
+  }
 }

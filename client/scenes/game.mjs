@@ -37,6 +37,14 @@ export default class Game extends Phaser.Scene {
 
     if (process.env.NODE_ENV === "development") {
       DEBUG_MENU(this);
+
+      window.e2e = {
+        player: {
+          isDead: (playerName) => this.players.get(playerName).getIsDead(),
+          getCurrentPositionTile: (playerName) =>
+            this.players.get(playerName).getCurrentPositionTile(),
+        },
+      };
     }
   }
 
