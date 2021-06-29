@@ -223,4 +223,15 @@ export default (game) => {
     displayServerMessage(game, `Disconnected from server`);
     game.removePlayers();
   });
+
+  if (process.env.NODE_ENV === "development") {
+    window.e2e = {
+      ...window.e2e,
+      killPlayer: (playerName) => {
+        game.socket.emit("game:killPlayer", {
+          name: playerName,
+        });
+      },
+    };
+  }
 };

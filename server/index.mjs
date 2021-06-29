@@ -170,6 +170,16 @@ io.on("connection", (socket) => {
       }
     });
 
+    if (process.env.NODE_ENV === "development") {
+      socket.on("game:killPlayer", ({ name }) => {
+        const player = players.get(name);
+
+        if (player) {
+          player.toKill = true;
+        }
+      });
+    }
+
     socket.on("action:button:clicked", ({ name }) => {
       const player = players.get(name);
 
@@ -397,6 +407,14 @@ const loop = () => {
       const item = getItem(player.selectedPlayer);
       if (item && player.addToBackpack(item)) {
         io.to(player.socketId).emit("items:update", player.backpack);
+      }
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      if (player.toKill) {
+        player.toKill = false;
+        player.gotHit(100);
+        io.to(player.socketId).emit("player:dead", player.name);
       }
     }
   });

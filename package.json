@@ -33,11 +33,13 @@
     "parcel-plugin-static-files-copy": "^2.5.1",
     "prettier": "^2.2.1",
     "sass": "^1.35.1",
-    "socket.io-client": "^4.1.2"
+    "socket.io-client": "^4.1.2",
+    "start-server-and-test": "^1.12.5"
   },
   "nodemonConfig": {
     "ignore": [
-      "client/*"
+      "client/*",
+      "package.json"
     ],
     "delay": "1000"
   },
@@ -58,10 +60,12 @@
     "extract:map": "node ./scripts/extractMap.mjs",
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",
-    "serve": "nodemon server/index.mjs",
+    "serve:dev": "NODE_ENV=development nodemon server/index.mjs",
+    "serve:test": "NODE_ENV=development node server/index.mjs",
+    "serve": "node server/index.mjs",
     "test:unit": "PORT=1234 mocha server/test --exit",
-    "pretest:e2e": "yarn serve &",
-    "test:e2e": "nightwatch",
-    "test": "yarn test:unit && yarn test:e2e"
+    "test:e2e": "start-server-and-test serve:test http://localhost:5000 nightwatch",
+    "test:all": "yarn test:unit && yarn test:e2e",
+    "test": "if test \"$NODE_ENV\" = \"production\"; then yarn test:unit; else yarn test:all; fi"
   }
 }
