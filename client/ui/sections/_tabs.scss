@@ -1,0 +1,28 @@
+.tabs {
+  &__options {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+  }
+  &__option {
+    background: transparent;
+    border: 1px solid transparent;
+    flex: 1;
+
+    &:hover {
+      border: 1px solid black;
+    }
+
+    &--active {
+      background: white;
+    }
+  }
+  &__content {
+    display: none;
+
+    &--active {
+      display: block;
+    }
+  }
+}

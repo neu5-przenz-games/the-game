@@ -1,4 +1,9 @@
-import { UIBackpack, UIEquipment, UISettings } from "./sections/index.mjs";
+import {
+  UIBackpack,
+  UIEquipment,
+  UISettings,
+  UITabs,
+} from "./sections/index.mjs";
 
 export default class UIProfile {
   constructor({
@@ -45,6 +50,7 @@ export default class UIProfile {
       settings,
       showRangeCb,
     });
+    this.UITabs = new UITabs();
 
     this.UIEquipment.setEquipment(equipment);
     this.UIBackpack.setBackpack(backpack);
