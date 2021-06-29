@@ -61,9 +61,11 @@
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",
     "serve:dev": "NODE_ENV=development nodemon server/index.mjs",
+    "serve:test": "NODE_ENV=development node server/index.mjs",
     "serve": "node server/index.mjs",
     "test:unit": "PORT=1234 mocha server/test --exit",
-    "test:e2e": "start-server-and-test serve:dev http://localhost:5000 nightwatch",
-    "test": "yarn test:unit && yarn test:e2e"
+    "test:e2e": "start-server-and-test serve:test http://localhost:5000 nightwatch",
+    "test:all": "yarn test:unit && yarn test:e2e",
+    "test": "if test \"$NODE_ENV\" = \"production\"; then yarn test:unit; else yarn test:all; fi"
   }
 }

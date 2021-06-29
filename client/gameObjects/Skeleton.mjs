@@ -181,7 +181,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   }
 
   getCurrentPositionTile() {
-    return { tileX: this.x, tileY: this.y };
+    const { x, y } = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
+    return { x, y };
   }
 
   getDisplayName() {
