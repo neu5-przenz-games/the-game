@@ -16,14 +16,16 @@ export default [
     isWalking: false,
     isDead: false,
     equipment: {
-      backpack: "bag",
+      backpack: { id: "bag", quantity: 1 },
+      weapon: { id: "sword", quantity: 1 },
+      quiver: { id: "quiver", quantity: 1 },
+      arrows: { id: "arrowsBunch", quantity: 10 },
     },
     backpack: {
       slots: 4,
       items: [
-        { name: "wood", quantity: 1 },
-        { name: "sword", quantity: 1 },
-        { name: "bow", quantity: 1 },
+        { id: "wood", quantity: 1 },
+        { id: "bow", quantity: 1 },
       ],
     },
     settings: {
@@ -62,12 +64,12 @@ export default [
     isWalking: false,
     isDead: false,
     equipment: {
-      weapon: "bow",
-      backpack: "bag",
+      weapon: { id: "bow", quantity: 1 },
+      backpack: { id: "bag", quantity: 1 },
     },
     backpack: {
       slots: 4,
-      items: [],
+      items: [{ id: "sword", quantity: 1 }],
     },
     settings: {
       dropSelectedOnMove: true,
@@ -105,8 +107,8 @@ export default [
     isWalking: false,
     isDead: false,
     equipment: {
-      weapon: "sword",
-      backpack: "bag",
+      weapon: { id: "sword", quantity: 1 },
+      backpack: { id: "bag", quantity: 1 },
     },
     backpack: {
       slots: 4,
@@ -148,8 +150,8 @@ export default [
     isWalking: false,
     isDead: false,
     equipment: {
-      weapon: "sword",
-      backpack: "bag",
+      weapon: { id: "sword", quantity: 1 },
+      backpack: { id: "bag", quantity: 1 },
     },
     backpack: {
       slots: 4,
@@ -191,8 +193,8 @@ export default [
     isWalking: false,
     isDead: false,
     equipment: {
-      weapon: "sword",
-      backpack: "bag",
+      weapon: { id: "sword", quantity: 1 },
+      backpack: { id: "bag", quantity: 1 },
     },
     backpack: {
       slots: 4,
@@ -234,8 +236,8 @@ export default [
     isWalking: false,
     isDead: false,
     equipment: {
-      weapon: "sword",
-      backpack: "bag",
+      weapon: { id: "sword", quantity: 1 },
+      backpack: { id: "bag", quantity: 1 },
     },
     backpack: {
       slots: 4,

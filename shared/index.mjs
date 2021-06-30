@@ -4,7 +4,8 @@ import ITEM_ACTIONS from "./itemActions.mjs";
 import ITEM_TYPES from "./itemTypes.mjs";
 import FRACTIONS from "./fractions.mjs";
 
-const getCurrentWeapon = (itemId) => GAME_ITEMS[itemId] || GAME_ITEMS.fist;
+const getCurrentWeapon = (item) =>
+  GAME_ITEMS[item && item.id] || GAME_ITEMS.fist;
 
 export {
   gameObjects,

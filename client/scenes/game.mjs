@@ -32,8 +32,8 @@ export default class Game extends Phaser.Scene {
     this.SI = new SnapshotInterpolation(FPS);
 
     // ui
-    const [settings] = document.getElementsByClassName("settings");
-    this.UIsettings = settings;
+    const [menu] = document.getElementsByClassName("menu");
+    this.UIMenu = menu;
 
     if (process.env.NODE_ENV === "development") {
       DEBUG_MENU(this);

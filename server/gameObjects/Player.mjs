@@ -114,23 +114,24 @@ export default class Player {
   }
 
   getFromBackpack(itemName) {
-    return this.backpack.items.find((item) => item.name === itemName);
+    return this.backpack.items.find((item) => item.id === itemName);
+  }
+
+  getWeaponRange() {
+    return getCurrentWeapon(this.equipment.weapon).weapon.range;
   }
 
   addToBackpack(newItem) {
-    const item = this.backpack.items.find((i) => i.name === newItem);
+    const item = this.backpack.items.find((i) => i.id === newItem.id);
 
     if (item) {
-      item.quantity += 1;
+      item.quantity += newItem.quantity;
     } else {
       if (this.backpack.slots === this.backpack.items.length) {
         return false;
       }
 
-      this.backpack.items.push({
-        name: newItem,
-        quantity: 1,
-      });
+      this.backpack.items.push(newItem);
     }
 
     return true;
@@ -139,11 +140,11 @@ export default class Player {
   moveToBackpack(itemName, equipmentItemType) {
     const item = this.equipment[equipmentItemType];
 
-    if (itemName !== item) {
+    if (itemName !== item.id) {
       return false;
     }
 
-    if (!this.addToBackpack(itemName)) {
+    if (!this.addToBackpack(item)) {
       return false;
     }
     if (!this.removeFromEquipment(itemName, equipmentItemType)) {
@@ -162,7 +163,11 @@ export default class Player {
       return false;
     }
 
-    if (item.quantity > 1) {
+    const itemSchema = GAME_ITEMS[item.id];
+
+    if (itemSchema.type === ITEM_TYPES.ARROWS) {
+      this.destroyItemFromBackpack(itemName);
+    } else if (item.quantity > 1) {
       item.quantity -= 1;
     } else if (!this.destroyItemFromBackpack(itemName)) {
       return false;
@@ -171,25 +176,30 @@ export default class Player {
     return true;
   }
 
-  addToEquipment(itemId) {
-    const item = GAME_ITEMS[itemId];
+  addToEquipment(item) {
+    const itemSchema = GAME_ITEMS[item.id];
 
     if (
-      !item ||
-      ![ITEM_TYPES.BACKPACK, ITEM_TYPES.WEAPON].includes(item.type)
+      !itemSchema ||
+      ![
+        ITEM_TYPES.ARROWS,
+        ITEM_TYPES.BACKPACK,
+        ITEM_TYPES.WEAPON,
+        ITEM_TYPES.QUIVER,
+      ].includes(itemSchema.type)
     ) {
       return false;
     }
 
-    const itemFromEquipment = this.equipment[item.type];
+    const itemFromEquipment = this.equipment[itemSchema.type];
     if (
       itemFromEquipment &&
-      !this.moveToBackpack(itemFromEquipment, item.type)
+      !this.moveToBackpack(itemFromEquipment.id, itemSchema.type)
     ) {
       return false;
     }
 
-    this.equipment[item.type] = itemId;
+    this.equipment[itemSchema.type] = item;
 
     return true;
   }
@@ -201,7 +211,7 @@ export default class Player {
       return false;
     }
 
-    if (!this.addToEquipment(itemName)) {
+    if (!this.addToEquipment(item)) {
       return false;
     }
     if (!this.removeFromBackpack(itemName)) {
@@ -251,12 +261,34 @@ export default class Player {
     );
   }
 
+  hasRangedWeapon() {
+    return this.getWeaponRange() > 1;
+  }
+
+  hasEnoughArrows() {
+    return Boolean(this.equipment.arrows);
+  }
+
+  useArrow() {
+    if (this.hasEnoughArrows()) {
+      if (this.equipment.arrows.quantity === 1) {
+        this.removeFromEquipment(this.equipment.arrows.id, "arrows");
+      } else {
+        this.equipment.arrows.quantity -= 1;
+      }
+
+      return true;
+    }
+    return false;
+  }
+
   canAttack({ PF, finder, map }) {
     return (
-      this.attackDelayTicks >= this.attackDelayMaxTicks &&
       this.selectedPlayer.isDead === false &&
-      this.inRange(getCurrentWeapon(this.equipment.weapon).weapon.range) &&
       this.energy >= ENERGY_ATTACK_USE &&
+      this.attackDelayTicks >= this.attackDelayMaxTicks &&
+      (this.hasRangedWeapon() ? this.hasEnoughArrows() : true) &&
+      this.inRange(this.getWeaponRange()) &&
       noObstacles({ PF, finder, map, player: this })
     );
   }
@@ -359,7 +391,7 @@ export default class Player {
     try {
       this.backpack.items = this.backpack.items.reduce(
         (backpack, currentItem) => {
-          if (currentItem.name !== itemName) {
+          if (currentItem.id !== itemName) {
             backpack.push(currentItem);
           }
           return backpack;
@@ -375,7 +407,7 @@ export default class Player {
   destroyItemFromEquipment(itemName, equipmentItemType) {
     const item = this.equipment[equipmentItemType];
 
-    if (itemName === item && delete this.equipment[equipmentItemType]) {
+    if (itemName === item.id && delete this.equipment[equipmentItemType]) {
       return true;
     }
     return false;
