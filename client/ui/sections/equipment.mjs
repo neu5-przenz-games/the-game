@@ -2,6 +2,7 @@ import {
   GAME_ITEMS,
   ITEM_ACTIONS,
   ITEM_TYPES,
+  WEARABLE_TYPES,
 } from "../../../shared/index.mjs";
 import { GFX_PATH } from "../constants.mjs";
 import { createBtn } from "../utils/index.mjs";
@@ -31,9 +32,9 @@ export default class UIEquipment {
       { type: "weapon", displayName: "weapon" },
       { type: "armor", displayName: "armor" },
       { type: "shield", displayName: "shield" },
-      { type: "quiver", displayName: "quiver" },
       { type: "arrows", displayName: "arrows" },
       { type: "pants", displayName: "pants" },
+      { type: "quiver", displayName: "quiver" },
       { type: "boots", displayName: "boots" },
       { type: "backpack", displayName: "backpack" },
     ];
@@ -152,14 +153,7 @@ export default class UIEquipment {
           text: "move to backpack",
         });
         fragment.appendChild(btnMoveToBackpack);
-      } else if (
-        [
-          ITEM_TYPES.ARROWS,
-          ITEM_TYPES.BACKPACK,
-          ITEM_TYPES.WEAPON,
-          ITEM_TYPES.QUIVER,
-        ].includes(item.type)
-      ) {
+      } else if (WEARABLE_TYPES.includes(item.type)) {
         const btnWearIt = createBtn({
           classNames: actionClassNames,
           datasets: [

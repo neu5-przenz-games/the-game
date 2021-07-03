@@ -7,6 +7,7 @@ import {
 import {
   GAME_ITEMS,
   ITEM_TYPES,
+  WEARABLE_TYPES,
   getCurrentWeapon,
 } from "../../shared/index.mjs";
 
@@ -179,15 +180,7 @@ export default class Player {
   addToEquipment(item) {
     const itemSchema = GAME_ITEMS[item.id];
 
-    if (
-      !itemSchema ||
-      ![
-        ITEM_TYPES.ARROWS,
-        ITEM_TYPES.BACKPACK,
-        ITEM_TYPES.WEAPON,
-        ITEM_TYPES.QUIVER,
-      ].includes(itemSchema.type)
-    ) {
+    if (!itemSchema || !WEARABLE_TYPES.includes(itemSchema.type)) {
       return false;
     }
 
@@ -265,16 +258,16 @@ export default class Player {
     return this.getWeaponRange() > 1;
   }
 
-  hasEnoughArrows() {
+  hasArrows() {
     return Boolean(this.equipment.arrows);
   }
 
   useArrow() {
-    if (this.hasEnoughArrows()) {
-      if (this.equipment.arrows.quantity === 1) {
+    if (this.hasArrows()) {
+      this.equipment.arrows.quantity -= 1;
+
+      if (this.equipment.arrows.quantity === 0) {
         this.removeFromEquipment(this.equipment.arrows.id, "arrows");
-      } else {
-        this.equipment.arrows.quantity -= 1;
       }
 
       return true;
@@ -287,7 +280,7 @@ export default class Player {
       this.selectedPlayer.isDead === false &&
       this.energy >= ENERGY_ATTACK_USE &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
-      (this.hasRangedWeapon() ? this.hasEnoughArrows() : true) &&
+      (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.inRange(this.getWeaponRange()) &&
       noObstacles({ PF, finder, map, player: this })
     );

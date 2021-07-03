@@ -1,4 +1,4 @@
-import ITEM_TYPES from "./itemTypes.mjs";
+import { ITEM_TYPES } from "./itemTypes.mjs";
 
 export default {
   arrowsBunch: {
