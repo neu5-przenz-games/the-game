@@ -12,10 +12,6 @@
     @include item;
   }
   &__item-quantity {
-    position: absolute;
-    bottom: 4px;
-    right: 4px;
-    line-height: 12px;
-    color: #fff;
+    @include item-quantity;
   }
 }

@@ -2,6 +2,7 @@ import {
   GAME_ITEMS,
   ITEM_ACTIONS,
   ITEM_TYPES,
+  WEARABLE_TYPES,
 } from "../../../shared/index.mjs";
 import { GFX_PATH } from "../constants.mjs";
 import { createBtn } from "../utils/index.mjs";
@@ -27,13 +28,15 @@ export default class UIEquipment {
     this.equipmentItemActions = equipmentItemActions;
 
     this.equipmentElements = [
-      "helmet",
-      "weapon",
-      "armor",
-      "shield",
-      "pants",
-      "boots",
-      "backpack",
+      { type: "helmet", displayName: "helmet" },
+      { type: "weapon", displayName: "weapon" },
+      { type: "armor", displayName: "armor" },
+      { type: "shield", displayName: "shield" },
+      { type: "arrows", displayName: "arrows" },
+      { type: "pants", displayName: "pants" },
+      { type: "quiver", displayName: "quiver" },
+      { type: "boots", displayName: "boots" },
+      { type: "backpack", displayName: "backpack" },
     ];
 
     this.equipmentWrapper.onclick = (ev) => {
@@ -92,20 +95,28 @@ export default class UIEquipment {
 
     const fragment = new DocumentFragment();
 
-    this.equipmentElements.forEach((name) => {
+    this.equipmentElements.forEach(({ type, displayName }) => {
       const div = document.createElement("div");
-      div.classList.add("equipment__item", `equipment__${name}`);
+      div.classList.add("equipment__item", `equipment__${type}`);
 
-      const itemName = equipment[name];
+      const item = equipment[type];
 
-      if (itemName) {
+      if (item) {
         const itemImg = document.createElement("img");
-        itemImg.src = GFX_PATH.concat(GAME_ITEMS[itemName].imgURL);
-        itemImg.dataset.itemName = itemName;
-        itemImg.dataset.equipmentItemType = name;
+        itemImg.src = GFX_PATH.concat(GAME_ITEMS[item.id].imgURL);
+        itemImg.dataset.itemName = item.id;
+        itemImg.dataset.equipmentItemType = type;
+
+        if (type === ITEM_TYPES.ARROWS) {
+          const quantity = document.createElement("div");
+          quantity.classList.add("equipment__item-quantity");
+          quantity.innerText = item.quantity;
+          div.appendChild(quantity);
+        }
+
         div.appendChild(itemImg);
       } else {
-        div.innerText = name;
+        div.innerText = displayName;
       }
 
       fragment.appendChild(div);
@@ -142,7 +153,7 @@ export default class UIEquipment {
           text: "move to backpack",
         });
         fragment.appendChild(btnMoveToBackpack);
-      } else if ([ITEM_TYPES.BACKPACK, ITEM_TYPES.WEAPON].includes(item.type)) {
+      } else if (WEARABLE_TYPES.includes(item.type)) {
         const btnWearIt = createBtn({
           classNames: actionClassNames,
           datasets: [

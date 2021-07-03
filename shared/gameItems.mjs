@@ -1,6 +1,12 @@
-import ITEM_TYPES from "./itemTypes.mjs";
+import { ITEM_TYPES } from "./itemTypes.mjs";
 
 export default {
+  arrowsBunch: {
+    id: "arrowsBunch",
+    displayName: "arrows",
+    imgURL: "arrows.png",
+    type: ITEM_TYPES.ARROWS,
+  },
   bag: {
     id: "bag",
     displayName: "bag",
@@ -58,5 +64,11 @@ export default {
       shield: () => {},
       spike: () => {},
     },
+  },
+  quiver: {
+    id: "quiver",
+    displayName: "quiver",
+    imgURL: "quiver.png",
+    type: ITEM_TYPES.QUIVER,
   },
 };

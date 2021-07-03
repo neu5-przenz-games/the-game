@@ -353,6 +353,14 @@ const loop = () => {
 
         player.selectedPlayer.gotHit(hit);
 
+        if (player.hasRangedWeapon() && player.useArrow()) {
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
+        }
+
         io.emit("player:hit", {
           name: player.selectedPlayer.name,
           hitType: getHitType(hit),

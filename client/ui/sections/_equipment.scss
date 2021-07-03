@@ -32,8 +32,14 @@
   &__shield {
     grid-area: shield;
   }
+  &__arrows {
+    grid-area: arrows;
+  }
   &__pants {
     grid-area: pants;
+  }
+  &__quiver {
+    grid-area: quiver;
   }
   &__boots {
     grid-area: boots;
@@ -51,11 +57,15 @@
     grid-template-areas:
       ". helmet ."
       "weapon armor shield"
-      ". pants ."
-      ". boots backpack";
+      "arrows pants ."
+      "quiver boots backpack";
   }
 
   &__item {
     @include item;
+  }
+
+  &__item-quantity {
+    @include item-quantity;
   }
 }

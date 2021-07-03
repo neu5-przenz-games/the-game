@@ -25,8 +25,8 @@ export default class UIBackpack {
         const item = items[i];
 
         const itemImg = document.createElement("img");
-        itemImg.src = GFX_PATH.concat(GAME_ITEMS[item.name].imgURL);
-        itemImg.dataset.itemName = item.name;
+        itemImg.src = GFX_PATH.concat(GAME_ITEMS[item.id].imgURL);
+        itemImg.dataset.itemName = item.id;
 
         const quantity = document.createElement("div");
         quantity.classList.add("backpack__item-quantity");

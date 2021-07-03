@@ -24,7 +24,7 @@ export default (game) => {
   });
 
   game.input.on("gameobjectdown", (pointer, obj) => {
-    if (game.UIsettings.classList.contains("show")) {
+    if (game.UIMenu.classList.contains("show")) {
       return;
     }
 

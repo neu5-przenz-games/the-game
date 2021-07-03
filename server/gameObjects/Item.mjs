@@ -5,12 +5,18 @@ const ITEMS = {
   Tree: {
     action: "chop",
     durationTicks: 150,
-    item: "wood",
+    item: {
+      id: "wood",
+      quantity: 1,
+    },
   },
   Ore: {
     action: "mine",
     durationTicks: 300,
-    item: "copper ore",
+    item: {
+      id: "copper ore",
+      quantity: 1,
+    },
   },
 };
 
