@@ -413,7 +413,7 @@ const loop = () => {
       io.to(player.socketId).emit("action:end");
 
       const item = getItem(player.selectedPlayer);
-      if (item && player.addToBackpack(item)) {
+      if (item && player.addToBackpack([item])) {
         io.to(player.socketId).emit("items:update", player.backpack);
       }
     }
