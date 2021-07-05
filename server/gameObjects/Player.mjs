@@ -122,18 +122,24 @@ export default class Player {
     return getCurrentWeapon(this.equipment.weapon).weapon.range;
   }
 
-  addToBackpack(newItem) {
-    const item = this.backpack.items.find((i) => i.id === newItem.id);
+  canAddToBackpack(itemsToAddNum) {
+    return itemsToAddNum <= this.backpack.slots - this.backpack.items.length;
+  }
 
-    if (item) {
-      item.quantity += newItem.quantity;
-    } else {
-      if (this.backpack.slots === this.backpack.items.length) {
-        return false;
-      }
-
-      this.backpack.items.push(newItem);
+  addToBackpack(newItems) {
+    if (!this.canAddToBackpack(newItems.length)) {
+      return false;
     }
+
+    newItems.forEach((newItem) => {
+      const item = this.backpack.items.find((i) => i.id === newItem.id);
+
+      if (item) {
+        item.quantity += newItem.quantity;
+      } else {
+        this.backpack.items.push(newItem);
+      }
+    });
 
     return true;
   }
@@ -145,14 +151,19 @@ export default class Player {
       return false;
     }
 
-    if (!this.addToBackpack(item)) {
-      return false;
-    }
-    if (!this.removeFromEquipment(itemName, equipmentItemType)) {
-      this.removeFromBackpack(itemName);
+    const itemSchema = GAME_ITEMS[item.id];
+    if (itemSchema.type === ITEM_TYPES.QUIVER && this.hasArrows()) {
+      const { arrows } = this.equipment;
+      if (!this.addToBackpack([item, arrows])) {
+        return false;
+      }
 
+      this.removeFromEquipment(arrows.id, ITEM_TYPES.ARROWS);
+    } else if (!this.addToBackpack([item])) {
       return false;
     }
+
+    this.removeFromEquipment(itemName, equipmentItemType);
 
     return true;
   }
@@ -192,6 +203,13 @@ export default class Player {
       return false;
     }
 
+    if (
+      itemSchema.type === ITEM_TYPES.ARROWS &&
+      this.equipment.quiver === undefined
+    ) {
+      return false;
+    }
+
     this.equipment[itemSchema.type] = item;
 
     return true;
@@ -204,12 +222,12 @@ export default class Player {
       return false;
     }
 
-    if (!this.addToEquipment(item)) {
-      return false;
-    }
     if (!this.removeFromBackpack(itemName)) {
       this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
 
+      return false;
+    }
+    if (!this.addToEquipment(item)) {
       return false;
     }
 
