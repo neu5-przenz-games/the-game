@@ -188,6 +188,13 @@ export default class Player {
     return true;
   }
 
+  setBackpack(slots = 0, items = []) {
+    this.backpack = {
+      slots,
+      items,
+    };
+  }
+
   addToEquipment(item) {
     const itemSchema = GAME_ITEMS[item.id];
 
@@ -419,6 +426,12 @@ export default class Player {
     const item = this.equipment[equipmentItemType];
 
     if (itemName === item.id && delete this.equipment[equipmentItemType]) {
+      const itemSchema = GAME_ITEMS[item.id];
+
+      if (itemSchema.type === ITEM_TYPES.BACKPACK) {
+        this.setBackpack();
+      }
+
       return true;
     }
     return false;
