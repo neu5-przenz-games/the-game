@@ -1,6 +1,7 @@
 import {
   GAME_ITEMS,
   ITEM_ACTIONS,
+  ITEM_TYPES,
   WEARABLE_TYPES,
 } from "../../../shared/index.mjs";
 import { ITEMS_PATH } from "../constants.mjs";
@@ -101,7 +102,7 @@ export default class UIEquipment {
         itemImg.dataset.itemName = item.id;
         itemImg.dataset.equipmentItemType = type;
 
-        if (type === WEARABLE_TYPES.ARROWS) {
+        if (type === ITEM_TYPES.ARROWS) {
           const quantity = document.createElement("div");
           quantity.classList.add("equipment__item-quantity");
           quantity.innerText = item.quantity;
