@@ -16,13 +16,18 @@ export default [
     isWalking: false,
     isDead: false,
     equipment: {
-      backpack: { id: "bag", quantity: 1 },
+      armor: { id: "armor", quantity: 1 },
+      pants: { id: "pants", quantity: 1 },
+      boots: { id: "boots", quantity: 1 },
+      backpack: { id: "backpack_6", quantity: 1 },
+      shield: { id: "shield", quantity: 1 },
       weapon: { id: "sword", quantity: 1 },
+      helmet: { id: "hat", quantity: 1 },
       quiver: { id: "quiver", quantity: 1 },
       arrows: { id: "arrowsBunch", quantity: 10 },
     },
     backpack: {
-      slots: 4,
+      slots: 6,
       items: [
         { id: "wood", quantity: 1 },
         { id: "bow", quantity: 1 },

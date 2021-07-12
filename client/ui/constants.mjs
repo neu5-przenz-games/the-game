@@ -1,3 +1,3 @@
-const GFX_PATH = "/assets/gfx/";
+const ITEMS_PATH = "/assets/items/";
 
-export { GFX_PATH };
+export { ITEMS_PATH };
