@@ -4,13 +4,18 @@ import {
   ITEM_TYPES,
   WEARABLE_TYPES,
 } from "../../../shared/index.mjs";
-import { GFX_PATH } from "../constants.mjs";
+import { ITEMS_PATH } from "../constants.mjs";
 import { createBtn } from "../utils/index.mjs";
 
 const actionClassNames = [
   "equipment__actions-button",
   "equipment__action-button",
 ];
+
+const equipmentElements = WEARABLE_TYPES.map((type) => ({
+  type,
+  displayName: type,
+}));
 
 export default class UIEquipment {
   constructor({ name, itemActionsCb }) {
@@ -27,17 +32,7 @@ export default class UIEquipment {
     this.equipmentItems = equipmentItems;
     this.equipmentItemActions = equipmentItemActions;
 
-    this.equipmentElements = [
-      { type: "helmet", displayName: "helmet" },
-      { type: "weapon", displayName: "weapon" },
-      { type: "armor", displayName: "armor" },
-      { type: "shield", displayName: "shield" },
-      { type: "arrows", displayName: "arrows" },
-      { type: "pants", displayName: "pants" },
-      { type: "quiver", displayName: "quiver" },
-      { type: "boots", displayName: "boots" },
-      { type: "backpack", displayName: "backpack" },
-    ];
+    this.equipmentElements = equipmentElements;
 
     this.equipmentWrapper.onclick = (ev) => {
       const el = ev.target;
@@ -103,7 +98,7 @@ export default class UIEquipment {
 
       if (item) {
         const itemImg = document.createElement("img");
-        itemImg.src = GFX_PATH.concat(GAME_ITEMS[item.id].imgURL);
+        itemImg.src = ITEMS_PATH.concat(GAME_ITEMS[item.id].imgURL);
         itemImg.dataset.itemName = item.id;
         itemImg.dataset.equipmentItemType = type;
 

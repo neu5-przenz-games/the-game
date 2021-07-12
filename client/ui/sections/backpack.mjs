@@ -1,5 +1,5 @@
 import { GAME_ITEMS } from "../../../shared/index.mjs";
-import { GFX_PATH } from "../constants.mjs";
+import { ITEMS_PATH } from "../constants.mjs";
 
 export default class UIBackpack {
   constructor({ backpack }) {
@@ -26,7 +26,7 @@ export default class UIBackpack {
         const item = items[i];
 
         const itemImg = document.createElement("img");
-        itemImg.src = GFX_PATH.concat(GAME_ITEMS[item.id].imgURL);
+        itemImg.src = ITEMS_PATH.concat(GAME_ITEMS[item.id].imgURL);
         itemImg.dataset.itemName = item.id;
 
         const quantity = document.createElement("div");
