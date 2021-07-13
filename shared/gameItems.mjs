@@ -16,12 +16,14 @@ export default {
   backpack_6: {
     id: "backpack_6",
     displayName: "small backpack",
+    slots: 6,
     imgURL: "backpack_6.png",
     type: ITEM_TYPES.BACKPACK,
   },
   bag: {
     id: "bag",
     displayName: "bag",
+    slots: 4,
     imgURL: "bag.png",
     type: ITEM_TYPES.BACKPACK,
   },
