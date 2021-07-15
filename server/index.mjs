@@ -9,15 +9,16 @@ import map from "../public/assets/map/map.mjs";
 import {
   ITEM_ACTIONS,
   gameObjects,
+  getAction,
   getCurrentWeapon,
+  getDuration,
+  getItem,
 } from "../shared/index.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";
 
 import Player from "./gameObjects/Player.mjs";
-
-import { getAction, getDuration, getItem } from "./gameObjects/Item.mjs";
 
 import playersConfig from "./mocks/players.mjs";
 
