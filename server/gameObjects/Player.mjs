@@ -152,6 +152,11 @@ export default class Player {
     }
 
     const itemSchema = GAME_ITEMS[item.id];
+
+    if (itemSchema.type === ITEM_TYPES.BACKPACK) {
+      return false;
+    }
+
     if (itemSchema.type === ITEM_TYPES.QUIVER && this.hasArrows()) {
       const { arrows } = this.equipment;
       if (!this.addToBackpack([item, arrows])) {
@@ -222,20 +227,39 @@ export default class Player {
     return true;
   }
 
-  moveToEquipment(itemName) {
+  moveToEquipmentFromBackpack(itemName) {
     const item = this.getFromBackpack(itemName);
 
-    if (!item) {
+    const itemSchema = GAME_ITEMS[item.id];
+
+    if (!WEARABLE_TYPES.includes(itemSchema.type)) {
       return false;
     }
 
-    if (!this.removeFromBackpack(itemName)) {
-      this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
+    if (itemSchema.type === ITEM_TYPES.BACKPACK) {
+      const currentBackpack = this.equipment.backpack;
+      const backpackItems = this.backpack.items;
 
-      return false;
-    }
-    if (!this.addToEquipment(item)) {
-      return false;
+      const { slots } = itemSchema;
+
+      this.setBackpack(slots, [
+        ...(backpackItems.length >= slots
+          ? backpackItems.slice(0, slots)
+          : backpackItems),
+        currentBackpack,
+      ]);
+
+      this.destroyItemFromBackpack(itemName);
+      this.equipment.backpack = item;
+    } else {
+      if (!this.removeFromBackpack(itemName)) {
+        this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
+
+        return false;
+      }
+      if (!this.addToEquipment(item)) {
+        return false;
+      }
     }
 
     return true;

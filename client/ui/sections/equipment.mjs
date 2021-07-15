@@ -140,14 +140,16 @@ export default class UIEquipment {
     const item = GAME_ITEMS[this.selectedItemName];
     if (item) {
       if (isInEquipment) {
-        const btnMoveToBackpack = createBtn({
-          classNames: actionClassNames,
-          datasets: [
-            { name: "actionName", value: ITEM_ACTIONS.MOVE_TO_BACKPACK },
-          ],
-          text: "move to backpack",
-        });
-        fragment.appendChild(btnMoveToBackpack);
+        if (item.type !== ITEM_TYPES.BACKPACK) {
+          const btnMoveToBackpack = createBtn({
+            classNames: actionClassNames,
+            datasets: [
+              { name: "actionName", value: ITEM_ACTIONS.MOVE_TO_BACKPACK },
+            ],
+            text: "move to backpack",
+          });
+          fragment.appendChild(btnMoveToBackpack);
+        }
       } else if (WEARABLE_TYPES.includes(item.type)) {
         const btnWearIt = createBtn({
           classNames: actionClassNames,

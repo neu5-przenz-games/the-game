@@ -29,6 +29,7 @@ export default [
     backpack: {
       slots: 6,
       items: [
+        { id: "bag", quantity: 1 },
         { id: "wood", quantity: 1 },
         { id: "bow", quantity: 1 },
       ],

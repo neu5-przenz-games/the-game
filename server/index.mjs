@@ -230,7 +230,7 @@ io.on("connection", (socket) => {
             }
           },
           [ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
-            if (player.moveToEquipment(itemName)) {
+            if (player.moveToEquipmentFromBackpack(itemName)) {
               io.to(player.socketId).emit(
                 "items:update",
                 player.backpack,
