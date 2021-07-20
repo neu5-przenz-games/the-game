@@ -13,7 +13,7 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 };
 
-const getSurroundingTiles = ({ map, obj, players, sizeToIncrease = 2 }) => {
+const getSurroundingTiles = ({ map, obj, sizeToIncrease = 2 }) => {
   const { startingTile, size } = obj;
   const position = {
     x: startingTile.tileX - (sizeToIncrease - 1),
@@ -25,22 +25,12 @@ const getSurroundingTiles = ({ map, obj, players, sizeToIncrease = 2 }) => {
   };
 
   const tiles = [];
-  const currentPlayersPositions = [];
-
-  players.forEach((player) => {
-    currentPlayersPositions.push(player.positionTile);
-  });
 
   for (let sizeX = 0; sizeX < increasedSize.x; sizeX += 1) {
     for (let sizeY = 0; sizeY < increasedSize.y; sizeY += 1) {
       const y = position.y + sizeY;
       const x = position.x + sizeX;
-      if (
-        map[y][x] === 0 &&
-        currentPlayersPositions.every(
-          (pos) => pos.tileX !== x || pos.tileY !== y
-        )
-      ) {
+      if (map[y][x] === 0) {
         tiles.push({ tileX: x, tileY: y });
       }
     }
@@ -49,8 +39,29 @@ const getSurroundingTiles = ({ map, obj, players, sizeToIncrease = 2 }) => {
   return tiles;
 };
 
-const getRespawnTile = (options) => {
-  const respawnTiles = getSurroundingTiles(options);
+const availableTiles = (surroundingTiles, players) => {
+  const tiles = [...surroundingTiles];
+  const currentPlayersPositions = [];
+
+  players.forEach((player) => {
+    currentPlayersPositions.push(player.positionTile);
+  });
+
+  return tiles.reduce((avTiles, tile) => {
+    if (
+      currentPlayersPositions.every(
+        (pos) => pos.tileX !== tile.tileX || pos.tileY !== tile.tileY
+      )
+    ) {
+      avTiles.push(tile);
+    }
+
+    return avTiles;
+  }, []);
+};
+
+const getRespawnTile = ({ players, ...opts }) => {
+  const respawnTiles = availableTiles(getSurroundingTiles(opts), players);
 
   return respawnTiles[getRandomInt(0, respawnTiles.length - 1)];
 };
@@ -60,15 +71,26 @@ const getXYFromTile = (tileX, tileY) => ({
   y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
 });
 
-const getDestTile = (player, options) => {
-  const tiles = getSurroundingTiles(options);
+const getDestTile = (player, { players, ...opts }) => {
+  const tiles = getSurroundingTiles(opts);
+  const { positionTile } = player;
 
-  const destTile = tiles.reduce(
+  // check if player is standing next to the destination
+  if (
+    tiles.some(
+      ({ tileX, tileY }) =>
+        tileX === positionTile.tileX && tileY === positionTile.tileY
+    )
+  ) {
+    return {};
+  }
+
+  const destTile = availableTiles(tiles, players).reduce(
     (savedTile, tile) => {
       const distance = getChebyshevDistance(
         {
-          tileX: player.positionTile.tileX,
-          tileY: player.positionTile.tileY,
+          tileX: positionTile.tileX,
+          tileY: positionTile.tileY,
         },
         tile
       );
@@ -83,7 +105,7 @@ const getDestTile = (player, options) => {
     { distance: Infinity }
   );
 
-  return destTile.distance !== 1 ? destTile : {};
+  return destTile.distance > 0 ? destTile : {};
 };
 
 export { getChebyshevDistance, getDestTile, getRespawnTile, getXYFromTile };
