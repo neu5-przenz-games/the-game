@@ -340,6 +340,12 @@ const loop = () => {
       }
     }
 
+    if (player.dropSelection) {
+      player.dropSelection = false;
+      player.selectedPlayer = null;
+      player.selectedPlayerTile = null;
+    }
+
     if (player.selectedPlayer) {
       if (player.settings.follow) {
         player.updateFollowing(map, players);
