@@ -283,6 +283,7 @@ const loop = () => {
           player.dest = null;
           player.selectedPlayer = null;
           player.selectedPlayerTile = null;
+          player.isWalking = false;
 
           return;
         }
@@ -340,12 +341,6 @@ const loop = () => {
       }
     }
 
-    if (player.dropSelection) {
-      player.dropSelection = false;
-      player.selectedPlayer = null;
-      player.selectedPlayerTile = null;
-    }
-
     if (player.selectedPlayer) {
       if (player.settings.follow) {
         player.updateFollowing(map, players);
@@ -381,6 +376,10 @@ const loop = () => {
         }
         io.to(player.socketId).emit("player:energy:update", player.energy);
       }
+    } else if (player.dropSelection) {
+      player.dropSelection = false;
+      player.selectedPlayer = null;
+      player.selectedPlayerTile = null;
     }
 
     if (player.toRespawn) {
