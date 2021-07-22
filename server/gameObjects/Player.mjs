@@ -11,27 +11,6 @@ import {
   getCurrentWeapon,
 } from "../../shared/index.mjs";
 
-const noObstacles = ({ PF, finder, map, player }) => {
-  let noObstacle = true;
-
-  if (player.equipment.weapon === "bow") {
-    const combatGrid = new PF.Grid(map.length, map.length);
-    const combatPath = finder
-      .findPath(
-        player.positionTile.tileX,
-        player.positionTile.tileY,
-        player.selectedPlayer.positionTile.tileX,
-        player.selectedPlayer.positionTile.tileY,
-        combatGrid
-      )
-      .slice(1, -1);
-
-    noObstacle = combatPath.every(([x, y]) => map[y][x] === 0);
-  }
-
-  return noObstacle;
-};
-
 const ENERGY_ACTION_USE = 50;
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
@@ -122,8 +101,36 @@ export default class Player {
     return getCurrentWeapon(this.equipment.weapon).weapon.range;
   }
 
-  canAddToBackpack(itemsToAddNum) {
-    return itemsToAddNum <= this.backpack.slots - this.backpack.items.length;
+  setOnline(socketId) {
+    this.isOnline = true;
+    this.socketId = socketId;
+  }
+
+  setSelectedObject(player) {
+    this.selectedPlayer = player;
+  }
+
+  setSettingsFollow(value) {
+    this.settings.follow = value;
+  }
+
+  setSettingsFight(value) {
+    this.settings.fight = value;
+  }
+
+  setSettingsShowRange(value) {
+    this.settings.showRange = value;
+  }
+
+  setWeapon(value) {
+    this.equipment.weapon = value;
+  }
+
+  setBackpack(slots = 0, items = []) {
+    this.backpack = {
+      slots,
+      items,
+    };
   }
 
   addToBackpack(newItems) {
@@ -144,7 +151,7 @@ export default class Player {
     return true;
   }
 
-  moveToBackpack(itemName, equipmentItemType) {
+  moveToBackpackFromEquipment(itemName, equipmentItemType) {
     const item = this.equipment[equipmentItemType];
 
     if (itemName !== item.id) {
@@ -193,13 +200,6 @@ export default class Player {
     return true;
   }
 
-  setBackpack(slots = 0, items = []) {
-    this.backpack = {
-      slots,
-      items,
-    };
-  }
-
   addToEquipment(item) {
     const itemSchema = GAME_ITEMS[item.id];
 
@@ -210,7 +210,7 @@ export default class Player {
     const itemFromEquipment = this.equipment[itemSchema.type];
     if (
       itemFromEquipment &&
-      !this.moveToBackpack(itemFromEquipment.id, itemSchema.type)
+      !this.moveToBackpackFromEquipment(itemFromEquipment.id, itemSchema.type)
     ) {
       return false;
     }
@@ -227,6 +227,60 @@ export default class Player {
     return true;
   }
 
+  moveBackpackToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+    const itemSchema = GAME_ITEMS[item.id];
+    const currentBackpack = this.equipment.backpack;
+    const backpackItems = this.backpack.items;
+
+    const { slots } = itemSchema;
+
+    this.setBackpack(slots, [
+      ...(backpackItems.length >= slots
+        ? backpackItems.slice(0, slots)
+        : backpackItems),
+      currentBackpack,
+    ]);
+
+    this.destroyItemFromBackpack(itemName);
+    this.equipment.backpack = item;
+  }
+
+  moveTwoHandedWeaponToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (
+      this.canAddToBackpack(this.equipment.weapon?.id ? 1 : 0) &&
+      this.removeFromBackpack(itemName) &&
+      this.addToEquipment(item) &&
+      this.moveToBackpackFromEquipment(
+        this.equipment.shield.id,
+        ITEM_TYPES.SHIELD
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  moveShieldToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (
+      this.removeFromBackpack(itemName) &&
+      this.addToEquipment(item) &&
+      this.moveToBackpackFromEquipment(
+        this.equipment.weapon.id,
+        ITEM_TYPES.WEAPON
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   moveToEquipmentFromBackpack(itemName) {
     const item = this.getFromBackpack(itemName);
 
@@ -237,20 +291,22 @@ export default class Player {
     }
 
     if (itemSchema.type === ITEM_TYPES.BACKPACK) {
-      const currentBackpack = this.equipment.backpack;
-      const backpackItems = this.backpack.items;
-
-      const { slots } = itemSchema;
-
-      this.setBackpack(slots, [
-        ...(backpackItems.length >= slots
-          ? backpackItems.slice(0, slots)
-          : backpackItems),
-        currentBackpack,
-      ]);
-
-      this.destroyItemFromBackpack(itemName);
-      this.equipment.backpack = item;
+      this.moveBackpackToEquipment(itemName);
+    }
+    // player wants to wear two-handed weapon and wears the shield
+    else if (itemSchema.isTwoHanded && this.equipment.shield !== undefined) {
+      if (!this.moveTwoHandedWeaponToEquipment(itemName)) {
+        return false;
+      }
+    }
+    // player wants to wear shield
+    else if (
+      itemSchema.type === ITEM_TYPES.SHIELD &&
+      this.hasTwoHandedWeapon()
+    ) {
+      if (!this.moveShieldToEquipment(itemName)) {
+        return false;
+      }
     } else {
       if (!this.removeFromBackpack(itemName)) {
         this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
@@ -269,38 +325,42 @@ export default class Player {
     return this.destroyItemFromEquipment(itemName, equipmentItemType);
   }
 
-  setOnline(socketId) {
-    this.isOnline = true;
-    this.socketId = socketId;
+  canAddToBackpack(itemsToAddNum) {
+    return itemsToAddNum <= this.backpack.slots - this.backpack.items.length;
   }
 
-  setSelectedObject(player) {
-    this.selectedPlayer = player;
-  }
+  noObstacles = ({ PF, finder, map }) => {
+    let noObstacle = true;
 
-  setSettingsFollow(value) {
-    this.settings.follow = value;
-  }
+    if (this.hasRangedWeapon()) {
+      const combatGrid = new PF.Grid(map.length, map.length);
+      const combatPath = finder
+        .findPath(
+          this.positionTile.tileX,
+          this.positionTile.tileY,
+          this.selectedPlayer.positionTile.tileX,
+          this.selectedPlayer.positionTile.tileY,
+          combatGrid
+        )
+        .slice(1, -1);
 
-  setSettingsFight(value) {
-    this.settings.fight = value;
-  }
+      noObstacle = combatPath.every(([x, y]) => map[y][x] === 0);
+    }
 
-  setSettingsShowRange(value) {
-    this.settings.showRange = value;
-  }
+    return noObstacle;
+  };
 
-  setWeapon(value) {
-    this.equipment.weapon = value;
-  }
-
-  inRange(range) {
+  isInRange(range) {
     return (
       getChebyshevDistance(
         this.positionTile,
         this.selectedPlayer.positionTile
       ) <= range
     );
+  }
+
+  hasTwoHandedWeapon() {
+    return getCurrentWeapon(this.equipment.weapon).isTwoHanded;
   }
 
   hasRangedWeapon() {
@@ -316,7 +376,7 @@ export default class Player {
       this.equipment.arrows.quantity -= 1;
 
       if (this.equipment.arrows.quantity === 0) {
-        this.removeFromEquipment(this.equipment.arrows.id, "arrows");
+        this.removeFromEquipment(this.equipment.arrows.id, ITEM_TYPES.ARROWS);
       }
 
       return true;
@@ -330,13 +390,13 @@ export default class Player {
       this.energy >= ENERGY_ATTACK_USE &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
-      this.inRange(this.getWeaponRange()) &&
-      noObstacles({ PF, finder, map, player: this })
+      this.isInRange(this.getWeaponRange()) &&
+      this.noObstacles({ PF, finder, map })
     );
   }
 
   canPerformAction() {
-    return this.inRange(1) && this.energy >= ENERGY_ACTION_USE;
+    return this.isInRange(1) && this.energy >= ENERGY_ACTION_USE;
   }
 
   gotHit(damage) {

@@ -38,6 +38,7 @@ export default {
     displayName: "bow",
     imgURL: "bow.png",
     type: ITEM_TYPES.WEAPON,
+    isTwoHanded: true,
     weapon: {
       attack: 15,
       range: 5,
