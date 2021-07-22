@@ -8,31 +8,33 @@ module.exports = {
       .navigate()
       .waitForElementVisible("@menu")
       .click("@menu")
-      .playerIsDead(playerName, (res) => {
+      .isPlayerDead(playerName, (res) => {
         browser.assert.ok(res.value === false);
       });
   },
   "player is getting killed": (browser) => {
+    const verifyIsPlayerDead = (res) => {
+      browser.assert.ok(res.value === true);
+    };
+
     browser
       .killPlayer(playerName)
-      .pause(2000)
-      .playerIsDead(playerName, (res) => {
-        browser.assert.ok(res.value === true);
-      });
+      .waitUntil(playerName, "isPlayerDead", true, verifyIsPlayerDead);
   },
   "player is respawned": (browser) => {
     const game = browser.page.game();
     let playerPositionTile = null;
+
+    const verifyIsPlayerAlive = (res) => {
+      browser.assert.ok(res.value === false);
+    };
 
     game
       .getPlayerPositionTile(playerName, (res) => {
         playerPositionTile = res.value;
       })
       .click("@btnRespawn")
-      .pause(2000)
-      .playerIsDead(playerName, (res) => {
-        browser.assert.ok(res.value === false);
-      })
+      .waitUntil(playerName, "isPlayerDead", false, verifyIsPlayerAlive)
       .getPlayerPositionTile(playerName, (res) => {
         browser.assert.ok(
           res.value.x !== playerPositionTile.x ||
