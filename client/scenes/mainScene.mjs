@@ -119,6 +119,7 @@ export default class MainScene extends Phaser.Scene {
     this.load.image("tileset-outside", "./assets/tileset/outside.png");
 
     // objects
+    this.load.image("HealingStone", "./assets/gfx/healing-stone.png");
     this.load.image("House", "./assets/gfx/house.png");
     this.load.image("Tree", "./assets/gfx/tree.png");
     this.load.image("Ore", "./assets/gfx/ore-copper.png");
