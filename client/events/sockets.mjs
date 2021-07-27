@@ -87,6 +87,7 @@ export default (game) => {
 
     let equipment = null;
     let backpack = null;
+    let skills = null;
 
     game.setPlayers(
       players.map((player) => {
@@ -98,6 +99,7 @@ export default (game) => {
 
           equipment = player.equipment;
           backpack = player.backpack;
+          skills = player.skills;
         }
 
         return game.add.existing(
@@ -139,6 +141,7 @@ export default (game) => {
         isDead: mainPlayer.isDead,
         equipment,
         settings: game.settings,
+        skills,
         backpack,
         followCb,
         fightCb,
@@ -209,6 +212,10 @@ export default (game) => {
     if (equipment) {
       game.setEquipment(equipment);
     }
+  });
+
+  game.socket.on("skills:update", (skills) => {
+    game.setSkills(skills);
   });
 
   game.socket.on("chat:message:add", (message, playerName) => {

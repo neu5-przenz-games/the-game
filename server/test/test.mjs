@@ -50,6 +50,7 @@ describe("Player", () => {
         "equipment",
         "fraction",
         "socketId",
+        "skills",
         "speed",
         "positionTile",
         "dest",
