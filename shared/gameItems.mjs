@@ -1,4 +1,5 @@
 import { ITEM_TYPES } from "./itemTypes.mjs";
+import { SKILLS_TYPES } from "./skills.mjs";
 
 export default {
   armor: {
@@ -38,6 +39,10 @@ export default {
     displayName: "bow",
     imgURL: "bow.png",
     type: ITEM_TYPES.WEAPON,
+    skill: {
+      name: SKILLS_TYPES.ARCHERY_FIGHTING,
+      pointsToGain: 5,
+    },
     weapon: {
       attack: 15,
       range: 5,
@@ -57,6 +62,10 @@ export default {
     id: "fist",
     displayName: "fist",
     type: ITEM_TYPES.WEAPON,
+    skill: {
+      name: SKILLS_TYPES.FIST_FIGHTING,
+      pointsToGain: 5,
+    },
     weapon: {
       attack: 5,
       range: 1,
@@ -79,12 +88,20 @@ export default {
     displayName: "shield",
     imgURL: "shield.png",
     type: ITEM_TYPES.SHIELD,
+    skill: {
+      name: SKILLS_TYPES.SHIELD_DEFENDING,
+      pointsToGain: 5,
+    },
   },
   sword: {
     id: "sword",
     displayName: "sword",
     imgURL: "sword.png",
     type: ITEM_TYPES.WEAPON,
+    skill: {
+      name: SKILLS_TYPES.SWORD_FIGHTING,
+      pointsToGain: 5,
+    },
     weapon: {
       attack: 20,
       range: 1,

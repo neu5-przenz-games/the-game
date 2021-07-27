@@ -95,6 +95,10 @@ export default class Game extends Phaser.Scene {
     this.profile.setBackpack(backpack);
   }
 
+  setSkills(skills) {
+    this.profile.setSkills(skills);
+  }
+
   setSelectedObject(selectedObject) {
     this.selectedObject = selectedObject;
   }
