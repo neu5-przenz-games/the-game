@@ -1,4 +1,5 @@
 import FRACTIONS from "./fractions.mjs";
+import { SKILLS_TYPES } from "./skills.mjs";
 
 const REAL_PROPERTIES = {
   House: {
@@ -7,6 +8,10 @@ const REAL_PROPERTIES = {
   Tree: {
     action: "chop",
     durationTicks: 150,
+    skill: {
+      name: SKILLS_TYPES.LUMBERJACKING,
+      pointsToGain: 5,
+    },
     item: {
       id: "wood",
       quantity: 1,
@@ -14,7 +19,11 @@ const REAL_PROPERTIES = {
   },
   Ore: {
     action: "mine",
-    durationTicks: 300,
+    durationTicks: 30,
+    skill: {
+      name: SKILLS_TYPES.MINING,
+      pointsToGain: 5,
+    },
     item: {
       id: "copper ore",
       quantity: 1,
@@ -27,6 +36,8 @@ const getAction = (obj) => REAL_PROPERTIES[obj.type].action;
 const getDuration = (obj) => REAL_PROPERTIES[obj.type].durationTicks;
 
 const getItem = (obj) => REAL_PROPERTIES[obj.type].item;
+
+const getSkillDetails = (obj) => REAL_PROPERTIES[obj.type].skill;
 
 const getStartingTile = ({ tileX, tileY }) => ({ tileX, tileY });
 
@@ -94,4 +105,4 @@ const gameObjects = [
   startingTile: gameObject.startingTile(gameObject.positionTile),
 }));
 
-export { gameObjects, getAction, getDuration, getItem };
+export { gameObjects, getAction, getDuration, getItem, getSkillDetails };

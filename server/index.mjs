@@ -13,6 +13,10 @@ import {
   getCurrentWeapon,
   getDuration,
   getItem,
+  getSkillDetails,
+  shapeSkillsForClient,
+  skillIncrease,
+  skillsSchema,
 } from "../shared/index.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
@@ -55,7 +59,17 @@ io.on("connection", (socket) => {
 
     socket.emit(
       "players:list",
-      Array.from(players, ([name, value]) => ({ name, ...value })),
+      Array.from(players, ([name, value]) => {
+        const newValue = {
+          ...value,
+          skills: shapeSkillsForClient(skillsSchema),
+        };
+
+        return {
+          name,
+          ...newValue,
+        };
+      }),
       socket.id
     );
 
@@ -343,7 +357,9 @@ const loop = () => {
       }
     }
 
-    if (player.selectedPlayer) {
+    const { selectedPlayer } = player;
+
+    if (selectedPlayer) {
       if (player.settings.follow) {
         player.updateFollowing(map, players);
       }
@@ -351,11 +367,40 @@ const loop = () => {
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {
         player.attackDelayTicks = 0;
         player.energyUse("attack");
-        player.attack = player.selectedPlayer.name;
+        player.attack = selectedPlayer.name;
 
-        const hit = getCurrentWeapon(player.equipment.weapon).weapon.attack;
+        const currentWeapon = getCurrentWeapon(player.equipment.weapon);
+        const hit = currentWeapon.weapon.attack;
+        const skillDetails = currentWeapon.skill;
 
-        player.selectedPlayer.gotHit(hit);
+        player.skillUpdate(skillIncrease(player.skills, skillDetails));
+
+        io.to(player.socketId).emit(
+          "skills:update",
+          shapeSkillsForClient(player.skills)
+        );
+
+        if (selectedPlayer.equipment.shield) {
+          const selectedPlayerSkillDetails = getCurrentWeapon(
+            selectedPlayer.equipment.shield
+          ).skill;
+
+          selectedPlayer.skillUpdate(
+            skillIncrease(selectedPlayer.skills, selectedPlayerSkillDetails)
+          );
+
+          io.to(selectedPlayer.socketId).emit(
+            "skills:update",
+            shapeSkillsForClient(selectedPlayer.skills)
+          );
+        }
+
+        selectedPlayer.gotHit(hit);
+
+        io.emit("player:hit", {
+          name: player.selectedPlayer.name,
+          hitType: getHitType(hit),
+        });
 
         if (player.hasRangedWeapon() && player.useArrow()) {
           io.to(player.socketId).emit(
@@ -365,15 +410,10 @@ const loop = () => {
           );
         }
 
-        io.emit("player:hit", {
-          name: player.selectedPlayer.name,
-          hitType: getHitType(hit),
-        });
-
-        if (player.selectedPlayer.isDead) {
-          io.to(player.selectedPlayer.socketId).emit(
+        if (selectedPlayer.isDead) {
+          io.to(selectedPlayer.socketId).emit(
             "player:dead",
-            player.selectedPlayer.name
+            selectedPlayer.name
           );
         }
         io.to(player.socketId).emit("player:energy:update", player.energy);
@@ -421,6 +461,16 @@ const loop = () => {
       io.to(player.socketId).emit("action:end");
 
       const item = getItem(player.selectedPlayer);
+
+      const skillDetails = getSkillDetails(player.selectedPlayer);
+
+      player.skillUpdate(skillIncrease(player.skills, skillDetails));
+
+      io.to(player.socketId).emit(
+        "skills:update",
+        shapeSkillsForClient(player.skills)
+      );
+
       if (item && player.addToBackpack([item])) {
         io.to(player.socketId).emit("items:update", player.backpack);
       }

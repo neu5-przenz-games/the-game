@@ -1,9 +1,10 @@
-import { FRACTIONS } from "../../shared/index.mjs";
+import { FRACTIONS, skillsSchema } from "../../shared/index.mjs";
 
 const radiantFraction = FRACTIONS[0].name;
 const radiantHouse = FRACTIONS[0].houses[0];
 const direFraction = FRACTIONS[1].name;
 const direHouse = FRACTIONS[1].houses[0];
+const skills = skillsSchema;
 
 export default [
   {
@@ -34,6 +35,7 @@ export default [
         { id: "bow", quantity: 1 },
       ],
     },
+    skills,
     settings: {
       dropSelectedOnMove: true,
       follow: true,
@@ -77,6 +79,7 @@ export default [
       slots: 4,
       items: [{ id: "sword", quantity: 1 }],
     },
+    skills,
     settings: {
       dropSelectedOnMove: true,
       follow: false,
@@ -120,6 +123,7 @@ export default [
       slots: 4,
       items: [],
     },
+    skills,
     settings: {
       dropSelectedOnMove: true,
       follow: false,
@@ -163,6 +167,7 @@ export default [
       slots: 4,
       items: [],
     },
+    skills,
     settings: {
       dropSelectedOnMove: true,
       follow: false,
@@ -206,6 +211,7 @@ export default [
       slots: 4,
       items: [],
     },
+    skills,
     settings: {
       dropSelectedOnMove: true,
       follow: false,
@@ -249,6 +255,7 @@ export default [
       slots: 4,
       items: [],
     },
+    skills,
     settings: {
       dropSelectedOnMove: true,
       follow: false,

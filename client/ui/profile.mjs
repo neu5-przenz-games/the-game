@@ -2,6 +2,7 @@ import {
   UIBackpack,
   UIEquipment,
   UISettings,
+  UISkills,
   UITabs,
 } from "./sections/index.mjs";
 
@@ -10,6 +11,7 @@ export default class UIProfile {
     name,
     isDead,
     equipment,
+    skills,
     backpack,
     settings,
     followCb,
@@ -40,6 +42,7 @@ export default class UIProfile {
     this.selectedItemName = null;
 
     this.UIEquipment = new UIEquipment({ name, itemActionsCb });
+    this.UISkills = new UISkills();
     this.UIBackpack = new UIBackpack({ backpack });
     this.UISettings = new UISettings({
       followCb,
@@ -53,6 +56,7 @@ export default class UIProfile {
     this.UITabs = new UITabs();
 
     this.UIEquipment.setEquipment(equipment);
+    this.UISkills.setSkills(skills);
     this.UIBackpack.setBackpack(backpack);
 
     this.dropSelectionButton.onclick = () => {
@@ -66,6 +70,10 @@ export default class UIProfile {
 
   setBackpack(backpack) {
     this.UIBackpack.setBackpack(backpack);
+  }
+
+  setSkills(skills) {
+    this.UISkills.setSkills(skills);
   }
 
   setEquipment(equipment) {

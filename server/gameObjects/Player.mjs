@@ -41,6 +41,7 @@ export default class Player {
     energyRegenDelayTicks,
     energyRegenDelayMaxTicks,
     next,
+    skills,
     speed,
     isOnline,
     socketId,
@@ -81,7 +82,7 @@ export default class Player {
     this.energyRegenDelayMaxTicks = energyRegenDelayMaxTicks;
     this.hp = hp;
     this.energy = energy;
-
+    this.skills = skills;
     // technical info
     this.socketId = socketId;
     this.isOnline = isOnline;
@@ -481,6 +482,15 @@ export default class Player {
       return true;
     }
     return false;
+  }
+
+  skillUpdate({ name, skill }) {
+    this.skills = {
+      ...this.skills,
+      [name]: {
+        ...skill,
+      },
+    };
   }
 
   destroyItem(itemName, equipmentItemType) {
