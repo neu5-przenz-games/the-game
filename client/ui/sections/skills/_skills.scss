@@ -1,0 +1,19 @@
+.skills {
+  font-size: 14px;
+
+  &__skill {
+    margin: 4px 0;
+  }
+
+  &__progressbar-wrapper {
+    width: 100%;
+    background: white;
+    border: 1px solid black;
+    box-sizing: border-box;
+  }
+
+  &__progressbar {
+    height: 2px;
+    background-color: green;
+  }
+}
