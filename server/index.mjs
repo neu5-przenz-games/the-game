@@ -193,6 +193,20 @@ io.on("connection", (socket) => {
           player.toKill = true;
         }
       });
+
+      socket.on("player:equipment:clear", ({ name }) => {
+        const player = players.get(name);
+
+        if (player) {
+          player.setEquipment();
+
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
+        }
+      });
     }
 
     socket.on("action:button:clicked", ({ name }) => {
@@ -470,7 +484,11 @@ const loop = () => {
       );
 
       if (item && player.addToBackpack([item])) {
-        io.to(player.socketId).emit("items:update", player.backpack);
+        io.to(player.socketId).emit(
+          "items:update",
+          player.backpack,
+          player.equipment
+        );
       }
     }
 

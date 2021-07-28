@@ -201,6 +201,12 @@ export default class Player {
     };
   }
 
+  setEquipment(items = {}) {
+    this.equipment = {
+      ...items,
+    };
+  }
+
   addToEquipment(item) {
     const itemSchema = GAME_ITEMS[item.id];
 

@@ -206,12 +206,8 @@ export default (game) => {
   });
 
   game.socket.on("items:update", (backpack, equipment) => {
-    if (backpack) {
-      game.setBackpack(backpack);
-    }
-    if (equipment) {
-      game.setEquipment(equipment);
-    }
+    game.setBackpack(backpack);
+    game.setEquipment(equipment);
   });
 
   game.socket.on("skills:update", (skills) => {
@@ -236,6 +232,11 @@ export default (game) => {
       ...window.e2e,
       killPlayer: (playerName) => {
         game.socket.emit("game:killPlayer", {
+          name: playerName,
+        });
+      },
+      clearPlayerEquipment: (playerName) => {
+        game.socket.emit("player:equipment:clear", {
           name: playerName,
         });
       },
