@@ -296,18 +296,14 @@ export default class Player {
     }
     // player wants to wear two-handed weapon and wears the shield
     else if (itemSchema.isTwoHanded && this.equipment.shield !== undefined) {
-      if (!this.moveTwoHandedWeaponToEquipment(itemName)) {
-        return false;
-      }
+      return this.moveTwoHandedWeaponToEquipment(itemName);
     }
     // player wants to wear shield
     else if (
       itemSchema.type === ITEM_TYPES.SHIELD &&
       this.hasTwoHandedWeapon()
     ) {
-      if (!this.moveShieldToEquipment(itemName)) {
-        return false;
-      }
+      return this.moveShieldToEquipment(itemName);
     } else {
       if (!this.removeFromBackpack(itemName)) {
         this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
@@ -528,6 +524,7 @@ export default class Player {
 
       return true;
     }
+
     return false;
   }
 
