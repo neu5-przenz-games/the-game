@@ -39,6 +39,7 @@ export default {
     displayName: "bow",
     imgURL: "bow.png",
     type: ITEM_TYPES.WEAPON,
+    isTwoHanded: true,
     skill: {
       name: SKILLS_TYPES.ARCHERY_FIGHTING,
       pointsToGain: 5,
