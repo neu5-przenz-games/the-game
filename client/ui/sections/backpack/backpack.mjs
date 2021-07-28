@@ -1,5 +1,5 @@
-import { GAME_ITEMS } from "../../../shared/index.mjs";
-import { ITEMS_PATH } from "../constants.mjs";
+import { GAME_ITEMS } from "../../../../shared/index.mjs";
+import { ITEMS_PATH } from "../../constants.mjs";
 
 export default class UIBackpack {
   constructor({ backpack }) {

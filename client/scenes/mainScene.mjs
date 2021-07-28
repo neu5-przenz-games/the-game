@@ -7,7 +7,7 @@ import sockets from "../events/sockets.mjs";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList.mjs";
 
-import UIChat from "../ui/chat.mjs";
+import UIChat from "../ui/sections/chat/chat.mjs";
 
 import { FRACTIONS } from "../../shared/index.mjs";
 

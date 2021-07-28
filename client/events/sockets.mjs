@@ -214,6 +214,10 @@ export default (game) => {
     game.setSkills(skills);
   });
 
+  game.socket.on("skills:update", (skills) => {
+    game.setSkills(skills);
+  });
+
   game.socket.on("chat:message:add", (message, playerName) => {
     game.chat.addMessage(playerName, message);
   });

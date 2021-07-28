@@ -62,7 +62,10 @@ io.on("connection", (socket) => {
       Array.from(players, ([name, value]) => {
         const newValue = {
           ...value,
-          skills: shapeSkillsForClient(skillsSchema),
+          skills:
+            availablePlayer.name === name
+              ? shapeSkillsForClient(availablePlayer.skills)
+              : shapeSkillsForClient(skillsSchema),
         };
 
         return {
