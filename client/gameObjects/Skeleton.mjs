@@ -86,7 +86,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       scene,
       x + OFFSET.X,
       y + OFFSET.Y,
-      "skeleton",
+      fraction,
       directions[direction].offset
     );
 
