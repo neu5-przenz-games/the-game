@@ -127,13 +127,6 @@ export default class Player {
     this.equipment.weapon = value;
   }
 
-  setBackpack(slots = 0, items = []) {
-    this.backpack = {
-      slots,
-      items,
-    };
-  }
-
   addToBackpack(newItems) {
     if (!this.canAddToBackpack(newItems.length)) {
       return false;
@@ -199,6 +192,19 @@ export default class Player {
     }
 
     return true;
+  }
+
+  setBackpack(slots = 0, items = []) {
+    this.backpack = {
+      slots,
+      items,
+    };
+  }
+
+  setEquipment(items = {}) {
+    this.equipment = {
+      ...items,
+    };
   }
 
   addToEquipment(item) {
@@ -386,6 +392,7 @@ export default class Player {
       this.selectedPlayer.isDead === false &&
       this.energy >= ENERGY_ATTACK_USE &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
+      this.fraction !== this.selectedPlayer.fraction &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
       this.noObstacles({ PF, finder, map })

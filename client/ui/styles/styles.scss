@@ -3,11 +3,12 @@
 @import "./mixins";
 
 @import "../profile";
-@import "../sections/settings";
-@import "../sections/tabs";
-@import "../sections/equipment";
-@import "../sections/backpack";
-@import "../chat";
+@import "../sections/settings/settings";
+@import "../sections/tabs/tabs";
+@import "../sections/equipment/equipment";
+@import "../sections/backpack/backpack";
+@import "../sections/skills/skills";
+@import "../sections/chat/chat";
 
 .hidden {
   display: none;

@@ -62,7 +62,10 @@ io.on("connection", (socket) => {
       Array.from(players, ([name, value]) => {
         const newValue = {
           ...value,
-          skills: shapeSkillsForClient(skillsSchema),
+          skills:
+            availablePlayer.name === name
+              ? shapeSkillsForClient(availablePlayer.skills)
+              : shapeSkillsForClient(skillsSchema),
         };
 
         return {
@@ -191,6 +194,20 @@ io.on("connection", (socket) => {
 
         if (player) {
           player.toKill = true;
+        }
+      });
+
+      socket.on("player:equipment:clear", ({ name }) => {
+        const player = players.get(name);
+
+        if (player) {
+          player.setEquipment();
+
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
         }
       });
     }
@@ -472,7 +489,11 @@ const loop = () => {
       );
 
       if (item && player.addToBackpack([item])) {
-        io.to(player.socketId).emit("items:update", player.backpack);
+        io.to(player.socketId).emit(
+          "items:update",
+          player.backpack,
+          player.equipment
+        );
       }
     }
 

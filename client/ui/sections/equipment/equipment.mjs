@@ -3,9 +3,9 @@ import {
   ITEM_ACTIONS,
   ITEM_TYPES,
   WEARABLE_TYPES,
-} from "../../../shared/index.mjs";
-import { ITEMS_PATH } from "../constants.mjs";
-import { createBtn } from "../utils/index.mjs";
+} from "../../../../shared/index.mjs";
+import { ITEMS_PATH } from "../../constants.mjs";
+import { createBtn } from "../../utils/index.mjs";
 
 const actionClassNames = [
   "equipment__actions-button",

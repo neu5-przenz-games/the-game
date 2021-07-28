@@ -7,15 +7,17 @@ import sockets from "../events/sockets.mjs";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList.mjs";
 
-import UIChat from "../ui/chat.mjs";
+import UIChat from "../ui/sections/chat/chat.mjs";
+
+import { FRACTIONS } from "../../shared/index.mjs";
 
 import DEBUG_MENU from "../ui/debugMenu.mjs";
 
 const FPS = 30;
 
-export default class Game extends Phaser.Scene {
+export default class MainScene extends Phaser.Scene {
   constructor() {
-    super("GameScene");
+    super("MainScene");
 
     this.mainPlayer = null;
     this.mainPlayerName = null;
@@ -24,7 +26,6 @@ export default class Game extends Phaser.Scene {
     this.playerList = new UIPlayerStatusList();
     this.profile = null;
     this.settings = null;
-    this.backpack = null;
     this.selectedObject = null;
     this.chat = new UIChat();
     this.socket = null;
@@ -129,9 +130,16 @@ export default class Game extends Phaser.Scene {
     this.load.image("arrow-bow", "./assets/gfx/arrow-bow.png");
 
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
-    this.load.spritesheet("skeleton", "./assets/character/skeleton.png", {
-      frameWidth: 128,
-      frameHeight: 128,
+
+    FRACTIONS.forEach((fraction) => {
+      this.load.spritesheet(
+        fraction.name,
+        `./assets/character/${fraction.characterImg}.png`,
+        {
+          frameWidth: 128,
+          frameHeight: 128,
+        }
+      );
     });
   }
 
