@@ -330,6 +330,7 @@ export default class Player {
       this.selectedPlayer.isDead === false &&
       this.energy >= ENERGY_ATTACK_USE &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
+      this.fraction !== this.selectedPlayer.fraction &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.inRange(this.getWeaponRange()) &&
       noObstacles({ PF, finder, map, player: this })
