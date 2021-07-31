@@ -45,6 +45,14 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
+const healingStones = gameObjects.reduce((res, go) => {
+  if (go.type === "HealingStone") {
+    res.push(go);
+  }
+
+  return res;
+}, []);
+
 io.on("connection", (socket) => {
   // this is temporarily, will be changed
   let availablePlayer = null;
@@ -459,19 +467,12 @@ const loop = () => {
       }
     }
 
-    player.hpRegenerate(
-      gameObjects.find((b) => b.name === "healing-stone").healingArea
-    );
-
     if (player.energyRegenerate()) {
       io.to(player.socketId).emit("player:energy:update", player.energy);
     }
 
     if (player.attackDelayTicks < player.attackDelayMaxTicks) {
       player.attackDelayTicks += 1;
-    }
-    if (player.healingDelayTicks < player.healingDelayMaxTicks) {
-      player.healingDelayTicks += 1;
     }
     if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
       player.energyRegenDelayTicks += 1;
@@ -510,6 +511,25 @@ const loop = () => {
         player.gotHit(100);
         io.to(player.socketId).emit("player:dead", player.name);
       }
+    }
+  });
+
+  healingStones.forEach((healingStone) => {
+    if (healingStone.healingDelayTicks >= healingStone.healingDelayMaxTicks) {
+      players.forEach((player) => {
+        if (
+          !player.isDead &&
+          healingStone.isPlayerInHealingArea(player.positionTile)
+        ) {
+          player.gotHealed(healingStone.HP_REGEN_RATE);
+        }
+      });
+
+      healingStone.healingDelayTicks = 0;
+    }
+
+    if (healingStone.healingDelayTicks < healingStone.healingDelayMaxTicks) {
+      healingStone.healingDelayTicks += 1;
     }
   });
 

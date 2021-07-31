@@ -125,6 +125,15 @@ const gameObjects = [
     startingTile: getStartingTileHealingStone,
     healingArea: getHealingArea,
     size: { tileX: 2, tileY: 2 },
+    healingDelayTicks: 10,
+    healingDelayMaxTicks: 10,
+    HP_REGEN_RATE: 2,
+    isPlayerInHealingArea(positionTile) {
+      return this.healingArea.some(
+        ({ tileX, tileY }) =>
+          tileX === positionTile.tileX && tileY === positionTile.tileY
+      );
+    },
   },
 ].map((gameObject) => ({
   ...gameObject,
