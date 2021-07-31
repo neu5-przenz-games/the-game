@@ -14,8 +14,6 @@ import {
 const ENERGY_ACTION_USE = 50;
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
-const HP_REGEN_RATE = 2;
-const HP_MAX = 100;
 const ENERGY_MAX = 100;
 const HP_MAX = 100;
 
@@ -41,8 +39,6 @@ export default class Player {
     attack,
     attackDelayTicks,
     attackDelayMaxTicks,
-    healingDelayTicks,
-    healingDelayMaxTicks,
     energyRegenDelayTicks,
     energyRegenDelayMaxTicks,
     next,
@@ -83,8 +79,6 @@ export default class Player {
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
     this.attackDelayMaxTicks = attackDelayMaxTicks;
-    this.healingDelayTicks = healingDelayTicks;
-    this.healingDelayMaxTicks = healingDelayMaxTicks;
     this.energyRegenDelayTicks = energyRegenDelayTicks;
     this.energyRegenDelayMaxTicks = energyRegenDelayMaxTicks;
     this.hp = hp;
@@ -483,27 +477,6 @@ export default class Player {
       chop: ENERGY_ACTION_USE,
       mine: ENERGY_ACTION_USE,
     }[type];
-  }
-
-  hpRegenerate(healingArea) {
-    if (
-      this.healingDelayTicks >= this.healingDelayMaxTicks &&
-      healingArea.some(
-        ({ tileX, tileY }) =>
-          tileX === this.positionTile.tileX && tileY === this.positionTile.tileY
-      ) &&
-      !this.isDead &&
-      this.hp < HP_MAX
-    ) {
-      this.hp += HP_REGEN_RATE;
-      this.healingDelayTicks = 0;
-
-      if (this.hp > HP_MAX) {
-        this.hp = HP_MAX;
-      }
-      return true;
-    }
-    return false;
   }
 
   energyRegenerate() {

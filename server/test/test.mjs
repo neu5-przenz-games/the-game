@@ -40,8 +40,6 @@ describe("Player", () => {
         "actionDurationMaxTicks",
         "attackDelayTicks",
         "attackDelayMaxTicks",
-        "healingDelayTicks",
-        "healingDelayMaxTicks",
         "backpack",
         "energyRegenDelayTicks",
         "energyRegenDelayMaxTicks",

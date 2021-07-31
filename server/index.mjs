@@ -467,19 +467,12 @@ const loop = () => {
       }
     }
 
-    player.hpRegenerate(
-      gameObjects.find((b) => b.name === "healing-stone").healingArea
-    );
-
     if (player.energyRegenerate()) {
       io.to(player.socketId).emit("player:energy:update", player.energy);
     }
 
     if (player.attackDelayTicks < player.attackDelayMaxTicks) {
       player.attackDelayTicks += 1;
-    }
-    if (player.healingDelayTicks < player.healingDelayMaxTicks) {
-      player.healingDelayTicks += 1;
     }
     if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
       player.energyRegenDelayTicks += 1;
