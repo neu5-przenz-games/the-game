@@ -53,6 +53,7 @@ const getStartingTileTree = getStartingTile;
 
 const getStartingTileHealingStone = getStartingTile;
 
+// @TODO: Clean up getSurroundingTiles function and test it #238
 const getHealingArea = ({ tileX, tileY, size = 4 }) => {
   const tiles = [];
 

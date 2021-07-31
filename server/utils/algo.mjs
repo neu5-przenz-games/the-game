@@ -13,6 +13,7 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 };
 
+// @TODO: Clean up getSurroundingTiles function and test it #238
 const getSurroundingTiles = ({ map, obj, sizeToIncrease = 2 }) => {
   const { startingTile, size } = obj;
   const position = {
