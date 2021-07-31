@@ -184,7 +184,6 @@ export default [
     attack: null,
     attackDelayTicks: 30,
     attackDelayMaxTicks: 30,
-
     energyRegenDelayTicks: 30,
     energyRegenDelayMaxTicks: 30,
     next: null,
