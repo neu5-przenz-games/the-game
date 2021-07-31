@@ -11,7 +11,7 @@ export default [
     name: "player1",
     displayName: "player 1",
     fraction: radiantFraction,
-    positionTile: { tileX: 9, tileY: 13 },
+    positionTile: { tileX: 13, tileY: 6 },
     size: { tileX: 1, tileY: 1 },
     dest: null,
     isWalking: false,
@@ -59,7 +59,7 @@ export default [
     isOnline: false,
     socketId: null,
     direction: "east",
-    hp: 10,
+    hp: 100,
     energy: 100,
   },
   {
