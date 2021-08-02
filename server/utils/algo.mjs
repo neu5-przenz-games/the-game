@@ -1,4 +1,5 @@
 import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
+import { getSurroundingTiles } from "../../shared/utils.mjs";
 
 const getChebyshevDistance = (currTile, destTile) => {
   const distX = Math.abs(currTile.tileX - destTile.tileX);
@@ -13,34 +14,7 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 };
 
-// @TODO: Clean up getSurroundingTiles function and test it #238
-const getSurroundingTiles = ({ map, obj, sizeToIncrease = 2 }) => {
-  const { startingTile, size } = obj;
-  const position = {
-    x: startingTile.tileX - (sizeToIncrease - 1),
-    y: startingTile.tileY - (sizeToIncrease - 1),
-  };
-  const increasedSize = {
-    x: size.tileX + sizeToIncrease,
-    y: size.tileY + sizeToIncrease,
-  };
-
-  const tiles = [];
-
-  for (let sizeX = 0; sizeX < increasedSize.x; sizeX += 1) {
-    for (let sizeY = 0; sizeY < increasedSize.y; sizeY += 1) {
-      const y = position.y + sizeY;
-      const x = position.x + sizeX;
-      if (map[y][x] === 0) {
-        tiles.push({ tileX: x, tileY: y });
-      }
-    }
-  }
-
-  return tiles;
-};
-
-const availableTiles = (surroundingTiles, players) => {
+const availableTiles = ({ surroundingTiles, players, map }) => {
   const tiles = [...surroundingTiles];
   const currentPlayersPositions = [];
 
@@ -50,6 +24,7 @@ const availableTiles = (surroundingTiles, players) => {
 
   return tiles.reduce((avTiles, tile) => {
     if (
+      map[tile.tileY][tile.tileX] === 0 &&
       currentPlayersPositions.every(
         (pos) => pos.tileX !== tile.tileX || pos.tileY !== tile.tileY
       )
@@ -61,8 +36,19 @@ const availableTiles = (surroundingTiles, players) => {
   }, []);
 };
 
-const getRespawnTile = ({ players, ...opts }) => {
-  const respawnTiles = availableTiles(getSurroundingTiles(opts), players);
+const getRespawnTile = ({ map, obj, players, ...sizeToIncrease }) => {
+  const { startingTile, size } = obj;
+
+  const respawnTiles = availableTiles({
+    surroundingTiles: getSurroundingTiles({
+      ...startingTile,
+      sizeX: size.tileX,
+      sizeY: size.tileY,
+      ...sizeToIncrease,
+    }),
+    players,
+    map,
+  });
 
   return respawnTiles[getRandomInt(0, respawnTiles.length - 1)];
 };
@@ -72,13 +58,18 @@ const getXYFromTile = (tileX, tileY) => ({
   y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
 });
 
-const getDestTile = (player, { players, ...opts }) => {
-  const tiles = getSurroundingTiles(opts);
+const getDestTile = (player, { map, obj, players }) => {
+  const { size } = obj;
+  const surroundingTiles = getSurroundingTiles({
+    ...obj.positionTile,
+    sizeX: size.tileX,
+    sizeY: size.tileY,
+  });
   const { positionTile } = player;
 
-  // check if player is standing next to the destination
+  // check if player is at the destination
   if (
-    tiles.some(
+    surroundingTiles.some(
       ({ tileX, tileY }) =>
         tileX === positionTile.tileX && tileY === positionTile.tileY
     )
@@ -86,7 +77,7 @@ const getDestTile = (player, { players, ...opts }) => {
     return {};
   }
 
-  const destTile = availableTiles(tiles, players).reduce(
+  const destTile = availableTiles({ surroundingTiles, players, map }).reduce(
     (savedTile, tile) => {
       const distance = getChebyshevDistance(
         {

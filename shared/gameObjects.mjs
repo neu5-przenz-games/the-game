@@ -1,5 +1,6 @@
 import FRACTIONS from "./fractions.mjs";
 import { SKILLS_TYPES } from "./skills.mjs";
+import { getSurroundingTiles } from "./utils.mjs";
 
 const REAL_PROPERTIES = {
   HealingStone: {
@@ -52,19 +53,6 @@ const getStartingTileHouse = ({ tileX, tileY }) => ({
 const getStartingTileTree = getStartingTile;
 
 const getStartingTileHealingStone = getStartingTile;
-
-// @TODO: Clean up getSurroundingTiles function and test it #238
-const getHealingArea = ({ tileX, tileY, size = 4 }) => {
-  const tiles = [];
-
-  for (let x = tileX - size; x <= tileX + size + 1; x += 1) {
-    for (let y = tileY - size; y <= tileY + size + 1; y += 1) {
-      tiles.push({ tileX: x, tileY: y });
-    }
-  }
-
-  return tiles;
-};
 
 const direHouse = FRACTIONS[1].houses[0];
 const radiantHouse = FRACTIONS[0].houses[0];
@@ -124,8 +112,10 @@ const gameObjects = [
     type: "HealingStone",
     positionTile: { tileX: 10, tileY: 20 },
     startingTile: getStartingTileHealingStone,
-    healingArea: getHealingArea,
+    healingArea: getSurroundingTiles,
     size: { tileX: 2, tileY: 2 },
+    sizeToIncreaseX: 4,
+    sizeToIncreaseY: 4,
     healingDelayTicks: 10,
     healingDelayMaxTicks: 10,
     HP_REGEN_RATE: 2,
@@ -140,7 +130,11 @@ const gameObjects = [
   ...gameObject,
   startingTile: gameObject.startingTile(gameObject.positionTile),
   ...(gameObject.healingArea && {
-    healingArea: gameObject.healingArea(gameObject.positionTile),
+    healingArea: gameObject.healingArea({
+      ...gameObject.positionTile,
+      sizeToIncreaseX: gameObject.sizeToIncreaseX,
+      sizeToIncreaseY: gameObject.sizeToIncreaseY,
+    }),
   }),
 }));
 
