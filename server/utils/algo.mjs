@@ -36,15 +36,14 @@ const availableTiles = ({ surroundingTiles, players, map }) => {
   }, []);
 };
 
-const getRespawnTile = ({ map, obj, players, ...sizeToIncrease }) => {
+const getRespawnTile = ({ map, obj, players, sizeToIncrease }) => {
   const { startingTile, size } = obj;
 
   const respawnTiles = availableTiles({
     surroundingTiles: getSurroundingTiles({
-      ...startingTile,
-      sizeX: size.tileX,
-      sizeY: size.tileY,
-      ...sizeToIncrease,
+      startingTile,
+      size,
+      sizeToIncrease,
     }),
     players,
     map,
@@ -61,9 +60,8 @@ const getXYFromTile = (tileX, tileY) => ({
 const getDestTile = (player, { map, obj, players }) => {
   const { size } = obj;
   const surroundingTiles = getSurroundingTiles({
-    ...obj.positionTile,
-    sizeX: size.tileX,
-    sizeY: size.tileY,
+    startingTile: obj.positionTile,
+    size,
   });
   const { positionTile } = player;
 

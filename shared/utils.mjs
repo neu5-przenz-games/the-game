@@ -1,12 +1,14 @@
-export const getObjectTiles = ({ tileX, tileY, sizeX = 1, sizeY = 1 }) => {
-  if (sizeX <= 0 || sizeY <= 0) {
+export const getObjectTiles = ({ startingTile, size = { x: 1, y: 1 } }) => {
+  if (size.x <= 0 || size.y <= 0) {
     return [];
   }
 
+  const { tileX, tileY } = startingTile;
+
   const objectTiles = [];
 
-  for (let x = tileX; x < tileX + sizeX; x += 1) {
-    for (let y = tileY; y < tileY + sizeY; y += 1) {
+  for (let x = tileX; x < tileX + size.x; x += 1) {
+    for (let y = tileY; y < tileY + size.y; y += 1) {
       objectTiles.push({ tileX: x, tileY: y });
     }
   }
@@ -15,18 +17,16 @@ export const getObjectTiles = ({ tileX, tileY, sizeX = 1, sizeY = 1 }) => {
 };
 
 export const getSurroundingTiles = ({
-  tileX,
-  tileY,
-  sizeX = 1,
-  sizeY = 1,
-  sizeToIncreaseX = 1,
-  sizeToIncreaseY = 1,
+  startingTile,
+  size = { x: 1, y: 1 },
+  sizeToIncrease = { x: 1, y: 1 },
 }) => {
+  const { tileX, tileY } = startingTile;
   if (tileX < 1 || tileY < 1) {
     return [];
   }
 
-  const objectTiles = getObjectTiles({ tileX, tileY, sizeX, sizeY });
+  const objectTiles = getObjectTiles({ startingTile, size });
 
   if (objectTiles.length === 0) {
     return [];
@@ -35,13 +35,13 @@ export const getSurroundingTiles = ({
   const tiles = [];
 
   for (
-    let x = tileX - sizeToIncreaseX;
-    x < tileX + sizeX + sizeToIncreaseX;
+    let x = tileX - sizeToIncrease.x;
+    x < tileX + size.x + sizeToIncrease.x;
     x += 1
   ) {
     for (
-      let y = tileY - sizeToIncreaseY;
-      y < tileY + sizeY + sizeToIncreaseY;
+      let y = tileY - sizeToIncrease.y;
+      y < tileY + size.y + sizeToIncrease.y;
       y += 1
     ) {
       if (

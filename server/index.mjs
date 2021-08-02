@@ -456,8 +456,10 @@ const loop = () => {
           (b) => b.name === player.settings.respawnBuilding.name
         ),
         players,
-        sizeToIncreaseX: 2,
-        sizeToIncreaseY: 2,
+        sizeToIncrease: {
+          x: 2,
+          y: 2,
+        },
       });
 
       if (respawnTile) {
