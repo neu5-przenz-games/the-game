@@ -2,6 +2,9 @@ import FRACTIONS from "./fractions.mjs";
 import { SKILLS_TYPES } from "./skills.mjs";
 
 const REAL_PROPERTIES = {
+  HealingStone: {
+    action: "heal",
+  },
   House: {
     action: "rest",
   },
@@ -47,6 +50,21 @@ const getStartingTileHouse = ({ tileX, tileY }) => ({
 });
 
 const getStartingTileTree = getStartingTile;
+
+const getStartingTileHealingStone = getStartingTile;
+
+// @TODO: Clean up getSurroundingTiles function and test it #238
+const getHealingArea = ({ tileX, tileY, size = 4 }) => {
+  const tiles = [];
+
+  for (let x = tileX - size; x <= tileX + size + 1; x += 1) {
+    for (let y = tileY - size; y <= tileY + size + 1; y += 1) {
+      tiles.push({ tileX: x, tileY: y });
+    }
+  }
+
+  return tiles;
+};
 
 const direHouse = FRACTIONS[1].houses[0];
 const radiantHouse = FRACTIONS[0].houses[0];
@@ -100,9 +118,30 @@ const gameObjects = [
     startingTile: getStartingTileTree,
     size: { tileX: 1, tileY: 1 },
   },
+  {
+    name: "healing-stone",
+    displayName: "healing stone",
+    type: "HealingStone",
+    positionTile: { tileX: 10, tileY: 20 },
+    startingTile: getStartingTileHealingStone,
+    healingArea: getHealingArea,
+    size: { tileX: 2, tileY: 2 },
+    healingDelayTicks: 10,
+    healingDelayMaxTicks: 10,
+    HP_REGEN_RATE: 2,
+    isPlayerInHealingArea(positionTile) {
+      return this.healingArea.some(
+        ({ tileX, tileY }) =>
+          tileX === positionTile.tileX && tileY === positionTile.tileY
+      );
+    },
+  },
 ].map((gameObject) => ({
   ...gameObject,
   startingTile: gameObject.startingTile(gameObject.positionTile),
+  ...(gameObject.healingArea && {
+    healingArea: gameObject.healingArea(gameObject.positionTile),
+  }),
 }));
 
 export { gameObjects, getAction, getDuration, getItem, getSkillDetails };

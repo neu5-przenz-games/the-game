@@ -45,6 +45,14 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
+const healingStones = gameObjects.reduce((res, go) => {
+  if (go.type === "HealingStone") {
+    res.push(go);
+  }
+
+  return res;
+}, []);
+
 io.on("connection", (socket) => {
   // this is temporarily, will be changed
   let availablePlayer = null;
@@ -412,7 +420,7 @@ const loop = () => {
           );
         }
 
-        selectedPlayer.gotHit(hit);
+        selectedPlayer.hit(hit);
 
         io.emit("player:hit", {
           name: player.selectedPlayer.name,
@@ -500,9 +508,28 @@ const loop = () => {
     if (process.env.NODE_ENV === "development") {
       if (player.toKill) {
         player.toKill = false;
-        player.gotHit(100);
+        player.hit(100);
         io.to(player.socketId).emit("player:dead", player.name);
       }
+    }
+  });
+
+  healingStones.forEach((healingStone) => {
+    if (healingStone.healingDelayTicks >= healingStone.healingDelayMaxTicks) {
+      players.forEach((player) => {
+        if (
+          !player.isDead &&
+          healingStone.isPlayerInHealingArea(player.positionTile)
+        ) {
+          player.heal(healingStone.HP_REGEN_RATE);
+        }
+      });
+
+      healingStone.healingDelayTicks = 0;
+    }
+
+    if (healingStone.healingDelayTicks < healingStone.healingDelayMaxTicks) {
+      healingStone.healingDelayTicks += 1;
     }
   });
 

@@ -15,6 +15,7 @@ const ENERGY_ACTION_USE = 50;
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
+const HP_MAX = 100;
 
 export default class Player {
   constructor({
@@ -403,8 +404,8 @@ export default class Player {
     return this.isInRange(1) && this.energy >= ENERGY_ACTION_USE;
   }
 
-  gotHit(damage) {
-    this.hp -= damage;
+  hit(value) {
+    this.hp -= value;
 
     if (this.hp < 0) {
       this.hp = 0;
@@ -420,6 +421,14 @@ export default class Player {
         this.actionDurationTicks = null;
         this.actionDurationMax = null;
       }
+    }
+  }
+
+  heal(value) {
+    this.hp += value;
+
+    if (this.hp > HP_MAX) {
+      this.hp = HP_MAX;
     }
   }
 
