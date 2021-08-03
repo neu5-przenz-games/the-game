@@ -420,7 +420,7 @@ const loop = () => {
           );
         }
 
-        selectedPlayer.gotHit(hit);
+        selectedPlayer.hit(hit);
 
         io.emit("player:hit", {
           name: player.selectedPlayer.name,
@@ -508,7 +508,7 @@ const loop = () => {
     if (process.env.NODE_ENV === "development") {
       if (player.toKill) {
         player.toKill = false;
-        player.gotHit(100);
+        player.hit(100);
         io.to(player.socketId).emit("player:dead", player.name);
       }
     }
@@ -521,7 +521,7 @@ const loop = () => {
           !player.isDead &&
           healingStone.isPlayerInHealingArea(player.positionTile)
         ) {
-          player.gotHealed(healingStone.HP_REGEN_RATE);
+          player.heal(healingStone.HP_REGEN_RATE);
         }
       });
 

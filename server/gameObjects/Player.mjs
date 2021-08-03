@@ -404,8 +404,8 @@ export default class Player {
     return this.isInRange(1) && this.energy >= ENERGY_ACTION_USE;
   }
 
-  gotHit(damage) {
-    this.hp -= damage;
+  hit(value) {
+    this.hp -= value;
 
     if (this.hp < 0) {
       this.hp = 0;
@@ -424,7 +424,7 @@ export default class Player {
     }
   }
 
-  gotHealed(value) {
+  heal(value) {
     this.hp += value;
 
     if (this.hp > HP_MAX) {
