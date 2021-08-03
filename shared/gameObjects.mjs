@@ -130,7 +130,9 @@ const gameObjects = [
   startingTile: gameObject.startingTile(gameObject.positionTile),
   ...(gameObject.healingArea && {
     healingArea: gameObject.healingArea({
-      ...gameObject,
+      startingTile: gameObject.positionTile,
+      size: gameObject.size,
+      sizeToIncrease: gameObject.sizeToIncrease,
     }),
   }),
 }));
