@@ -1,5 +1,6 @@
 import FRACTIONS from "./fractions.mjs";
 import { SKILLS_TYPES } from "./skills.mjs";
+import { getSurroundingTiles } from "./utils.mjs";
 
 const REAL_PROPERTIES = {
   HealingStone: {
@@ -53,19 +54,6 @@ const getStartingTileTree = getStartingTile;
 
 const getStartingTileHealingStone = getStartingTile;
 
-// @TODO: Clean up getSurroundingTiles function and test it #238
-const getHealingArea = ({ tileX, tileY, size = 4 }) => {
-  const tiles = [];
-
-  for (let x = tileX - size; x <= tileX + size + 1; x += 1) {
-    for (let y = tileY - size; y <= tileY + size + 1; y += 1) {
-      tiles.push({ tileX: x, tileY: y });
-    }
-  }
-
-  return tiles;
-};
-
 const direHouse = FRACTIONS[1].houses[0];
 const radiantHouse = FRACTIONS[0].houses[0];
 
@@ -76,7 +64,7 @@ const gameObjects = [
     type: "House",
     positionTile: { tileX: 14, tileY: 8 },
     startingTile: getStartingTileHouse,
-    size: { tileX: 4, tileY: 3 },
+    size: { x: 4, y: 3 },
   },
   {
     name: radiantHouse.name,
@@ -84,7 +72,7 @@ const gameObjects = [
     type: "House",
     positionTile: { tileX: 15, tileY: 30 },
     startingTile: getStartingTileHouse,
-    size: { tileX: 4, tileY: 3 },
+    size: { x: 4, y: 3 },
   },
   {
     name: "tree1",
@@ -92,7 +80,7 @@ const gameObjects = [
     type: "Tree",
     positionTile: { tileX: 17, tileY: 4 },
     startingTile: getStartingTileTree,
-    size: { tileX: 1, tileY: 1 },
+    size: { x: 1, y: 1 },
   },
   {
     name: "tree2",
@@ -100,7 +88,7 @@ const gameObjects = [
     type: "Tree",
     positionTile: { tileX: 20, tileY: 20 },
     startingTile: getStartingTileTree,
-    size: { tileX: 1, tileY: 1 },
+    size: { x: 1, y: 1 },
   },
   {
     name: "ore-copper-1",
@@ -108,7 +96,7 @@ const gameObjects = [
     type: "Ore",
     positionTile: { tileX: 20, tileY: 12 },
     startingTile: getStartingTileTree,
-    size: { tileX: 1, tileY: 1 },
+    size: { x: 1, y: 1 },
   },
   {
     name: "ore-copper-2",
@@ -116,7 +104,7 @@ const gameObjects = [
     type: "Ore",
     positionTile: { tileX: 16, tileY: 23 },
     startingTile: getStartingTileTree,
-    size: { tileX: 1, tileY: 1 },
+    size: { x: 1, y: 1 },
   },
   {
     name: "healing-stone",
@@ -124,8 +112,9 @@ const gameObjects = [
     type: "HealingStone",
     positionTile: { tileX: 10, tileY: 20 },
     startingTile: getStartingTileHealingStone,
-    healingArea: getHealingArea,
-    size: { tileX: 2, tileY: 2 },
+    healingArea: getSurroundingTiles,
+    size: { x: 2, y: 2 },
+    sizeToIncrease: { x: 4, y: 4 },
     healingDelayTicks: 10,
     healingDelayMaxTicks: 10,
     HP_REGEN_RATE: 2,
@@ -140,7 +129,11 @@ const gameObjects = [
   ...gameObject,
   startingTile: gameObject.startingTile(gameObject.positionTile),
   ...(gameObject.healingArea && {
-    healingArea: gameObject.healingArea(gameObject.positionTile),
+    healingArea: gameObject.healingArea({
+      startingTile: gameObject.positionTile,
+      size: gameObject.size,
+      sizeToIncrease: gameObject.sizeToIncrease,
+    }),
   }),
 }));
 

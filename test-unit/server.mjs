@@ -1,7 +1,7 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
 import io from "socket.io-client";
-import server from "../index.mjs";
+import server from "../server/index.mjs";
 
 const ioOptions = {
   transports: ["websocket"],
