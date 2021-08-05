@@ -232,11 +232,11 @@ io.on("connection", (socket) => {
 
     socket.on("action:button:clicked", ({ name }) => {
       const player = players.get(name);
-
       const energyCost = getEnergyCost(player.selectedPlayer);
 
-      if (!player.canGetResource(energyCost)) {
-        // @TODO: send message that action can't be performed #164
+      const getResourceResult = player.canGetResource(energyCost);
+      if (getResourceResult !== true) {
+        io.to(player.socketId).emit("action:rejected", getResourceResult);
         return;
       }
 
@@ -244,7 +244,6 @@ io.on("connection", (socket) => {
 
       player.actionDurationTicks = 0;
       player.actionDurationMaxTicks = durationTicks;
-
       player.receipt = null;
 
       player.energyUse(energyCost);
@@ -299,17 +298,15 @@ io.on("connection", (socket) => {
 
     socket.on("crafting:button:clicked", ({ id, name }) => {
       const player = players.get(name);
-
       const receipt = receipts.get(id);
 
-      if (
-        !player.canDoCrafting({
-          energyCost: receipt.energyCost,
-          requiredItems: receipt.requiredItems,
-          requiredSkills: receipt.requiredSkills,
-        })
-      ) {
-        // @TODO: send message that action can't be performed #164
+      const craftResult = player.canDoCrafting({
+        energyCost: receipt.energyCost,
+        requiredItems: receipt.requiredItems,
+        requiredSkills: receipt.requiredSkills,
+      });
+      if (craftResult !== true) {
+        io.to(player.socketId).emit("crafting:rejected", craftResult);
         return;
       }
 

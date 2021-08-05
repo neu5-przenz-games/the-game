@@ -1,3 +1,4 @@
 import COLOR from "./Color.mjs";
+import MESSAGES from "./Messages.mjs";
 
-export default COLOR;
+export { COLOR, MESSAGES };

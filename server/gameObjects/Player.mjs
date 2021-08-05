@@ -402,8 +402,13 @@ export default class Player {
   }
 
   canGetResource(energyCost) {
-    // @TODO: send message that action can't be performed #164
-    return this.isInRange(1) && this.energy >= energyCost;
+    if (!this.isInRange(1)) {
+      return "not-in-range";
+    }
+    if (this.energy < energyCost) {
+      return "no-energy";
+    }
+    return true;
   }
 
   canDoCrafting({ energyCost, requiredItems, requiredSkills }) {
@@ -416,8 +421,7 @@ export default class Player {
     });
 
     if (!hasResources) {
-      // @TODO: send message that action can't be performed #164
-      return false;
+      return "no-resources";
     }
 
     const hasSkills = requiredSkills.every(
@@ -426,12 +430,14 @@ export default class Player {
     );
 
     if (!hasSkills) {
-      // @TODO: send message that action can't be performed #164
-      return false;
+      return "no-skill";
     }
 
-    // @TODO: send message that action can't be performed #164
-    return this.energy >= energyCost;
+    if (this.energy < energyCost) {
+      return "no-energy";
+    }
+
+    return true;
   }
 
   hit(value) {

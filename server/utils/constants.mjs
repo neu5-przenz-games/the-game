@@ -5,15 +5,15 @@ const TILE_QUARTER = TILE / 4;
 const HIT_TYPES = {
   NORMAL: {
     color: "#FFE62B",
-    text: "got hit",
+    text: "Ouch!",
   },
   HARD: {
     color: "#FF942B",
-    text: "that's hard!",
+    text: "That hurts!",
   },
   CRITICAL: {
     color: "#FF0000",
-    text: "ohh my!!!",
+    text: "Ohh my!",
   },
 };
 
