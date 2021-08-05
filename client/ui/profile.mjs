@@ -1,5 +1,6 @@
 import {
   UIBackpack,
+  UICrafting,
   UIEquipment,
   UISettings,
   UISkills,
@@ -11,6 +12,7 @@ export default class UIProfile {
     name,
     isDead,
     equipment,
+    crafting,
     skills,
     backpack,
     settings,
@@ -21,6 +23,7 @@ export default class UIProfile {
     dropSelectionCb,
     actionCb,
     itemActionsCb,
+    craftingCb,
   }) {
     const [profileHello] = document.getElementsByClassName(
       "profile-wrapper__hello"
@@ -42,8 +45,9 @@ export default class UIProfile {
     this.selectedItemName = null;
 
     this.UIEquipment = new UIEquipment({ name, itemActionsCb });
+    this.UIBackpack = new UIBackpack();
+    this.UICrafting = new UICrafting({ name, craftingCb });
     this.UISkills = new UISkills();
-    this.UIBackpack = new UIBackpack({ backpack });
     this.UISettings = new UISettings({
       followCb,
       fightCb,
@@ -56,8 +60,9 @@ export default class UIProfile {
     this.UITabs = new UITabs();
 
     this.UIEquipment.setEquipment(equipment);
-    this.UISkills.setSkills(skills);
     this.UIBackpack.setBackpack(backpack);
+    this.UICrafting.setCrafting(crafting);
+    this.UISkills.setSkills(skills);
 
     this.dropSelectionButton.onclick = () => {
       dropSelectionCb(name);

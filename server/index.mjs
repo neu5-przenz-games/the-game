@@ -12,8 +12,10 @@ import {
   getAction,
   getCurrentWeapon,
   getDuration,
+  getEnergyCost,
   getItem,
   getSkillDetails,
+  receipts,
   shapeSkillsForClient,
   skillIncrease,
   skillsSchema,
@@ -31,6 +33,8 @@ const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 const FRAME_IN_MS = 1000 / 30;
+
+const ENERGY_ATTACK_USE = 15;
 
 const players = new Map();
 playersConfig.forEach((player) => {
@@ -70,6 +74,10 @@ io.on("connection", (socket) => {
       Array.from(players, ([name, value]) => {
         const newValue = {
           ...value,
+          crafting: Array.from(receipts, ([id, craftingValue]) => ({
+            id,
+            displayName: craftingValue.displayName,
+          })),
           skills:
             availablePlayer.name === name
               ? shapeSkillsForClient(availablePlayer.skills)
@@ -102,6 +110,8 @@ io.on("connection", (socket) => {
             player.selectedPlayer = null;
             player.selectedPlayerTile = null;
           }
+
+          player.receipt = null;
 
           if (player.resetActionDuration()) {
             io.to(player.socketId).emit("action:end");
@@ -223,7 +233,9 @@ io.on("connection", (socket) => {
     socket.on("action:button:clicked", ({ name }) => {
       const player = players.get(name);
 
-      if (!player.canPerformAction()) {
+      const energyCost = getEnergyCost(player.selectedPlayer);
+
+      if (!player.canGetResource(energyCost)) {
         // @TODO: send message that action can't be performed #164
         return;
       }
@@ -233,7 +245,9 @@ io.on("connection", (socket) => {
       player.actionDurationTicks = 0;
       player.actionDurationMaxTicks = durationTicks;
 
-      player.energyUse(player.action);
+      player.receipt = null;
+
+      player.energyUse(energyCost);
       io.to(player.socketId).emit(
         "action:start",
         Math.ceil(durationTicks * FRAME_IN_MS)
@@ -282,6 +296,44 @@ io.on("connection", (socket) => {
         }[actionName]());
       }
     );
+
+    socket.on("crafting:button:clicked", ({ id, name }) => {
+      const player = players.get(name);
+
+      const receipt = receipts.get(id);
+
+      if (
+        !player.canDoCrafting({
+          energyCost: receipt.energyCost,
+          requiredItems: receipt.requiredItems,
+          requiredSkills: receipt.requiredSkills,
+        })
+      ) {
+        // @TODO: send message that action can't be performed #164
+        return;
+      }
+
+      player.actionDurationTicks = 0;
+      player.actionDurationMaxTicks = receipt.durationTicks;
+
+      receipt.requiredItems.forEach((requiredItem) =>
+        player.removeFromBackpack(requiredItem.id)
+      );
+
+      io.to(player.socketId).emit(
+        "items:update",
+        player.backpack,
+        player.equipment
+      );
+
+      player.receipt = receipt;
+
+      player.energyUse(receipt.energyCost);
+      io.to(player.socketId).emit(
+        "action:start",
+        Math.ceil(receipt.durationTicks * FRAME_IN_MS)
+      );
+    });
 
     socket.on("player:message:send", ({ name, text }) => {
       socket.broadcast.emit("chat:message:add", text, name);
@@ -391,7 +443,7 @@ const loop = () => {
 
       if (player.settings.fight && player.canAttack({ PF, finder, map })) {
         player.attackDelayTicks = 0;
-        player.energyUse("attack");
+        player.energyUse(ENERGY_ATTACK_USE);
         player.attack = selectedPlayer.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
@@ -480,18 +532,32 @@ const loop = () => {
     if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
       player.energyRegenDelayTicks += 1;
     }
+
     if (
       Number.isInteger(player.actionDurationTicks) &&
       player.actionDurationTicks < player.actionDurationMaxTicks
     ) {
       player.actionDurationTicks += 1;
     } else if (player.resetActionDuration()) {
+      // action has ended
       io.to(player.socketId).emit("action:end");
 
-      const item = getItem(player.selectedPlayer);
+      let item = null;
+      let skillDetails = null;
 
-      const skillDetails = getSkillDetails(player.selectedPlayer);
+      if (player.receipt) {
+        // crafting action
+        const { createdItem, skill } = player.receipt;
 
+        item = { ...createdItem };
+        skillDetails = { ...skill };
+      } else if (player.selectedPlayer) {
+        // getting resources action
+        item = getItem(player.selectedPlayer);
+        skillDetails = getSkillDetails(player.selectedPlayer);
+      }
+
+      player.receipt = null;
       player.skillUpdate(skillIncrease(player.skills, skillDetails));
 
       io.to(player.socketId).emit(

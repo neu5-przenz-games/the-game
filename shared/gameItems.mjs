@@ -54,10 +54,6 @@ export default {
     displayName: "copper ore",
     imgURL: "copper-ore.png",
     type: ITEM_TYPES.RESOURCE,
-    // @TODO: Implement basic crafting #190
-    craft: {
-      sword: () => {},
-    },
   },
   fist: {
     id: "fist",
@@ -113,13 +109,6 @@ export default {
     displayName: "wood",
     imgURL: "wood.png",
     type: ITEM_TYPES.RESOURCE,
-    // @TODO: Implement basic crafting #190
-    craft: {
-      arrows: () => {},
-      bow: () => {},
-      shield: () => {},
-      spike: () => {},
-    },
   },
   quiver: {
     id: "quiver",

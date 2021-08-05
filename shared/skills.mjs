@@ -7,6 +7,7 @@ export const SKILLS_TYPES = {
   PIKE_FIGHTING: "PIKE_FIGHTING",
   SHIELD_DEFENDING: "SHIELD_DEFENDING",
   SWORD_FIGHTING: "SWORD_FIGHTING",
+  WOODWORKING: "WOODWORKING",
 };
 
 const LEVEL_TYPES = {
@@ -110,6 +111,10 @@ export const skillsSchema = {
   },
   [SKILLS_TYPES.SWORD_FIGHTING]: {
     displayName: "sword fighting",
+    points: 0,
+  },
+  [SKILLS_TYPES.WOODWORKING]: {
+    displayName: "woodworking",
     points: 0,
   },
 };

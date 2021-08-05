@@ -11,6 +11,7 @@ const REAL_PROPERTIES = {
   },
   Tree: {
     action: "chop",
+    energyCost: 50,
     durationTicks: 150,
     skill: {
       name: SKILLS_TYPES.LUMBERJACKING,
@@ -24,6 +25,7 @@ const REAL_PROPERTIES = {
   Ore: {
     action: "mine",
     durationTicks: 30,
+    energyCost: 50,
     skill: {
       name: SKILLS_TYPES.MINING,
       pointsToGain: 5,
@@ -38,6 +40,8 @@ const REAL_PROPERTIES = {
 const getAction = (obj) => REAL_PROPERTIES[obj.type].action;
 
 const getDuration = (obj) => REAL_PROPERTIES[obj.type].durationTicks;
+
+const getEnergyCost = (obj) => REAL_PROPERTIES[obj.type].energyCost;
 
 const getItem = (obj) => REAL_PROPERTIES[obj.type].item;
 
@@ -137,4 +141,11 @@ const gameObjects = [
   }),
 }));
 
-export { gameObjects, getAction, getDuration, getItem, getSkillDetails };
+export {
+  gameObjects,
+  getAction,
+  getDuration,
+  getEnergyCost,
+  getItem,
+  getSkillDetails,
+};
