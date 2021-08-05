@@ -36,6 +36,7 @@ describe("Player", () => {
       player.should.have.keys(
         "attack",
         "action",
+        "receipt",
         "actionDurationTicks",
         "actionDurationMaxTicks",
         "attackDelayTicks",

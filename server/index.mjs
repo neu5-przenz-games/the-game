@@ -111,6 +111,8 @@ io.on("connection", (socket) => {
             player.selectedPlayerTile = null;
           }
 
+          player.receipt = null;
+
           if (player.resetActionDuration()) {
             io.to(player.socketId).emit("action:end");
           }
@@ -242,6 +244,8 @@ io.on("connection", (socket) => {
 
       player.actionDurationTicks = 0;
       player.actionDurationMaxTicks = durationTicks;
+
+      player.receipt = null;
 
       player.energyUse(energyCost);
       io.to(player.socketId).emit(
@@ -541,18 +545,19 @@ const loop = () => {
       let item = null;
       let skillDetails = null;
 
-      // getting resources action
-      if (player.selectedPlayer) {
-        item = getItem(player.selectedPlayer);
-        skillDetails = getSkillDetails(player.selectedPlayer);
-      } else {
+      if (player.receipt) {
         // crafting action
         const { createdItem, skill } = player.receipt;
 
         item = { ...createdItem };
         skillDetails = { ...skill };
+      } else if (player.selectedPlayer) {
+        // getting resources action
+        item = getItem(player.selectedPlayer);
+        skillDetails = getSkillDetails(player.selectedPlayer);
       }
 
+      player.receipt = null;
       player.skillUpdate(skillIncrease(player.skills, skillDetails));
 
       io.to(player.socketId).emit(

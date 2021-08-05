@@ -28,7 +28,7 @@ class Receipt {
 
 const arrowsReceipt = new Receipt({
   id: "arrows bunch receipt",
-  displayName: "arrows bunch",
+  displayName: "Arrows bunch",
   // get this from Item class
   createdItem: { id: "arrowsBunch", quantity: 10 },
   energyCost: 50,
@@ -54,7 +54,7 @@ const arrowsReceipt = new Receipt({
 
 const bowReceipt = new Receipt({
   id: "bow receipt",
-  displayName: "bow",
+  displayName: "Bow",
   // get this from Item class
   createdItem: { id: "bow", quantity: 1 },
   quantity: 1,

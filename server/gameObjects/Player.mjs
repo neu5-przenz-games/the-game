@@ -32,6 +32,7 @@ export default class Player {
     selectedPlayer,
     selectedPlayerTile,
     dropSelection,
+    receipt,
     action,
     actionDurationTicks,
     actionDurationMaxTicks,
@@ -73,6 +74,7 @@ export default class Player {
 
     // properties
     this.action = action;
+    this.receipt = receipt;
     this.actionDurationTicks = actionDurationTicks;
     this.actionDurationMaxTicks = actionDurationMaxTicks;
     this.attack = attack;
@@ -400,6 +402,7 @@ export default class Player {
   }
 
   canGetResource(energyCost) {
+    // @TODO: send message that action can't be performed #164
     return this.isInRange(1) && this.energy >= energyCost;
   }
 
@@ -427,6 +430,7 @@ export default class Player {
       return false;
     }
 
+    // @TODO: send message that action can't be performed #164
     return this.energy >= energyCost;
   }
 
