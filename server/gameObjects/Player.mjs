@@ -11,7 +11,6 @@ import {
   getCurrentWeapon,
 } from "../../shared/index.mjs";
 
-const ENERGY_ACTION_USE = 50;
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
@@ -400,8 +399,35 @@ export default class Player {
     );
   }
 
-  canPerformAction() {
-    return this.isInRange(1) && this.energy >= ENERGY_ACTION_USE;
+  canGetResource(energyCost) {
+    return this.isInRange(1) && this.energy >= energyCost;
+  }
+
+  canDoCrafting({ energyCost, requiredItems, requiredSkills }) {
+    const hasResources = requiredItems.every((requiredItem) => {
+      const foundItem = this.backpack.items.find(
+        (item) => item.id === requiredItem.id
+      );
+
+      return foundItem && foundItem.quantity >= requiredItem.quantity;
+    });
+
+    if (!hasResources) {
+      // @TODO: send message that action can't be performed #164
+      return false;
+    }
+
+    const hasSkills = requiredSkills.every(
+      (requiredSkill) =>
+        requiredSkill.points <= this.skills[requiredSkill.name].points
+    );
+
+    if (!hasSkills) {
+      // @TODO: send message that action can't be performed #164
+      return false;
+    }
+
+    return this.energy >= energyCost;
   }
 
   hit(value) {
@@ -471,12 +497,8 @@ export default class Player {
     }
   }
 
-  energyUse(type) {
-    this.energy -= {
-      attack: ENERGY_ATTACK_USE,
-      chop: ENERGY_ACTION_USE,
-      mine: ENERGY_ACTION_USE,
-    }[type];
+  energyUse(value) {
+    this.energy -= value;
   }
 
   energyRegenerate() {

@@ -31,7 +31,7 @@ export default [
       slots: 6,
       items: [
         { id: "bag", quantity: 1 },
-        { id: "wood", quantity: 1 },
+        { id: "wood", quantity: 2 },
         { id: "bow", quantity: 1 },
       ],
     },

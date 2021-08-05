@@ -76,6 +76,13 @@ export default (game) => {
     });
   };
 
+  const craftingCb = ({ id, name }) => {
+    game.socket.emit("crafting:button:clicked", {
+      id,
+      name,
+    });
+  };
+
   game.socket.on("players:list", (players, socketId) => {
     game.setSocketId(socketId);
 
@@ -87,6 +94,7 @@ export default (game) => {
 
     let equipment = null;
     let backpack = null;
+    let crafting = null;
     let skills = null;
 
     game.setPlayers(
@@ -99,6 +107,7 @@ export default (game) => {
 
           equipment = player.equipment;
           backpack = player.backpack;
+          crafting = player.crafting;
           skills = player.skills;
         }
 
@@ -141,6 +150,7 @@ export default (game) => {
         isDead: mainPlayer.isDead,
         equipment,
         settings: game.settings,
+        crafting,
         skills,
         backpack,
         followCb,
@@ -150,6 +160,7 @@ export default (game) => {
         dropSelectionCb,
         actionCb,
         itemActionsCb,
+        craftingCb,
       })
     );
 

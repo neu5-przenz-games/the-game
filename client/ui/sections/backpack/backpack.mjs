@@ -2,14 +2,12 @@ import { GAME_ITEMS } from "../../../../shared/index.mjs";
 import { ITEMS_PATH } from "../../constants.mjs";
 
 export default class UIBackpack {
-  constructor({ backpack }) {
+  constructor() {
     const [backpackSlots] = document.getElementsByClassName("backpack__slots");
     const [backpackItems] = document.getElementsByClassName("backpack__items");
 
     this.backpackSlots = backpackSlots;
     this.backpackItems = backpackItems;
-
-    this.backpackSlots.innerText = `Backpack slots - ${backpack.slots}`;
   }
 
   setBackpack({ items, slots }) {
