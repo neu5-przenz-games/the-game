@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { COLOR } from "../../constants/index.mjs";
+import COLOR from "../../constants/index.mjs";
 
 const BAR_WIDTH = 64;
 const BAR_HEIGHT = 4;

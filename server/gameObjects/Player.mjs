@@ -3,13 +3,13 @@ import {
   getDestTile,
   getXYFromTile,
 } from "../utils/algo.mjs";
-
 import {
   GAME_ITEMS,
   ITEM_TYPES,
   WEARABLE_TYPES,
   getCurrentWeapon,
 } from "../../shared/index.mjs";
+import { MESSAGES, getMsgKey } from "../../shared/messages.mjs";
 
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
@@ -403,10 +403,10 @@ export default class Player {
 
   canGetResource(energyCost) {
     if (!this.isInRange(1)) {
-      return "not-in-range";
+      return getMsgKey(MESSAGES.not_in_range);
     }
     if (this.energy < energyCost) {
-      return "no-energy";
+      return getMsgKey(MESSAGES.no_energy);
     }
     return true;
   }
@@ -421,7 +421,7 @@ export default class Player {
     });
 
     if (!hasResources) {
-      return "no-resources";
+      return getMsgKey(MESSAGES.no_resources);
     }
 
     const hasSkills = requiredSkills.every(
@@ -430,11 +430,11 @@ export default class Player {
     );
 
     if (!hasSkills) {
-      return "no-skill";
+      return getMsgKey(MESSAGES.no_skill);
     }
 
     if (this.energy < energyCost) {
-      return "no-energy";
+      return getMsgKey(MESSAGES.no_energy);
     }
 
     return true;
