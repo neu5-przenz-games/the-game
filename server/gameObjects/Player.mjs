@@ -313,6 +313,14 @@ export default class Player {
     ) {
       return this.moveShieldToEquipment(itemName);
     } else {
+      // player has to wear quiver if wants to wear arrows
+      if (
+        itemSchema.type === ITEM_TYPES.ARROWS &&
+        this.equipment.quiver === undefined
+      ) {
+        return false;
+      }
+
       if (!this.removeFromBackpack(itemName)) {
         this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
 
