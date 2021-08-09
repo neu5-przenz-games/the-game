@@ -488,6 +488,10 @@ const loop = () => {
         }
 
         if (selectedPlayer.isDead) {
+          selectedPlayer.dest = null;
+          selectedPlayer.next = null;
+          selectedPlayer.isWalking = false;
+
           io.to(selectedPlayer.socketId).emit(
             "player:dead",
             selectedPlayer.name
