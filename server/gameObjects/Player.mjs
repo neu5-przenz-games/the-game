@@ -484,10 +484,10 @@ export default class Player {
 
       let obj = this.selectedPlayer;
 
-      if (this.selectedPlayer.startingTile === undefined) {
+      if (this.selectedPlayer.positionTile === undefined) {
         obj = {
           ...obj,
-          startingTile: obj.positionTile,
+          positionTile: obj.positionTile,
         };
       }
 

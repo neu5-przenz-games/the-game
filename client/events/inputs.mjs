@@ -13,7 +13,7 @@ export default (game) => {
     clickedTile.y -= 1;
 
     if (process.env.NODE_ENV === "development") {
-      console.log({ clickedTile });
+      console.log(clickedTile);
     }
 
     if (clickedTile.x >= 0 && clickedTile.y >= 0) {

@@ -8,18 +8,13 @@ import { Server } from "socket.io";
 import map from "../public/assets/map/map.mjs";
 import {
   ITEM_ACTIONS,
-  gameObjects,
-  getAction,
   getCurrentWeapon,
-  getDuration,
-  getEnergyCost,
-  getItem,
-  getSkillDetails,
   receipts,
   shapeSkillsForClient,
   skillIncrease,
   skillsSchema,
 } from "../shared/index.mjs";
+import gameObjects from "../shared/init/gameObjects.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";

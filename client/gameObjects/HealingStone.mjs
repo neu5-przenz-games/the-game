@@ -8,6 +8,6 @@ export default class HealingStone extends Phaser.GameObjects.Image {
 
     this.name = name;
     this.displayName = displayName;
-    this.depth = y + 64 - 1;
+    this.depth = y + 32;
   }
 }

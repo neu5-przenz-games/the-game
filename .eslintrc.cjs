@@ -23,5 +23,6 @@ module.exports = {
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "no-param-reassign": ["error", { props: false }],
     "sort-imports": ["error", { ignoreDeclarationSort: true }],
+    "max-classes-per-file": ["error", 10],
   },
 };
