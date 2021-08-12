@@ -145,7 +145,8 @@ io.on("connection", (socket) => {
 
         player.setSelectedObject(selectedObject);
 
-        const action = getAction(selectedObject);
+        const { action } = selectedObject;
+
         if (action) {
           player.action = action;
         }
@@ -228,14 +229,12 @@ io.on("connection", (socket) => {
     socket.on("action:button:clicked", ({ name }) => {
       const player = players.get(name);
 
-      const energyCost = getEnergyCost(player.selectedPlayer);
+      const { durationTicks, energyCost } = player.selectedPlayer;
 
       if (!player.canGetResource(energyCost)) {
         // @TODO: send message that action can't be performed #164
         return;
       }
-
-      const durationTicks = getDuration(player.selectedPlayer);
 
       player.actionDurationTicks = 0;
       player.actionDurationMaxTicks = durationTicks;
@@ -552,8 +551,8 @@ const loop = () => {
         skillDetails = { ...skill };
       } else if (player.selectedPlayer) {
         // getting resources action
-        item = getItem(player.selectedPlayer);
-        skillDetails = getSkillDetails(player.selectedPlayer);
+        item = player.selectedPlayer.item;
+        skillDetails = player.selectedPlayer.skill;
       }
 
       player.receipt = null;

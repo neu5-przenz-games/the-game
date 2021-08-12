@@ -8,12 +8,14 @@ export default class Tree extends GameObject {
     type = "Tree",
     positionTile,
     size = { x: 1, y: 1 },
+    energyCost = 50,
+    durationTicks = 150,
   }) {
     super({ name, displayName, type, positionTile, size });
 
     this.action = "chop";
-    this.energyCost = 50;
-    this.durationTicks = 150;
+    this.energyCost = energyCost;
+    this.durationTicks = durationTicks;
     this.skill = {
       name: SKILLS_TYPES.LUMBERJACKING,
       pointsToGain: 5,

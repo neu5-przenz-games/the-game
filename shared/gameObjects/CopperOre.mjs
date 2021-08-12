@@ -8,12 +8,15 @@ export default class CopperOre extends GameObject {
     type = "Ore",
     positionTile,
     size = { x: 1, y: 1 },
+    action = "mine",
+    durationTicks = 30,
+    energyCost = 50,
   }) {
     super({ name, displayName, type, positionTile, size });
 
-    this.action = "mine";
-    this.durationTicks = 30;
-    this.energyCost = 50;
+    this.action = action;
+    this.durationTicks = durationTicks;
+    this.energyCost = energyCost;
     this.skill = {
       name: SKILLS_TYPES.MINING,
       pointsToGain: 5,
