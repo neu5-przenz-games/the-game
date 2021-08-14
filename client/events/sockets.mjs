@@ -2,9 +2,10 @@ import Phaser from "phaser";
 import io from "socket.io-client";
 
 import Skeleton from "../gameObjects/Skeleton.mjs";
-import HitText from "../gameObjects/HitText.mjs";
+import TextTween from "../gameObjects/TextTween.mjs";
 import UIProfile from "../ui/profile.mjs";
 import inputs from "./inputs.mjs";
+import { MESSAGES } from "../../shared/messages.mjs";
 
 const displayServerMessage = (game, msgArg) => {
   game.chat.addServerMessage(msgArg);
@@ -176,12 +177,13 @@ export default (game) => {
   game.socket.on("player:hit", ({ name, hitType }) => {
     const player = game.players.get(name);
 
-    HitText({
+    TextTween({
       scene: game,
       x: player.x,
       y: player.y,
       depth: player.depth,
-      hitType,
+      message: hitType.text,
+      color: hitType.color,
     });
   });
 
@@ -214,6 +216,30 @@ export default (game) => {
 
   game.socket.on("action:end", () => {
     game.mainPlayer.actionEnd();
+  });
+
+  game.socket.on("action:rejected", (message) => {
+    const player = game.mainPlayer;
+    TextTween({
+      scene: game,
+      x: player.x,
+      y: player.y,
+      depth: player.depth,
+      message: MESSAGES[message],
+      duration: 3000,
+    });
+  });
+
+  game.socket.on("crafting:rejected", (message) => {
+    const player = game.mainPlayer;
+    TextTween({
+      scene: game,
+      x: player.x,
+      y: player.y,
+      depth: player.depth,
+      message: MESSAGES[message],
+      duration: 3000,
+    });
   });
 
   game.socket.on("items:update", (backpack, equipment) => {

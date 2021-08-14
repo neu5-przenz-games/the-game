@@ -3,13 +3,13 @@ import {
   getDestTile,
   getXYFromTile,
 } from "../utils/algo.mjs";
-
 import {
   GAME_ITEMS,
   ITEM_TYPES,
   WEARABLE_TYPES,
   getCurrentWeapon,
 } from "../../shared/index.mjs";
+import { MESSAGES_TYPES } from "../../shared/messages.mjs";
 
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
@@ -410,8 +410,13 @@ export default class Player {
   }
 
   canGetResource(energyCost) {
-    // @TODO: send message that action can't be performed #164
-    return this.isInRange(1) && this.energy >= energyCost;
+    if (!this.isInRange(1)) {
+      return MESSAGES_TYPES.NOT_IN_RANGE;
+    }
+    if (this.energy < energyCost) {
+      return MESSAGES_TYPES.NO_ENERGY;
+    }
+    return true;
   }
 
   canDoCrafting({ energyCost, requiredItems, requiredSkills }) {
@@ -424,8 +429,7 @@ export default class Player {
     });
 
     if (!hasResources) {
-      // @TODO: send message that action can't be performed #164
-      return false;
+      return MESSAGES_TYPES.NO_RESOURCES;
     }
 
     const hasSkills = requiredSkills.every(
@@ -434,12 +438,14 @@ export default class Player {
     );
 
     if (!hasSkills) {
-      // @TODO: send message that action can't be performed #164
-      return false;
+      return MESSAGES_TYPES.NO_SKILL;
     }
 
-    // @TODO: send message that action can't be performed #164
-    return this.energy >= energyCost;
+    if (this.energy < energyCost) {
+      return MESSAGES_TYPES.NO_ENERGY;
+    }
+
+    return true;
   }
 
   hit(value) {
