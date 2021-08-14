@@ -9,7 +9,7 @@ import {
   WEARABLE_TYPES,
   getCurrentWeapon,
 } from "../../shared/index.mjs";
-import { MESSAGES, getMsgKey } from "../../shared/messages.mjs";
+import { MESSAGES_TYPES } from "../../shared/messages.mjs";
 
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
@@ -403,10 +403,10 @@ export default class Player {
 
   canGetResource(energyCost) {
     if (!this.isInRange(1)) {
-      return getMsgKey(MESSAGES.not_in_range);
+      return MESSAGES_TYPES.NOT_IN_RANGE;
     }
     if (this.energy < energyCost) {
-      return getMsgKey(MESSAGES.no_energy);
+      return MESSAGES_TYPES.NO_ENERGY;
     }
     return true;
   }
@@ -421,7 +421,7 @@ export default class Player {
     });
 
     if (!hasResources) {
-      return getMsgKey(MESSAGES.no_resources);
+      return MESSAGES_TYPES.NO_RESOURCES;
     }
 
     const hasSkills = requiredSkills.every(
@@ -430,11 +430,11 @@ export default class Player {
     );
 
     if (!hasSkills) {
-      return getMsgKey(MESSAGES.no_skill);
+      return MESSAGES_TYPES.NO_SKILL;
     }
 
     if (this.energy < energyCost) {
-      return getMsgKey(MESSAGES.no_energy);
+      return MESSAGES_TYPES.NO_ENERGY;
     }
 
     return true;

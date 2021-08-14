@@ -1,12 +1,15 @@
-const MESSAGES = {
-  no_energy: "You are exhausted, rest for a while",
-  not_in_range: "You are too far away, come closer",
-  no_resources: "Not enough resources",
-  no_skill: "You are not skilled enough",
+const MESSAGES_TYPES = {
+  NO_ENERGY: "NO_ENERGY",
+  NOT_IN_RANGE: "NOT_IN_RANGE",
+  NO_RESOURCES: "NO_RESOURCES",
+  NO_SKILL: "NO_SKILL",
 };
 
-function getMsgKey(value) {
-  return Object.keys(MESSAGES).find((key) => MESSAGES[key] === value);
-}
+const MESSAGES = {
+  [MESSAGES_TYPES.NO_ENERGY]: "You are exhausted, rest for a while",
+  [MESSAGES_TYPES.NOT_IN_RANGE]: "You are too far away, come closer",
+  [MESSAGES_TYPES.NO_RESOURCES]: "Not enough resources",
+  [MESSAGES_TYPES.NO_SKILL]: "You are not skilled enough",
+};
 
-export { MESSAGES, getMsgKey };
+export { MESSAGES, MESSAGES_TYPES };
