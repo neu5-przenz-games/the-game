@@ -8,18 +8,13 @@ import { Server } from "socket.io";
 import map from "../public/assets/map/map.mjs";
 import {
   ITEM_ACTIONS,
-  gameObjects,
-  getAction,
   getCurrentWeapon,
-  getDuration,
-  getEnergyCost,
-  getItem,
-  getSkillDetails,
   receipts,
   shapeSkillsForClient,
   skillIncrease,
   skillsSchema,
 } from "../shared/index.mjs";
+import gameObjects from "../shared/init/gameObjects.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";
@@ -150,7 +145,8 @@ io.on("connection", (socket) => {
 
         player.setSelectedObject(selectedObject);
 
-        const action = getAction(selectedObject);
+        const { action } = selectedObject;
+
         if (action) {
           player.action = action;
         }
@@ -232,15 +228,14 @@ io.on("connection", (socket) => {
 
     socket.on("action:button:clicked", ({ name }) => {
       const player = players.get(name);
-      const energyCost = getEnergyCost(player.selectedPlayer);
+
+      const { durationTicks, energyCost } = player.selectedPlayer;
 
       const getResourceResult = player.canGetResource(energyCost);
       if (getResourceResult !== true) {
         io.to(player.socketId).emit("action:rejected", getResourceResult);
         return;
       }
-
-      const durationTicks = getDuration(player.selectedPlayer);
 
       player.actionDurationTicks = 0;
       player.actionDurationMaxTicks = durationTicks;
@@ -554,8 +549,8 @@ const loop = () => {
         skillDetails = { ...skill };
       } else if (player.selectedPlayer) {
         // getting resources action
-        item = getItem(player.selectedPlayer);
-        skillDetails = getSkillDetails(player.selectedPlayer);
+        item = player.selectedPlayer.item;
+        skillDetails = player.selectedPlayer.skill;
       }
 
       player.receipt = null;

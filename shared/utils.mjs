@@ -1,9 +1,9 @@
-export const getObjectTiles = ({ startingTile, size = { x: 1, y: 1 } }) => {
+export const getObjectTiles = ({ positionTile, size = { x: 1, y: 1 } }) => {
   if (size.x <= 0 || size.y <= 0) {
     return [];
   }
 
-  const { tileX, tileY } = startingTile;
+  const { tileX, tileY } = positionTile;
 
   const objectTiles = [];
 
@@ -17,16 +17,16 @@ export const getObjectTiles = ({ startingTile, size = { x: 1, y: 1 } }) => {
 };
 
 export const getSurroundingTiles = ({
-  startingTile,
+  positionTile,
   size = { x: 1, y: 1 },
   sizeToIncrease = { x: 1, y: 1 },
 }) => {
-  const { tileX, tileY } = startingTile;
+  const { tileX, tileY } = positionTile;
   if (tileX < 1 || tileY < 1) {
     return [];
   }
 
-  const objectTiles = getObjectTiles({ startingTile, size });
+  const objectTiles = getObjectTiles({ positionTile, size });
 
   if (objectTiles.length === 0) {
     return [];

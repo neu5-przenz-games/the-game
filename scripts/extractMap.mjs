@@ -8,7 +8,7 @@
  */
 import { readFileSync, writeFileSync } from "fs";
 
-import { gameObjects } from "../shared/index.mjs";
+import gameObjects from "../shared/init/gameObjects.mjs";
 
 const map = readFileSync("public/assets/map/map.json", "utf8");
 
@@ -31,12 +31,12 @@ for (let y = 0, idx = 0; y < layerCollides.width; y += 1) {
 }
 
 gameObjects.forEach((gameObject) => {
-  const { startingTile, size } = gameObject;
+  const { positionTile, size } = gameObject;
 
   for (let sizeX = 0; sizeX < size.x; sizeX += 1) {
     for (let sizeY = 0; sizeY < size.y; sizeY += 1) {
-      const y = startingTile.tileY + sizeY;
-      const x = startingTile.tileX + sizeX;
+      const y = positionTile.tileY + sizeY;
+      const x = positionTile.tileX + sizeX;
 
       arr[y][x] = 1;
     }
