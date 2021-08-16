@@ -1,22 +1,30 @@
 const OFFSET_Y = 44;
 
-export default ({ scene, x, y, depth, hitType }) => {
-  const hitText = scene.add
-    .text(x, y, hitType.text, {
+export default ({
+  scene,
+  x,
+  y,
+  depth,
+  message,
+  color = "#fff",
+  duration = 2000,
+}) => {
+  const text = scene.add
+    .text(x, y, message, {
       font: "12px Verdana",
-      fill: hitType.color,
+      fill: color,
       stroke: "#333",
-      strokeThickness: 1,
+      strokeThickness: 2,
     })
     .setOrigin(0.5, 2)
     .setPosition(x, y - OFFSET_Y);
-  hitText.depth = depth;
+  text.depth = depth;
 
   scene.tweens.add({
-    targets: hitText,
+    targets: text,
     y: "-=50",
     ease: "Linear",
-    duration: 2000,
+    duration,
     onComplete(tween, targets) {
       targets[0].destroy();
     },
