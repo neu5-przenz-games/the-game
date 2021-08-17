@@ -1,6 +1,6 @@
 export default class GameItem {
-  constructor({ name, displayName, imgURL = "", type }) {
-    this.name = name;
+  constructor({ id, displayName, imgURL = "", type }) {
+    this.id = id;
     this.displayName = displayName;
     this.imgURL = imgURL;
     this.type = type;

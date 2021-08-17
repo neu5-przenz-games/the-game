@@ -1,3 +1,4 @@
+import { arrowsBunch, bow, wood } from "../init/gameItems.mjs";
 import { SKILLS_TYPES } from "../skills/index.mjs";
 
 class Receipt {
@@ -29,13 +30,11 @@ class Receipt {
 const arrowsReceipt = new Receipt({
   id: "arrows bunch receipt",
   displayName: "Arrows bunch",
-  // get this from Item class
-  createdItem: { id: "arrowsBunch", quantity: 10 },
+  createdItem: { id: arrowsBunch.id, quantity: 10 },
   energyCost: 50,
   requiredItems: [
-    // get this from Item class
     {
-      id: "wood",
+      id: wood.id,
       quantity: 1,
     },
   ],
@@ -55,14 +54,12 @@ const arrowsReceipt = new Receipt({
 const bowReceipt = new Receipt({
   id: "bow receipt",
   displayName: "Bow",
-  // get this from Item class
-  createdItem: { id: "bow", quantity: 1 },
+  createdItem: { id: bow.id, quantity: 1 },
   quantity: 1,
   energyCost: 50,
   requiredItems: [
-    // get this from Item class
     {
-      id: "wood",
+      id: wood.id,
       quantity: 2,
     },
   ],

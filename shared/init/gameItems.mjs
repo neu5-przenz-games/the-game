@@ -13,51 +13,51 @@ import {
 import { SKILLS_TYPES } from "../skills/index.mjs";
 
 const armor = new Armor({
-  name: "armor",
+  id: "armor",
   displayName: "armor",
   imgURL: "armor.png",
 });
 
-const arrowsBunch = new Arrows({
-  name: "arrowsBunch",
+export const arrowsBunch = new Arrows({
+  id: "arrowsBunch",
   displayName: "arrows",
   imgURL: "arrows.png",
 });
 
 const bag = new Backpack({
-  name: "bag",
+  id: "bag",
   displayName: "bag",
   imgURL: "bag.png",
   slots: 4,
 });
 
 const backpack = new Backpack({
-  name: "backpack",
+  id: "backpack",
   displayName: "backpack",
   imgURL: "backpack_6.png",
   slots: 6,
 });
 
 const boots = new Boots({
-  name: "boots",
+  id: "boots",
   displayName: "boots",
   imgURL: "boots.png",
 });
 
 const hat = new Helmet({
-  name: "hat",
+  id: "hat",
   displayName: "hat",
   imgURL: "hat.png",
 });
 
 const pants = new Pants({
-  name: "pants",
+  id: "pants",
   displayName: "pants",
   imgURL: "pants.png",
 });
 
 const shield = new Shield({
-  name: "shield",
+  id: "shield",
   displayName: "shield",
   imgURL: "shield.png",
   skill: {
@@ -69,8 +69,8 @@ const shield = new Shield({
   },
 });
 
-const bow = new Weapon({
-  name: "bow",
+export const bow = new Weapon({
+  id: "bow",
   displayName: "bow",
   imgURL: "bow.png",
   isTwoHanded: true,
@@ -85,7 +85,7 @@ const bow = new Weapon({
 });
 
 const fist = new Weapon({
-  name: "fist",
+  id: "fist",
   displayName: "fist",
   skill: {
     name: SKILLS_TYPES.FIST_FIGHTING,
@@ -98,7 +98,7 @@ const fist = new Weapon({
 });
 
 const sword = new Weapon({
-  name: "sword",
+  id: "sword",
   displayName: "sword",
   imgURL: "sword.png",
   skill: {
@@ -112,43 +112,43 @@ const sword = new Weapon({
 });
 
 const quiver = new Quiver({
-  name: "quiver",
+  id: "quiver",
   displayName: "quiver",
   imgURL: "quiver.png",
 });
 
-const cooperOre = new Resource({
-  name: "copper ore",
+export const copperOre = new Resource({
+  id: "copper ore",
   displayName: "copper ore",
   imgURL: "copper-ore.png",
 });
 
-const wood = new Resource({
-  name: "wood",
+export const wood = new Resource({
+  id: "wood",
   displayName: "wood",
   imgURL: "wood.png",
 });
 
 const gameItems = new Map();
 
-gameItems.set(armor.name, armor);
-gameItems.set(boots.name, boots);
-gameItems.set(hat.name, hat);
-gameItems.set(pants.name, pants);
+gameItems.set(armor.id, armor);
+gameItems.set(boots.id, boots);
+gameItems.set(hat.id, hat);
+gameItems.set(pants.id, pants);
 
-gameItems.set(backpack.name, backpack);
-gameItems.set(bag.name, bag);
+gameItems.set(backpack.id, backpack);
+gameItems.set(bag.id, bag);
 
-gameItems.set(arrowsBunch.name, arrowsBunch);
-gameItems.set(quiver.name, quiver);
+gameItems.set(arrowsBunch.id, arrowsBunch);
+gameItems.set(quiver.id, quiver);
 
-gameItems.set(shield.name, shield);
-gameItems.set(bow.name, bow);
-gameItems.set(fist.name, fist);
-gameItems.set(sword.name, sword);
+gameItems.set(shield.id, shield);
+gameItems.set(bow.id, bow);
+gameItems.set(fist.id, fist);
+gameItems.set(sword.id, sword);
 
-gameItems.set(cooperOre.name, cooperOre);
-gameItems.set(wood.name, wood);
+gameItems.set(copperOre.id, copperOre);
+gameItems.set(wood.id, wood);
 
 export const getCurrentWeapon = (item) =>
   item && item.id ? gameItems.get(item.id) : fist;

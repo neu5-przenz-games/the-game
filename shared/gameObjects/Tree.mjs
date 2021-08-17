@@ -1,5 +1,6 @@
 import GameObject from "./GameObject.mjs";
 import { SKILLS_TYPES } from "../skills/index.mjs";
+import { wood } from "../init/gameItems.mjs";
 
 export default class Tree extends GameObject {
   constructor({
@@ -21,7 +22,7 @@ export default class Tree extends GameObject {
       pointsToGain: 5,
     };
     this.item = {
-      id: "wood",
+      id: wood.id,
       quantity: 1,
     };
   }

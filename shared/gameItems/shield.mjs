@@ -3,14 +3,14 @@ import { ITEM_TYPES } from "./itemTypes.mjs";
 
 export default class Shield extends GameItem {
   constructor({
-    name,
+    id,
     displayName,
     imgURL = "",
     type = ITEM_TYPES.SHIELD,
     skill = {},
     weapon = {},
   }) {
-    super({ name, displayName, imgURL, type });
+    super({ id, displayName, imgURL, type });
 
     this.skill = skill;
     this.weapon = weapon;

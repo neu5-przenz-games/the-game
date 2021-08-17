@@ -3,7 +3,7 @@ import { ITEM_TYPES } from "./itemTypes.mjs";
 
 export default class Weapon extends GameItem {
   constructor({
-    name,
+    id,
     displayName,
     imgURL = "",
     type = ITEM_TYPES.WEAPON,
@@ -11,7 +11,7 @@ export default class Weapon extends GameItem {
     skill = {},
     weapon = {},
   }) {
-    super({ name, displayName, imgURL, type });
+    super({ id, displayName, imgURL, type });
 
     this.isTwoHanded = isTwoHanded;
     this.skill = skill;
