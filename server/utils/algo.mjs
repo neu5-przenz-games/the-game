@@ -1,5 +1,5 @@
 import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
-import { getSurroundingTiles } from "../../shared/utils.mjs";
+import { getSurroundingTiles } from "../../shared/utils/index.mjs";
 
 const getChebyshevDistance = (currTile, destTile) => {
   const distX = Math.abs(currTile.tileX - destTile.tileX);

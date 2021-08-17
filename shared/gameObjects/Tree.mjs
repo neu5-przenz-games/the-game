@@ -1,5 +1,5 @@
 import GameObject from "./GameObject.mjs";
-import { SKILLS_TYPES } from "../skills.mjs";
+import { SKILLS_TYPES } from "../skills/index.mjs";
 
 export default class Tree extends GameObject {
   constructor({

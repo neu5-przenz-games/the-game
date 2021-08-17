@@ -1,4 +1,4 @@
-import { SKILLS_TYPES } from "./skills.mjs";
+import { SKILLS_TYPES } from "../skills/index.mjs";
 
 class Receipt {
   constructor({
