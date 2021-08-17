@@ -28,6 +28,9 @@ export default class UIEquipment {
       "equipment__actions"
     );
 
+    this.selectedItemName = null;
+    this.equipmentItemType = null;
+
     this.equipmentWrapper = equipmentWrapper;
     this.equipmentItems = equipmentItems;
     this.equipmentItemActions = equipmentItemActions;
@@ -127,7 +130,7 @@ export default class UIEquipment {
 
     const itemNameSpan = document.createElement("span");
     itemNameSpan.classList.add("equipment__item-name");
-    itemNameSpan.innerText = this.selectedItemName;
+    itemNameSpan.innerText = gameItems.get(this.selectedItemName).displayName;
     fragment.appendChild(itemNameSpan);
 
     const btnClose = createBtn({
