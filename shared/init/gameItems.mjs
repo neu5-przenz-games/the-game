@@ -13,7 +13,6 @@ import {
 import { SKILLS_TYPES } from "../skills/index.mjs";
 
 const armor = new Armor({
-<<<<<<< HEAD
   id: "armor",
   displayName: "Armor",
   imgURL: "armor.png",
@@ -22,16 +21,6 @@ const armor = new Armor({
 export const arrowsBunch = new Arrows({
   id: "arrowsBunch",
   displayName: "Arrows",
-=======
-  name: "armor",
-  displayName: "armor",
-  imgURL: "armor.png",
-});
-
-const arrowsBunch = new Arrows({
-  name: "arrowsBunch",
-  displayName: "arrows",
->>>>>>> Create classes for game items #256
   imgURL: "arrows.png",
 });
 
