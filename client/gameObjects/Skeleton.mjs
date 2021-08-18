@@ -146,7 +146,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     this.rangeTiles = [];
 
-    if (isDead) {
+    if (this.isDead) {
       this.motion = "die";
       this.anim = anims[this.motion];
       this.f = this.anim.endFrame;
@@ -249,24 +249,13 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.f = this.anim.startFrame;
   }
 
-  update({
-    x,
-    y,
-    destTile,
-    direction,
-    attack,
-    equipment,
-    isDead,
-    isWalking,
-    selectedPlayer,
-    hp,
-  }) {
+  update({ x, y, destTile, direction, attack, weapon, isDead, isWalking, hp }) {
     this.tick += 1;
 
     this.isDead = isDead;
 
     if (attack !== null) {
-      if (getCurrentWeapon(equipment.weapon).weapon.range < 2) {
+      if (getCurrentWeapon(weapon).weapon.range < 2) {
         if (this.motion !== "attack") {
           this.setMotion("attack");
         }
@@ -285,7 +274,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
         this.shoot(player.x, player.y);
       }
-    } else if (isDead) {
+    } else if (this.isDead) {
       if (this.motion !== "die") {
         this.setMotion("die");
       }
@@ -293,7 +282,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       if (this.motion !== "walk") {
         this.setMotion("walk");
       }
-    } else if (!attack && !isWalking && !isDead && !this.isFighting()) {
+    } else if (!attack && !isWalking && !this.isDead && !this.isFighting()) {
       if (this.motion !== "idle") {
         this.setMotion("idle");
       }
@@ -335,7 +324,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     // Handle Main player only
     if (this.isMainPlayer) {
-      if (selectedPlayer === null && destTile !== null) {
+      if (this.scene.selectedObject === null && destTile !== null) {
         // clear previous marker if it exists and if player is in movement
         if (
           this.tileMarked.visible === true &&
