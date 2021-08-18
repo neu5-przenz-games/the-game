@@ -60,12 +60,12 @@ const shield = new Shield({
   id: "shield",
   displayName: "shield",
   imgURL: "shield.png",
-  skill: {
+  skillToIncrease: {
     name: SKILLS_TYPES.SHIELD_DEFENDING,
     pointsToGain: 5,
   },
-  weapon: {
-    defending: 5,
+  details: {
+    defence: 5,
   },
 });
 
@@ -74,26 +74,30 @@ export const bow = new Weapon({
   displayName: "bow",
   imgURL: "bow.png",
   isTwoHanded: true,
-  skill: {
+  skillToIncrease: {
     name: SKILLS_TYPES.ARCHERY_FIGHTING,
     pointsToGain: 5,
   },
-  weapon: {
-    attack: 15,
+  details: {
+    damage: 15,
     range: 5,
+    attackDelayTicks: 20,
+    energyCost: 15,
   },
 });
 
 const fist = new Weapon({
   id: "fist",
   displayName: "fist",
-  skill: {
+  skillToIncrease: {
     name: SKILLS_TYPES.FIST_FIGHTING,
     pointsToGain: 5,
   },
-  weapon: {
-    attack: 5,
+  details: {
+    damage: 5,
     range: 1,
+    attackDelayTicks: 20,
+    energyCost: 10,
   },
 });
 
@@ -101,13 +105,31 @@ const sword = new Weapon({
   id: "sword",
   displayName: "sword",
   imgURL: "sword.png",
-  skill: {
+  skillToIncrease: {
     name: SKILLS_TYPES.SWORD_FIGHTING,
     pointsToGain: 5,
   },
-  weapon: {
-    attack: 20,
+  details: {
+    damage: 20,
     range: 1,
+    attackDelayTicks: 30,
+    energyCost: 15,
+  },
+});
+
+const dagger = new Weapon({
+  id: "dagger",
+  displayName: "dagger",
+  imgURL: "dagger.png",
+  skillToIncrease: {
+    name: SKILLS_TYPES.SWORD_FIGHTING,
+    pointsToGain: 2,
+  },
+  details: {
+    damage: 10,
+    range: 1,
+    attackDelayTicks: 20,
+    energyCost: 10,
   },
 });
 
@@ -146,6 +168,7 @@ gameItems.set(shield.id, shield);
 gameItems.set(bow.id, bow);
 gameItems.set(fist.id, fist);
 gameItems.set(sword.id, sword);
+gameItems.set(dagger.id, dagger);
 
 gameItems.set(copperOre.id, copperOre);
 gameItems.set(wood.id, wood);
