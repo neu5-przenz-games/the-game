@@ -72,7 +72,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
   constructor({
     direction,
     isMainPlayer,
-    hp,
     energy,
     isDead,
     name,
@@ -108,7 +107,8 @@ export default class Skeleton extends Phaser.GameObjects.Image {
       this.y,
       HEALTH_BAR_OFFSET_X,
       HEALTH_BAR_OFFSET_Y,
-      hp
+      0,
+      false
     );
 
     this.energyBar = new EnergyBar(
@@ -259,7 +259,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     isDead,
     isWalking,
     selectedPlayer,
-    hp,
   }) {
     this.tick += 1;
 
@@ -387,10 +386,6 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
       this.tileSelected.setPosition(this.x, this.y);
       this.tileFight.setPosition(this.x, this.y);
-    }
-
-    if (this.healthBar.value !== hp) {
-      this.healthBar.updateValue(hp);
     }
 
     this.healthBar.setPosition(this.x, this.y, this.depth);
