@@ -1,4 +1,4 @@
-import GameItem from "./gameItem.mjs";
+import { GameItem } from "./gameItem.mjs";
 import { ITEM_TYPES } from "./itemTypes.mjs";
 
 export default class Shield extends GameItem {
@@ -7,12 +7,12 @@ export default class Shield extends GameItem {
     displayName,
     imgURL = "",
     type = ITEM_TYPES.SHIELD,
-    skill = {},
+    skillToIncrease = {},
     weapon = {},
   }) {
     super({ id, displayName, imgURL, type });
 
-    this.skill = skill;
+    this.skillToIncrease = skillToIncrease;
     this.weapon = weapon;
   }
 }

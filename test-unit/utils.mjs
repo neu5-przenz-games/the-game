@@ -1,5 +1,5 @@
 import chai from "chai";
-import { getObjectTiles, getSurroundingTiles } from "../shared/utils/index.mjs";
+import { getObjectTiles, getSurroundingTiles } from "shared/utils/index.mjs";
 
 chai.should();
 

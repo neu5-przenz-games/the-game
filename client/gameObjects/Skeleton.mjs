@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { getCurrentWeapon } from "../../shared/init/gameItems.mjs";
+import { getCurrentWeapon } from "shared/init/gameItems/index.mjs";
 import { EnergyBar, HealthBar, ProgressBar } from "./Bar/index.mjs";
 import { TileFight, TileMarked, TileSelected } from "./Tile/index.mjs";
 import Arrow from "./Arrow.mjs";
@@ -68,7 +68,7 @@ export const OFFSET = {
   Y: 16,
 };
 
-export default class Skeleton extends Phaser.GameObjects.Image {
+export class Skeleton extends Phaser.GameObjects.Image {
   constructor({
     direction,
     isMainPlayer,
@@ -200,7 +200,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
 
     const { range } = getCurrentWeapon(
       this.scene.equipment && this.scene.equipment.weapon
-    ).weapon;
+    ).details;
 
     const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
     this.rangeTiles = this.scene.groundLayer.getTilesWithin(
@@ -255,7 +255,7 @@ export default class Skeleton extends Phaser.GameObjects.Image {
     this.isDead = isDead;
 
     if (attack !== null) {
-      if (getCurrentWeapon(weapon).weapon.range < 2) {
+      if (getCurrentWeapon(weapon).details.range < 2) {
         if (this.motion !== "attack") {
           this.setMotion("attack");
         }

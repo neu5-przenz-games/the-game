@@ -1,5 +1,5 @@
-import FRACTIONS from "../../shared/fractions/index.mjs";
-import { skillsSchema } from "../../shared/skills/index.mjs";
+import FRACTIONS from "shared/fractions/index.mjs";
+import { skillsSchema } from "shared/skills/index.mjs";
 
 const radiantFraction = FRACTIONS[0].name;
 const radiantHouse = FRACTIONS[0].houses[0];

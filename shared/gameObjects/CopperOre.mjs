@@ -1,6 +1,6 @@
 import GameObject from "./GameObject.mjs";
 import { SKILLS_TYPES } from "../skills/index.mjs";
-import { copperOre } from "../init/gameItems.mjs";
+import { copperOre } from "../init/gameItems/resource.mjs";
 
 export default class CopperOre extends GameObject {
   constructor({

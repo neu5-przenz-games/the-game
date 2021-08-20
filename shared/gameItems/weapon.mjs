@@ -1,4 +1,4 @@
-import GameItem from "./gameItem.mjs";
+import { GameItem } from "./gameItem.mjs";
 import { ITEM_TYPES } from "./itemTypes.mjs";
 
 export default class Weapon extends GameItem {
@@ -8,13 +8,13 @@ export default class Weapon extends GameItem {
     imgURL = "",
     type = ITEM_TYPES.WEAPON,
     isTwoHanded = false,
-    skill = {},
-    weapon = {},
+    skillToIncrease = {},
+    details = {},
   }) {
     super({ id, displayName, imgURL, type });
 
     this.isTwoHanded = isTwoHanded;
-    this.skill = skill;
-    this.weapon = weapon;
+    this.skillToIncrease = skillToIncrease;
+    this.details = details;
   }
 }
