@@ -14,51 +14,51 @@ import { SKILLS_TYPES } from "../skills/index.mjs";
 
 const armor = new Armor({
   id: "armor",
-  displayName: "armor",
+  displayName: "Armor",
   imgURL: "armor.png",
 });
 
 export const arrowsBunch = new Arrows({
   id: "arrowsBunch",
-  displayName: "arrows",
+  displayName: "Arrows",
   imgURL: "arrows.png",
 });
 
 const bag = new Backpack({
   id: "bag",
-  displayName: "bag",
+  displayName: "Bag",
   imgURL: "bag.png",
   slots: 4,
 });
 
 const backpack = new Backpack({
   id: "backpack",
-  displayName: "backpack",
+  displayName: "Backpack",
   imgURL: "backpack_6.png",
   slots: 6,
 });
 
 const boots = new Boots({
   id: "boots",
-  displayName: "boots",
+  displayName: "Boots",
   imgURL: "boots.png",
 });
 
 const hat = new Helmet({
   id: "hat",
-  displayName: "hat",
+  displayName: "Hat",
   imgURL: "hat.png",
 });
 
 const pants = new Pants({
   id: "pants",
-  displayName: "pants",
+  displayName: "Pants",
   imgURL: "pants.png",
 });
 
 const shield = new Shield({
   id: "shield",
-  displayName: "shield",
+  displayName: "Shield",
   imgURL: "shield.png",
   skill: {
     name: SKILLS_TYPES.SHIELD_DEFENDING,
@@ -71,7 +71,7 @@ const shield = new Shield({
 
 export const bow = new Weapon({
   id: "bow",
-  displayName: "bow",
+  displayName: "Bow",
   imgURL: "bow.png",
   isTwoHanded: true,
   skill: {
@@ -86,7 +86,7 @@ export const bow = new Weapon({
 
 const fist = new Weapon({
   id: "fist",
-  displayName: "fist",
+  displayName: "Fist",
   skill: {
     name: SKILLS_TYPES.FIST_FIGHTING,
     pointsToGain: 5,
@@ -99,7 +99,7 @@ const fist = new Weapon({
 
 const sword = new Weapon({
   id: "sword",
-  displayName: "sword",
+  displayName: "Sword",
   imgURL: "sword.png",
   skill: {
     name: SKILLS_TYPES.SWORD_FIGHTING,
@@ -113,19 +113,19 @@ const sword = new Weapon({
 
 const quiver = new Quiver({
   id: "quiver",
-  displayName: "quiver",
+  displayName: "Quiver",
   imgURL: "quiver.png",
 });
 
 export const copperOre = new Resource({
   id: "copper ore",
-  displayName: "copper ore",
+  displayName: "Copper ore",
   imgURL: "copper-ore.png",
 });
 
 export const wood = new Resource({
   id: "wood",
-  displayName: "wood",
+  displayName: "Wood",
   imgURL: "wood.png",
 });
 
