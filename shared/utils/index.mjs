@@ -1,4 +1,4 @@
-export const getObjectTiles = ({ positionTile, size = { x: 1, y: 1 } }) => {
+const getObjectTiles = ({ positionTile, size = { x: 1, y: 1 } }) => {
   if (size.x <= 0 || size.y <= 0) {
     return [];
   }
@@ -16,7 +16,7 @@ export const getObjectTiles = ({ positionTile, size = { x: 1, y: 1 } }) => {
   return objectTiles;
 };
 
-export const getSurroundingTiles = ({
+const getSurroundingTiles = ({
   positionTile,
   size = { x: 1, y: 1 },
   sizeToIncrease = { x: 1, y: 1 },
@@ -58,3 +58,5 @@ export const getSurroundingTiles = ({
 
   return tiles;
 };
+
+export { getObjectTiles, getSurroundingTiles };

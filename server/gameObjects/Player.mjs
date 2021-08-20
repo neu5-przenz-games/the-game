@@ -3,13 +3,11 @@ import {
   getDestTile,
   getXYFromTile,
 } from "../utils/algo.mjs";
-import {
-  GAME_ITEMS,
-  ITEM_TYPES,
-  WEARABLE_TYPES,
-  getCurrentWeapon,
-} from "../../shared/index.mjs";
-import { MESSAGES_TYPES } from "../../shared/messages.mjs";
+
+import { ITEM_TYPES, WEARABLE_TYPES } from "../../shared/gameItems/index.mjs";
+import gameItems, { getCurrentWeapon } from "../../shared/init/gameItems.mjs";
+
+import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
 
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
@@ -154,7 +152,7 @@ export default class Player {
       return false;
     }
 
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (itemSchema.type === ITEM_TYPES.BACKPACK) {
       return false;
@@ -183,7 +181,7 @@ export default class Player {
       return false;
     }
 
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (itemSchema.type === ITEM_TYPES.ARROWS) {
       this.destroyItemFromBackpack(itemName);
@@ -210,7 +208,7 @@ export default class Player {
   }
 
   addToEquipment(item) {
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (!itemSchema || !WEARABLE_TYPES.includes(itemSchema.type)) {
       return false;
@@ -238,7 +236,7 @@ export default class Player {
 
   moveBackpackToEquipment(itemName) {
     const item = this.getFromBackpack(itemName);
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
     const currentBackpack = this.equipment.backpack;
     const backpackItems = this.backpack.items;
 
@@ -293,7 +291,7 @@ export default class Player {
   moveToEquipmentFromBackpack(itemName) {
     const item = this.getFromBackpack(itemName);
 
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (!WEARABLE_TYPES.includes(itemSchema.type)) {
       return false;
@@ -322,7 +320,7 @@ export default class Player {
       }
 
       if (!this.removeFromBackpack(itemName)) {
-        this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
+        this.removeFromEquipment(itemName, gameItems.get(itemName));
 
         return false;
       }
@@ -572,7 +570,7 @@ export default class Player {
     const item = this.equipment[equipmentItemType];
 
     if (itemName === item.id && delete this.equipment[equipmentItemType]) {
-      const itemSchema = GAME_ITEMS[item.id];
+      const itemSchema = gameItems.get(item.id);
 
       if (itemSchema.type === ITEM_TYPES.BACKPACK) {
         this.setBackpack();

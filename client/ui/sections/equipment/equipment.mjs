@@ -1,9 +1,9 @@
 import {
-  GAME_ITEMS,
-  ITEM_ACTIONS,
   ITEM_TYPES,
   WEARABLE_TYPES,
-} from "../../../../shared/index.mjs";
+} from "../../../../shared/gameItems/index.mjs";
+import ITEM_ACTIONS from "../../../../shared/UIItemActions/index.mjs";
+import gameItems from "../../../../shared/init/gameItems.mjs";
 import { ITEMS_PATH } from "../../constants.mjs";
 import { createBtn } from "../../utils/index.mjs";
 
@@ -27,6 +27,9 @@ export default class UIEquipment {
     const [equipmentItemActions] = document.getElementsByClassName(
       "equipment__actions"
     );
+
+    this.selectedItemName = null;
+    this.equipmentItemType = null;
 
     this.equipmentWrapper = equipmentWrapper;
     this.equipmentItems = equipmentItems;
@@ -98,7 +101,7 @@ export default class UIEquipment {
 
       if (item) {
         const itemImg = document.createElement("img");
-        itemImg.src = ITEMS_PATH.concat(GAME_ITEMS[item.id].imgURL);
+        itemImg.src = ITEMS_PATH.concat(gameItems.get(item.id).imgURL);
         itemImg.dataset.itemName = item.id;
         itemImg.dataset.equipmentItemType = type;
 
@@ -127,7 +130,7 @@ export default class UIEquipment {
 
     const itemNameSpan = document.createElement("span");
     itemNameSpan.classList.add("equipment__item-name");
-    itemNameSpan.innerText = this.selectedItemName;
+    itemNameSpan.innerText = gameItems.get(this.selectedItemName).displayName;
     fragment.appendChild(itemNameSpan);
 
     const btnClose = createBtn({
@@ -137,7 +140,7 @@ export default class UIEquipment {
     });
     fragment.appendChild(btnClose);
 
-    const item = GAME_ITEMS[this.selectedItemName];
+    const item = gameItems.get(this.selectedItemName);
     if (item) {
       if (isInEquipment) {
         if (item.type !== ITEM_TYPES.BACKPACK) {

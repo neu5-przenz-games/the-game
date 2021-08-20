@@ -1,5 +1,6 @@
 import GameObject from "./GameObject.mjs";
-import { SKILLS_TYPES } from "../skills.mjs";
+import { SKILLS_TYPES } from "../skills/index.mjs";
+import { copperOre } from "../init/gameItems.mjs";
 
 export default class CopperOre extends GameObject {
   constructor({
@@ -22,7 +23,7 @@ export default class CopperOre extends GameObject {
       pointsToGain: 5,
     };
     this.item = {
-      id: "copper ore",
+      id: copperOre.id,
       quantity: 1,
     };
   }

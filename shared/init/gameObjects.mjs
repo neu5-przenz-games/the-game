@@ -1,4 +1,4 @@
-import FRACTIONS from "../fractions.mjs";
+import FRACTIONS from "../fractions/index.mjs";
 import { CopperOre, HealingStone, House, Tree } from "../gameObjects/index.mjs";
 
 const direHouse = FRACTIONS[1].houses[0];

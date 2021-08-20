@@ -9,7 +9,7 @@ import UIPlayerStatusList from "../ui/playerList/playerStatusList.mjs";
 
 import UIChat from "../ui/sections/chat/chat.mjs";
 
-import { FRACTIONS } from "../../shared/index.mjs";
+import FRACTIONS from "../../shared/fractions/index.mjs";
 
 import DEBUG_MENU from "../ui/debugMenu.mjs";
 
