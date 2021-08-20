@@ -31,7 +31,6 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
-    "link-module-alias": "^1.2.0",
     "mocha": "^8.3.0",
     "nightwatch": "^1.7.6",
     "nodemon": "^2.0.7",
@@ -58,7 +57,6 @@
     "watcherGlob": "**"
   },
   "scripts": {
-    "postinstall": "link-module-alias",
     "prebuild": "yarn extract:map",
     "build": "if test \"$NODE_ENV\" = \"production\"; then yarn build:prod; else yarn build:dev; fi",
     "build:prod": "NODE_ENV=production parcel build client/index.html",

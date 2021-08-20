@@ -1,4 +1,4 @@
-import gameItems from "shared/init/gameItems/index.mjs";
+import gameItems from "../../../../shared/init/gameItems/index.mjs";
 import { ITEMS_PATH } from "../../constants.mjs";
 
 export default class UIBackpack {

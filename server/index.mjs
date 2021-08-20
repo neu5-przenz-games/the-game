@@ -5,17 +5,16 @@ import PF from "pathfinding";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-import ITEM_ACTIONS from "shared/UIItemActions/index.mjs";
-
-import { getCurrentWeapon } from "shared/init/gameItems/index.mjs";
-import receipts from "shared/receipts/index.mjs";
+import ITEM_ACTIONS from "../shared/UIItemActions/index.mjs";
+import { getCurrentWeapon } from "../shared/init/gameItems/index.mjs";
+import receipts from "../shared/receipts/index.mjs";
 import {
   shapeSkillsForClient,
   skillIncrease,
   skillsSchema,
-} from "shared/skills/index.mjs";
+} from "../shared/skills/index.mjs";
 
-import gameObjects from "shared/init/gameObjects.mjs";
+import gameObjects from "../shared/init/gameObjects.mjs";
 import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";

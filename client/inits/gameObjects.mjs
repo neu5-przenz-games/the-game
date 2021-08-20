@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import gameObjects from "shared/init/gameObjects.mjs";
+import gameObjects from "../../shared/init/gameObjects.mjs";
 import HealingStone from "../gameObjects/HealingStone.mjs";
 import House from "../gameObjects/House.mjs";
 import Tree from "../gameObjects/Tree.mjs";

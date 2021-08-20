@@ -1,7 +1,8 @@
-import gameItems, { getCurrentWeapon } from "shared/init/gameItems/index.mjs";
-
-import { MESSAGES_TYPES } from "shared/UIMessages/index.mjs";
-import { ITEM_TYPES, WEARABLE_TYPES } from "shared/gameItems/index.mjs";
+import gameItems, {
+  getCurrentWeapon,
+} from "../../shared/init/gameItems/index.mjs";
+import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
+import { ITEM_TYPES, WEARABLE_TYPES } from "../../shared/gameItems/index.mjs";
 import {
   getChebyshevDistance,
   getDestTile,

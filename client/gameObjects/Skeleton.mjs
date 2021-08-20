@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { getCurrentWeapon } from "shared/init/gameItems/index.mjs";
+import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
 import { EnergyBar, HealthBar, ProgressBar } from "./Bar/index.mjs";
 import { TileFight, TileMarked, TileSelected } from "./Tile/index.mjs";
 import Arrow from "./Arrow.mjs";
