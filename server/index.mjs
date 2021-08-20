@@ -607,8 +607,7 @@ const loop = () => {
     players.forEach((player) => {
       worldState.push({
         id: player.name,
-        equipment: player.equipment,
-        selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
+        weapon: player.equipment.weapon || {},
         isWalking: player.isWalking,
         isDead: player.isDead,
         attack: player.attack,
