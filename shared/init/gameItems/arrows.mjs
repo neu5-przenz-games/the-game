@@ -2,7 +2,7 @@ import { Arrows } from "../../gameItems/index.mjs";
 
 export const arrowsBunch = new Arrows({
   id: "arrowsBunch",
-  displayName: "arrows",
+  displayName: "Arrows",
   imgURL: "arrows.png",
 });
 

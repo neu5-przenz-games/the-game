@@ -3,7 +3,7 @@ import { Weapon } from "../../gameItems/index.mjs";
 
 export const bow = new Weapon({
   id: "bow",
-  displayName: "bow",
+  displayName: "Bow",
   imgURL: "bow.png",
   isTwoHanded: true,
   skillToIncrease: {
@@ -20,7 +20,7 @@ export const bow = new Weapon({
 
 export const fist = new Weapon({
   id: "fist",
-  displayName: "fist",
+  displayName: "Fist",
   skillToIncrease: {
     name: SKILLS_TYPES.FIST_FIGHTING,
     pointsToGain: 5,
@@ -35,7 +35,7 @@ export const fist = new Weapon({
 
 const sword = new Weapon({
   id: "sword",
-  displayName: "sword",
+  displayName: "Sword",
   imgURL: "sword.png",
   skillToIncrease: {
     name: SKILLS_TYPES.SWORD_FIGHTING,
@@ -51,7 +51,7 @@ const sword = new Weapon({
 
 const dagger = new Weapon({
   id: "dagger",
-  displayName: "dagger",
+  displayName: "Dagger",
   imgURL: "dagger.png",
   skillToIncrease: {
     name: SKILLS_TYPES.SWORD_FIGHTING,

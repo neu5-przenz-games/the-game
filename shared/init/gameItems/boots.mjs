@@ -2,7 +2,7 @@ import { Boots } from "../../gameItems/index.mjs";
 
 const leatherBoots = new Boots({
   id: "boots",
-  displayName: "boots",
+  displayName: "Boots",
   imgURL: "boots.png",
 });
 

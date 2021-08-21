@@ -2,14 +2,14 @@ import { Backpack } from "../../gameItems/index.mjs";
 
 const bag = new Backpack({
   id: "bag",
-  displayName: "bag",
+  displayName: "Bag",
   imgURL: "bag.png",
   slots: 4,
 });
 
 const backpack = new Backpack({
   id: "backpack",
-  displayName: "backpack",
+  displayName: "Backpack",
   imgURL: "backpack_6.png",
   slots: 6,
 });

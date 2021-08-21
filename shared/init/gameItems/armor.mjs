@@ -2,7 +2,7 @@ import { Armor } from "../../gameItems/index.mjs";
 
 const armor = new Armor({
   id: "armor",
-  displayName: "armor",
+  displayName: "Armor",
   imgURL: "armor.png",
 });
 

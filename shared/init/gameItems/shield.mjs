@@ -3,7 +3,7 @@ import { Shield } from "../../gameItems/index.mjs";
 
 const shield = new Shield({
   id: "shield",
-  displayName: "shield",
+  displayName: "Shield",
   imgURL: "shield.png",
   skillToIncrease: {
     name: SKILLS_TYPES.SHIELD_DEFENDING,
