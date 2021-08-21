@@ -8,11 +8,11 @@ export default class Shield extends GameItem {
     imgURL = "",
     type = ITEM_TYPES.SHIELD,
     skillToIncrease = {},
-    weapon = {},
+    details = {},
   }) {
     super({ id, displayName, imgURL, type });
 
     this.skillToIncrease = skillToIncrease;
-    this.weapon = weapon;
+    this.details = details;
   }
 }
