@@ -1,11 +1,11 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
-import Skeleton from "../gameObjects/Skeleton.mjs";
+import { MESSAGES } from "../../shared/UIMessages/index.mjs";
+import { Skeleton } from "../gameObjects/Skeleton.mjs";
 import TextTween from "../gameObjects/TextTween.mjs";
 import UIProfile from "../ui/profile.mjs";
 import inputs from "./inputs.mjs";
-import { MESSAGES } from "../../shared/UIMessages/index.mjs";
 
 const displayServerMessage = (game, msgArg) => {
   game.chat.addServerMessage(msgArg);

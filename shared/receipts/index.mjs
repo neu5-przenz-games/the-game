@@ -1,4 +1,6 @@
-import { arrowsBunch, bow, wood } from "../init/gameItems.mjs";
+import { arrowsBunch } from "../init/gameItems/arrows.mjs";
+import { bow } from "../init/gameItems/weapon.mjs";
+import { wood } from "../init/gameItems/resource.mjs";
 import { SKILLS_TYPES } from "../skills/index.mjs";
 
 class Receipt {

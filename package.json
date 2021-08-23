@@ -8,6 +8,12 @@
   "engines": {
     "node": "^16"
   },
+  "alias": {
+    "shared": "./shared"
+  },
+  "_moduleAliases": {
+    "shared": "./shared"
+  },
   "dependencies": {
     "@geckos.io/snapshot-interpolation": "^1.0.2",
     "express": "^4.17.1",

@@ -5,10 +5,8 @@ import PF from "pathfinding";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-import map from "../public/assets/map/map.mjs";
-
 import ITEM_ACTIONS from "../shared/UIItemActions/index.mjs";
-import { getCurrentWeapon } from "../shared/init/gameItems.mjs";
+import { getCurrentWeapon } from "../shared/init/gameItems/index.mjs";
 import receipts from "../shared/receipts/index.mjs";
 import {
   shapeSkillsForClient,
@@ -17,11 +15,12 @@ import {
 } from "../shared/skills/index.mjs";
 
 import gameObjects from "../shared/init/gameObjects.mjs";
+import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";
 
-import Player from "./gameObjects/Player.mjs";
+import { Player } from "./gameObjects/Player.mjs";
 
 import playersConfig from "./mocks/players.mjs";
 
@@ -441,8 +440,8 @@ const loop = () => {
         player.attack = selectedPlayer.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
-        const hit = currentWeapon.weapon.attack;
-        const skillDetails = currentWeapon.skill;
+        const hit = currentWeapon.details.damage;
+        const skillDetails = currentWeapon.skillToIncrease;
 
         player.skillUpdate(skillIncrease(player.skills, skillDetails));
 
@@ -454,7 +453,7 @@ const loop = () => {
         if (selectedPlayer.equipment.shield) {
           const selectedPlayerSkillDetails = getCurrentWeapon(
             selectedPlayer.equipment.shield
-          ).skill;
+          ).skillToIncrease;
 
           selectedPlayer.skillUpdate(
             skillIncrease(selectedPlayer.skills, selectedPlayerSkillDetails)

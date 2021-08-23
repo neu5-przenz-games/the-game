@@ -3,7 +3,7 @@ import {
   WEARABLE_TYPES,
 } from "../../../../shared/gameItems/index.mjs";
 import ITEM_ACTIONS from "../../../../shared/UIItemActions/index.mjs";
-import gameItems from "../../../../shared/init/gameItems.mjs";
+import gameItems from "../../../../shared/init/gameItems/index.mjs";
 import { ITEMS_PATH } from "../../constants.mjs";
 import { createBtn } from "../../utils/index.mjs";
 

@@ -1,20 +1,20 @@
+import gameItems, {
+  getCurrentWeapon,
+} from "../../shared/init/gameItems/index.mjs";
+import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
+import { ITEM_TYPES, WEARABLE_TYPES } from "../../shared/gameItems/index.mjs";
 import {
   getChebyshevDistance,
   getDestTile,
   getXYFromTile,
 } from "../utils/algo.mjs";
 
-import { ITEM_TYPES, WEARABLE_TYPES } from "../../shared/gameItems/index.mjs";
-import gameItems, { getCurrentWeapon } from "../../shared/init/gameItems.mjs";
-
-import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
-
 const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
 const HP_MAX = 100;
 
-export default class Player {
+export class Player {
   constructor({
     name,
     displayName,
@@ -99,7 +99,7 @@ export default class Player {
   }
 
   getWeaponRange() {
-    return getCurrentWeapon(this.equipment.weapon).weapon.range;
+    return getCurrentWeapon(this.equipment.weapon).details.range;
   }
 
   setOnline(socketId) {
