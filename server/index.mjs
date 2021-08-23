@@ -30,8 +30,6 @@ const io = new Server(httpServer);
 
 const FRAME_IN_MS = 1000 / 30;
 
-const ENERGY_ATTACK_USE = 15;
-
 const players = new Map();
 playersConfig.forEach((player) => {
   players.set(player.name, new Player(player));
@@ -434,12 +432,12 @@ const loop = () => {
         player.updateFollowing(map, players);
       }
 
-      if (player.settings.fight && player.canAttack({ PF, finder, map })) {
+      if (player.settings.fight && player.canAttack({ finder, map, PF })) {
         player.attackDelayTicks = 0;
-        player.energyUse(ENERGY_ATTACK_USE);
         player.attack = selectedPlayer.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
+        player.energyUse(currentWeapon.details.energyCost);
         const hit = currentWeapon.details.damage;
         const skillDetails = currentWeapon.skillToIncrease;
 

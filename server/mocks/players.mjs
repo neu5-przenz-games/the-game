@@ -34,6 +34,7 @@ export default [
         { id: "bag", quantity: 1 },
         { id: "wood", quantity: 2 },
         { id: "bow", quantity: 1 },
+        { id: "dagger", quantity: 1 },
       ],
     },
     skills,
