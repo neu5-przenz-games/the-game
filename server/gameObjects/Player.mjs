@@ -9,7 +9,6 @@ import {
   getXYFromTile,
 } from "../utils/algo.mjs";
 
-const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
 const HP_MAX = 100;
@@ -231,6 +230,11 @@ export class Player {
 
     this.equipment[itemSchema.type] = item;
 
+    if (itemSchema.type === ITEM_TYPES.WEAPON) {
+      this.attackDelayTicks = 0;
+      this.attackDelayMaxTicks = itemSchema.details.attackDelayTicks;
+    }
+
     return true;
   }
 
@@ -395,15 +399,16 @@ export class Player {
     return false;
   }
 
-  canAttack({ PF, finder, map }) {
+  canAttack({ finder, map, PF }) {
     return (
       this.selectedPlayer.isDead === false &&
-      this.energy >= ENERGY_ATTACK_USE &&
+      this.energy >=
+        getCurrentWeapon(this.equipment.weapon).details.energyCost &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
       this.fraction !== this.selectedPlayer.fraction &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
-      this.noObstacles({ PF, finder, map })
+      this.noObstacles({ finder, map, PF })
     );
   }
 

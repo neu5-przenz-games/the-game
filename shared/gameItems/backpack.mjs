@@ -1,7 +1,7 @@
 import { GameItem } from "./gameItem.mjs";
 import { ITEM_TYPES } from "./itemTypes.mjs";
 
-export default class Backpack extends GameItem {
+export class Backpack extends GameItem {
   constructor({
     id,
     displayName,
