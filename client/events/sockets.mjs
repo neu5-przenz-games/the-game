@@ -116,7 +116,6 @@ export default (game) => {
           new Skeleton({
             direction: player.direction,
             isMainPlayer,
-            hp: player.hp,
             energy: player.energy,
             isDead: player.isDead,
             name: player.name,
@@ -172,6 +171,15 @@ export default (game) => {
 
   game.socket.on("players:update", (snapshot) => {
     game.SI.snapshot.add(snapshot);
+  });
+
+  game.socket.on("players:hp:update", (players) => {
+    players.forEach(({ name, hp }) => {
+      const player = game.players.get(name);
+
+      player.healthBar.show();
+      player.healthBar.updateValue(hp);
+    });
   });
 
   game.socket.on("player:hit", ({ name, hitType }) => {

@@ -1,6 +1,18 @@
 import { getSurroundingTiles } from "../../shared/utils/index.mjs";
 import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
 
+const getAllies = (players, fraction) =>
+  Array.from(players).reduce((allies, [name, player]) => {
+    if (player.fraction === fraction) {
+      allies.push({
+        name,
+        hp: player.hp,
+      });
+    }
+
+    return allies;
+  }, []);
+
 const getChebyshevDistance = (currTile, destTile) => {
   const distX = Math.abs(currTile.tileX - destTile.tileX);
   const distY = Math.abs(currTile.tileY - destTile.tileY);
@@ -98,4 +110,10 @@ const getDestTile = (player, { map, obj, players }) => {
   return destTile.distance > 0 ? destTile : {};
 };
 
-export { getChebyshevDistance, getDestTile, getRespawnTile, getXYFromTile };
+export {
+  getAllies,
+  getChebyshevDistance,
+  getDestTile,
+  getRespawnTile,
+  getXYFromTile,
+};

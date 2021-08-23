@@ -17,7 +17,7 @@ import {
 import gameObjects from "../shared/init/gameObjects.mjs";
 import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
-import { getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
+import { getAllies, getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";
 
 import { Player } from "./gameObjects/Player.mjs";
@@ -87,6 +87,12 @@ io.on("connection", (socket) => {
     );
 
     socket.broadcast.emit("player:new", availablePlayer);
+
+    socket.join(availablePlayer.fraction);
+    io.to(availablePlayer.fraction).emit(
+      "players:hp:update",
+      getAllies(players, availablePlayer.fraction)
+    );
 
     socket.on("player:go", ({ name, tileX, tileY }) => {
       if (tileX >= 0 && tileY >= 0 && map[tileY][tileX] === 0) {
@@ -466,9 +472,14 @@ const loop = () => {
         selectedPlayer.hit(hit);
 
         io.emit("player:hit", {
-          name: player.selectedPlayer.name,
+          name: selectedPlayer.name,
           hitType: getHitType(hit),
         });
+
+        io.to(selectedPlayer.fraction).emit(
+          "players:hp:update",
+          getAllies(players, selectedPlayer.fraction)
+        );
 
         if (player.hasRangedWeapon() && player.useArrow()) {
           io.to(player.socketId).emit(
@@ -512,6 +523,10 @@ const loop = () => {
       if (respawnTile) {
         player.respawn(respawnTile);
         io.to(player.socketId).emit("player:energy:update", player.energy);
+        io.to(player.fraction).emit(
+          "players:hp:update",
+          getAllies(players, player.fraction)
+        );
       } else {
         // fallback for no place to respawn
       }
@@ -586,6 +601,11 @@ const loop = () => {
           healingStone.isPlayerInHealingArea(player.positionTile)
         ) {
           player.heal(healingStone.HP_REGEN_RATE);
+
+          io.to(player.fraction).emit(
+            "players:hp:update",
+            getAllies(players, player.fraction)
+          );
         }
       });
 
@@ -610,7 +630,6 @@ const loop = () => {
         attack: player.attack,
         x: player.x,
         y: player.y,
-        hp: player.hp,
         destTile: player.dest && player.dest.tile,
         direction: player.direction,
       });
