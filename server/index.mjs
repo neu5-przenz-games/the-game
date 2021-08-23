@@ -5,21 +5,22 @@ import PF from "pathfinding";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-import map from "../public/assets/map/map.mjs";
+import ITEM_ACTIONS from "../shared/UIItemActions/index.mjs";
+import { getCurrentWeapon } from "../shared/init/gameItems/index.mjs";
+import receipts from "../shared/receipts/index.mjs";
 import {
-  ITEM_ACTIONS,
-  getCurrentWeapon,
-  receipts,
   shapeSkillsForClient,
   skillIncrease,
   skillsSchema,
-} from "../shared/index.mjs";
+} from "../shared/skills/index.mjs";
+
 import gameObjects from "../shared/init/gameObjects.mjs";
+import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getAllies, getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import getHitType from "./utils/hitText.mjs";
 
-import Player from "./gameObjects/Player.mjs";
+import { Player } from "./gameObjects/Player.mjs";
 
 import playersConfig from "./mocks/players.mjs";
 
@@ -28,8 +29,6 @@ const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 const FRAME_IN_MS = 1000 / 30;
-
-const ENERGY_ATTACK_USE = 15;
 
 const players = new Map();
 playersConfig.forEach((player) => {
@@ -439,14 +438,14 @@ const loop = () => {
         player.updateFollowing(map, players);
       }
 
-      if (player.settings.fight && player.canAttack({ PF, finder, map })) {
+      if (player.settings.fight && player.canAttack({ finder, map, PF })) {
         player.attackDelayTicks = 0;
-        player.energyUse(ENERGY_ATTACK_USE);
         player.attack = selectedPlayer.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
-        const hit = currentWeapon.weapon.attack;
-        const skillDetails = currentWeapon.skill;
+        player.energyUse(currentWeapon.details.energyCost);
+        const hit = currentWeapon.details.damage;
+        const skillDetails = currentWeapon.skillToIncrease;
 
         player.skillUpdate(skillIncrease(player.skills, skillDetails));
 
@@ -458,7 +457,7 @@ const loop = () => {
         if (selectedPlayer.equipment.shield) {
           const selectedPlayerSkillDetails = getCurrentWeapon(
             selectedPlayer.equipment.shield
-          ).skill;
+          ).skillToIncrease;
 
           selectedPlayer.skillUpdate(
             skillIncrease(selectedPlayer.skills, selectedPlayerSkillDetails)
@@ -625,8 +624,7 @@ const loop = () => {
     players.forEach((player) => {
       worldState.push({
         id: player.name,
-        equipment: player.equipment,
-        selectedPlayer: player.selectedPlayer && player.selectedPlayer.name,
+        weapon: player.equipment.weapon || {},
         isWalking: player.isWalking,
         isDead: player.isDead,
         attack: player.attack,

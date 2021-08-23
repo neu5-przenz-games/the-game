@@ -1,4 +1,5 @@
-import { FRACTIONS, skillsSchema } from "../../shared/index.mjs";
+import FRACTIONS from "../../shared/fractions/index.mjs";
+import { skillsSchema } from "../../shared/skills/index.mjs";
 
 const radiantFraction = FRACTIONS[0].name;
 const radiantHouse = FRACTIONS[0].houses[0];
@@ -20,7 +21,7 @@ export default [
       armor: { id: "armor", quantity: 1 },
       pants: { id: "pants", quantity: 1 },
       boots: { id: "boots", quantity: 1 },
-      backpack: { id: "backpack_6", quantity: 1 },
+      backpack: { id: "backpack", quantity: 1 },
       shield: { id: "shield", quantity: 1 },
       weapon: { id: "sword", quantity: 1 },
       helmet: { id: "hat", quantity: 1 },
@@ -33,6 +34,7 @@ export default [
         { id: "bag", quantity: 1 },
         { id: "wood", quantity: 2 },
         { id: "bow", quantity: 1 },
+        { id: "dagger", quantity: 1 },
       ],
     },
     skills,

@@ -1,22 +1,19 @@
+import gameItems, {
+  getCurrentWeapon,
+} from "../../shared/init/gameItems/index.mjs";
+import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
+import { ITEM_TYPES, WEARABLE_TYPES } from "../../shared/gameItems/index.mjs";
 import {
   getChebyshevDistance,
   getDestTile,
   getXYFromTile,
 } from "../utils/algo.mjs";
-import {
-  GAME_ITEMS,
-  ITEM_TYPES,
-  WEARABLE_TYPES,
-  getCurrentWeapon,
-} from "../../shared/index.mjs";
-import { MESSAGES_TYPES } from "../../shared/messages.mjs";
 
-const ENERGY_ATTACK_USE = 15;
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 100;
 const HP_MAX = 100;
 
-export default class Player {
+export class Player {
   constructor({
     name,
     displayName,
@@ -101,7 +98,7 @@ export default class Player {
   }
 
   getWeaponRange() {
-    return getCurrentWeapon(this.equipment.weapon).weapon.range;
+    return getCurrentWeapon(this.equipment.weapon).details.range;
   }
 
   setOnline(socketId) {
@@ -154,7 +151,7 @@ export default class Player {
       return false;
     }
 
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (itemSchema.type === ITEM_TYPES.BACKPACK) {
       return false;
@@ -183,7 +180,7 @@ export default class Player {
       return false;
     }
 
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (itemSchema.type === ITEM_TYPES.ARROWS) {
       this.destroyItemFromBackpack(itemName);
@@ -210,7 +207,7 @@ export default class Player {
   }
 
   addToEquipment(item) {
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (!itemSchema || !WEARABLE_TYPES.includes(itemSchema.type)) {
       return false;
@@ -233,12 +230,17 @@ export default class Player {
 
     this.equipment[itemSchema.type] = item;
 
+    if (itemSchema.type === ITEM_TYPES.WEAPON) {
+      this.attackDelayTicks = 0;
+      this.attackDelayMaxTicks = itemSchema.details.attackDelayTicks;
+    }
+
     return true;
   }
 
   moveBackpackToEquipment(itemName) {
     const item = this.getFromBackpack(itemName);
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
     const currentBackpack = this.equipment.backpack;
     const backpackItems = this.backpack.items;
 
@@ -293,7 +295,7 @@ export default class Player {
   moveToEquipmentFromBackpack(itemName) {
     const item = this.getFromBackpack(itemName);
 
-    const itemSchema = GAME_ITEMS[item.id];
+    const itemSchema = gameItems.get(item.id);
 
     if (!WEARABLE_TYPES.includes(itemSchema.type)) {
       return false;
@@ -322,7 +324,7 @@ export default class Player {
       }
 
       if (!this.removeFromBackpack(itemName)) {
-        this.removeFromEquipment(itemName, GAME_ITEMS[itemName]);
+        this.removeFromEquipment(itemName, gameItems.get(itemName));
 
         return false;
       }
@@ -397,15 +399,16 @@ export default class Player {
     return false;
   }
 
-  canAttack({ PF, finder, map }) {
+  canAttack({ finder, map, PF }) {
     return (
       this.selectedPlayer.isDead === false &&
-      this.energy >= ENERGY_ATTACK_USE &&
+      this.energy >=
+        getCurrentWeapon(this.equipment.weapon).details.energyCost &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
       this.fraction !== this.selectedPlayer.fraction &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
-      this.noObstacles({ PF, finder, map })
+      this.noObstacles({ finder, map, PF })
     );
   }
 
@@ -572,7 +575,7 @@ export default class Player {
     const item = this.equipment[equipmentItemType];
 
     if (itemName === item.id && delete this.equipment[equipmentItemType]) {
-      const itemSchema = GAME_ITEMS[item.id];
+      const itemSchema = gameItems.get(item.id);
 
       if (itemSchema.type === ITEM_TYPES.BACKPACK) {
         this.setBackpack();

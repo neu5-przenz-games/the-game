@@ -1,5 +1,5 @@
+import { getSurroundingTiles } from "../../shared/utils/index.mjs";
 import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
-import { getSurroundingTiles } from "../../shared/utils.mjs";
 
 const getAllies = (players, fraction) =>
   Array.from(players).reduce((allies, [name, player]) => {
