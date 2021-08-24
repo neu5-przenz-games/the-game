@@ -1,8 +1,10 @@
 import { GameItem } from "./gameItem.mjs";
 import { ITEM_TYPES } from "./itemTypes.mjs";
 
+const pantsURL = "pants";
+
 export class Pants extends GameItem {
   constructor({ id, displayName, imgURL = "", type = ITEM_TYPES.PANTS }) {
-    super({ id, displayName, imgURL, type });
+    super({ id, displayName, imgURL: `${pantsURL}/${imgURL}`, type });
   }
 }

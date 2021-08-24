@@ -1,4 +1,5 @@
-import gameItems, {
+import {
+  gameItems,
   getCurrentWeapon,
 } from "../../shared/init/gameItems/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";

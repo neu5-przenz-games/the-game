@@ -1,6 +1,5 @@
 import Phaser from "phaser";
-
-import MainScene from "./scenes/mainScene.mjs";
+import { MainScene } from "./scenes/mainScene.mjs";
 
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
@@ -31,4 +30,4 @@ const config = {
   scene: [MainScene],
 };
 
-export default new Phaser.Game(config);
+export const game = new Phaser.Game(config);

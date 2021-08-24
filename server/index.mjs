@@ -5,8 +5,13 @@ import PF from "pathfinding";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-import ITEM_ACTIONS from "../shared/UIItemActions/index.mjs";
-import { getCurrentWeapon } from "../shared/init/gameItems/index.mjs";
+import { DEBUG_ITEMS_SETS } from "../shared/debugUtils/index.mjs";
+import { UI_ITEM_ACTIONS } from "../shared/UIItemActions/index.mjs";
+import {
+  gameItems,
+  getCurrentWeapon,
+} from "../shared/init/gameItems/index.mjs";
+import { bag } from "../shared/init/gameItems/backpack.mjs";
 import receipts from "../shared/receipts/index.mjs";
 import {
   shapeSkillsForClient,
@@ -22,7 +27,7 @@ import getHitType from "./utils/hitText.mjs";
 
 import { Player } from "./gameObjects/Player.mjs";
 
-import playersConfig from "./mocks/players.mjs";
+import { playersMocks } from "./mocks/players.mjs";
 
 const app = express();
 const httpServer = createServer(app);
@@ -31,7 +36,7 @@ const io = new Server(httpServer);
 const FRAME_IN_MS = 1000 / 30;
 
 const players = new Map();
-playersConfig.forEach((player) => {
+playersMocks.forEach((player) => {
   players.set(player.name, new Player(player));
 });
 
@@ -216,11 +221,46 @@ io.on("connection", (socket) => {
         }
       });
 
-      socket.on("player:equipment:clear", ({ name }) => {
+      socket.on("player:items:clear", ({ name }) => {
         const player = players.get(name);
 
         if (player) {
           player.setEquipment();
+          player.setBackpack();
+
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
+        }
+      });
+
+      socket.on("player:items:give-a-bag", ({ name }) => {
+        const player = players.get(name);
+
+        if (player) {
+          player.setEquipment({
+            backpack: { id: bag.id, quantity: 1 },
+          });
+          player.setBackpack(bag.slots);
+
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
+        }
+      });
+
+      socket.on("player:items:set", ({ name, itemsSetType }) => {
+        const player = players.get(name);
+        const itemsSet = DEBUG_ITEMS_SETS[itemsSetType];
+
+        if (player && itemsSet) {
+          const backpackToSet = gameItems.get(itemsSet.backpack.id);
+          player.setEquipment(itemsSet);
+          player.setBackpack(backpackToSet.slots);
 
           io.to(player.socketId).emit(
             "items:update",
@@ -263,7 +303,7 @@ io.on("connection", (socket) => {
         }
 
         ({
-          [ITEM_ACTIONS.DESTROY]: () => {
+          [UI_ITEM_ACTIONS.DESTROY]: () => {
             if (player.destroyItem(itemName, equipmentItemType)) {
               io.to(player.socketId).emit(
                 "items:update",
@@ -272,7 +312,7 @@ io.on("connection", (socket) => {
               );
             }
           },
-          [ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
+          [UI_ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
             if (
               player.moveToBackpackFromEquipment(itemName, equipmentItemType)
             ) {
@@ -283,7 +323,7 @@ io.on("connection", (socket) => {
               );
             }
           },
-          [ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
+          [UI_ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
             if (player.moveToEquipmentFromBackpack(itemName)) {
               io.to(player.socketId).emit(
                 "items:update",
@@ -652,4 +692,4 @@ app.get("/", (req, res) => {
   res.sendFile("index.html", { root: "./dist" });
 });
 
-export default httpServer.listen(process.env.PORT || 5000);
+export const server = httpServer.listen(process.env.PORT || 5000);

@@ -4,17 +4,17 @@ import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 import FRACTIONS from "../../shared/fractions/index.mjs";
 import initMap from "../inits/map.mjs";
 import initGameObjects from "../inits/gameObjects.mjs";
-import sockets from "../events/sockets.mjs";
+import { sockets } from "../events/sockets.mjs";
 
 import UIPlayerStatusList from "../ui/playerList/playerStatusList.mjs";
 
-import UIChat from "../ui/sections/chat/chat.mjs";
+import { UIChat } from "../ui/sections/chat/chat.mjs";
 
-import DEBUG_MENU from "../ui/debugMenu.mjs";
+import { debugMenu } from "../ui/debugMenu.mjs";
 
 const FPS = 30;
 
-export default class MainScene extends Phaser.Scene {
+export class MainScene extends Phaser.Scene {
   constructor() {
     super("MainScene");
 
@@ -36,7 +36,7 @@ export default class MainScene extends Phaser.Scene {
     this.UIMenu = menu;
 
     if (process.env.NODE_ENV === "development") {
-      DEBUG_MENU(this);
+      debugMenu(this);
 
       window.e2e = {
         player: {

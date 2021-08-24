@@ -1,7 +1,7 @@
-import gameItems from "../../../../shared/init/gameItems/index.mjs";
+import { gameItems } from "../../../../shared/init/gameItems/index.mjs";
 import { ITEMS_PATH } from "../../constants.mjs";
 
-export default class UIBackpack {
+export class UIBackpack {
   constructor() {
     const [backpackSlots] = document.getElementsByClassName("backpack__slots");
     const [backpackItems] = document.getElementsByClassName("backpack__items");

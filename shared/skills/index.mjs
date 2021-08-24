@@ -1,5 +1,6 @@
 export const SKILLS_TYPES = {
   ARCHERY_FIGHTING: "ARCHERY_FIGHTING",
+  AXE_FIGHTING: "AXE_FIGHTING",
   BLACKSMITHING: "BLACKSMITHING",
   FIST_FIGHTING: "FIST_FIGHTING",
   LUMBERJACKING: "LUMBERJACKING",
@@ -83,6 +84,10 @@ export const skillIncrease = (skills, { name, pointsToGain }) => {
 export const skillsSchema = {
   [SKILLS_TYPES.ARCHERY_FIGHTING]: {
     displayName: "archery fighting",
+    points: 0,
+  },
+  [SKILLS_TYPES.AXE_FIGHTING]: {
+    displayName: "axe fighting",
     points: 0,
   },
   [SKILLS_TYPES.BLACKSMITHING]: {

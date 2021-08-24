@@ -1,4 +1,4 @@
-export default {
+export const UI_ITEM_ACTIONS = {
   CLOSE: "CLOSE",
   DESTROY: "DESTROY",
   MOVE_TO_BACKPACK: "MOVE_TO_BACKPACK",
