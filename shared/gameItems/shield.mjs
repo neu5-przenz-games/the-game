@@ -1,6 +1,8 @@
 import { GameItem } from "./gameItem.mjs";
 import { ITEM_TYPES } from "./itemTypes.mjs";
 
+const shieldURL = "shield";
+
 export class Shield extends GameItem {
   constructor({
     id,
@@ -10,7 +12,7 @@ export class Shield extends GameItem {
     skillToIncrease = {},
     details = {},
   }) {
-    super({ id, displayName, imgURL, type });
+    super({ id, displayName, imgURL: `${shieldURL}/${imgURL}`, type });
 
     this.skillToIncrease = skillToIncrease;
     this.details = details;

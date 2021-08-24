@@ -25,4 +25,4 @@ weapons.forEach((weapon) => gameItems.set(weapon.id, weapon));
 export const getCurrentWeapon = (item) =>
   item && item.id ? gameItems.get(item.id) : fist;
 
-export default gameItems;
+export { gameItems };

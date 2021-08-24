@@ -7,7 +7,7 @@ const TABS = {
 const ACTIVE_TAB_CLASSNAME = "tabs__option--active";
 const ACTIVE_TAB_CONTENT_CLASSNAME = "tabs__content--active";
 
-export default class UITabs {
+export class UITabs {
   constructor() {
     const [tabsOptions] = document.getElementsByClassName("tabs__options");
     const [...tabOption] = document.getElementsByClassName("tabs__option");

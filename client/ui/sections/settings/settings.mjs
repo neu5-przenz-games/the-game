@@ -1,4 +1,4 @@
-export default class UISettings {
+export class UISettings {
   constructor({
     followCb,
     fightCb,

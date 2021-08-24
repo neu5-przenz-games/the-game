@@ -7,7 +7,7 @@ import {
   UITabs,
 } from "./sections/index.mjs";
 
-export default class UIProfile {
+export class UIProfile {
   constructor({
     name,
     isDead,

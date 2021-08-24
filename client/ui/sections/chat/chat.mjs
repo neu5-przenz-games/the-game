@@ -1,4 +1,4 @@
-export default class UIChat {
+export class UIChat {
   constructor(playerName) {
     this.playerName = playerName;
     const [chatInput] = document.getElementsByClassName("chat__input");

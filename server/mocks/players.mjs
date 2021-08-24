@@ -7,7 +7,7 @@ const direFraction = FRACTIONS[1].name;
 const direHouse = FRACTIONS[1].houses[0];
 const skills = skillsSchema;
 
-export default [
+export const playersMocks = [
   {
     name: "player1",
     displayName: "player 1",

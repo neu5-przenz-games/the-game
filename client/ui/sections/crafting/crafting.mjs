@@ -1,4 +1,4 @@
-export default class UICrafting {
+export class UICrafting {
   constructor({ name, craftingCb }) {
     const [craftingWrapper] = document.getElementsByClassName("crafting");
     this.craftingWrapper = craftingWrapper;

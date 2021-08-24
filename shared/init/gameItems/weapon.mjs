@@ -49,7 +49,7 @@ const sword = new Weapon({
   },
 });
 
-const dagger = new Weapon({
+export const dagger = new Weapon({
   id: "dagger",
   displayName: "Dagger",
   imgURL: "dagger.png",
@@ -65,4 +65,20 @@ const dagger = new Weapon({
   },
 });
 
-export const weapons = [bow, fist, sword, dagger];
+export const frozenAxe = new Weapon({
+  id: "frozenAxe",
+  displayName: "Frozen Axe",
+  imgURL: "frozen_axe.png",
+  skillToIncrease: {
+    name: SKILLS_TYPES.AXE_FIGHTING,
+    pointsToGain: 20,
+  },
+  details: {
+    damage: 30,
+    range: 1,
+    attackDelayTicks: 30,
+    energyCost: 10,
+  },
+});
+
+export const weapons = [bow, fist, sword, dagger, frozenAxe];

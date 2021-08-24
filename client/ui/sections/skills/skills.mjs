@@ -1,4 +1,4 @@
-export default class UISkills {
+export class UISkills {
   constructor() {
     const [skillsWrapper] = document.getElementsByClassName("skills");
     this.skillsWrapper = skillsWrapper;

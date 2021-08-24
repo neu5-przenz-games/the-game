@@ -4,14 +4,14 @@ import io from "socket.io-client";
 import { MESSAGES } from "../../shared/UIMessages/index.mjs";
 import { Skeleton } from "../gameObjects/Skeleton.mjs";
 import TextTween from "../gameObjects/TextTween.mjs";
-import UIProfile from "../ui/profile.mjs";
+import { UIProfile } from "../ui/profile.mjs";
 import inputs from "./inputs.mjs";
 
 const displayServerMessage = (game, msgArg) => {
   game.chat.addServerMessage(msgArg);
 };
 
-export default (game) => {
+export const sockets = (game) => {
   game.setSocket(io());
 
   game.socket.on("player:new", (newPlayer) => {
@@ -284,9 +284,20 @@ export default (game) => {
           name: playerName,
         });
       },
-      clearPlayerEquipment: (playerName) => {
-        game.socket.emit("player:equipment:clear", {
+      clearPlayerItems: (playerName) => {
+        game.socket.emit("player:items:clear", {
           name: playerName,
+        });
+      },
+      givePlayerABag: (playerName) => {
+        game.socket.emit("player:items:give-a-bag", {
+          name: playerName,
+        });
+      },
+      setPlayerItems: (playerName, itemsSetType) => {
+        game.socket.emit("player:items:set", {
+          name: playerName,
+          itemsSetType,
         });
       },
     };

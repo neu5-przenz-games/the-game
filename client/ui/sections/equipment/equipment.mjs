@@ -2,8 +2,8 @@ import {
   ITEM_TYPES,
   WEARABLE_TYPES,
 } from "../../../../shared/gameItems/index.mjs";
-import ITEM_ACTIONS from "../../../../shared/UIItemActions/index.mjs";
-import gameItems from "../../../../shared/init/gameItems/index.mjs";
+import { UI_ITEM_ACTIONS } from "../../../../shared/UIItemActions/index.mjs";
+import { gameItems } from "../../../../shared/init/gameItems/index.mjs";
 import { ITEMS_PATH } from "../../constants.mjs";
 import { createBtn } from "../../utils/index.mjs";
 
@@ -17,7 +17,7 @@ const equipmentElements = WEARABLE_TYPES.map((type) => ({
   displayName: type,
 }));
 
-export default class UIEquipment {
+export class UIEquipment {
   constructor({ name, itemActionsCb }) {
     const [equipmentWrapper] = document.getElementsByClassName("equipment");
     const [equipmentItems] = document.getElementsByClassName(
@@ -56,10 +56,10 @@ export default class UIEquipment {
       }
 
       ({
-        [ITEM_ACTIONS.CLOSE]: () => {
+        [UI_ITEM_ACTIONS.CLOSE]: () => {
           // do nothing
         },
-        [ITEM_ACTIONS.DESTROY]: () => {
+        [UI_ITEM_ACTIONS.DESTROY]: () => {
           itemActionsCb({
             name,
             actionName,
@@ -67,7 +67,7 @@ export default class UIEquipment {
             equipmentItemType: this.equipmentItemType,
           });
         },
-        [ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
+        [UI_ITEM_ACTIONS.MOVE_TO_BACKPACK]: () => {
           itemActionsCb({
             name,
             actionName,
@@ -75,7 +75,7 @@ export default class UIEquipment {
             equipmentItemType: this.equipmentItemType,
           });
         },
-        [ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
+        [UI_ITEM_ACTIONS.MOVE_TO_EQUIPMENT]: () => {
           itemActionsCb({
             name,
             actionName,
@@ -135,7 +135,7 @@ export default class UIEquipment {
 
     const btnClose = createBtn({
       classNames: actionClassNames,
-      datasets: [{ name: "actionName", value: ITEM_ACTIONS.CLOSE }],
+      datasets: [{ name: "actionName", value: UI_ITEM_ACTIONS.CLOSE }],
       text: "close",
     });
     fragment.appendChild(btnClose);
@@ -147,7 +147,7 @@ export default class UIEquipment {
           const btnMoveToBackpack = createBtn({
             classNames: actionClassNames,
             datasets: [
-              { name: "actionName", value: ITEM_ACTIONS.MOVE_TO_BACKPACK },
+              { name: "actionName", value: UI_ITEM_ACTIONS.MOVE_TO_BACKPACK },
             ],
             text: "move to backpack",
           });
@@ -157,7 +157,7 @@ export default class UIEquipment {
         const btnWearIt = createBtn({
           classNames: actionClassNames,
           datasets: [
-            { name: "actionName", value: ITEM_ACTIONS.MOVE_TO_EQUIPMENT },
+            { name: "actionName", value: UI_ITEM_ACTIONS.MOVE_TO_EQUIPMENT },
           ],
           text: "wear it",
         });
@@ -167,7 +167,7 @@ export default class UIEquipment {
 
     const btnDestroy = createBtn({
       classNames: actionClassNames,
-      datasets: [{ name: "actionName", value: ITEM_ACTIONS.DESTROY }],
+      datasets: [{ name: "actionName", value: UI_ITEM_ACTIONS.DESTROY }],
       text: "destroy",
     });
     fragment.appendChild(btnDestroy);
