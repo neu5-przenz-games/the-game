@@ -1,6 +1,6 @@
 import { HIT_TYPES } from "./constants.mjs";
 
-export default (value) => {
+export const getHitText = (value) => {
   if (value >= 40) {
     return HIT_TYPES.CRITICAL;
   }

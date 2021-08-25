@@ -1,7 +1,7 @@
-import Bar from "./Bar.mjs";
-import COLOR from "../../constants/index.mjs";
+import { Bar } from "./Bar.mjs";
+import { COLOR } from "../../constants/index.mjs";
 
-export default class ProgressBar extends Bar {
+export class ProgressBar extends Bar {
   constructor(scene, x, y, xOffset, yOffset, value, drawBar) {
     super(scene, x, y, xOffset, yOffset, value, COLOR.GREEN, drawBar);
 

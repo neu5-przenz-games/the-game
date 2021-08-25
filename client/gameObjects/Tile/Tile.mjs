@@ -2,7 +2,7 @@ const OFFSET = {
   Y: 16,
 };
 
-export default class Tile {
+export class Tile {
   constructor(scene, x, y, image) {
     this.image = scene.add.image(x, y + OFFSET.Y, image);
     this.image.setVisible(false);

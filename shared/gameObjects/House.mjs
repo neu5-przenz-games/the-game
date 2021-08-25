@@ -1,6 +1,6 @@
-import GameObject from "./GameObject.mjs";
+import { GameObject } from "./GameObject.mjs";
 
-export default class House extends GameObject {
+export class House extends GameObject {
   constructor({
     name,
     displayName,

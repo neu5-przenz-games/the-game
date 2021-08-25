@@ -2,9 +2,9 @@ import Phaser from "phaser";
 import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
 import { EnergyBar, HealthBar, ProgressBar } from "./Bar/index.mjs";
 import { TileFight, TileMarked, TileSelected } from "./Tile/index.mjs";
-import Arrow from "./Arrow.mjs";
+import { Arrow } from "./Arrow.mjs";
 
-export const directions = {
+const directions = {
   west: { offset: 0 },
   northWest: { offset: 32 },
   north: { offset: 64 },
@@ -63,12 +63,12 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 };
 
-export const OFFSET = {
+const OFFSET = {
   X: 32,
   Y: 16,
 };
 
-export class Skeleton extends Phaser.GameObjects.Image {
+class Skeleton extends Phaser.GameObjects.Image {
   constructor({
     direction,
     isMainPlayer,
@@ -394,3 +394,5 @@ export class Skeleton extends Phaser.GameObjects.Image {
     super.destroy();
   }
 }
+
+export { directions, OFFSET, Skeleton };

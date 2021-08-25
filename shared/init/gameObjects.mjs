@@ -1,10 +1,10 @@
-import FRACTIONS from "../fractions/index.mjs";
+import { FRACTIONS } from "../fractions/index.mjs";
 import { CopperOre, HealingStone, House, Tree } from "../gameObjects/index.mjs";
 
 const direHouse = FRACTIONS[1].houses[0];
 const radiantHouse = FRACTIONS[0].houses[0];
 
-export default [
+export const gameObjects = [
   new House({
     name: direHouse.name,
     displayName: direHouse.displayName,

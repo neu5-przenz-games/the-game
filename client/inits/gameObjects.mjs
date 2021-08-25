@@ -1,9 +1,9 @@
 import Phaser from "phaser";
-import gameObjects from "../../shared/init/gameObjects.mjs";
-import HealingStone from "../gameObjects/HealingStone.mjs";
-import House from "../gameObjects/House.mjs";
-import Tree from "../gameObjects/Tree.mjs";
-import Ore from "../gameObjects/Ore.mjs";
+import { gameObjects } from "../../shared/init/gameObjects.mjs";
+import { HealingStone } from "../gameObjects/HealingStone.mjs";
+import { House } from "../gameObjects/House.mjs";
+import { Tree } from "../gameObjects/Tree.mjs";
+import { Ore } from "../gameObjects/Ore.mjs";
 
 const TYPES = {
   HealingStone,
@@ -12,7 +12,7 @@ const TYPES = {
   Ore,
 };
 
-export default (game) => {
+export const initGameObjects = (game) => {
   gameObjects.forEach((gameObject) => {
     const objectWorldXY = game.groundLayer.tileToWorldXY(
       gameObject.positionTile.tileX,

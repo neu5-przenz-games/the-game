@@ -1,12 +1,12 @@
 import Phaser from "phaser";
-import COLOR from "../../constants/index.mjs";
+import { COLOR } from "../../constants/index.mjs";
 
 const BAR_WIDTH = 64;
 const BAR_HEIGHT = 4;
 const BAR_BORDER_WIDTH = 1;
 const BAR_BORDER_WIDTH_DOUBLE = BAR_BORDER_WIDTH * 2;
 
-export default class Bar {
+export class Bar {
   constructor(scene, x, y, xOffset, yOffset, value, color, drawBar = true) {
     this.bar = new Phaser.GameObjects.Graphics(scene);
 

@@ -1,4 +1,4 @@
-export default [
+export const FRACTIONS = [
   {
     name: "Radiant",
     characterImg: "skeleton-blue",

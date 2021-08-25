@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default class Tree extends Phaser.GameObjects.Image {
+export class Tree extends Phaser.GameObjects.Image {
   static hitAreaPoly =
     "85 10 145 55 140 120 120 140 85 140 85 185 75 185 75 135 65 145 5 105 10 60";
 

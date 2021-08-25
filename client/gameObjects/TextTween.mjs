@@ -1,6 +1,6 @@
 const OFFSET_Y = 44;
 
-export default ({
+export const TextTween = ({
   scene,
   x,
   y,

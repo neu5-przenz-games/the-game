@@ -1,7 +1,7 @@
-import GameObject from "./GameObject.mjs";
+import { GameObject } from "./GameObject.mjs";
 import { getSurroundingTiles } from "../utils/index.mjs";
 
-export default class HealingStone extends GameObject {
+export class HealingStone extends GameObject {
   constructor({
     name,
     displayName,

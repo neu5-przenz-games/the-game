@@ -1,6 +1,6 @@
-import UIPlayerList from "./playerList.mjs";
+import { UIPlayerList } from "./playerList.mjs";
 
-export default class UIPlayerStatusList {
+export class UIPlayerStatusList {
   constructor() {
     this.activePlayerList = new UIPlayerList("player-list-active");
     this.inactivePlayerList = new UIPlayerList("player-list-inactive");

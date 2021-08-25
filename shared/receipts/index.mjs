@@ -82,4 +82,4 @@ const receipts = new Map();
 receipts.set(arrowsReceipt.id, arrowsReceipt);
 receipts.set(bowReceipt.id, bowReceipt);
 
-export default receipts;
+export { receipts };
