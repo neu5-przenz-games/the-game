@@ -1,4 +1,4 @@
-export default (game) => {
+export const initMap = (game) => {
   const tilemap = game.make.tilemap({ key: "map" });
   const tilesetOutside = tilemap.addTilesetImage("outside", "tileset-outside");
 

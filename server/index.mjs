@@ -12,18 +12,18 @@ import {
   getCurrentWeapon,
 } from "../shared/init/gameItems/index.mjs";
 import { bag } from "../shared/init/gameItems/backpack.mjs";
-import receipts from "../shared/receipts/index.mjs";
+import { receipts } from "../shared/receipts/index.mjs";
 import {
   shapeSkillsForClient,
   skillIncrease,
   skillsSchema,
 } from "../shared/skills/index.mjs";
 
-import gameObjects from "../shared/init/gameObjects.mjs";
+import { gameObjects } from "../shared/init/gameObjects.mjs";
 import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import { getAllies, getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
-import getHitType from "./utils/hitText.mjs";
+import { getHitText } from "./utils/hitText.mjs";
 
 import { Player } from "./gameObjects/Player.mjs";
 
@@ -478,6 +478,13 @@ const loop = () => {
         player.updateFollowing(map, players);
       }
 
+      if (player.dest === null) {
+        player.direction = getDirection(
+          player.positionTile,
+          selectedPlayer.positionTile
+        );
+      }
+
       if (player.settings.fight && player.canAttack({ finder, map, PF })) {
         player.attackDelayTicks = 0;
         player.attack = selectedPlayer.name;
@@ -513,7 +520,7 @@ const loop = () => {
 
         io.emit("player:hit", {
           name: selectedPlayer.name,
-          hitType: getHitType(hit),
+          hitType: getHitText(hit),
         });
 
         io.to(selectedPlayer.fraction).emit(

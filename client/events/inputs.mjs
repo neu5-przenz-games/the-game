@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default (game) => {
+export const inputs = (game) => {
   game.input.on(Phaser.Input.Events.POINTER_UP, (pointer, obj) => {
     // second parameter (obj) is an array with empty object if player is clicked
     if (obj.length) return;

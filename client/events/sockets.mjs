@@ -3,9 +3,9 @@ import io from "socket.io-client";
 
 import { MESSAGES } from "../../shared/UIMessages/index.mjs";
 import { Skeleton } from "../gameObjects/Skeleton.mjs";
-import TextTween from "../gameObjects/TextTween.mjs";
+import { TextTween } from "../gameObjects/TextTween.mjs";
 import { UIProfile } from "../ui/profile.mjs";
-import inputs from "./inputs.mjs";
+import { inputs } from "./inputs.mjs";
 
 const displayServerMessage = (game, msgArg) => {
   game.chat.addServerMessage(msgArg);

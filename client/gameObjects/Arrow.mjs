@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default class Arrow extends Phaser.GameObjects.Image {
+export class Arrow extends Phaser.GameObjects.Image {
   constructor(scene, x, y) {
     super(scene, x, y, "arrow-bow");
 

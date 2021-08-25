@@ -1,4 +1,4 @@
-export default class UIPlayerList {
+export class UIPlayerList {
   constructor(listClassPrefix) {
     const [playerList] = document.getElementsByClassName(
       `${listClassPrefix}__content`

@@ -1,4 +1,4 @@
-export default class GameObject {
+export class GameObject {
   constructor({ name, displayName, type, positionTile, size }) {
     this.name = name;
     this.displayName = displayName;

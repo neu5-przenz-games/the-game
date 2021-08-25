@@ -8,7 +8,7 @@
  */
 import { readFileSync, writeFileSync } from "fs";
 
-import gameObjects from "../shared/init/gameObjects.mjs";
+import { gameObjects } from "../shared/init/gameObjects.mjs";
 
 const map = readFileSync("public/assets/map/map.json", "utf8");
 

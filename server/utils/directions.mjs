@@ -35,21 +35,38 @@ const directions = {
   },
 };
 
-const getDirection = (currentTile, nextTile) =>
-  ({
-    "1,0": "southEast",
-    "1,1": "south",
-    "0,1": "southWest",
-    "-1,1": "west",
-    "-1,0": "northWest",
-    "-1,-1": "north",
-    "0,-1": "northEast",
-    "1,-1": "east",
-  }[
-    [
+const getDirection = (currentTile, nextTile) => {
+  const angle =
+    Math.atan2(
       nextTile.tileX - currentTile.tileX,
-      nextTile.tileY - currentTile.tileY,
-    ].join()
-  ]);
+      nextTile.tileY - currentTile.tileY
+    ) *
+    (180 / Math.PI);
+
+  let direction = null;
+
+  if (angle > -157.5 && angle <= -112.5) {
+    direction = "north";
+  } else if (angle > -112.5 && angle <= -67.5) {
+    direction = "northWest";
+  } else if (angle > -67.5 && angle <= -22.5) {
+    direction = "west";
+  } else if (angle > -22.5 && angle <= 22.5) {
+    direction = "southWest";
+  } else if (angle > 22.5 && angle <= 67.5) {
+    direction = "south";
+  } else if (angle > 67.5 && angle <= 112.5) {
+    direction = "southEast";
+  } else if (angle > 112.5 && angle <= 157.5) {
+    direction = "east";
+  } else if (
+    (angle > 157.5 && angle <= 180) ||
+    (angle >= -180 && angle < -157.5)
+  ) {
+    direction = "northEast";
+  }
+
+  return direction;
+};
 
 export { directions, getDirection };

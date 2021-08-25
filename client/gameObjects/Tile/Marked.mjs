@@ -1,6 +1,6 @@
-import Tile from "./Tile.mjs";
+import { Tile } from "./Tile.mjs";
 
-export default class TileMarked extends Tile {
+export class TileMarked extends Tile {
   constructor(scene, x, y) {
     super(scene, x, y, "tile-marked");
 

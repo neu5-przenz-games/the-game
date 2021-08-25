@@ -1,12 +1,12 @@
 import Phaser from "phaser";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
-import FRACTIONS from "../../shared/fractions/index.mjs";
-import initMap from "../inits/map.mjs";
-import initGameObjects from "../inits/gameObjects.mjs";
+import { FRACTIONS } from "../../shared/fractions/index.mjs";
+import { initMap } from "../inits/map.mjs";
+import { initGameObjects } from "../inits/gameObjects.mjs";
 import { sockets } from "../events/sockets.mjs";
 
-import UIPlayerStatusList from "../ui/playerList/playerStatusList.mjs";
+import { UIPlayerStatusList } from "../ui/playerList/playerStatusList.mjs";
 
 import { UIChat } from "../ui/sections/chat/chat.mjs";
 
