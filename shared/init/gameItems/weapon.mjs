@@ -11,9 +11,26 @@ export const bow = new Weapon({
     pointsToGain: 5,
   },
   details: {
-    damage: 15,
+    damage: 10,
     range: 5,
-    attackDelayTicks: 20,
+    attackDelayTicks: 40,
+    energyCost: 15,
+  },
+});
+
+export const crossbow = new Weapon({
+  id: "crossbow",
+  displayName: "Crossbow",
+  imgURL: "crossbow.png",
+  isTwoHanded: true,
+  skillToIncrease: {
+    name: SKILLS_TYPES.ARCHERY_FIGHTING,
+    pointsToGain: 20,
+  },
+  details: {
+    damage: 30,
+    range: 7,
+    attackDelayTicks: 60,
     energyCost: 15,
   },
 });
@@ -81,4 +98,4 @@ export const frozenAxe = new Weapon({
   },
 });
 
-export const weapons = [bow, fist, sword, dagger, frozenAxe];
+export const weapons = [bow, crossbow, fist, sword, dagger, frozenAxe];
