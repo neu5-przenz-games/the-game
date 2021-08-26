@@ -11,10 +11,10 @@ export const bow = new Weapon({
     pointsToGain: 5,
   },
   details: {
-    damage: 10,
+    damage: 100,
     range: 5,
     attackDelayTicks: 40,
-    energyCost: 15,
+    energyCost: 50,
   },
 });
 
@@ -28,10 +28,10 @@ export const crossbow = new Weapon({
     pointsToGain: 20,
   },
   details: {
-    damage: 30,
+    damage: 500,
     range: 7,
-    attackDelayTicks: 60,
-    energyCost: 15,
+    attackDelayTicks: 80,
+    energyCost: 50,
   },
 });
 
@@ -43,10 +43,10 @@ export const fist = new Weapon({
     pointsToGain: 5,
   },
   details: {
-    damage: 5,
+    damage: 50,
     range: 1,
     attackDelayTicks: 20,
-    energyCost: 10,
+    energyCost: 50,
   },
 });
 
@@ -59,10 +59,10 @@ const sword = new Weapon({
     pointsToGain: 5,
   },
   details: {
-    damage: 20,
+    damage: 100,
     range: 1,
     attackDelayTicks: 30,
-    energyCost: 15,
+    energyCost: 50,
   },
 });
 
@@ -75,10 +75,10 @@ export const dagger = new Weapon({
     pointsToGain: 2,
   },
   details: {
-    damage: 10,
+    damage: 50,
     range: 1,
     attackDelayTicks: 20,
-    energyCost: 10,
+    energyCost: 50,
   },
 });
 
@@ -91,10 +91,10 @@ export const frozenAxe = new Weapon({
     pointsToGain: 20,
   },
   details: {
-    damage: 30,
+    damage: 2000,
     range: 1,
-    attackDelayTicks: 30,
-    energyCost: 10,
+    attackDelayTicks: 60,
+    energyCost: 50,
   },
 });
 

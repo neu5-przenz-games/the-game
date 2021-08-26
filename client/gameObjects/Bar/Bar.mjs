@@ -16,7 +16,7 @@ export class Bar {
     this.y = y + this.offsetY;
     this.bar.depth = y;
     this.value = value;
-    this.p = (BAR_WIDTH - BAR_BORDER_WIDTH_DOUBLE) / 100;
+    this.p = (BAR_WIDTH - BAR_BORDER_WIDTH_DOUBLE) / 1000;
     this.valueColor = color;
     this.drawBar = drawBar;
 
