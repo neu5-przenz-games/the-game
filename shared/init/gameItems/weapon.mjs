@@ -31,7 +31,7 @@ export const crossbow = new Weapon({
     damage: 30,
     range: 7,
     attackDelayTicks: 60,
-    energyCost: 2,
+    energyCost: 15,
   },
 });
 
