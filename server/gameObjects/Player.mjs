@@ -14,7 +14,7 @@ const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 1000;
 const HP_MAX = 1000;
 
-export class Player {
+class Player {
   constructor({
     name,
     displayName,
@@ -615,3 +615,5 @@ export class Player {
     this.dropSelection = true;
   }
 }
+
+export { HP_MAX, Player };
