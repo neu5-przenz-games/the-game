@@ -82,9 +82,9 @@ export const debugMenu = (game) => {
   DEBUGSetPlayerEquipmentBasicWarrior.innerText = "Basic warrior";
   DEBUGSetPlayerEquipmentBasicWarrior.value =
     DEBUG_ITEMS_SETS_TYPES.WARRIOR_BASIC;
-  const DEBUGSetPlayerEquipmentPro = document.createElement("option");
-  DEBUGSetPlayerEquipmentPro.innerText = "Pro warrior";
-  DEBUGSetPlayerEquipmentPro.value = DEBUG_ITEMS_SETS_TYPES.WARRIOR_PRO;
+  const DEBUGSetPlayerEquipmentProWarrior = document.createElement("option");
+  DEBUGSetPlayerEquipmentProWarrior.innerText = "Pro warrior";
+  DEBUGSetPlayerEquipmentProWarrior.value = DEBUG_ITEMS_SETS_TYPES.WARRIOR_PRO;
   const DEBUGSetPlayerEquipmentBasicArcher = document.createElement("option");
   DEBUGSetPlayerEquipmentBasicArcher.innerText = "Basic archer";
   DEBUGSetPlayerEquipmentBasicArcher.value =
@@ -98,9 +98,10 @@ export const debugMenu = (game) => {
   DEBUGSetPlayerEquipmentSelect.appendChild(
     DEBUGSetPlayerEquipmentBasicWarrior
   );
-  DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentPro);
+  DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentProWarrior);
   DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentBasicArcher);
   DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentProArcher);
+
   DEBUGSetPlayerEquipmentLabel.appendChild(DEBUGSetPlayerEquipmentSelect);
   DEBUGSetPlayerEquipmentLabel.appendChild(DEBUGSetPlayerEquipmentBtn);
 
