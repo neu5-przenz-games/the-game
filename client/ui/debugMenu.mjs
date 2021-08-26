@@ -75,17 +75,32 @@ export const debugMenu = (game) => {
   const DEBUGSetPlayerEquipmentLabel = document.createElement("label");
   DEBUGSetPlayerEquipmentLabel.classList.add("DEBUG_Label");
   DEBUGSetPlayerEquipmentLabel.innerText = "Set player items";
+
   const DEBUGSetPlayerEquipmentSelect = document.createElement("select");
-  const DEBUGSetPlayerEquipmentBasic = document.createElement("option");
-  DEBUGSetPlayerEquipmentBasic.innerText = "Basic warrior";
-  DEBUGSetPlayerEquipmentBasic.value = DEBUG_ITEMS_SETS_TYPES.WARRIOR_BASIC;
+
+  const DEBUGSetPlayerEquipmentBasicWarrior = document.createElement("option");
+  DEBUGSetPlayerEquipmentBasicWarrior.innerText = "Basic warrior";
+  DEBUGSetPlayerEquipmentBasicWarrior.value =
+    DEBUG_ITEMS_SETS_TYPES.WARRIOR_BASIC;
   const DEBUGSetPlayerEquipmentPro = document.createElement("option");
   DEBUGSetPlayerEquipmentPro.innerText = "Pro warrior";
   DEBUGSetPlayerEquipmentPro.value = DEBUG_ITEMS_SETS_TYPES.WARRIOR_PRO;
+  const DEBUGSetPlayerEquipmentBasicArcher = document.createElement("option");
+  DEBUGSetPlayerEquipmentBasicArcher.innerText = "Basic archer";
+  DEBUGSetPlayerEquipmentBasicArcher.value =
+    DEBUG_ITEMS_SETS_TYPES.ARCHER_BASIC;
+  const DEBUGSetPlayerEquipmentProArcher = document.createElement("option");
+  DEBUGSetPlayerEquipmentProArcher.innerText = "Pro archer";
+  DEBUGSetPlayerEquipmentProArcher.value = DEBUG_ITEMS_SETS_TYPES.ARCHER_PRO;
+
   const DEBUGSetPlayerEquipmentBtn = document.createElement("button");
   DEBUGSetPlayerEquipmentBtn.innerText = "Set items";
-  DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentBasic);
+  DEBUGSetPlayerEquipmentSelect.appendChild(
+    DEBUGSetPlayerEquipmentBasicWarrior
+  );
   DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentPro);
+  DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentBasicArcher);
+  DEBUGSetPlayerEquipmentSelect.appendChild(DEBUGSetPlayerEquipmentProArcher);
   DEBUGSetPlayerEquipmentLabel.appendChild(DEBUGSetPlayerEquipmentSelect);
   DEBUGSetPlayerEquipmentLabel.appendChild(DEBUGSetPlayerEquipmentBtn);
 
@@ -101,7 +116,9 @@ export const debugMenu = (game) => {
   const DEBUGSetPlayerSkillsLabel = document.createElement("label");
   DEBUGSetPlayerSkillsLabel.classList.add("DEBUG_Label");
   DEBUGSetPlayerSkillsLabel.innerText = "Set player skills";
+
   const DEBUGSetPlayerSkillsSelect = document.createElement("select");
+
   const DEBUGSetPlayerSkillsNoob = document.createElement("option");
   DEBUGSetPlayerSkillsNoob.innerText = "Noob";
   DEBUGSetPlayerSkillsNoob.value = DEBUG_LEVEL_TYPES.NOOB;
@@ -111,6 +128,7 @@ export const debugMenu = (game) => {
   const DEBUGSetPlayerSkillsExpert = document.createElement("option");
   DEBUGSetPlayerSkillsExpert.innerText = "Expert";
   DEBUGSetPlayerSkillsExpert.value = DEBUG_LEVEL_TYPES.EXPERT;
+
   const DEBUGSetPlayerSkillsBtn = document.createElement("button");
   DEBUGSetPlayerSkillsBtn.innerText = "Set skills";
   DEBUGSetPlayerSkillsSelect.appendChild(DEBUGSetPlayerSkillsNoob);

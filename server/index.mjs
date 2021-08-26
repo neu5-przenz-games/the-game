@@ -263,6 +263,10 @@ io.on("connection", (socket) => {
 
         if (player && itemsSet) {
           const backpackToSet = gameItems.get(itemsSet.backpack.id);
+          player.attackDelayTicks = 0;
+          player.attackDelayMaxTicks = gameItems.get(
+            itemsSet.weapon.id
+          ).details.attackDelayTicks;
           player.setEquipment(itemsSet);
           player.setBackpack(backpackToSet.slots);
 
