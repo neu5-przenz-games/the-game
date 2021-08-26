@@ -5,15 +5,16 @@ import { frozenHelmet, hat } from "../init/gameItems/helmet.mjs";
 import { frozenPants, leatherPants } from "../init/gameItems/pants.mjs";
 import { frozenShield, shield } from "../init/gameItems/shield.mjs";
 import { dagger, frozenAxe } from "../init/gameItems/weapon.mjs";
+import { LEVELS, LEVEL_TYPES } from "../skills/index.mjs";
 
-export const DEBUG_ITEMS_SETS_TYPES = {
+const DEBUG_ITEMS_SETS_TYPES = {
   ARCHER_BASIC: "ARCHER_BASIC",
   ARCHER_PRO: "ARCHER_PRO",
   WARRIOR_BASIC: "WARRIOR_BASIC",
   WARRIOR_PRO: "WARRIOR_PRO",
 };
 
-export const DEBUG_ITEMS_SETS = {
+const DEBUG_ITEMS_SETS = {
   [DEBUG_ITEMS_SETS_TYPES.ARCHER_BASIC]: {},
   [DEBUG_ITEMS_SETS_TYPES.ARCHER_PRO]: {},
   [DEBUG_ITEMS_SETS_TYPES.WARRIOR_BASIC]: {
@@ -34,4 +35,29 @@ export const DEBUG_ITEMS_SETS = {
     shield: { id: frozenShield.id, quantity: 1 },
     weapon: { id: frozenAxe.id, quantity: 1 },
   },
+};
+
+const DEBUG_LEVEL_TYPES = {
+  NOOB: LEVEL_TYPES.NOOB,
+  REGULAR: LEVEL_TYPES.REGULAR,
+  EXPERT: LEVEL_TYPES.EXPERT,
+};
+
+const DEBUG_SKILL_POINTS = {
+  [DEBUG_LEVEL_TYPES.NOOB]: LEVELS.find(
+    (level) => level.name === DEBUG_LEVEL_TYPES.NOOB
+  ).minPoints,
+  [DEBUG_LEVEL_TYPES.REGULAR]: LEVELS.find(
+    (level) => level.name === DEBUG_LEVEL_TYPES.REGULAR
+  ).minPoints,
+  [DEBUG_LEVEL_TYPES.EXPERT]: LEVELS.find(
+    (level) => level.name === DEBUG_LEVEL_TYPES.EXPERT
+  ).minPoints,
+};
+
+export {
+  DEBUG_ITEMS_SETS_TYPES,
+  DEBUG_ITEMS_SETS,
+  DEBUG_LEVEL_TYPES,
+  DEBUG_SKILL_POINTS,
 };

@@ -5,7 +5,10 @@ import PF from "pathfinding";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-import { DEBUG_ITEMS_SETS } from "../shared/debugUtils/index.mjs";
+import {
+  DEBUG_ITEMS_SETS,
+  DEBUG_SKILL_POINTS,
+} from "../shared/debugUtils/index.mjs";
 import { UI_ITEM_ACTIONS } from "../shared/UIItemActions/index.mjs";
 import {
   gameItems,
@@ -14,6 +17,7 @@ import {
 import { bag } from "../shared/init/gameItems/backpack.mjs";
 import { receipts } from "../shared/receipts/index.mjs";
 import {
+  setSkillPoints,
   shapeSkillsForClient,
   skillIncrease,
   skillsSchema,
@@ -266,6 +270,27 @@ io.on("connection", (socket) => {
             "items:update",
             player.backpack,
             player.equipment
+          );
+        }
+      });
+
+      socket.on("player:skills:set", ({ name, skillType }) => {
+        const player = players.get(name);
+        const skillPoints = DEBUG_SKILL_POINTS[skillType];
+
+        if (player && skillPoints !== undefined) {
+          Object.entries(player.skills).forEach(([skillKey]) => {
+            player.skillUpdate(
+              setSkillPoints(player.skills, {
+                name: skillKey,
+                pointsNumber: skillPoints,
+              })
+            );
+          });
+
+          io.to(player.socketId).emit(
+            "skills:update",
+            shapeSkillsForClient(player.skills)
           );
         }
       });

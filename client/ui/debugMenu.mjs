@@ -1,4 +1,7 @@
-import { DEBUG_ITEMS_SETS_TYPES } from "../../shared/debugUtils/index.mjs";
+import {
+  DEBUG_ITEMS_SETS_TYPES,
+  DEBUG_LEVEL_TYPES,
+} from "../../shared/debugUtils/index.mjs";
 
 export const debugMenu = (game) => {
   const sheet = document.createElement("style");
@@ -60,7 +63,7 @@ export const debugMenu = (game) => {
   DEBUGFieldsetLegend.innerText = "debug settings";
 
   // create debug fields
-  // clear player items
+  // clear players' items
   const DEBUGClearPlayerItemsLabel = document.createElement("label");
   DEBUGClearPlayerItemsLabel.classList.add("DEBUG_Label");
   DEBUGClearPlayerItemsLabel.innerText = "Clear player items";
@@ -68,7 +71,7 @@ export const debugMenu = (game) => {
   DEBUGClearPlayerItemsBtn.innerText = "Clear";
   DEBUGClearPlayerItemsLabel.appendChild(DEBUGClearPlayerItemsBtn);
 
-  // set player equipment
+  // set players' equipment
   const DEBUGSetPlayerEquipmentLabel = document.createElement("label");
   DEBUGSetPlayerEquipmentLabel.classList.add("DEBUG_Label");
   DEBUGSetPlayerEquipmentLabel.innerText = "Set player items";
@@ -94,6 +97,28 @@ export const debugMenu = (game) => {
   DEBUGGivePlayerBagBtn.innerText = "Give player a bag";
   DEBUGGivePlayerBagLabel.appendChild(DEBUGGivePlayerBagBtn);
 
+  // set players' skills
+  const DEBUGSetPlayerSkillsLabel = document.createElement("label");
+  DEBUGSetPlayerSkillsLabel.classList.add("DEBUG_Label");
+  DEBUGSetPlayerSkillsLabel.innerText = "Set player skills";
+  const DEBUGSetPlayerSkillsSelect = document.createElement("select");
+  const DEBUGSetPlayerSkillsNoob = document.createElement("option");
+  DEBUGSetPlayerSkillsNoob.innerText = "Noob";
+  DEBUGSetPlayerSkillsNoob.value = DEBUG_LEVEL_TYPES.NOOB;
+  const DEBUGSetPlayerSkillsRegular = document.createElement("option");
+  DEBUGSetPlayerSkillsRegular.innerText = "Regular";
+  DEBUGSetPlayerSkillsRegular.value = DEBUG_LEVEL_TYPES.REGULAR;
+  const DEBUGSetPlayerSkillsExpert = document.createElement("option");
+  DEBUGSetPlayerSkillsExpert.innerText = "Expert";
+  DEBUGSetPlayerSkillsExpert.value = DEBUG_LEVEL_TYPES.EXPERT;
+  const DEBUGSetPlayerSkillsBtn = document.createElement("button");
+  DEBUGSetPlayerSkillsBtn.innerText = "Set skills";
+  DEBUGSetPlayerSkillsSelect.appendChild(DEBUGSetPlayerSkillsNoob);
+  DEBUGSetPlayerSkillsSelect.appendChild(DEBUGSetPlayerSkillsRegular);
+  DEBUGSetPlayerSkillsSelect.appendChild(DEBUGSetPlayerSkillsExpert);
+  DEBUGSetPlayerSkillsLabel.appendChild(DEBUGSetPlayerSkillsSelect);
+  DEBUGSetPlayerSkillsLabel.appendChild(DEBUGSetPlayerSkillsBtn);
+
   // toggle objects hit area
   const DEBUGHitAreaLabel = document.createElement("label");
   DEBUGHitAreaLabel.classList.add("DEBUG_Label");
@@ -105,6 +130,7 @@ export const debugMenu = (game) => {
   // append fields to fieldset
   DEBUGFieldset.appendChild(DEBUGClearPlayerItemsLabel);
   DEBUGFieldset.appendChild(DEBUGSetPlayerEquipmentLabel);
+  DEBUGFieldset.appendChild(DEBUGSetPlayerSkillsLabel);
   DEBUGFieldset.appendChild(DEBUGGivePlayerBagLabel);
   DEBUGFieldset.appendChild(DEBUGHitAreaLabel);
 
@@ -134,6 +160,13 @@ export const debugMenu = (game) => {
     window.e2e.setPlayerItems(
       game.mainPlayerName,
       DEBUGSetPlayerEquipmentSelect.value
+    );
+  };
+
+  DEBUGSetPlayerSkillsBtn.onclick = () => {
+    window.e2e.setPlayerSkills(
+      game.mainPlayerName,
+      DEBUGSetPlayerSkillsSelect.value
     );
   };
 
