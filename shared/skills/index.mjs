@@ -1,4 +1,4 @@
-export const SKILLS_TYPES = {
+const SKILLS_TYPES = {
   ARCHERY_FIGHTING: "ARCHERY_FIGHTING",
   AXE_FIGHTING: "AXE_FIGHTING",
   BLACKSMITHING: "BLACKSMITHING",
@@ -72,7 +72,7 @@ const getLevel = (points) =>
     ({ minPoints, maxPoints }) => !!(points >= minPoints && points < maxPoints)
   );
 
-export const skillIncrease = (skills, { name, pointsToGain }) => {
+const skillIncrease = (skills, { name, pointsToGain }) => {
   const skill = skills[name];
 
   return {
@@ -81,7 +81,16 @@ export const skillIncrease = (skills, { name, pointsToGain }) => {
   };
 };
 
-export const skillsSchema = {
+const setSkillPoints = (skills, { name, pointsNumber }) => {
+  const skill = skills[name];
+
+  return {
+    name,
+    skill: { ...skill, points: pointsNumber },
+  };
+};
+
+const skillsSchema = {
   [SKILLS_TYPES.ARCHERY_FIGHTING]: {
     displayName: "archery fighting",
     points: 0,
@@ -124,7 +133,7 @@ export const skillsSchema = {
   },
 };
 
-export const shapeSkillsForClient = (skills) =>
+const shapeSkillsForClient = (skills) =>
   Object.values(skills).map(({ displayName, points }) => {
     const level = getLevel(points);
     return {
@@ -133,3 +142,13 @@ export const shapeSkillsForClient = (skills) =>
       progressInPerc: points === 0 ? 0 : getLevelProgress(points, level),
     };
   });
+
+export {
+  LEVEL_TYPES,
+  SKILLS_TYPES,
+  LEVELS,
+  setSkillPoints,
+  skillIncrease,
+  skillsSchema,
+  shapeSkillsForClient,
+};

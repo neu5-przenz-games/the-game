@@ -300,6 +300,12 @@ export const sockets = (game) => {
           itemsSetType,
         });
       },
+      setPlayerSkills: (playerName, skillType) => {
+        game.socket.emit("player:skills:set", {
+          name: playerName,
+          skillType,
+        });
+      },
     };
   }
 };
