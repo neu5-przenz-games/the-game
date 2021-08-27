@@ -11,10 +11,10 @@ import {
 } from "../utils/algo.mjs";
 
 const ENERGY_REGEN_RATE = 3;
-const ENERGY_MAX = 100;
-const HP_MAX = 100;
+const ENERGY_MAX = 1000;
+const HP_MAX = 1000;
 
-export class Player {
+class Player {
   constructor({
     name,
     displayName,
@@ -591,7 +591,7 @@ export class Player {
   respawn(respawnTile) {
     this.isDead = false;
     this.toRespawn = false;
-    this.hp = 100;
+    this.hp = HP_MAX;
     this.energy = ENERGY_MAX;
 
     const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
@@ -615,3 +615,5 @@ export class Player {
     this.dropSelection = true;
   }
 }
+
+export { ENERGY_MAX, HP_MAX, Player };

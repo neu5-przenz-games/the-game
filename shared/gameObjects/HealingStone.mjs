@@ -11,7 +11,7 @@ export class HealingStone extends GameObject {
     sizeToIncrease = { x: 4, y: 4 },
     healingDelayTicks = 10,
     healingDelayMaxTicks = 10,
-    HP_REGEN_RATE = 2,
+    HP_REGEN_RATE = 5,
   }) {
     super({ name, displayName, type, positionTile, size });
 

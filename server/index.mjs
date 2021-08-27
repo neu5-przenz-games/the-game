@@ -29,7 +29,7 @@ import { directions, getDirection } from "./utils/directions.mjs";
 import { getAllies, getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
 import { getHitText } from "./utils/hitText.mjs";
 
-import { Player } from "./gameObjects/Player.mjs";
+import { HP_MAX, Player } from "./gameObjects/Player.mjs";
 
 import { playersMocks } from "./mocks/players.mjs";
 
@@ -663,7 +663,7 @@ const loop = () => {
     if (process.env.NODE_ENV === "development") {
       if (player.toKill) {
         player.toKill = false;
-        player.hit(100);
+        player.hit(HP_MAX);
         io.to(player.socketId).emit("player:dead", player.name);
       }
     }
