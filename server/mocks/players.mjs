@@ -1,5 +1,6 @@
 import { FRACTIONS } from "../../shared/fractions/index.mjs";
 import { skillsSchema } from "../../shared/skills/index.mjs";
+import { ENERGY_MAX, HP_MAX } from "../gameObjects/Player.mjs";
 
 const radiantFraction = FRACTIONS[0].name;
 const radiantHouse = FRACTIONS[0].houses[0];
@@ -62,8 +63,8 @@ export const playersMocks = [
     isOnline: false,
     socketId: null,
     direction: "east",
-    hp: 1000,
-    energy: 1000,
+    hp: HP_MAX,
+    energy: ENERGY_MAX,
   },
   {
     name: "player2",
@@ -107,8 +108,8 @@ export const playersMocks = [
     isOnline: false,
     socketId: null,
     direction: "southEast",
-    hp: 1000,
-    energy: 1000,
+    hp: HP_MAX,
+    energy: ENERGY_MAX,
   },
   {
     name: "player3",
@@ -152,8 +153,8 @@ export const playersMocks = [
     isOnline: false,
     socketId: null,
     direction: "south",
-    hp: 1000,
-    energy: 1000,
+    hp: HP_MAX,
+    energy: ENERGY_MAX,
   },
   {
     name: "player4",
@@ -197,8 +198,8 @@ export const playersMocks = [
     isOnline: false,
     socketId: null,
     direction: "southWest",
-    hp: 1000,
-    energy: 1000,
+    hp: HP_MAX,
+    energy: ENERGY_MAX,
   },
   {
     name: "player5",
@@ -242,8 +243,8 @@ export const playersMocks = [
     isOnline: false,
     socketId: null,
     direction: "west",
-    hp: 1000,
-    energy: 1000,
+    hp: HP_MAX,
+    energy: ENERGY_MAX,
   },
   {
     name: "player6",
@@ -287,7 +288,7 @@ export const playersMocks = [
     isOnline: false,
     socketId: null,
     direction: "northWest",
-    hp: 1000,
-    energy: 1000,
+    hp: HP_MAX,
+    energy: ENERGY_MAX,
   },
 ];

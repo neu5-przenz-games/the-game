@@ -616,4 +616,4 @@ class Player {
   }
 }
 
-export { HP_MAX, Player };
+export { ENERGY_MAX, HP_MAX, Player };
