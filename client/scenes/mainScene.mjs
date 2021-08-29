@@ -119,6 +119,10 @@ export class MainScene extends Phaser.Scene {
 
     // objects
     this.load.image("HealingStone", "./assets/gfx/healing-stone.png");
+    this.load.image(
+      "HealingStoneParticle",
+      "./assets/gfx/healing-stone-particle.png"
+    );
     this.load.image("House", "./assets/gfx/house.png");
     this.load.image("Tree", "./assets/gfx/tree.png");
     this.load.image("Ore", "./assets/gfx/ore-copper.png");
