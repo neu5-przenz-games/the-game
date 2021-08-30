@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { getObjectTiles } from "../../shared/utils/index.mjs";
 
 export class HealingStone extends Phaser.GameObjects.Image {
   static hitAreaPoly = "16 16 40 4 54 20 54 40 64 72 0 70";
@@ -17,11 +16,6 @@ export class HealingStone extends Phaser.GameObjects.Image {
       true
     );
     const range = 4;
-
-    this.objectTiles = getObjectTiles({
-      positionTile: { tileX: 10, tileY: 20 },
-      size: { x: 2, y: 2 },
-    });
 
     this.rangeTiles = scene.groundLayer.getTilesWithin(
       gameObjectVec.x - 1 - range,
