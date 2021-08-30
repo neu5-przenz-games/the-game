@@ -40,4 +40,9 @@ export const gameObjects = [
     displayName: "healing stone",
     positionTile: { tileX: 10, tileY: 20 },
   }),
+  new HealingStone({
+    name: "healing-stone",
+    displayName: "healing stone",
+    positionTile: { tileX: 32, tileY: 14 },
+  }),
 ];
