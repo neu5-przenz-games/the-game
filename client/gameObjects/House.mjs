@@ -8,6 +8,6 @@ export class House extends Phaser.GameObjects.Image {
 
     this.name = name;
     this.displayName = displayName;
-    this.depth = y + 56;
+    this.depth = y + 96 - 8;
   }
 }
