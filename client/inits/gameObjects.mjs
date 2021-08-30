@@ -61,6 +61,7 @@ export const initGameObjects = (game) => {
         particleImgId: "HealingStoneParticle",
         positionTile: gameObject.positionTile,
         sizeToIncrease: gameObject.sizeToIncrease,
+        mainObjectSize: gameObject.size,
       });
     }
   });

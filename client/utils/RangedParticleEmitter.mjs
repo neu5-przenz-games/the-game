@@ -22,8 +22,8 @@ export class RangedParticleEmitter {
     this.rangeTiles = this.scene.groundLayer.getTilesWithin(
       positionTile.tileX - 1 - sizeToIncrease.x,
       positionTile.tileY - 1 - sizeToIncrease.y,
-      sizeToIncrease.x * 2 + sizeToIncrease.x / 2,
-      sizeToIncrease.y * 2 + sizeToIncrease.y / 2
+      sizeToIncrease.x * 2 + mainObjectSize.x,
+      sizeToIncrease.y * 2 + mainObjectSize.y
     );
 
     if (withoutMainObject) {
