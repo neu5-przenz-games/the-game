@@ -3,12 +3,15 @@ module.exports.command = function ({
   playerName,
   funcName,
   wantedValue,
+  opts = {
+    INTERVAL_IN_MS: 250,
+    TIMEOUT_IN_MS: 5000,
+  },
   callback,
-  opts,
 }) {
   const self = this;
-  const INTERVAL_IN_MS = (opts && opts.INTERVAL_IN_MS) || 250;
-  const TIMEOUT_IN_MS = (opts && opts.TIMEOUT_IN_MS) || 5000;
+
+  const { INTERVAL_IN_MS, TIMEOUT_IN_MS } = opts;
 
   const startTime = new Date().getTime();
 

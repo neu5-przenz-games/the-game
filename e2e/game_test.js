@@ -66,13 +66,12 @@ module.exports = {
         wantedValue: 0,
         callback: verifyValue,
       })
-      .waitUntil({
-        browser,
-        playerName,
-        funcName: "getPlayerEquipmentItemsLength",
-        wantedValue: 0,
-        callback: verifyValue,
-      });
+      .playerFunction(
+        { playerName, functionName: "getPlayerEquipmentItemsLength" },
+        (res) => {
+          browser.assert.ok(res.value === 0);
+        }
+      );
   },
   "player have item set": (browser) => {
     browser
@@ -88,13 +87,12 @@ module.exports = {
         wantedValue: 0,
         callback: verifyValue,
       })
-      .waitUntil({
-        browser,
-        playerName,
-        funcName: "getPlayerEquipmentItemsLength",
-        wantedValue: 8,
-        callback: verifyValue,
-      });
+      .playerFunction(
+        { playerName, functionName: "getPlayerEquipmentItemsLength" },
+        (res) => {
+          browser.assert.ok(res.value === 8);
+        }
+      );
   },
   "player can move quiver to the backpack": (browser) => {
     browser
@@ -110,13 +108,12 @@ module.exports = {
         wantedValue: 2,
         callback: verifyValue,
       })
-      .waitUntil({
-        browser,
-        playerName,
-        funcName: "getPlayerEquipmentItemsLength",
-        wantedValue: 6,
-        callback: verifyValue,
-      });
+      .playerFunction(
+        { playerName, functionName: "getPlayerEquipmentItemsLength" },
+        (res) => {
+          browser.assert.ok(res.value === 6);
+        }
+      );
   },
   "player can destroy arrows from the backpack": (browser) => {
     browser
