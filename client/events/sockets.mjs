@@ -300,6 +300,18 @@ export const sockets = (game) => {
           itemsSetType,
         });
       },
+      moveItemToBackpackFromEquipment: (playerName, itemID) => {
+        game.socket.emit("player:items:move-to-backpack", {
+          name: playerName,
+          itemID,
+        });
+      },
+      destroyItemFromBackpack: (playerName, itemID) => {
+        game.socket.emit("player:items:destroy", {
+          name: playerName,
+          itemID,
+        });
+      },
       setPlayerSkills: (playerName, skillType) => {
         game.socket.emit("player:skills:set", {
           name: playerName,
