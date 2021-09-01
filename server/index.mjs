@@ -520,10 +520,46 @@ const loop = () => {
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
         player.energyUse(currentWeapon.details.energyCost);
-        const hit = currentWeapon.details.damage;
+
         const skillDetails = currentWeapon.skillToIncrease;
 
         player.skillUpdate(skillIncrease(player.skills, skillDetails));
+
+        if (/* isAttackMissed() */ false) {
+          // @TODO: Implement attack misses logic #282
+        }
+
+        if (/* isAttackParried() */ false) {
+          // @TODO: Implement attack parrying logic #283
+        }
+
+        const calculateDefence = (eq) => {
+          return Object.values(eq).reduce((defence, item) => {
+            const itemSchema = gameItems.get(item.id);
+
+            return itemSchema?.details?.defence
+              ? defence + itemSchema.details.defence
+              : defence;
+          }, 0);
+        };
+
+        const defence = calculateDefence(selectedPlayer.equipment);
+
+        // const playerSkill = currentWeapon.skillToIncrease.name;
+
+        let [minDmg, maxDmg] = currentWeapon.details.damage;
+        // ranged weapon
+        if (currentWeapon.details.range > 1) {
+          const arrowSchema = gameItems.get(player.equipment.arrows.id);
+
+          const [arrowsDmgMin, arrowsDmgMax] = arrowSchema.details.damage;
+
+          minDmg += arrowsDmgMin;
+          maxDmg += arrowsDmgMax;
+        }
+
+        const dmg = maxDmg - defence;
+        const hit = dmg < 0 ? minDmg : maxDmg;
 
         io.to(player.socketId).emit(
           "skills:update",
