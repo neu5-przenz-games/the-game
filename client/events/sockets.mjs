@@ -307,7 +307,7 @@ export const sockets = (game) => {
         });
       },
       destroyItemFromBackpack: (playerName, itemID) => {
-        game.socket.emit("player:items:destroy", {
+        game.socket.emit("player:items:destroy-from-backpack", {
           name: playerName,
           itemID,
         });

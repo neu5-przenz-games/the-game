@@ -293,7 +293,7 @@ io.on("connection", (socket) => {
         }
       });
 
-      socket.on("player:items:destroy", ({ name, itemID }) => {
+      socket.on("player:items:destroy-from-backpack", ({ name, itemID }) => {
         const player = players.get(name);
         const item = gameItems.get(itemID);
 
