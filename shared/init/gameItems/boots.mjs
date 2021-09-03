@@ -14,7 +14,7 @@ export const frozenBoots = new Boots({
   displayName: "Frozen boots",
   imgURL: "frozen_boots.png",
   details: {
-    defence: 100,
+    defence: 50,
   },
 });
 

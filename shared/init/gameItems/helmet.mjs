@@ -14,7 +14,7 @@ export const frozenHelmet = new Helmet({
   displayName: "Frozen helmet",
   imgURL: "frozen_helmet.png",
   details: {
-    defence: 200,
+    defence: 100,
   },
 });
 

@@ -25,7 +25,7 @@
     "babel-eslint": "^10.1.0",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
-    "chromedriver": "^91.0.1",
+    "chromedriver": "^92.0.2",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",

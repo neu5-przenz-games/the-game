@@ -26,7 +26,13 @@ import {
 import { gameObjects } from "../shared/init/gameObjects.mjs";
 import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
-import { getAllies, getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
+import {
+  getAllies,
+  getDefenceSum,
+  getDmg,
+  getRespawnTile,
+  getXYFromTile,
+} from "./utils/algo.mjs";
 import { getHitText } from "./utils/hitText.mjs";
 
 import { HP_MAX, Player } from "./gameObjects/Player.mjs";
@@ -259,16 +265,18 @@ io.on("connection", (socket) => {
 
       socket.on("player:items:set", ({ name, itemsSetType }) => {
         const player = players.get(name);
-        const itemsSet = DEBUG_ITEMS_SETS[itemsSetType];
+        const { equipment, backpackItems = [] } = DEBUG_ITEMS_SETS[
+          itemsSetType
+        ];
 
-        if (player && itemsSet) {
-          const backpackToSet = gameItems.get(itemsSet.backpack.id);
+        if (player && equipment && backpackItems) {
+          const backpackToSet = gameItems.get(equipment.backpack.id);
           player.attackDelayTicks = 0;
           player.attackDelayMaxTicks = gameItems.get(
-            itemsSet.weapon.id
+            equipment.weapon.id
           ).details.attackDelayTicks;
-          player.setEquipment(itemsSet);
-          player.setBackpack(backpackToSet.slots);
+          player.setEquipment(equipment);
+          player.setBackpack(backpackToSet.slots, backpackItems);
 
           io.to(player.socketId).emit(
             "items:update",
@@ -519,11 +527,6 @@ const loop = () => {
         player.attack = selectedPlayer.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
-        player.energyUse(currentWeapon.details.energyCost);
-
-        const skillDetails = currentWeapon.skillToIncrease;
-
-        player.skillUpdate(skillIncrease(player.skills, skillDetails));
 
         if (/* isAttackMissed() */ false) {
           // @TODO: Implement attack misses logic #282
@@ -533,33 +536,16 @@ const loop = () => {
           // @TODO: Implement attack parrying logic #283
         }
 
-        const calculateDefence = (eq) => {
-          return Object.values(eq).reduce((defence, item) => {
-            const itemSchema = gameItems.get(item.id);
+        const defence = getDefenceSum(selectedPlayer.equipment);
 
-            return itemSchema?.details?.defence
-              ? defence + itemSchema.details.defence
-              : defence;
-          }, 0);
-        };
+        const dmg = getDmg({ player, currentWeapon });
+        const hit = Math.floor(dmg - (dmg * defence) / 1000);
 
-        const defence = calculateDefence(selectedPlayer.equipment);
+        player.energyUse(currentWeapon.details.energyCost);
 
-        // const playerSkill = currentWeapon.skillToIncrease.name;
+        const skillDetails = currentWeapon.skillToIncrease;
 
-        let [minDmg, maxDmg] = currentWeapon.details.damage;
-        // ranged weapon
-        if (currentWeapon.details.range > 1) {
-          const arrowSchema = gameItems.get(player.equipment.arrows.id);
-
-          const [arrowsDmgMin, arrowsDmgMax] = arrowSchema.details.damage;
-
-          minDmg += arrowsDmgMin;
-          maxDmg += arrowsDmgMax;
-        }
-
-        const dmg = maxDmg - defence;
-        const hit = dmg < 0 ? minDmg : maxDmg;
+        player.skillUpdate(skillIncrease(player.skills, skillDetails));
 
         io.to(player.socketId).emit(
           "skills:update",

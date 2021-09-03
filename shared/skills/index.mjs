@@ -147,6 +147,7 @@ export {
   LEVEL_TYPES,
   SKILLS_TYPES,
   LEVELS,
+  getLevel,
   setSkillPoints,
   skillIncrease,
   skillsSchema,

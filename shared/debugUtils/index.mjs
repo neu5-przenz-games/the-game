@@ -4,7 +4,13 @@ import { frozenBoots, leatherBoots } from "../init/gameItems/boots.mjs";
 import { frozenHelmet, hat } from "../init/gameItems/helmet.mjs";
 import { frozenPants, leatherPants } from "../init/gameItems/pants.mjs";
 import { frozenShield, shield } from "../init/gameItems/shield.mjs";
-import { bow, crossbow, dagger, frozenAxe } from "../init/gameItems/weapon.mjs";
+import {
+  bow,
+  crossbow,
+  dagger,
+  frozenAxe,
+  frozenSword,
+} from "../init/gameItems/weapon.mjs";
 import { quiver } from "../init/gameItems/quiver.mjs";
 import { arrowsBunch } from "../init/gameItems/arrows.mjs";
 import { LEVELS, LEVEL_TYPES } from "../skills/index.mjs";
@@ -18,42 +24,51 @@ const DEBUG_ITEMS_SETS_TYPES = {
 
 const DEBUG_ITEMS_SETS = {
   [DEBUG_ITEMS_SETS_TYPES.ARCHER_BASIC]: {
-    backpack: { id: bag.id, quantity: 1 },
-    armor: { id: armor.id, quantity: 1 },
-    boots: { id: leatherBoots.id, quantity: 1 },
-    pants: { id: leatherPants.id, quantity: 1 },
-    helmet: { id: hat.id, quantity: 1 },
-    quiver: { id: quiver.id, quantity: 1 },
-    arrows: { id: arrowsBunch.id, quantity: 100 },
-    weapon: { id: bow.id, quantity: 1 },
+    equipment: {
+      backpack: { id: bag.id, quantity: 1 },
+      armor: { id: armor.id, quantity: 1 },
+      boots: { id: leatherBoots.id, quantity: 1 },
+      pants: { id: leatherPants.id, quantity: 1 },
+      helmet: { id: hat.id, quantity: 1 },
+      quiver: { id: quiver.id, quantity: 1 },
+      arrows: { id: arrowsBunch.id, quantity: 100 },
+      weapon: { id: bow.id, quantity: 1 },
+    },
   },
   [DEBUG_ITEMS_SETS_TYPES.ARCHER_PRO]: {
-    backpack: { id: backpack.id, quantity: 1 },
-    armor: { id: frozenArmor.id, quantity: 1 },
-    boots: { id: frozenBoots.id, quantity: 1 },
-    helmet: { id: frozenHelmet.id, quantity: 1 },
-    pants: { id: frozenPants.id, quantity: 1 },
-    quiver: { id: quiver.id, quantity: 1 },
-    arrows: { id: arrowsBunch.id, quantity: 100 },
-    weapon: { id: crossbow.id, quantity: 1 },
+    equipment: {
+      backpack: { id: backpack.id, quantity: 1 },
+      armor: { id: frozenArmor.id, quantity: 1 },
+      boots: { id: frozenBoots.id, quantity: 1 },
+      helmet: { id: frozenHelmet.id, quantity: 1 },
+      pants: { id: frozenPants.id, quantity: 1 },
+      quiver: { id: quiver.id, quantity: 1 },
+      arrows: { id: arrowsBunch.id, quantity: 100 },
+      weapon: { id: crossbow.id, quantity: 1 },
+    },
   },
   [DEBUG_ITEMS_SETS_TYPES.WARRIOR_BASIC]: {
-    backpack: { id: bag.id, quantity: 1 },
-    armor: { id: armor.id, quantity: 1 },
-    boots: { id: leatherBoots.id, quantity: 1 },
-    pants: { id: leatherPants.id, quantity: 1 },
-    shield: { id: shield.id, quantity: 1 },
-    weapon: { id: dagger.id, quantity: 1 },
-    helmet: { id: hat.id, quantity: 1 },
+    equipment: {
+      backpack: { id: bag.id, quantity: 1 },
+      armor: { id: armor.id, quantity: 1 },
+      boots: { id: leatherBoots.id, quantity: 1 },
+      pants: { id: leatherPants.id, quantity: 1 },
+      shield: { id: shield.id, quantity: 1 },
+      weapon: { id: dagger.id, quantity: 1 },
+      helmet: { id: hat.id, quantity: 1 },
+    },
   },
   [DEBUG_ITEMS_SETS_TYPES.WARRIOR_PRO]: {
-    backpack: { id: backpack.id, quantity: 1 },
-    armor: { id: frozenArmor.id, quantity: 1 },
-    boots: { id: frozenBoots.id, quantity: 1 },
-    helmet: { id: frozenHelmet.id, quantity: 1 },
-    pants: { id: frozenPants.id, quantity: 1 },
-    shield: { id: frozenShield.id, quantity: 1 },
-    weapon: { id: frozenAxe.id, quantity: 1 },
+    equipment: {
+      backpack: { id: backpack.id, quantity: 1 },
+      armor: { id: frozenArmor.id, quantity: 1 },
+      boots: { id: frozenBoots.id, quantity: 1 },
+      helmet: { id: frozenHelmet.id, quantity: 1 },
+      pants: { id: frozenPants.id, quantity: 1 },
+      shield: { id: frozenShield.id, quantity: 1 },
+      weapon: { id: frozenSword.id, quantity: 1 },
+    },
+    backpackItems: [{ id: frozenAxe.id, quantity: 1 }],
   },
 };
 

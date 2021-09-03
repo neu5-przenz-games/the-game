@@ -14,7 +14,7 @@ export const frozenPants = new Pants({
   displayName: "Frozen pants",
   imgURL: "frozen_pants.png",
   details: {
-    defence: 300,
+    defence: 250,
   },
 });
 
