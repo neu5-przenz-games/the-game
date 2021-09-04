@@ -31,6 +31,9 @@ export class MainScene extends Phaser.Scene {
     this.socketId = null;
     this.SI = new SnapshotInterpolation(FPS);
 
+    this.equipment = null;
+    this.backpack = null;
+
     // ui
     const [menu] = document.getElementsByClassName("menu");
     this.UIMenu = menu;
@@ -39,11 +42,11 @@ export class MainScene extends Phaser.Scene {
       debugMenu(this);
 
       window.e2e = {
-        player: {
-          isDead: (playerName) => this.players.get(playerName).getIsDead(),
-          getCurrentPositionTile: (playerName) =>
-            this.players.get(playerName).getCurrentPositionTile(),
-        },
+        isPlayerDead: (playerName) => this.players.get(playerName).getIsDead(),
+        getPlayerCurrentPositionTile: (playerName) =>
+          this.players.get(playerName).getCurrentPositionTile(),
+        getPlayerEquipmentItemsLength: () => Object.keys(this.equipment).length,
+        getPlayerBackpackItemsLength: () => this.backpack.items.length,
       };
     }
   }
@@ -93,6 +96,7 @@ export class MainScene extends Phaser.Scene {
 
   setBackpack(backpack) {
     this.profile.setBackpack(backpack);
+    this.backpack = backpack;
   }
 
   setSkills(skills) {
