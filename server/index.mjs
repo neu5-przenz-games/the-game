@@ -278,6 +278,36 @@ io.on("connection", (socket) => {
         }
       });
 
+      socket.on("player:items:move-to-backpack", ({ name, itemID }) => {
+        const player = players.get(name);
+        const item = gameItems.get(itemID);
+
+        if (player && item) {
+          if (player.moveToBackpackFromEquipment(item.id, item.type)) {
+            io.to(player.socketId).emit(
+              "items:update",
+              player.backpack,
+              player.equipment
+            );
+          }
+        }
+      });
+
+      socket.on("player:items:destroy-from-backpack", ({ name, itemID }) => {
+        const player = players.get(name);
+        const item = gameItems.get(itemID);
+
+        if (player && item) {
+          if (player.destroyItem(item.id)) {
+            io.to(player.socketId).emit(
+              "items:update",
+              player.backpack,
+              player.equipment
+            );
+          }
+        }
+      });
+
       socket.on("player:skills:set", ({ name, skillType }) => {
         const player = players.get(name);
         const skillPoints = DEBUG_SKILL_POINTS[skillType];
