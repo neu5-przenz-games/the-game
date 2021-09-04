@@ -26,7 +26,13 @@ import {
 import { gameObjects } from "../shared/init/gameObjects.mjs";
 import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
-import { getAllies, getRespawnTile, getXYFromTile } from "./utils/algo.mjs";
+import {
+  getAllies,
+  getDefenseSum,
+  getDmg,
+  getRespawnTile,
+  getXYFromTile,
+} from "./utils/algo.mjs";
 import { getHitText } from "./utils/hitText.mjs";
 
 import { HP_MAX, Player } from "./gameObjects/Player.mjs";
@@ -259,16 +265,18 @@ io.on("connection", (socket) => {
 
       socket.on("player:items:set", ({ name, itemsSetType }) => {
         const player = players.get(name);
-        const itemsSet = DEBUG_ITEMS_SETS[itemsSetType];
+        const { equipment, backpackItems = [] } = DEBUG_ITEMS_SETS[
+          itemsSetType
+        ];
 
-        if (player && itemsSet) {
-          const backpackToSet = gameItems.get(itemsSet.backpack.id);
+        if (player && equipment && backpackItems) {
+          const backpackToSet = gameItems.get(equipment.backpack.id);
           player.attackDelayTicks = 0;
           player.attackDelayMaxTicks = gameItems.get(
-            itemsSet.weapon.id
+            equipment.weapon.id
           ).details.attackDelayTicks;
-          player.setEquipment(itemsSet);
-          player.setBackpack(backpackToSet.slots);
+          player.setEquipment(equipment);
+          player.setBackpack(backpackToSet.slots, backpackItems);
 
           io.to(player.socketId).emit(
             "items:update",
@@ -549,8 +557,22 @@ const loop = () => {
         player.attack = selectedPlayer.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
+
+        if (/* isAttackMissed() */ false) {
+          // @TODO: Implement attack misses logic #282
+        }
+
+        if (/* isAttackParried() */ false) {
+          // @TODO: Implement attack parrying logic #283
+        }
+
+        const defense = getDefenseSum(selectedPlayer.equipment);
+
+        const dmg = getDmg({ player, currentWeapon });
+        const hit = Math.floor(dmg - (dmg * defense) / 1000);
+
         player.energyUse(currentWeapon.details.energyCost);
-        const hit = currentWeapon.details.damage;
+
         const skillDetails = currentWeapon.skillToIncrease;
 
         player.skillUpdate(skillIncrease(player.skills, skillDetails));

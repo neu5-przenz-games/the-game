@@ -10,7 +10,7 @@ export const shield = new Shield({
     pointsToGain: 5,
   },
   details: {
-    defence: 10,
+    defense: 50,
   },
 });
 
@@ -23,7 +23,7 @@ export const frozenShield = new Shield({
     pointsToGain: 20,
   },
   details: {
-    defence: 50,
+    defense: 200,
   },
 });
 
