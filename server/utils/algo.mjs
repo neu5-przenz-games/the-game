@@ -9,13 +9,13 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 };
 
-const getDefenceSum = (eq) => {
-  return Object.values(eq).reduce((defence, item) => {
+const getDefenseSum = (eq) => {
+  return Object.values(eq).reduce((defense, item) => {
     const itemSchema = gameItems.get(item.id);
 
-    return itemSchema?.details?.defence
-      ? defence + itemSchema.details.defence
-      : defence;
+    return itemSchema?.details?.defense
+      ? defense + itemSchema.details.defense
+      : defense;
   }, 0);
 };
 
@@ -163,7 +163,7 @@ const getDestTile = (player, { map, obj, players }) => {
 export {
   getAllies,
   getChebyshevDistance,
-  getDefenceSum,
+  getDefenseSum,
   getDestTile,
   getDmg,
   getRandomInt,

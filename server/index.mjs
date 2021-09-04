@@ -28,7 +28,7 @@ import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import {
   getAllies,
-  getDefenceSum,
+  getDefenseSum,
   getDmg,
   getRespawnTile,
   getXYFromTile,
@@ -536,10 +536,10 @@ const loop = () => {
           // @TODO: Implement attack parrying logic #283
         }
 
-        const defence = getDefenceSum(selectedPlayer.equipment);
+        const defense = getDefenseSum(selectedPlayer.equipment);
 
         const dmg = getDmg({ player, currentWeapon });
-        const hit = Math.floor(dmg - (dmg * defence) / 1000);
+        const hit = Math.floor(dmg - (dmg * defense) / 1000);
 
         player.energyUse(currentWeapon.details.energyCost);
 

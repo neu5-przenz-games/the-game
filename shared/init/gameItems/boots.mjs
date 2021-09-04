@@ -5,7 +5,7 @@ export const leatherBoots = new Boots({
   displayName: "Boots",
   imgURL: "boots.png",
   details: {
-    defence: 20,
+    defense: 20,
   },
 });
 
@@ -14,7 +14,7 @@ export const frozenBoots = new Boots({
   displayName: "Frozen boots",
   imgURL: "frozen_boots.png",
   details: {
-    defence: 50,
+    defense: 50,
   },
 });
 

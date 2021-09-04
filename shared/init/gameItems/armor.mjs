@@ -5,7 +5,7 @@ export const armor = new Armor({
   displayName: "Armor",
   imgURL: "armor.png",
   details: {
-    defence: 100,
+    defense: 100,
   },
 });
 
@@ -14,7 +14,7 @@ export const frozenArmor = new Armor({
   displayName: "Frozen armor",
   imgURL: "frozen_armor.png",
   details: {
-    defence: 300,
+    defense: 300,
   },
 });
 
