@@ -110,7 +110,14 @@ io.on("connection", (socket) => {
     );
 
     socket.on("player:go", ({ name, tileX, tileY }) => {
-      if (tileX >= 0 && tileY >= 0 && map[tileY][tileX] === 0) {
+      const mapSize = map.length;
+      if (
+        tileX >= 0 &&
+        tileX < mapSize &&
+        tileY >= 0 &&
+        tileY < mapSize &&
+        map[tileY][tileX] === 0
+      ) {
         const player = players.get(name);
 
         if (player.isDead) {
