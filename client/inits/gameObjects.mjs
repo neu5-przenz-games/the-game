@@ -4,6 +4,7 @@ import { HealingStone } from "../gameObjects/HealingStone.mjs";
 import { House } from "../gameObjects/House.mjs";
 import { Tree } from "../gameObjects/Tree.mjs";
 import { Ore } from "../gameObjects/Ore.mjs";
+import { RangedParticleEmitter } from "../utils/index.mjs";
 
 const TYPES = {
   HealingStone,
@@ -52,6 +53,25 @@ export const initGameObjects = (game) => {
         .setOrigin(0.5, 2)
         .setPosition(object.x, object.y - HOUSE_LABEL_OFFSET);
       label.depth = object.depth;
+    }
+    if (gameObject.type === "HealingStone") {
+      const { positionTile, sizeToIncrease, size } = gameObject;
+
+      const rangeTiles = game.groundLayer.getTilesWithin(
+        positionTile.tileX - sizeToIncrease.x,
+        positionTile.tileY - sizeToIncrease.y,
+        sizeToIncrease.x * 2 + size.x,
+        sizeToIncrease.y * 2 + size.y
+      );
+
+      // in the future maybe keep it in the array and run only if the player is getting close
+      const particleEmitter = new RangedParticleEmitter({
+        scene: game,
+        particleImgId: "HealingStoneParticle",
+        rangeTiles,
+      });
+
+      particleEmitter.start();
     }
   });
 };
