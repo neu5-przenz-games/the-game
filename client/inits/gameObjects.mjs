@@ -55,14 +55,23 @@ export const initGameObjects = (game) => {
       label.depth = object.depth;
     }
     if (gameObject.type === "HealingStone") {
+      const { positionTile, sizeToIncrease, size } = gameObject;
+
+      const rangeTiles = game.groundLayer.getTilesWithin(
+        positionTile.tileX - sizeToIncrease.x,
+        positionTile.tileY - sizeToIncrease.y,
+        sizeToIncrease.x * 2 + size.x,
+        sizeToIncrease.y * 2 + size.y
+      );
+
       // in the future maybe keep it in the array and run only if the player is getting close
-      const particleEmitter = new RangedParticleEmitter({ // eslint-disable-line
+      const particleEmitter = new RangedParticleEmitter({
         scene: game,
         particleImgId: "HealingStoneParticle",
-        positionTile: gameObject.positionTile,
-        sizeToIncrease: gameObject.sizeToIncrease,
-        mainObjectSize: gameObject.size,
+        rangeTiles,
       });
+
+      particleEmitter.start();
     }
   });
 };

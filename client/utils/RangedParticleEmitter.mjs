@@ -1,69 +1,34 @@
 import Phaser from "phaser";
-import { getObjectTiles } from "../../shared/utils/index.mjs";
 
 export class RangedParticleEmitter {
   constructor({
     scene,
     particleImgId,
-    positionTile,
-    mainObjectSize,
+    rangeTiles,
     timerDelay = 50,
     timerStartAt = 50,
     timerLoop = true,
     maxParticlesPerc = 50,
     particleDuration = 5000,
-    sizeToIncrease = { x: 1, y: 1 },
-    withoutMainObject = false,
+    particlesNum = 0,
   }) {
     this.scene = scene;
     this.particleImgId = particleImgId;
     this.particleDuration = particleDuration;
+    this.rangeTiles = rangeTiles;
+    this.timerDelay = timerDelay;
+    this.timerStartAt = timerStartAt;
+    this.timerLoop = timerLoop;
 
-    this.rangeTiles = this.scene.groundLayer.getTilesWithin(
-      positionTile.tileX - 1 - sizeToIncrease.x,
-      positionTile.tileY - 1 - sizeToIncrease.y,
-      sizeToIncrease.x * 2 + mainObjectSize.x,
-      sizeToIncrease.y * 2 + mainObjectSize.y
-    );
+    this.particlesNum = particlesNum;
 
-    if (withoutMainObject) {
-      const mainObjectTiles = getObjectTiles({
-        positionTile,
-        size: mainObjectSize,
-      });
-
-      this.rangeTiles = this.rangeTiles.reduce((rangeTiles, tile) => {
-        if (
-          !mainObjectTiles.find(
-            (mainObjTile) =>
-              mainObjTile.tileX === tile.x && mainObjTile.tileY === tile.y
-          )
-        ) {
-          rangeTiles.push(tile);
-        }
-
-        return rangeTiles;
-      }, []);
-    }
-
-    this.particlesNum = 0;
     this.maxParticlesNum = Math.floor(
       (maxParticlesPerc / this.rangeTiles.length) * 100
     );
-
-    const timedEvent = new Phaser.Time.TimerEvent({
-      delay: timerDelay,
-      startAt: timerStartAt,
-      loop: timerLoop,
-      callback: () => {
-        this.throwParticles(this.scene);
-      },
-    });
-
-    this.scene.time.addEvent(timedEvent);
+    this.timedEvent = null;
   }
 
-  throwParticles() {
+  update() {
     if (this.particlesNum <= this.maxParticlesNum) {
       const randomTileNum = Phaser.Math.Between(0, this.rangeTiles.length - 1);
 
@@ -109,5 +74,18 @@ export class RangedParticleEmitter {
         },
       });
     }
+  }
+
+  start() {
+    this.timedEvent = new Phaser.Time.TimerEvent({
+      delay: this.timerDelay,
+      startAt: this.timerStartAt,
+      loop: this.timerLoop,
+      callback: () => {
+        this.update(this.scene);
+      },
+    });
+
+    this.scene.time.addEvent(this.timedEvent);
   }
 }
