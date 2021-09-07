@@ -195,6 +195,18 @@ export const sockets = (game) => {
     });
   });
 
+  game.socket.on("player:attack-missed", ({ name, message }) => {
+    const player = game.players.get(name);
+
+    TextTween({
+      scene: game,
+      x: player.x,
+      y: player.y,
+      depth: player.depth,
+      message: MESSAGES[message],
+    });
+  });
+
   game.socket.on("player:dead", (name) => {
     const player = game.players.get(name);
 

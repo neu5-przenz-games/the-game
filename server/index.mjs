@@ -24,12 +24,14 @@ import {
 } from "../shared/skills/index.mjs";
 
 import { gameObjects } from "../shared/init/gameObjects.mjs";
+import { ATTACK_TYPES } from "../shared/attackTypes/index.mjs";
+import { MESSAGES_TYPES } from "../shared/UIMessages/index.mjs";
 import map from "../public/assets/map/map.mjs";
 import { directions, getDirection } from "./utils/directions.mjs";
 import {
   getAllies,
+  getAttack,
   getDefenseSum,
-  getDmg,
   getRespawnTile,
   getXYFromTile,
 } from "./utils/algo.mjs";
@@ -565,18 +567,40 @@ const loop = () => {
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
 
-        if (/* isAttackMissed() */ false) {
-          // @TODO: Implement attack misses logic #282
-        }
-
         if (/* isAttackParried() */ false) {
           // @TODO: Implement attack parrying logic #283
         }
 
         const defense = getDefenseSum(selectedPlayer.equipment);
 
-        const dmg = getDmg({ player, currentWeapon });
-        const hit = Math.floor(dmg - (dmg * defense) / 1000);
+        const attack = getAttack({
+          player,
+          selectedPlayer,
+          currentWeapon,
+        });
+
+        if (attack.type === ATTACK_TYPES.HIT) {
+          const hit = Math.floor(
+            attack.value - (attack.value * defense) / 1000
+          );
+
+          selectedPlayer.hit(hit);
+
+          io.emit("player:hit", {
+            name: selectedPlayer.name,
+            hitType: getHitText(hit),
+          });
+
+          io.to(selectedPlayer.fraction).emit(
+            "players:hp:update",
+            getAllies(players, selectedPlayer.fraction)
+          );
+        } else if (attack.type === ATTACK_TYPES.MISS) {
+          io.emit("player:attack-missed", {
+            name: selectedPlayer.name,
+            message: MESSAGES_TYPES.ATTACK_MISSED,
+          });
+        }
 
         player.energyUse(currentWeapon.details.energyCost);
 
@@ -603,18 +627,6 @@ const loop = () => {
             shapeSkillsForClient(selectedPlayer.skills)
           );
         }
-
-        selectedPlayer.hit(hit);
-
-        io.emit("player:hit", {
-          name: selectedPlayer.name,
-          hitType: getHitText(hit),
-        });
-
-        io.to(selectedPlayer.fraction).emit(
-          "players:hp:update",
-          getAllies(players, selectedPlayer.fraction)
-        );
 
         if (player.hasRangedWeapon() && player.useArrow()) {
           io.to(player.socketId).emit(
