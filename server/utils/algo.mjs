@@ -1,7 +1,7 @@
 import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
 import { getSurroundingTiles } from "../../shared/utils/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
-import { LEVEL_TYPES, getLevel } from "../../shared/skills/index.mjs";
+import { LEVEL_TYPES } from "../../shared/skills/index.mjs";
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 
 const getRandomInt = (min, max) => {
@@ -27,10 +27,12 @@ const getDefenseSum = (eq) => {
   }, 0);
 };
 
-const isAttackMissed = ({ player, currentWeapon, selectedPlayer }) => {
-  const weaponSkill = currentWeapon.skillToIncrease.name;
-  const skillLevel = getLevel(player.skills[weaponSkill].points);
-
+const isAttackMissed = ({
+  currentWeapon,
+  player,
+  skillLevelName,
+  selectedPlayer,
+}) => {
   const SKILL_TO_MISS_PERC = {
     [LEVEL_TYPES.NOOB]: 150,
     [LEVEL_TYPES.BEGINNER]: 125,
@@ -40,7 +42,7 @@ const isAttackMissed = ({ player, currentWeapon, selectedPlayer }) => {
     [LEVEL_TYPES.MASTER]: 25,
   };
 
-  let skillToMissPerc = SKILL_TO_MISS_PERC[skillLevel.name];
+  let skillToMissPerc = SKILL_TO_MISS_PERC[skillLevelName];
 
   if (player.isWalking) {
     skillToMissPerc *= 2;
@@ -52,10 +54,12 @@ const isAttackMissed = ({ player, currentWeapon, selectedPlayer }) => {
 
   // ranged weapon
   if (currentWeapon.details.range > 1) {
-    const range = getChebyshevDistance(
+    let range = getChebyshevDistance(
       player.positionTile,
       selectedPlayer.positionTile
     );
+
+    range = range > 5 ? 5 : range;
 
     skillToMissPerc *= (100 + range * 10) / 100;
   }
@@ -67,12 +71,15 @@ const isAttackMissed = ({ player, currentWeapon, selectedPlayer }) => {
   return random <= skillToMissPerc;
 };
 
-const getAttack = ({ player, currentWeapon, selectedPlayer }) => {
-  const weaponSkill = currentWeapon.skillToIncrease.name;
-
-  const skillLevel = getLevel(player.skills[weaponSkill].points);
-
-  if (isAttackMissed({ player, currentWeapon, selectedPlayer })) {
+const getAttack = ({
+  currentWeapon,
+  player,
+  skillLevelName,
+  selectedPlayer,
+}) => {
+  if (
+    isAttackMissed({ currentWeapon, player, skillLevelName, selectedPlayer })
+  ) {
     return {
       type: ATTACK_TYPES.MISS,
     };
@@ -101,7 +108,7 @@ const getAttack = ({ player, currentWeapon, selectedPlayer }) => {
     maxDmg += arrowsDmgMax;
   }
 
-  const skillToNum = SKILL_TO_NUM[skillLevel.name];
+  const skillToNum = SKILL_TO_NUM[skillLevelName];
 
   const diff = Math.floor((maxDmg - minDmg) / LVL_NUM);
 

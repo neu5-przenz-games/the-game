@@ -17,6 +17,7 @@ import {
 import { bag } from "../shared/init/gameItems/backpack.mjs";
 import { receipts } from "../shared/receipts/index.mjs";
 import {
+  getLevel,
   setSkillPoints,
   shapeSkillsForClient,
   skillIncrease,
@@ -571,15 +572,19 @@ const loop = () => {
           // @TODO: Implement attack parrying logic #283
         }
 
-        const defense = getDefenseSum(selectedPlayer.equipment);
+        const weaponSkill = currentWeapon.skillToIncrease.name;
+        const skillLevelName = getLevel(player.skills[weaponSkill].points).name;
 
         const attack = getAttack({
-          player,
-          selectedPlayer,
           currentWeapon,
+          player,
+          skillLevelName,
+          selectedPlayer,
         });
 
         if (attack.type === ATTACK_TYPES.HIT) {
+          const defense = getDefenseSum(selectedPlayer.equipment);
+
           const hit = Math.floor(
             attack.value - (attack.value * defense) / 1000
           );
