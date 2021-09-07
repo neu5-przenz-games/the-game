@@ -42,6 +42,8 @@ const isAttackMissed = ({
     [LEVEL_TYPES.MASTER]: 25,
   };
 
+  const MAX_RANGE = 5;
+
   let skillToMissPerc = SKILL_TO_MISS_PERC[skillLevelName];
 
   if (player.isWalking) {
@@ -59,16 +61,14 @@ const isAttackMissed = ({
       selectedPlayer.positionTile
     );
 
-    range = range > 5 ? 5 : range;
+    range = range > MAX_RANGE ? MAX_RANGE : range;
 
     skillToMissPerc *= (100 + range * 10) / 100;
   }
 
   skillToMissPerc = Math.floor(skillToMissPerc);
 
-  const random = getRandomInt(0, 1000);
-
-  return random <= skillToMissPerc;
+  return getRandomInt(0, 1000) <= skillToMissPerc;
 };
 
 const getAttack = ({
