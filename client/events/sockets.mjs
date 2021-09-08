@@ -182,7 +182,7 @@ export const sockets = (game) => {
     });
   });
 
-  game.socket.on("player:hit", ({ name, hitType }) => {
+  game.socket.on("player:attack-hit", ({ name, hitType }) => {
     const player = game.players.get(name);
 
     TextTween({
@@ -192,6 +192,18 @@ export const sockets = (game) => {
       depth: player.depth,
       message: hitType.text,
       color: hitType.color,
+    });
+  });
+
+  game.socket.on("player:attack-missed", ({ name, message }) => {
+    const player = game.players.get(name);
+
+    TextTween({
+      scene: game,
+      x: player.x,
+      y: player.y,
+      depth: player.depth,
+      message: MESSAGES[message],
     });
   });
 
