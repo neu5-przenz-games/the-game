@@ -5,6 +5,7 @@ import { MESSAGES } from "../../shared/UIMessages/index.mjs";
 import { Skeleton } from "../gameObjects/Skeleton.mjs";
 import { TextTween } from "../gameObjects/TextTween.mjs";
 import { UIProfile } from "../ui/profile.mjs";
+import { ParticleEmitter } from "../utils/index.mjs";
 import { inputs } from "./inputs.mjs";
 
 const displayServerMessage = (game, msgArg) => {
@@ -173,7 +174,20 @@ export const sockets = (game) => {
     game.SI.snapshot.add(snapshot);
   });
 
-  game.socket.on("players:hp:update", (players) => {
+  game.socket.on("players:hp:update", ({ playerName, players }) => {
+    if (playerName) {
+      const player = game.players.get(playerName);
+
+      const particle = new ParticleEmitter({ // eslint-disable-line
+        scene: game,
+        particleImgId: "particle-healing-green",
+        particleScale: 0.3,
+        x: player.x,
+        y: player.y,
+        objDepth: player.depth,
+      });
+    }
+
     players.forEach(({ name, hp }) => {
       const player = game.players.get(name);
 
@@ -184,6 +198,15 @@ export const sockets = (game) => {
 
   game.socket.on("player:attack-hit", ({ name, hitType }) => {
     const player = game.players.get(name);
+
+    const particle = new ParticleEmitter({ // eslint-disable-line
+      scene: game,
+      particleImgId: "particle-red",
+      particleScale: 0.5,
+      x: player.x,
+      y: player.y,
+      objDepth: player.depth,
+    });
 
     TextTween({
       scene: game,

@@ -1,3 +1,4 @@
+import { ParticleEmitter } from "./ParticleEmitter.mjs";
 import { RangedParticleEmitter } from "./RangedParticleEmitter.mjs";
 
-export { RangedParticleEmitter };
+export { ParticleEmitter, RangedParticleEmitter };

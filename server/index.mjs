@@ -108,10 +108,9 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("player:new", availablePlayer);
 
     socket.join(availablePlayer.fraction);
-    io.to(availablePlayer.fraction).emit(
-      "players:hp:update",
-      getAllies(players, availablePlayer.fraction)
-    );
+    io.to(availablePlayer.fraction).emit("players:hp:update", {
+      players: getAllies(players, availablePlayer.fraction),
+    });
 
     socket.on("player:go", ({ name, tileX, tileY }) => {
       const mapSize = map.length;
@@ -595,10 +594,9 @@ const loop = () => {
             hitType: getHitText(hit),
           });
 
-          io.to(selectedPlayer.fraction).emit(
-            "players:hp:update",
-            getAllies(players, selectedPlayer.fraction)
-          );
+          io.to(selectedPlayer.fraction).emit("players:hp:update", {
+            players: getAllies(players, selectedPlayer.fraction),
+          });
         } else if (attack.type === ATTACK_TYPES.MISS) {
           io.emit("player:attack-missed", {
             name: selectedPlayer.name,
@@ -674,10 +672,9 @@ const loop = () => {
       if (respawnTile) {
         player.respawn(respawnTile);
         io.to(player.socketId).emit("player:energy:update", player.energy);
-        io.to(player.fraction).emit(
-          "players:hp:update",
-          getAllies(players, player.fraction)
-        );
+        io.to(player.fraction).emit("players:hp:update", {
+          players: getAllies(players, player.fraction),
+        });
       } else {
         // fallback for no place to respawn
       }
@@ -753,10 +750,10 @@ const loop = () => {
         ) {
           player.heal(healingStone.HP_REGEN_RATE);
 
-          io.to(player.fraction).emit(
-            "players:hp:update",
-            getAllies(players, player.fraction)
-          );
+          io.to(player.fraction).emit("players:hp:update", {
+            playerName: player.name,
+            players: getAllies(players, player.fraction),
+          });
         }
       });
 
