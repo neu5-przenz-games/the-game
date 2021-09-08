@@ -27,6 +27,9 @@ const getDefenseSum = (eq) => {
   }, 0);
 };
 
+const getHitValue = (attackValue, defenseValue) =>
+  Math.floor(attackValue - (attackValue * defenseValue) / 1000);
+
 const isAttackMissed = ({
   currentWeapon,
   player,
@@ -223,6 +226,7 @@ export {
   getChebyshevDistance,
   getDefenseSum,
   getDestTile,
+  getHitValue,
   getRandomInt,
   getRespawnTile,
   getXYFromTile,

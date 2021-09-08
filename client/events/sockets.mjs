@@ -182,7 +182,7 @@ export const sockets = (game) => {
     });
   });
 
-  game.socket.on("player:hit", ({ name, hitType }) => {
+  game.socket.on("player:attack-hit", ({ name, hitType }) => {
     const player = game.players.get(name);
 
     TextTween({

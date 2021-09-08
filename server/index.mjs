@@ -33,6 +33,7 @@ import {
   getAllies,
   getAttack,
   getDefenseSum,
+  getHitValue,
   getRespawnTile,
   getXYFromTile,
 } from "./utils/algo.mjs";
@@ -583,15 +584,13 @@ const loop = () => {
         });
 
         if (attack.type === ATTACK_TYPES.HIT) {
-          const defense = getDefenseSum(selectedPlayer.equipment);
+          const defenseValue = getDefenseSum(selectedPlayer.equipment);
 
-          const hit = Math.floor(
-            attack.value - (attack.value * defense) / 1000
-          );
+          const hit = getHitValue(attack.value, defenseValue);
 
           selectedPlayer.hit(hit);
 
-          io.emit("player:hit", {
+          io.emit("player:attack-hit", {
             name: selectedPlayer.name,
             hitType: getHitText(hit),
           });
