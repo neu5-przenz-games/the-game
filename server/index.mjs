@@ -32,7 +32,7 @@ import { directions, getDirection } from "./utils/directions.mjs";
 import {
   getAllies,
   getAttack,
-  getDefenseSum,
+  getDefenseValue,
   getHitValue,
   getRespawnTile,
   getXYFromTile,
@@ -584,7 +584,7 @@ const loop = () => {
         });
 
         if (attack.type === ATTACK_TYPES.HIT) {
-          const defenseValue = getDefenseSum(selectedPlayer.equipment);
+          const defenseValue = getDefenseValue(selectedPlayer.equipment);
 
           const hit = getHitValue(attack.value, defenseValue);
 

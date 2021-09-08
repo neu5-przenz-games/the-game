@@ -17,7 +17,7 @@ const getChebyshevDistance = (currTile, destTile) => {
   return Math.max(distX, distY);
 };
 
-const getDefenseSum = (eq) => {
+const getDefenseValue = (eq) => {
   return Object.values(eq).reduce((defense, item) => {
     const itemSchema = gameItems.get(item.id);
 
@@ -224,7 +224,7 @@ export {
   getAllies,
   getAttack,
   getChebyshevDistance,
-  getDefenseSum,
+  getDefenseValue,
   getDestTile,
   getHitValue,
   getRandomInt,
