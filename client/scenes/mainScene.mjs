@@ -137,6 +137,13 @@ export class MainScene extends Phaser.Scene {
 
     this.load.image("arrow-bow", "./assets/gfx/arrow-bow.png");
 
+    this.load.image("particle-red", "./assets/gfx/particle-red.png");
+    this.load.image("particle-yellow", "./assets/gfx/particle-yellow.png");
+    this.load.image(
+      "particle-healing-green",
+      "./assets/gfx/particle-healing-green.png"
+    );
+
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
 
     FRACTIONS.forEach((fraction) => {
