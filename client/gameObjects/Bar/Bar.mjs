@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { COLOR } from "../../constants/index.mjs";
+import { BAR_MAX_VALUE, COLOR } from "../../constants/index.mjs";
 
 const BAR_WIDTH = 64;
 const BAR_HEIGHT = 4;
@@ -16,7 +16,7 @@ export class Bar {
     this.y = y + this.offsetY;
     this.bar.depth = y;
     this.value = value;
-    this.p = (BAR_WIDTH - BAR_BORDER_WIDTH_DOUBLE) / 1000;
+    this.p = (BAR_WIDTH - BAR_BORDER_WIDTH_DOUBLE) / BAR_MAX_VALUE;
     this.valueColor = color;
     this.drawBar = drawBar;
 

@@ -1,3 +1,5 @@
+const BAR_MAX_VALUE = 1000;
+
 const COLOR = {
   BLACK: 0x000000,
   GREEN: 0x00ff2e,
@@ -6,4 +8,4 @@ const COLOR = {
   WHITE: 0xffffff,
 };
 
-export { COLOR };
+export { BAR_MAX_VALUE, COLOR };

@@ -10,7 +10,7 @@ export class CopperOre extends GameObject {
     positionTile,
     size = { x: 1, y: 1 },
     action = "mine",
-    durationTicks = 30,
+    durationTicks = 150,
     energyCost = 50,
   }) {
     super({ name, displayName, type, positionTile, size });

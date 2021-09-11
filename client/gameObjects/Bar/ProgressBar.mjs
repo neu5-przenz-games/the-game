@@ -1,5 +1,5 @@
 import { Bar } from "./Bar.mjs";
-import { COLOR } from "../../constants/index.mjs";
+import { BAR_MAX_VALUE, COLOR } from "../../constants/index.mjs";
 
 export class ProgressBar extends Bar {
   constructor(scene, x, y, xOffset, yOffset, value, drawBar) {
@@ -9,7 +9,7 @@ export class ProgressBar extends Bar {
     this.counter = null;
   }
 
-  startCounter(duration, from = 0, to = 100) {
+  startCounter(duration, from = 0, to = BAR_MAX_VALUE) {
     this.updateValue(from);
     this.show();
 
