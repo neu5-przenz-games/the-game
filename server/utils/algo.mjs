@@ -106,7 +106,7 @@ const isAttackParried = ({ player, selectedPlayer }) => {
   }
 
   if (selectedPlayer.equipment.shield) {
-    const currentShield = getCurrentWeapon(selectedPlayer.equipment.shield);
+    const currentShield = gameItems.get(selectedPlayer.equipment.shield.id);
 
     const weaponSkill = currentShield.skillToIncrease.name;
 
