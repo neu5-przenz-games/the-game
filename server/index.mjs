@@ -568,10 +568,6 @@ const loop = () => {
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
 
-        if (/* isAttackParried() */ false) {
-          // @TODO: Implement attack parrying logic #283
-        }
-
         const weaponSkill = currentWeapon.skillToIncrease.name;
         const skillLevelName = getLevel(player.skills[weaponSkill].points).name;
 
@@ -582,7 +578,17 @@ const loop = () => {
           selectedPlayer,
         });
 
-        if (attack.type === ATTACK_TYPES.HIT) {
+        if (attack.type === ATTACK_TYPES.MISS) {
+          io.emit("player:attack-missed", {
+            name: selectedPlayer.name,
+            message: MESSAGES_TYPES.ATTACK_MISSED,
+          });
+        } else if (attack.type === ATTACK_TYPES.PARRY) {
+          io.emit("player:attack-parried", {
+            name: selectedPlayer.name,
+            message: MESSAGES_TYPES.ATTACK_PARRIED,
+          });
+        } else if (attack.type === ATTACK_TYPES.HIT) {
           const defenseValue = getDefenseValue(selectedPlayer.equipment);
 
           const hit = getHitValue(attack.value, defenseValue);
@@ -596,11 +602,6 @@ const loop = () => {
 
           io.to(selectedPlayer.fraction).emit("players:hp:update", {
             players: getAllies(players, selectedPlayer.fraction),
-          });
-        } else if (attack.type === ATTACK_TYPES.MISS) {
-          io.emit("player:attack-missed", {
-            name: selectedPlayer.name,
-            message: MESSAGES_TYPES.ATTACK_MISSED,
           });
         }
 

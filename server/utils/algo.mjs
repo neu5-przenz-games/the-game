@@ -1,7 +1,10 @@
 import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
 import { getSurroundingTiles } from "../../shared/utils/index.mjs";
-import { gameItems } from "../../shared/init/gameItems/index.mjs";
-import { LEVEL_TYPES } from "../../shared/skills/index.mjs";
+import {
+  gameItems,
+  getCurrentWeapon,
+} from "../../shared/init/gameItems/index.mjs";
+import { LEVEL_TYPES, getLevel } from "../../shared/skills/index.mjs";
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 
 const getRandomInt = (min, max) => {
@@ -36,7 +39,7 @@ const isAttackMissed = ({
   skillLevelName,
   selectedPlayer,
 }) => {
-  const SKILL_TO_MISS_PERC = {
+  const SKILL_TO_MISS_MAP = {
     [LEVEL_TYPES.NOOB]: 150,
     [LEVEL_TYPES.BEGINNER]: 125,
     [LEVEL_TYPES.REGULAR]: 100,
@@ -47,14 +50,14 @@ const isAttackMissed = ({
 
   const MAX_RANGE = 5;
 
-  let skillToMissPerc = SKILL_TO_MISS_PERC[skillLevelName];
+  let missChance = SKILL_TO_MISS_MAP[skillLevelName];
 
   if (player.isWalking) {
-    skillToMissPerc *= 2;
+    missChance *= 2;
   }
 
   if (selectedPlayer.isWalking) {
-    skillToMissPerc *= 2;
+    missChance *= 2;
   }
 
   // ranged weapon
@@ -66,12 +69,55 @@ const isAttackMissed = ({
 
     range = range > MAX_RANGE ? MAX_RANGE : range;
 
-    skillToMissPerc *= (100 + range * 10) / 100;
+    missChance *= (100 + range * 10) / 100;
   }
 
-  skillToMissPerc = Math.floor(skillToMissPerc);
+  return getRandomInt(0, 1000) <= Math.floor(missChance);
+};
 
-  return getRandomInt(0, 1000) <= skillToMissPerc;
+const isAttackParried = ({ player, selectedPlayer }) => {
+  if (
+    selectedPlayer.selectedPlayer === null ||
+    selectedPlayer.selectedPlayer.name !== player.name
+  ) {
+    return false;
+  }
+
+  const SKILL_TO_PARRY_MAP = {
+    [LEVEL_TYPES.NOOB]: 0,
+    [LEVEL_TYPES.BEGINNER]: 40,
+    [LEVEL_TYPES.REGULAR]: 80,
+    [LEVEL_TYPES.ADVANCED]: 120,
+    [LEVEL_TYPES.EXPERT]: 160,
+    [LEVEL_TYPES.MASTER]: 200,
+  };
+
+  let parryChance = 0;
+
+  if (selectedPlayer.equipment.weapon) {
+    const currentWeapon = getCurrentWeapon(selectedPlayer.equipment.weapon);
+    const weaponSkill = currentWeapon.skillToIncrease.name;
+
+    const weaponSkillLevelName = getLevel(
+      selectedPlayer.skills[weaponSkill].points
+    ).name;
+
+    parryChance = SKILL_TO_PARRY_MAP[weaponSkillLevelName];
+  }
+
+  if (selectedPlayer.equipment.shield) {
+    const currentShield = gameItems.get(selectedPlayer.equipment.shield.id);
+
+    const weaponSkill = currentShield.skillToIncrease.name;
+
+    const weaponSkillLevelName = getLevel(
+      selectedPlayer.skills[weaponSkill].points
+    ).name;
+
+    parryChance += SKILL_TO_PARRY_MAP[weaponSkillLevelName];
+  }
+
+  return getRandomInt(0, 1000) <= Math.floor(parryChance);
 };
 
 const getAttack = ({
@@ -85,6 +131,12 @@ const getAttack = ({
   ) {
     return {
       type: ATTACK_TYPES.MISS,
+    };
+  }
+
+  if (isAttackParried({ player, selectedPlayer })) {
+    return {
+      type: ATTACK_TYPES.PARRY,
     };
   }
 
