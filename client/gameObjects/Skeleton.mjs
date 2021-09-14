@@ -19,32 +19,34 @@ const anims = {
   idle: {
     startFrame: 0,
     endFrame: 3,
-    speed: 0.2,
+    speed: 2,
   },
   walk: {
     startFrame: 4,
     endFrame: 11,
-    speed: 0.15,
+    speed: 1,
   },
   attack: {
     startFrame: 12,
     endFrame: 19,
-    speed: 0.11,
+    speed: 1,
+  },
+  parry: {
+    startFrame: 12,
+    endFrame: 19,
+    speed: 0.2,
   },
   die: {
     startFrame: 20,
     endFrame: 27,
-    speed: 0.2,
+    speed: 2,
   },
   shoot: {
     startFrame: 28,
     endFrame: 31,
-    speed: 0.1,
+    speed: 1,
   },
 };
-
-const MIN_TICK = 8;
-const MAX_TICK = 12;
 
 const HEALTH_BAR_OFFSET_X = -32;
 const HEALTH_BAR_OFFSET_Y = -36;
@@ -56,12 +58,6 @@ const LABEL_OFFSET_Y = 25;
 
 const PROGRESS_BAR_OFFSET_X = -32;
 const PROGRESS_BAR_OFFSET_Y = 48;
-
-const getRandomInt = (min, max) => {
-  const minCeiled = Math.ceil(min);
-  const maxFloored = Math.floor(max);
-  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
-};
 
 const OFFSET = {
   X: 32,
@@ -98,8 +94,6 @@ class Skeleton extends Phaser.GameObjects.Image {
     this.dest = { x: null, y: null };
     this.isMainPlayer = isMainPlayer;
     this.isDead = isDead;
-    this.tick = 0;
-    this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
 
     this.healthBar = new HealthBar(
       scene,
@@ -149,12 +143,14 @@ class Skeleton extends Phaser.GameObjects.Image {
     if (this.isDead) {
       this.motion = "die";
       this.anim = anims[this.motion];
-      this.f = this.anim.endFrame;
+      this.f = this.anim.endFrame - 1;
     } else {
       this.motion = "idle";
       this.anim = anims[this.motion];
       this.f = this.anim.startFrame;
     }
+
+    this.speed = this.anim.speed;
 
     this.frame = this.texture.get(this.direction.offset);
 
@@ -167,6 +163,13 @@ class Skeleton extends Phaser.GameObjects.Image {
       .setOrigin(0.5, 2)
       .setPosition(this.x, this.y - LABEL_OFFSET_Y);
     this.label.depth = this.depth;
+
+    this.scene.time.delayedCall(
+      this.anim.speed * 100,
+      this.changeFrame,
+      [],
+      this
+    );
   }
 
   static TYPE = "Skeleton";
@@ -249,9 +252,61 @@ class Skeleton extends Phaser.GameObjects.Image {
     this.f = this.anim.startFrame;
   }
 
-  update({ x, y, destTile, direction, attack, weapon, isDead, isWalking }) {
-    this.tick += 1;
+  changeFrame() {
+    this.f += 1;
 
+    let delay = this.anim.speed;
+
+    if (this.f === this.anim.endFrame) {
+      if (this.motion === "walk") {
+        this.f = this.anim.startFrame;
+        this.frame = this.texture.get(this.direction.offset + this.f);
+        this.scene.time.delayedCall(delay * 100, this.changeFrame, [], this);
+      } else if (this.motion === "attack") {
+        this.scene.time.delayedCall(delay * 100, this.resetAnimation, [], this);
+      } else if (this.motion === "parry") {
+        this.scene.time.delayedCall(delay * 100, this.resetAnimation, [], this);
+      } else if (this.motion === "shoot") {
+        this.scene.time.delayedCall(delay * 100, this.resetAnimation, [], this);
+      } else if (this.motion === "idle") {
+        delay = 0.1 + Math.random();
+
+        this.scene.time.delayedCall(delay * 100, this.resetAnimation, [], this);
+      } else if (this.motion === "die") {
+        this.f -= 1;
+        this.scene.time.delayedCall(delay * 100, this.changeFrame, [], this);
+      }
+    } else {
+      this.frame = this.texture.get(this.direction.offset + this.f);
+
+      this.scene.time.delayedCall(delay * 100, this.changeFrame, [], this);
+    }
+  }
+
+  resetAnimation() {
+    this.f = this.anim.startFrame;
+
+    this.frame = this.texture.get(this.direction.offset + this.f);
+
+    this.scene.time.delayedCall(
+      this.anim.speed * 100,
+      this.changeFrame,
+      [],
+      this
+    );
+  }
+
+  update({
+    x,
+    y,
+    destTile,
+    direction,
+    attack,
+    weapon,
+    isDead,
+    isWalking,
+    isParrying,
+  }) {
     this.isDead = isDead;
 
     if (attack !== null) {
@@ -282,26 +337,13 @@ class Skeleton extends Phaser.GameObjects.Image {
       if (this.motion !== "walk") {
         this.setMotion("walk");
       }
+    } else if (isParrying) {
+      if (this.motion !== "parry") {
+        this.setMotion("parry");
+      }
     } else if (!attack && !isWalking && !this.isDead && !this.isFighting()) {
       if (this.motion !== "idle") {
         this.setMotion("idle");
-      }
-    }
-
-    if (this.tick === this.maxTick) {
-      this.tick = 0;
-      this.maxTick = getRandomInt(MIN_TICK, MAX_TICK);
-
-      if (this.f === this.anim.endFrame) {
-        if (
-          this.motion !== "attack" &&
-          this.motion !== "shoot" &&
-          this.motion !== "die"
-        ) {
-          this.f = this.anim.startFrame;
-        }
-      } else {
-        this.f += 1;
       }
     }
 
