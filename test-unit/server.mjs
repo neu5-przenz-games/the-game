@@ -67,7 +67,8 @@ describe("Player", () => {
         "hp",
         "energy",
         "isDead",
-        "isWalking"
+        "isWalking",
+        "isParrying"
       );
 
       socketClient.disconnect();
