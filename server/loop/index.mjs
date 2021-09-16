@@ -163,6 +163,7 @@ const loop = (players, io) => {
             name: selectedPlayer.name,
             message: MESSAGES_TYPES.ATTACK_PARRIED,
           });
+          selectedPlayer.isParrying = true;
         } else if (attack.type === ATTACK_TYPES.HIT) {
           const defenseValue = getDefenseValue(selectedPlayer.equipment);
 
@@ -351,6 +352,7 @@ const loop = (players, io) => {
         weapon: player.equipment.weapon || {},
         isWalking: player.isWalking,
         isDead: player.isDead,
+        isParrying: player.isParrying,
         attack: player.attack,
         x: player.x,
         y: player.y,
@@ -358,6 +360,7 @@ const loop = (players, io) => {
         direction: player.direction,
       });
       player.attack = null;
+      player.isParrying = false;
     });
 
     const snapshot = SI.snapshot.create(worldState);

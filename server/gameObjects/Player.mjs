@@ -92,6 +92,7 @@ class Player {
     this.x = x;
     this.y = y;
     this.toRespawn = false;
+    this.isParrying = false;
   }
 
   getFromBackpack(itemName) {
