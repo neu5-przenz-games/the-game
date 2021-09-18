@@ -82,7 +82,16 @@ const sockets = ({ players, httpServer, FRAME_IN_MS }) => {
             player.positionTile.tileY !== tileY
           ) {
             if (player.selectedPlayer) {
-              player.selectedPlayer = null;
+              if (
+                player.settings.keepSelectionOnMovement &&
+                player.settings.follow
+              ) {
+                player.setSettingsFollow(false);
+              }
+
+              if (!player.settings.keepSelectionOnMovement) {
+                player.selectedPlayer = null;
+              }
               player.selectedPlayerTile = null;
             }
 
@@ -166,6 +175,14 @@ const sockets = ({ players, httpServer, FRAME_IN_MS }) => {
 
         if (player) {
           player.setSettingsShowRange(value);
+        }
+      });
+
+      socket.on("settings:keepSelectionOnMovement", ({ name, value }) => {
+        const player = players.get(name);
+
+        if (player) {
+          player.setSettingsKeepSelectionOnMovement(value);
         }
       });
 

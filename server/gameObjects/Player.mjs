@@ -9,6 +9,7 @@ import {
   getDestTile,
   getXYFromTile,
 } from "../utils/algo.mjs";
+import { isAngleFine } from "../utils/directions.mjs";
 
 const ENERGY_REGEN_RATE = 3;
 const ENERGY_MAX = 1000;
@@ -122,6 +123,10 @@ class Player {
 
   setSettingsShowRange(value) {
     this.settings.showRange = value;
+  }
+
+  setSettingsKeepSelectionOnMovement(value) {
+    this.settings.keepSelectionOnMovement = value;
   }
 
   setWeapon(value) {
@@ -410,6 +415,7 @@ class Player {
       this.fraction !== this.selectedPlayer.fraction &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
+      isAngleFine(this, this.selectedPlayer) &&
       this.noObstacles({ finder, map, PF })
     );
   }

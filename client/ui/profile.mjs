@@ -19,6 +19,7 @@ export class UIProfile {
     followCb,
     fightCb,
     showRangeCb,
+    keepSelectionOnMovementCb,
     respawnCb,
     dropSelectionCb,
     actionCb,
@@ -56,6 +57,7 @@ export class UIProfile {
       respawnCb,
       settings,
       showRangeCb,
+      keepSelectionOnMovementCb,
     });
     this.UITabs = new UITabs();
 

@@ -69,4 +69,18 @@ const getDirection = (currentTile, nextTile) => {
   return direction;
 };
 
-export { directions, getDirection };
+const isAngleFine = (player, selectedObject) =>
+  ({
+    north: ["north", "northEast", "northWest"],
+    northWest: ["northWest", "north", "west"],
+    west: ["west", "northWest", "southWest"],
+    southWest: ["southWest", "west", "south"],
+    south: ["south", "southWest", "southEast"],
+    southEast: ["southEast", "south", "east"],
+    east: ["east", "southEast", "northEast"],
+    northEast: ["northEast", "east", "north"],
+  }[getDirection(player.positionTile, selectedObject.positionTile)].includes(
+    player.direction
+  ));
+
+export { directions, getDirection, isAngleFine };
