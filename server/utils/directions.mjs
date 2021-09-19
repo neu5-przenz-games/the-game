@@ -69,7 +69,7 @@ const getDirection = (currentTile, nextTile) => {
   return direction;
 };
 
-const isAngleFine = (player, selectedObject) =>
+const isObjectAhead = (player, selectedObject) =>
   ({
     north: ["north", "northEast", "northWest"],
     northWest: ["northWest", "north", "west"],
@@ -83,4 +83,4 @@ const isAngleFine = (player, selectedObject) =>
     player.direction
   ));
 
-export { directions, getDirection, isAngleFine };
+export { directions, getDirection, isObjectAhead };
