@@ -49,6 +49,14 @@ export const sockets = (game) => {
     game.settings.showRange = value;
   };
 
+  const keepSelectionOnMovementCb = (name, value) => {
+    game.socket.emit("settings:keepSelectionOnMovement", {
+      name,
+      value,
+    });
+    game.settings.keepSelectionOnMovement = value;
+  };
+
   const respawnCb = (name) => {
     game.socket.emit("player:respawn", {
       name,
@@ -157,6 +165,7 @@ export const sockets = (game) => {
         followCb,
         fightCb,
         showRangeCb,
+        keepSelectionOnMovementCb,
         respawnCb,
         dropSelectionCb,
         actionCb,

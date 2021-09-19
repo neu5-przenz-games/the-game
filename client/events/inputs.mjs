@@ -17,7 +17,13 @@ export const inputs = (game) => {
     }
 
     if (clickedTile.x >= 0 && clickedTile.y >= 0) {
-      game.resetSelectedObject();
+      if (game.settings.keepSelectionOnMovement && game.settings.follow) {
+        game.settings.follow = false;
+        game.profile.UISettings.setFollowCheckbox(false);
+      }
+      if (!game.settings.keepSelectionOnMovement) {
+        game.resetSelectedObject();
+      }
 
       game.socket.emit("player:go", {
         name: game.mainPlayerName,

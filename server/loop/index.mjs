@@ -81,10 +81,6 @@ const loop = (players, io) => {
           )
         );
 
-        if (player.followedPlayer) {
-          player.updateFollowing(map, players);
-        }
-
         const path = finder.findPath(
           player.positionTile.tileX,
           player.positionTile.tileY,
@@ -103,7 +99,8 @@ const loop = (players, io) => {
 
           if (
             player.selectedPlayer === null ||
-            (player.selectedPlayer && player.settings.follow)
+            (player.selectedPlayer && player.settings.follow) ||
+            player.settings.keepSelectionOnMovement
           ) {
             player.next = {
               x: player.x + directions[player.direction].nextX,

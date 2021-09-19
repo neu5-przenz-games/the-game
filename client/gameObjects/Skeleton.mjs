@@ -366,7 +366,7 @@ class Skeleton extends Phaser.GameObjects.Image {
 
     // Handle Main player only
     if (this.isMainPlayer) {
-      if (this.scene.selectedObject === null && destTile !== null) {
+      if (destTile !== null) {
         // clear previous marker if it exists and if player is in movement
         if (
           this.tileMarked.visible === true &&
