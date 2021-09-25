@@ -12,7 +12,9 @@ export class UIBackpack {
 
   setBackpack({ items, slots }) {
     this.backpackItems.textContent = "";
-    this.backpackSlots.innerText = `Backpack slots - ${slots}`;
+    this.backpackSlots.innerText = `Backpack of ${slots} slots with ${
+      slots - items.length
+    } empty slots`;
 
     const fragment = new DocumentFragment();
 
