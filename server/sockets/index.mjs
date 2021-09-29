@@ -153,36 +153,18 @@ const sockets = ({ players, httpServer, FRAME_IN_MS }) => {
         }
       );
 
-      socket.on("settings:follow", ({ name, value }) => {
+      socket.on("settings:checkbox:set", ({ checkboxName, name, value }) => {
         const player = players.get(name);
 
         if (player) {
-          player.isWalking = false;
-          player.setSettingsFollow(value);
-        }
-      });
-
-      socket.on("settings:fight", ({ name, value }) => {
-        const player = players.get(name);
-
-        if (player) {
-          player.setSettingsFight(value);
-        }
-      });
-
-      socket.on("settings:showRange", ({ name, value }) => {
-        const player = players.get(name);
-
-        if (player) {
-          player.setSettingsShowRange(value);
-        }
-      });
-
-      socket.on("settings:keepSelectionOnMovement", ({ name, value }) => {
-        const player = players.get(name);
-
-        if (player) {
-          player.setSettingsKeepSelectionOnMovement(value);
+          player[
+            {
+              follow: "setSettingsFollow",
+              fight: "setSettingsFight",
+              showRange: "setSettingsShowRange",
+              keepSelectionOnMovement: "setSettingsKeepSelectionOnMovement",
+            }[checkboxName]
+          ](value);
         }
       });
 

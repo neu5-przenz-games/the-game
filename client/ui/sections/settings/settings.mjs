@@ -1,14 +1,5 @@
 export class UISettings {
-  constructor({
-    followCb,
-    fightCb,
-    isDead,
-    keepSelectionOnMovementCb,
-    name,
-    respawnCb,
-    settings,
-    showRangeCb,
-  }) {
+  constructor({ checkboxCb, isDead, name, respawnCb, settings }) {
     const [respawnButton] = document.getElementsByClassName(
       "profile-wrapper__respawn-button"
     );
@@ -38,21 +29,20 @@ export class UISettings {
 
     this.respawnButton.disabled = !isDead;
 
-    this.followCheckbox.onchange = () => {
-      followCb(name, this.followCheckbox.checked);
+    const handleCheckbox = (ev) => {
+      const { dataset, checked } = ev.target;
+
+      checkboxCb({
+        checkboxName: dataset.name,
+        name,
+        value: checked,
+      });
     };
 
-    this.fightCheckbox.onchange = () => {
-      fightCb(name, this.fightCheckbox.checked);
-    };
-
-    this.showRange.onchange = () => {
-      showRangeCb(name, this.showRange.checked);
-    };
-
-    this.keepSelectionOnMovement.onchange = () => {
-      keepSelectionOnMovementCb(name, this.keepSelectionOnMovement.checked);
-    };
+    this.followCheckbox.onchange = handleCheckbox;
+    this.fightCheckbox.onchange = handleCheckbox;
+    this.showRange.onchange = handleCheckbox;
+    this.keepSelectionOnMovement.onchange = handleCheckbox;
 
     this.respawnButton.onclick = () => {
       respawnCb(name);
