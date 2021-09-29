@@ -25,36 +25,13 @@ export const sockets = (game) => {
     game.playerList.playerInactive(name);
   });
 
-  const followCb = (name, value) => {
-    game.socket.emit("settings:follow", {
+  const checkboxCb = ({ checkboxName, name, value }) => {
+    game.socket.emit("settings:checkbox:set", {
       name,
       value,
+      checkboxName,
     });
-    game.settings.follow = value;
-  };
-
-  const fightCb = (name, value) => {
-    game.socket.emit("settings:fight", {
-      name,
-      value,
-    });
-    game.settings.fight = value;
-  };
-
-  const showRangeCb = (name, value) => {
-    game.socket.emit("settings:showRange", {
-      name,
-      value,
-    });
-    game.settings.showRange = value;
-  };
-
-  const keepSelectionOnMovementCb = (name, value) => {
-    game.socket.emit("settings:keepSelectionOnMovement", {
-      name,
-      value,
-    });
-    game.settings.keepSelectionOnMovement = value;
+    game.settings[checkboxName] = value;
   };
 
   const respawnCb = (name) => {
@@ -162,10 +139,7 @@ export const sockets = (game) => {
         crafting,
         skills,
         backpack,
-        followCb,
-        fightCb,
-        showRangeCb,
-        keepSelectionOnMovementCb,
+        checkboxCb,
         respawnCb,
         dropSelectionCb,
         actionCb,

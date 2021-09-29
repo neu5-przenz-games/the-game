@@ -16,10 +16,7 @@ export class UIProfile {
     skills,
     backpack,
     settings,
-    followCb,
-    fightCb,
-    showRangeCb,
-    keepSelectionOnMovementCb,
+    checkboxCb,
     respawnCb,
     dropSelectionCb,
     actionCb,
@@ -50,14 +47,11 @@ export class UIProfile {
     this.UICrafting = new UICrafting({ name, craftingCb });
     this.UISkills = new UISkills();
     this.UISettings = new UISettings({
-      followCb,
-      fightCb,
+      checkboxCb,
       isDead,
       name,
       respawnCb,
       settings,
-      showRangeCb,
-      keepSelectionOnMovementCb,
     });
     this.UITabs = new UITabs();
 

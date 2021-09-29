@@ -114,6 +114,7 @@ class Player {
   }
 
   setSettingsFollow(value) {
+    this.isWalking = false;
     this.settings.follow = value;
   }
 
