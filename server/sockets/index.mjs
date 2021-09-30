@@ -1,5 +1,4 @@
 import { Server } from "socket.io";
-
 import {
   DEBUG_ITEMS_SETS,
   DEBUG_SKILL_POINTS,
@@ -14,10 +13,9 @@ import {
   skillsSchema,
 } from "../../shared/skills/index.mjs";
 import map from "../../public/assets/map/map.mjs";
-import { gameObjects } from "../../shared/init/gameObjects.mjs";
 import { getAllies, getXYFromTile } from "../utils/algo.mjs";
 
-const sockets = ({ players, httpServer, FRAME_IN_MS }) => {
+const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
   const io = new Server(httpServer);
 
   return io.on("connection", (socket) => {
@@ -53,6 +51,23 @@ const sockets = ({ players, httpServer, FRAME_IN_MS }) => {
           };
         }),
         socket.id
+      );
+
+      const lootingBags = gameObjects.reduce((res, go) => {
+        if (go.type === "LootingBag") {
+          res.push(go);
+        }
+
+        return res;
+      }, []);
+
+      io.emit(
+        "looting-bag:list",
+        lootingBags.map(({ name, positionTile, items }) => ({
+          id: name,
+          positionTile,
+          items,
+        }))
       );
 
       socket.broadcast.emit("player:new", availablePlayer);
@@ -134,12 +149,14 @@ const sockets = ({ players, httpServer, FRAME_IN_MS }) => {
               (obj) => obj.name === selectedObjectName
             );
 
-            player.setSelectedObject(selectedObject);
+            if (selectedObject) {
+              player.setSelectedObject(selectedObject);
 
-            const { action } = selectedObject;
+              const { action } = selectedObject;
 
-            if (action) {
-              player.action = action;
+              if (action) {
+                player.action = action;
+              }
             }
           }
 

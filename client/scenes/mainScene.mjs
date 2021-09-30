@@ -131,6 +131,8 @@ export class MainScene extends Phaser.Scene {
     this.load.image("Tree", "./assets/gfx/tree.png");
     this.load.image("Ore", "./assets/gfx/ore-copper.png");
 
+    this.load.image("looting-bag", "./assets/gfx/looting-bag.png");
+
     this.load.image("tile-marked", "./assets/gfx/tile-marked.png");
     this.load.image("tile-selected", "./assets/gfx/tile-selected.png");
     this.load.image("tile-fight", "./assets/gfx/tile-fight.png");

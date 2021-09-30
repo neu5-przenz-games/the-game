@@ -13,7 +13,7 @@ import {
 import { getHitText } from "../utils/hitText.mjs";
 
 import map from "../../public/assets/map/map.mjs";
-import { gameObjects } from "../../shared/init/gameObjects.mjs";
+
 import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
 import {
   getLevel,
@@ -22,6 +22,7 @@ import {
 } from "../../shared/skills/index.mjs";
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
+import { LootingBag } from "../../shared/gameObjects/index.mjs";
 
 const SI = new SnapshotInterpolation();
 
@@ -31,17 +32,9 @@ const finder = new PF.AStarFinder({
   allowDiagonal: true,
 });
 
-const healingStones = gameObjects.reduce((res, go) => {
-  if (go.type === "HealingStone") {
-    res.push(go);
-  }
-
-  return res;
-}, []);
-
 let tick = 0;
 
-const loop = (players, io) => {
+const loop = ({ gameObjects, healingStones, io, players }) => {
   players.forEach((player) => {
     // Destination is set
     if (player.dest !== null) {
@@ -216,6 +209,43 @@ const loop = (players, io) => {
           selectedPlayer.dest = null;
           selectedPlayer.next = null;
           selectedPlayer.isWalking = false;
+
+          if (
+            gameObjects.some(
+              (go) =>
+                go.name ===
+                `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+            )
+          ) {
+            // the looting bag is already there, just add the items to it
+          } else {
+            gameObjects.push(
+              new LootingBag({
+                name: `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                positionTile: {
+                  tileX: selectedPlayer.positionTile.tileX,
+                  tileY: selectedPlayer.positionTile.tileY,
+                },
+              })
+            );
+          }
+
+          const lootingBags = gameObjects.reduce((res, go) => {
+            if (go.type === "LootingBag") {
+              res.push(go);
+            }
+
+            return res;
+          }, []);
+
+          io.emit(
+            "looting-bag:list",
+            lootingBags.map(({ name, positionTile, items }) => ({
+              id: name,
+              positionTile,
+              items,
+            }))
+          );
 
           io.to(selectedPlayer.socketId).emit(
             "player:dead",
