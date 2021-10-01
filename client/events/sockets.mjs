@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import io from "socket.io-client";
 
 import { MESSAGES } from "../../shared/UIMessages/index.mjs";
+import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { Skeleton } from "../gameObjects/Skeleton.mjs";
 import { TextTween } from "../gameObjects/TextTween.mjs";
 import { UIProfile } from "../ui/profile.mjs";
@@ -295,6 +296,35 @@ export const sockets = (game) => {
 
   game.socket.on("chat:message:add", (message, playerName) => {
     game.chat.addMessage(playerName, message);
+  });
+
+  game.socket.on("looting-bag:list", (lootingBags) => {
+    lootingBags.forEach(({ id, positionTile }) => {
+      const objectWorldXY = game.groundLayer.tileToWorldXY(
+        positionTile.tileX,
+        positionTile.tileY
+      );
+
+      const lootingBag = new LootingBag(
+        game,
+        objectWorldXY.x,
+        objectWorldXY.y,
+        "looting-bag",
+        id
+      );
+
+      game.add.existing(lootingBag);
+
+      lootingBag.setInteractive(
+        new Phaser.Geom.Rectangle(
+          0,
+          0,
+          lootingBag.constructor.hitAreaSize.width,
+          lootingBag.constructor.hitAreaSize.height
+        ),
+        Phaser.Geom.Rectangle.Contains
+      );
+    });
   });
 
   game.socket.on("connect", () => {

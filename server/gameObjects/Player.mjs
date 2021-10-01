@@ -134,6 +134,12 @@ class Player {
     this.equipment.weapon = value;
   }
 
+  hasItems() {
+    return (
+      this.backpack.items.length > 0 || Object.keys(this.equipment).length > 0
+    );
+  }
+
   addToBackpack(newItems) {
     if (!this.canAddToBackpack(newItems.length)) {
       return false;
