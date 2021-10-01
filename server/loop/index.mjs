@@ -51,6 +51,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         if (player.x === player.dest.x && player.y === player.dest.y) {
           player.dest = null;
           player.isWalking = false;
+
+          if (player.selectedPlayer?.type === "LootingBag") {
+            io.to(player.socketId).emit("looting-bag:show");
+          }
         }
       } else {
         if (player.dropSelection) {

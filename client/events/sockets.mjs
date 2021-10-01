@@ -327,6 +327,10 @@ export const sockets = (game) => {
     });
   });
 
+  game.socket.on("looting-bag:show", () => {
+    game.profile.UIDialog.show();
+  });
+
   game.socket.on("connect", () => {
     displayServerMessage(game, `Connected to server`);
   });

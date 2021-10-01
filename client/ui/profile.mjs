@@ -1,6 +1,7 @@
 import {
   UIBackpack,
   UICrafting,
+  UIDialog,
   UIEquipment,
   UISettings,
   UISkills,
@@ -59,6 +60,8 @@ export class UIProfile {
     this.UIBackpack.setBackpack(backpack);
     this.UICrafting.setCrafting(crafting);
     this.UISkills.setSkills(skills);
+
+    this.UIDialog = new UIDialog();
 
     this.dropSelectionButton.onclick = () => {
       dropSelectionCb(name);

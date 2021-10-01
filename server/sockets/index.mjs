@@ -164,6 +164,11 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
             player.updateFollowing(map, players);
           }
 
+          // player selected looting bag and stands next to it
+          if (type === "LootingBag" && player.dest === null) {
+            io.to(player.socketId).emit("looting-bag:show");
+          }
+
           io.to(player.socketId).emit("action:button:set", {
             name: player.action,
           });
