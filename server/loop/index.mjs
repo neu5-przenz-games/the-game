@@ -210,42 +210,44 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           selectedPlayer.next = null;
           selectedPlayer.isWalking = false;
 
-          if (
-            gameObjects.some(
-              (go) =>
-                go.name ===
-                `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
-            )
-          ) {
-            // the looting bag is already there, just add the items to it
-          } else {
-            gameObjects.push(
-              new LootingBag({
-                name: `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
-                positionTile: {
-                  tileX: selectedPlayer.positionTile.tileX,
-                  tileY: selectedPlayer.positionTile.tileY,
-                },
-              })
-            );
-          }
-
-          const lootingBags = gameObjects.reduce((res, go) => {
-            if (go.type === "LootingBag") {
-              res.push(go);
+          if (selectedPlayer.hasItems()) {
+            if (
+              gameObjects.some(
+                (go) =>
+                  go.name ===
+                  `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+              )
+            ) {
+              // the looting bag is already there, just add the items to it
+            } else {
+              gameObjects.push(
+                new LootingBag({
+                  name: `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                  positionTile: {
+                    tileX: selectedPlayer.positionTile.tileX,
+                    tileY: selectedPlayer.positionTile.tileY,
+                  },
+                })
+              );
             }
 
-            return res;
-          }, []);
+            const lootingBags = gameObjects.reduce((res, go) => {
+              if (go.type === "LootingBag") {
+                res.push(go);
+              }
 
-          io.emit(
-            "looting-bag:list",
-            lootingBags.map(({ name, positionTile, items }) => ({
-              id: name,
-              positionTile,
-              items,
-            }))
-          );
+              return res;
+            }, []);
+
+            io.emit(
+              "looting-bag:list",
+              lootingBags.map(({ name, positionTile, items }) => ({
+                id: name,
+                positionTile,
+                items,
+              }))
+            );
+          }
 
           io.to(selectedPlayer.socketId).emit(
             "player:dead",
