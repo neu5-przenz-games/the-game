@@ -9,10 +9,11 @@
 }
 
 .dialog {
-  width: 50%;
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
   background-color: white;
-  top: 10%;
+  top: 0;
   position: relative;
 }
 
@@ -21,5 +22,20 @@
 
   &__close-button {
     float: right;
+  }
+}
+
+.dialog-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 64px);
+  grid-template-rows: auto;
+  column-gap: 8px;
+  row-gap: 4px;
+
+  &__item {
+    @include item;
+  }
+  &__item-quantity {
+    @include item-quantity;
   }
 }
