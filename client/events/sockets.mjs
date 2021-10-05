@@ -327,8 +327,8 @@ export const sockets = (game) => {
     });
   });
 
-  game.socket.on("looting-bag:show", () => {
-    game.profile.UIDialog.show();
+  game.socket.on("looting-bag:show", (items) => {
+    game.profile.UIDialog.show(items);
   });
 
   game.socket.on("connect", () => {

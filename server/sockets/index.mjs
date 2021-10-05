@@ -166,7 +166,19 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
           // player selected looting bag and stands next to it
           if (type === "LootingBag" && player.dest === null) {
-            io.to(player.socketId).emit("looting-bag:show");
+            const openLootingBagResult = player.canOpenLootingBag();
+
+            if (openLootingBagResult === true) {
+              io.to(player.socketId).emit(
+                "looting-bag:show",
+                player.selectedPlayer.items
+              );
+            } else {
+              io.to(player.socketId).emit(
+                "action:rejected",
+                openLootingBagResult
+              );
+            }
           }
 
           io.to(player.socketId).emit("action:button:set", {

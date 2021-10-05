@@ -25,8 +25,9 @@ const healingStones = gameObjects.reduce((res, go) => {
 }, []);
 
 const lootingBag = new LootingBag({
-  name: "10x16",
+  name: `LootingBag10x16`,
   positionTile: { tileX: 10, tileY: 16 },
+  items: [{ id: "armor", quantity: 1 }],
 });
 
 playersMocks.forEach((player) => {

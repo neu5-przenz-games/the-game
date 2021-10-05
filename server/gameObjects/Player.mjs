@@ -427,6 +427,13 @@ class Player {
     );
   }
 
+  canOpenLootingBag() {
+    if (!this.isInRange(1)) {
+      return MESSAGES_TYPES.NOT_IN_RANGE;
+    }
+    return true;
+  }
+
   canGetResource(energyCost) {
     if (!this.isInRange(1)) {
       return MESSAGES_TYPES.NOT_IN_RANGE;

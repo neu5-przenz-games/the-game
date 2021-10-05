@@ -53,7 +53,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           player.isWalking = false;
 
           if (player.selectedPlayer?.type === "LootingBag") {
-            io.to(player.socketId).emit("looting-bag:show");
+            io.to(player.socketId).emit(
+              "looting-bag:show",
+              player.selectedPlayer.items
+            );
           }
         }
       } else {
@@ -214,23 +217,53 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           selectedPlayer.next = null;
           selectedPlayer.isWalking = false;
 
+          const lootingBag = gameObjects.find(
+            (go) =>
+              go.name ===
+              `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+          );
+
           if (selectedPlayer.hasItems()) {
-            if (
-              gameObjects.some(
-                (go) =>
-                  go.name ===
-                  `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
-              )
-            ) {
-              // the looting bag is already there, just add the items to it
-            } else {
-              gameObjects.push(
+            if (lootingBag) {
+              const currentItems = [...lootingBag.items];
+
+              gameObjects.splice(
+                gameObjects.findIndex(
+                  (go) =>
+                    go.name ===
+                    `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+                ),
+                1,
                 new LootingBag({
-                  name: `${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                  name: `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
                   positionTile: {
                     tileX: selectedPlayer.positionTile.tileX,
                     tileY: selectedPlayer.positionTile.tileY,
                   },
+                  items: [
+                    ...currentItems,
+                    ...selectedPlayer.backpack.items,
+                    ...Object.values(selectedPlayer.equipment),
+                  ],
+                })
+              );
+            } else {
+              const items = [
+                ...selectedPlayer.backpack.items,
+                ...Object.values(selectedPlayer.equipment),
+              ];
+
+              selectedPlayer.setBackpack();
+              selectedPlayer.setEquipment();
+
+              gameObjects.push(
+                new LootingBag({
+                  name: `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                  positionTile: {
+                    tileX: selectedPlayer.positionTile.tileX,
+                    tileY: selectedPlayer.positionTile.tileY,
+                  },
+                  items,
                 })
               );
             }
@@ -252,6 +285,12 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
               }))
             );
           }
+
+          io.to(selectedPlayer.socketId).emit(
+            "items:update",
+            selectedPlayer.backpack,
+            selectedPlayer.equipment
+          );
 
           io.to(selectedPlayer.socketId).emit(
             "player:dead",
