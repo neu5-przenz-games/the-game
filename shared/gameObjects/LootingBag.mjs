@@ -14,3 +14,20 @@ export class LootingBag extends GameObject {
     this.items = items;
   }
 }
+
+export const mergeItems = (items, item) => {
+  const index = items.findIndex((i) => i.id === item.id);
+
+  if (index !== -1) {
+    const itemToAdd = items[index];
+
+    items[index] = {
+      ...itemToAdd,
+      quantity: itemToAdd.quantity + item.quantity,
+    };
+  } else {
+    items.push(item);
+  }
+
+  return items;
+};

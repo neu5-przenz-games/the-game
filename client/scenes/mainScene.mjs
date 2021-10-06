@@ -22,6 +22,7 @@ export class MainScene extends Phaser.Scene {
     this.mainPlayerName = null;
     this.groundLayer = null;
     this.players = new Map();
+    this.lootingBags = [];
     this.playerList = new UIPlayerStatusList();
     this.profile = null;
     this.settings = null;

@@ -17,12 +17,13 @@ export class UIProfile {
     skills,
     backpack,
     settings,
-    checkboxCb,
-    respawnCb,
-    dropSelectionCb,
     actionCb,
-    itemActionsCb,
+    checkboxCb,
     craftingCb,
+    dialogCb,
+    dropSelectionCb,
+    itemActionsCb,
+    respawnCb,
   }) {
     const [profileHello] = document.getElementsByClassName(
       "profile-wrapper__hello"
@@ -61,7 +62,7 @@ export class UIProfile {
     this.UICrafting.setCrafting(crafting);
     this.UISkills.setSkills(skills);
 
-    this.UIDialog = new UIDialog();
+    this.UIDialog = new UIDialog({ dialogCb, name });
 
     this.dropSelectionButton.onclick = () => {
       dropSelectionCb(name);

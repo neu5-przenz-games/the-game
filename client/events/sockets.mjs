@@ -71,6 +71,13 @@ export const sockets = (game) => {
     });
   };
 
+  const dialogCb = ({ items, name }) => {
+    game.socket.emit("looting-bag:get-items", {
+      items,
+      name,
+    });
+  };
+
   game.socket.on("players:list", (players, socketId) => {
     game.setSocketId(socketId);
 
@@ -140,12 +147,13 @@ export const sockets = (game) => {
         crafting,
         skills,
         backpack,
-        checkboxCb,
-        respawnCb,
-        dropSelectionCb,
         actionCb,
-        itemActionsCb,
+        checkboxCb,
         craftingCb,
+        dialogCb,
+        dropSelectionCb,
+        itemActionsCb,
+        respawnCb,
       })
     );
 
@@ -299,6 +307,12 @@ export const sockets = (game) => {
   });
 
   game.socket.on("looting-bag:list", (lootingBags) => {
+    game.lootingBags.forEach((lootingBag) => {
+      lootingBag.destroy();
+    });
+
+    game.lootingBags = [];
+
     lootingBags.forEach(({ id, positionTile }) => {
       const objectWorldXY = game.groundLayer.tileToWorldXY(
         positionTile.tileX,
@@ -324,11 +338,19 @@ export const sockets = (game) => {
         ),
         Phaser.Geom.Rectangle.Contains
       );
+
+      game.lootingBags.push(lootingBag);
     });
   });
 
   game.socket.on("looting-bag:show", (items) => {
     game.profile.UIDialog.show(items);
+  });
+
+  game.socket.on("looting-bag:close", () => {
+    game.resetSelectedObject();
+
+    game.profile.UIDialog.close();
   });
 
   game.socket.on("connect", () => {
