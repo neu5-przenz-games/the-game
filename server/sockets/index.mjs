@@ -7,6 +7,7 @@ import { UI_ITEM_ACTIONS } from "../../shared/UIItemActions/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
 import { bag } from "../../shared/init/gameItems/backpack.mjs";
 import { receipts } from "../../shared/receipts/index.mjs";
+import { LootingBag } from "../../shared/gameObjects/index.mjs";
 import {
   setSkillPoints,
   shapeSkillsForClient,
@@ -14,6 +15,24 @@ import {
 } from "../../shared/skills/index.mjs";
 import map from "../../public/assets/map/map.mjs";
 import { getAllies, getXYFromTile } from "../utils/algo.mjs";
+
+const emitLootingBagList = (gameObjects, io) =>
+  io.emit(
+    "looting-bag:list",
+    gameObjects
+      .reduce((res, go) => {
+        if (go.type === "LootingBag") {
+          res.push(go);
+        }
+
+        return res;
+      }, [])
+      .map(({ name, positionTile, items }) => ({
+        id: name,
+        positionTile,
+        items,
+      }))
+  );
 
 const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
   const io = new Server(httpServer);
@@ -53,22 +72,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
         socket.id
       );
 
-      const lootingBags = gameObjects.reduce((res, go) => {
-        if (go.type === "LootingBag") {
-          res.push(go);
-        }
-
-        return res;
-      }, []);
-
-      io.emit(
-        "looting-bag:list",
-        lootingBags.map(({ name, positionTile, items }) => ({
-          id: name,
-          positionTile,
-          items,
-        }))
-      );
+      emitLootingBagList(gameObjects, io);
 
       socket.broadcast.emit("player:new", availablePlayer);
 
@@ -433,6 +437,80 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           "action:start",
           Math.ceil(receipt.durationTicks * FRAME_IN_MS)
         );
+      });
+
+      socket.on("looting-bag:get-items", ({ items, name }) => {
+        const player = players.get(name);
+
+        if (!player || items.length === 0 || player.selectedPlayer === null) {
+          return;
+        }
+
+        const { selectedPlayer } = player;
+        const lootingBagItems = player.selectedPlayer.items;
+
+        if (!items.every((id) => lootingBagItems.find((i) => i.id === id))) {
+          return;
+        }
+
+        const itemsToAdd = items.map((id) => ({
+          id,
+          quantity: lootingBagItems.find((item) => item.id === id).quantity,
+        }));
+
+        if (player.addToBackpack(itemsToAdd)) {
+          const newLootingBagItems = lootingBagItems.reduce(
+            (lootingBag, item) => {
+              if (itemsToAdd.find((i) => i.id === item.id)) {
+                return lootingBag;
+              }
+              lootingBag.push(item);
+
+              return lootingBag;
+            },
+            []
+          );
+
+          if (newLootingBagItems.length === 0) {
+            gameObjects.splice(
+              gameObjects.findIndex(
+                (go) =>
+                  go.name ===
+                  `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+              ),
+              1
+            );
+          } else {
+            gameObjects.splice(
+              gameObjects.findIndex(
+                (go) =>
+                  go.name ===
+                  `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+              ),
+              1,
+              new LootingBag({
+                name: `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                positionTile: {
+                  tileX: selectedPlayer.positionTile.tileX,
+                  tileY: selectedPlayer.positionTile.tileY,
+                },
+                items: [...newLootingBagItems],
+              })
+            );
+          }
+
+          emitLootingBagList(gameObjects, io);
+
+          io.emit("looting-bag:close");
+
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
+
+          player.resetSelected();
+        }
       });
 
       socket.on("player:message:send", ({ name, text }) => {

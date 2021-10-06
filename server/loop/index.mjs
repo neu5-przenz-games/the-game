@@ -22,7 +22,7 @@ import {
 } from "../../shared/skills/index.mjs";
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
-import { LootingBag } from "../../shared/gameObjects/index.mjs";
+import { LootingBag, mergeItems } from "../../shared/gameObjects/index.mjs";
 
 const SI = new SnapshotInterpolation();
 
@@ -244,14 +244,14 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
                     ...currentItems,
                     ...selectedPlayer.backpack.items,
                     ...Object.values(selectedPlayer.equipment),
-                  ],
+                  ].reduce(mergeItems, []),
                 })
               );
             } else {
               const items = [
                 ...selectedPlayer.backpack.items,
                 ...Object.values(selectedPlayer.equipment),
-              ];
+              ].reduce(mergeItems, []);
 
               selectedPlayer.setBackpack();
               selectedPlayer.setEquipment();
