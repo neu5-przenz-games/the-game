@@ -5,9 +5,12 @@ const DIALOG_WRAPPER_CLASSNAME = "dialog-wrapper";
 const DIALOG_CLASSNAME = "dialog";
 const DIALOG_CLOSE_BUTTON_CLASSNAME = "dialog-header__close-button";
 const DIALOG_CONTENT_CLASSNAME = "dialog-content";
-const DIALOG_CONTENT_ITEM_CLASSNAME = `${DIALOG_CONTENT_CLASSNAME}__item`;
-const DIALOG_CONTENT_ITEM_MARKER_CLASSNAME = `${DIALOG_CONTENT_CLASSNAME}__item-marker`;
-const DIALOG_CONTENT_ITEM_QUANTITY_CLASSNAME = `${DIALOG_CONTENT_CLASSNAME}__item-quantity`;
+
+const DIALOG_ITEMS_COUNTER_CLASSNAME = "dialog-counter";
+const DIALOG_ITEMS_CLASSNAME = "dialog-items";
+const DIALOG_ITEM_CLASSNAME = `${DIALOG_ITEMS_CLASSNAME}__item`;
+const DIALOG_ITEM_MARKER_CLASSNAME = `${DIALOG_ITEMS_CLASSNAME}__item-marker`;
+const DIALOG_ITEM_QUANTITY_CLASSNAME = `${DIALOG_ITEMS_CLASSNAME}__item-quantity`;
 
 const DIALOG_FOOTER_CLASSNAME = "dialog-footer";
 
@@ -33,6 +36,10 @@ export class UIDialog {
     this.dialogContent = dialogContent;
     this.dialogFooter = dialogFooter;
 
+    this.items = [];
+    this.counter = null;
+    this.checkboxes = [];
+
     this.dialog.onclick = (ev) => {
       const { action } = ev.target.dataset;
 
@@ -48,6 +55,29 @@ export class UIDialog {
 
         dialogCb({ items, name });
       }
+
+      if (action === "SELECT_ALL") {
+        this.checkboxes.forEach((checkbox) => {
+          checkbox.checked = true;
+        });
+
+        this.setCounter();
+      }
+
+      if (action === "SELECT_CLEAR") {
+        this.checkboxes.forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+
+        this.setCounter();
+      }
+
+      if (
+        ev.target.type === "checkbox" &&
+        ev.target.name === "looting-bag-item"
+      ) {
+        this.setCounter();
+      }
     };
 
     this.dialogCloseButton.onclick = () => {
@@ -55,14 +85,45 @@ export class UIDialog {
     };
   }
 
+  setCounter() {
+    this.counter.textContent = `Selected ${this.checkboxes.reduce(
+      (sum, checkbox) => (checkbox.checked ? sum + 1 : sum),
+      0
+    )}/${this.items.length}`;
+  }
+
   setContent(items) {
     this.dialogContent.textContent = "";
 
+    this.items = items;
+    this.checkboxes = [];
+
     const fragment = new DocumentFragment();
+
+    const counter = document.createElement("p");
+    counter.classList.add(DIALOG_ITEMS_COUNTER_CLASSNAME);
+
+    this.counter = counter;
+    this.setCounter();
+
+    const selectAllBtn = document.createElement("button");
+    selectAllBtn.textContent = "Select all";
+    selectAllBtn.dataset.action = "SELECT_ALL";
+
+    const clearSelectedBtn = document.createElement("button");
+    clearSelectedBtn.textContent = "Clear selection";
+    clearSelectedBtn.dataset.action = "SELECT_CLEAR";
+
+    fragment.appendChild(counter);
+    fragment.appendChild(selectAllBtn);
+    fragment.appendChild(clearSelectedBtn);
+
+    const itemsWrapper = document.createElement("div");
+    itemsWrapper.classList.add(DIALOG_ITEMS_CLASSNAME);
 
     for (let i = 0; i < items.length; i += 1) {
       const div = document.createElement("div");
-      div.classList.add(DIALOG_CONTENT_ITEM_CLASSNAME);
+      div.classList.add(DIALOG_ITEM_CLASSNAME);
 
       const item = items[i];
 
@@ -71,16 +132,17 @@ export class UIDialog {
       checkbox.type = "checkbox";
       checkbox.name = "looting-bag-item";
       checkbox.value = item.id;
+      this.checkboxes.push(checkbox);
 
       const marker = document.createElement("div");
-      marker.classList.add(DIALOG_CONTENT_ITEM_MARKER_CLASSNAME);
+      marker.classList.add(DIALOG_ITEM_MARKER_CLASSNAME);
 
       const itemImg = document.createElement("img");
       itemImg.src = ITEMS_PATH.concat(gameItems.get(item.id).imgURL);
       itemImg.dataset.itemName = item.id;
 
       const quantity = document.createElement("div");
-      quantity.classList.add(DIALOG_CONTENT_ITEM_QUANTITY_CLASSNAME);
+      quantity.classList.add(DIALOG_ITEM_QUANTITY_CLASSNAME);
       quantity.innerText = item.quantity;
 
       div.appendChild(label);
@@ -90,8 +152,10 @@ export class UIDialog {
       label.appendChild(itemImg);
       label.appendChild(quantity);
 
-      fragment.appendChild(div);
+      itemsWrapper.appendChild(div);
     }
+
+    fragment.appendChild(itemsWrapper);
 
     this.dialogContent.appendChild(fragment);
   }
