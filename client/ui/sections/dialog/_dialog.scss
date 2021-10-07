@@ -25,7 +25,7 @@
   }
 }
 
-.dialog-content {
+.dialog-items {
   display: grid;
   grid-template-columns: repeat(auto-fill, 64px);
   grid-template-rows: auto;
@@ -39,7 +39,7 @@
       position: absolute;
       opacity: 0;
 
-      &:checked + .dialog-content__item-marker {
+      &:checked + .dialog-items__item-marker {
         border: 2px solid #00ff2e;
       }
     }
