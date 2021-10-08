@@ -9,8 +9,10 @@ const DIALOG_CONTENT_CLASSNAME = "dialog-content";
 const DIALOG_ITEMS_COUNTER_CLASSNAME = "dialog-counter";
 const DIALOG_ITEMS_CLASSNAME = "dialog-items";
 const DIALOG_ITEM_CLASSNAME = `${DIALOG_ITEMS_CLASSNAME}__item`;
+const DIALOG_LABEL_CLASSNAME = `${DIALOG_ITEMS_CLASSNAME}__label`;
 const DIALOG_ITEM_MARKER_CLASSNAME = `${DIALOG_ITEMS_CLASSNAME}__item-marker`;
 const DIALOG_ITEM_QUANTITY_CLASSNAME = `${DIALOG_ITEMS_CLASSNAME}__item-quantity`;
+const QUANTITY_SELECTOR_INPUT_CLASSNAME = "quantity-selector";
 
 const DIALOG_FOOTER_CLASSNAME = "dialog-footer";
 
@@ -39,6 +41,7 @@ export class UIDialog {
     this.items = [];
     this.counter = null;
     this.checkboxes = [];
+    this.quantitySelectors = [];
 
     this.dialog.onclick = (ev) => {
       const { action } = ev.target.dataset;
@@ -50,7 +53,15 @@ export class UIDialog {
 
         const items = [];
         checkboxes.forEach((checkbox) => {
-          items.push(checkbox.value);
+          items.push({
+            id: checkbox.value,
+            quantity: parseInt(
+              this.quantitySelectors.find(
+                (input) => input.name === checkbox.value
+              ).value,
+              10
+            ),
+          });
         });
 
         dialogCb({ items, name });
@@ -97,6 +108,7 @@ export class UIDialog {
 
     this.items = items;
     this.checkboxes = [];
+    this.quantitySelectors = [];
 
     const fragment = new DocumentFragment();
 
@@ -128,6 +140,8 @@ export class UIDialog {
       const item = items[i];
 
       const label = document.createElement("label");
+      label.classList.add(DIALOG_LABEL_CLASSNAME);
+
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.name = "looting-bag-item";
@@ -145,12 +159,24 @@ export class UIDialog {
       quantity.classList.add(DIALOG_ITEM_QUANTITY_CLASSNAME);
       quantity.innerText = item.quantity;
 
-      div.appendChild(label);
-
       label.appendChild(checkbox);
       label.appendChild(marker);
       label.appendChild(itemImg);
       label.appendChild(quantity);
+
+      div.appendChild(label);
+
+      const quantitySelector = document.createElement("input");
+      quantitySelector.classList.add(QUANTITY_SELECTOR_INPUT_CLASSNAME);
+      quantitySelector.type = "number";
+      quantitySelector.value = item.quantity;
+      quantitySelector.min = 1;
+      quantitySelector.max = item.quantity;
+      quantitySelector.name = item.id;
+
+      this.quantitySelectors.push(quantitySelector);
+
+      div.appendChild(quantitySelector);
 
       itemsWrapper.appendChild(div);
     }
