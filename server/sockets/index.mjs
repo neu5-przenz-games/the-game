@@ -442,29 +442,44 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
       socket.on("looting-bag:get-items", ({ items, name }) => {
         const player = players.get(name);
 
-        if (!player || items.length === 0 || player.selectedPlayer === null) {
+        if (
+          !player ||
+          items.length === 0 ||
+          player.selectedPlayer.type !== "LootingBag"
+        ) {
           return;
         }
 
         const { selectedPlayer } = player;
         const lootingBagItems = player.selectedPlayer.items;
 
-        if (!items.every((id) => lootingBagItems.find((i) => i.id === id))) {
+        if (
+          !items.every(({ id, quantity }) =>
+            lootingBagItems.find(
+              (item) => item.id === id && item.quantity >= quantity
+            )
+          )
+        ) {
           return;
         }
 
-        const itemsToAdd = items.map((id) => ({
-          id,
-          quantity: lootingBagItems.find((item) => item.id === id).quantity,
-        }));
-
-        if (player.addToBackpack(itemsToAdd)) {
+        if (player.addToBackpack(items)) {
           const newLootingBagItems = lootingBagItems.reduce(
             (lootingBag, item) => {
-              if (itemsToAdd.find((i) => i.id === item.id)) {
-                return lootingBag;
+              const itemSelectedByPlayer = items.find((i) => i.id === item.id);
+
+              if (
+                (itemSelectedByPlayer &&
+                  itemSelectedByPlayer.quantity !== item.quantity) ||
+                itemSelectedByPlayer === undefined
+              ) {
+                lootingBag.push({
+                  ...item,
+                  quantity:
+                    item.quantity -
+                    (itemSelectedByPlayer ? itemSelectedByPlayer.quantity : 0),
+                });
               }
-              lootingBag.push(item);
 
               return lootingBag;
             },

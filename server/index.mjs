@@ -28,8 +28,8 @@ const lootingBag = new LootingBag({
   name: `LootingBag10x16`,
   positionTile: { tileX: 10, tileY: 16 },
   items: [
-    { id: "armor", quantity: 1 },
-    { id: "sword", quantity: 1 },
+    { id: "armor", quantity: 2 },
+    { id: "sword", quantity: 2 },
   ],
 });
 
