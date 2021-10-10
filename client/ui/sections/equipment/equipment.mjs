@@ -24,9 +24,8 @@ export class UIEquipment {
       "equipment__personal"
     );
 
-    const [equipmentItemActions] = document.getElementsByClassName(
-      "equipment__actions"
-    );
+    const [equipmentItemActions] =
+      document.getElementsByClassName("equipment__actions");
 
     this.selectedItemName = null;
     this.equipmentItemType = null;

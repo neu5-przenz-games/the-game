@@ -265,9 +265,8 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
         socket.on("player:items:set", ({ name, itemsSetType }) => {
           const player = players.get(name);
-          const { equipment, backpackItems = [] } = DEBUG_ITEMS_SETS[
-            itemsSetType
-          ];
+          const { equipment, backpackItems = [] } =
+            DEBUG_ITEMS_SETS[itemsSetType];
 
           if (player && equipment && backpackItems) {
             const backpackToSet = gameItems.get(equipment.backpack.id);
