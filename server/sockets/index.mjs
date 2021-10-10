@@ -170,7 +170,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
           // player selected looting bag and stands next to it
           if (type === "LootingBag" && player.dest === null) {
-            const openLootingBagResult = player.canOpenLootingBag();
+            const openLootingBagResult = player.canInteractWithLootingBag();
 
             if (openLootingBagResult === true) {
               io.to(player.socketId).emit(
@@ -441,11 +441,16 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
       socket.on("looting-bag:get-items", ({ items, name }) => {
         const player = players.get(name);
+        const itemsToAdd = items.map((item) => ({
+          ...item,
+          quantity: parseInt(item.quantity, 10),
+        }));
 
         if (
           !player ||
-          items.length === 0 ||
-          player.selectedPlayer.type !== "LootingBag"
+          itemsToAdd.length === 0 ||
+          player.selectedPlayer.type !== "LootingBag" ||
+          !player.canInteractWithLootingBag()
         ) {
           return;
         }
@@ -454,19 +459,22 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
         const lootingBagItems = player.selectedPlayer.items;
 
         if (
-          !items.every(({ id, quantity }) =>
+          !itemsToAdd.every(({ id, quantity }) =>
             lootingBagItems.find(
-              (item) => item.id === id && item.quantity >= quantity
+              (item) =>
+                item.id === id && quantity > 0 && quantity <= item.quantity
             )
           )
         ) {
           return;
         }
 
-        if (player.addToBackpack(items)) {
+        if (player.addToBackpack(itemsToAdd)) {
           const newLootingBagItems = lootingBagItems.reduce(
             (lootingBag, item) => {
-              const itemSelectedByPlayer = items.find((i) => i.id === item.id);
+              const itemSelectedByPlayer = itemsToAdd.find(
+                ({ id }) => id === item.id
+              );
 
               if (
                 (itemSelectedByPlayer &&

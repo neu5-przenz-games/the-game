@@ -55,12 +55,9 @@ export class UIDialog {
         checkboxes.forEach((checkbox) => {
           items.push({
             id: checkbox.value,
-            quantity: parseInt(
-              this.quantitySelectors.find(
-                (input) => input.name === checkbox.value
-              ).value,
-              10
-            ),
+            quantity: this.quantitySelectors.find(
+              (input) => input.name === checkbox.value
+            ).value,
           });
         });
 
@@ -168,7 +165,7 @@ export class UIDialog {
 
       const quantitySelector = document.createElement("input");
       quantitySelector.classList.add(QUANTITY_SELECTOR_INPUT_CLASSNAME);
-      quantitySelector.type = "number";
+      // quantitySelector.type = "number";
       quantitySelector.value = item.quantity;
       quantitySelector.min = 1;
       quantitySelector.max = item.quantity;
