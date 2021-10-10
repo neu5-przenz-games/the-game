@@ -55,12 +55,9 @@ export class UIDialog {
         checkboxes.forEach((checkbox) => {
           items.push({
             id: checkbox.value,
-            quantity: parseInt(
-              this.quantitySelectors.find(
-                (input) => input.name === checkbox.value
-              ).value,
-              10
-            ),
+            quantity: this.quantitySelectors.find(
+              (input) => input.name === checkbox.value
+            ).value,
           });
         });
 

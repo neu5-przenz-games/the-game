@@ -427,7 +427,7 @@ class Player {
     );
   }
 
-  canOpenLootingBag() {
+  canInteractWithLootingBag() {
     if (!this.isInRange(1)) {
       return MESSAGES_TYPES.NOT_IN_RANGE;
     }
