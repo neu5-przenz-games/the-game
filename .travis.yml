@@ -1,11 +1,8 @@
-dist: focal
 language: node_js
 node_js:
   - 16
 addons:
-  apt:
-    packages:
-    - google-chrome-stable
+  chrome: stable
 before_script:
   - yarn lint;
   - if [ "$TRAVIS_BRANCH" = "main" ]; then
