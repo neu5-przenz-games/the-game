@@ -148,6 +148,13 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
             const selectedPlayer = players.get(selectedObjectName);
 
             player.setSelectedObject(selectedPlayer);
+
+            if (player.isSameFraction(player.selectedPlayer.fraction)) {
+              io.to(player.socketId).emit(
+                "dialog:confirm-attack-ally:show",
+                player.selectedPlayer.displayName
+              );
+            }
           } else {
             const selectedObject = gameObjects.find(
               (obj) => obj.name === selectedObjectName
@@ -174,7 +181,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
             if (openLootingBagResult === true) {
               io.to(player.socketId).emit(
-                "looting-bag:show",
+                "dialog:looting-bag:show",
                 player.selectedPlayer.items
               );
             } else {
@@ -197,6 +204,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
         if (player) {
           player[
             {
+              attackAlly: "setSettingsAttackAlly",
               follow: "setSettingsFollow",
               fight: "setSettingsFight",
               showRange: "setSettingsShowRange",
@@ -438,9 +446,9 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
         );
       });
 
-      socket.on("looting-bag:get-items", ({ items, name }) => {
+      socket.on("looting-bag:get-items", ({ selectedItems, name }) => {
         const player = players.get(name);
-        const itemsToAdd = items.map((item) => ({
+        const itemsToAdd = selectedItems.map((item) => ({
           ...item,
           quantity: parseInt(item.quantity, 10),
         }));

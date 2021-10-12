@@ -40,6 +40,7 @@ export const playersMocks = [
     },
     skills,
     settings: {
+      attackAlly: false,
       follow: true,
       fight: true,
       showRange: false,
@@ -85,6 +86,7 @@ export const playersMocks = [
     },
     skills,
     settings: {
+      attackAlly: false,
       follow: false,
       fight: true,
       showRange: false,
@@ -130,6 +132,7 @@ export const playersMocks = [
     },
     skills,
     settings: {
+      attackAlly: false,
       follow: false,
       fight: false,
       showRange: false,
@@ -175,6 +178,7 @@ export const playersMocks = [
     },
     skills,
     settings: {
+      attackAlly: false,
       follow: false,
       fight: false,
       showRange: false,
@@ -220,6 +224,7 @@ export const playersMocks = [
     },
     skills,
     settings: {
+      attackAlly: false,
       follow: false,
       fight: false,
       showRange: false,
@@ -265,6 +270,7 @@ export const playersMocks = [
     },
     skills,
     settings: {
+      attackAlly: false,
       follow: false,
       fight: false,
       showRange: false,
