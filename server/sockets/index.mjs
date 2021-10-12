@@ -149,7 +149,10 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
             player.setSelectedObject(selectedPlayer);
 
-            if (player.isSameFraction(player.selectedPlayer.fraction)) {
+            if (
+              player.isSameFraction(player.selectedPlayer.fraction) &&
+              !player.settings.attackAlly
+            ) {
               io.to(player.socketId).emit(
                 "dialog:confirm-attack-ally:show",
                 player.selectedPlayer.displayName
@@ -211,6 +214,10 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
               keepSelectionOnMovement: "setSettingsKeepSelectionOnMovement",
             }[checkboxName]
           ](value);
+
+          if (checkboxName === "attackAlly") {
+            io.emit("dialog:close");
+          }
         }
       });
 
@@ -531,7 +538,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
           emitLootingBagList(gameObjects, io);
 
-          io.emit("looting-bag:close");
+          io.emit("dialog:looting-bag:close");
 
           io.to(player.socketId).emit(
             "items:update",

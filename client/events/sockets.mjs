@@ -358,7 +358,11 @@ export const sockets = (game) => {
     }
   );
 
-  game.socket.on("looting-bag:close", () => {
+  game.socket.on("dialog:close", () => {
+    game.profile.UIDialog.wrapper.close();
+  });
+
+  game.socket.on("dialog:looting-bag:close", () => {
     game.resetSelectedObject();
 
     game.profile.UIDialog.wrapper.close();

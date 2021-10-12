@@ -1,5 +1,4 @@
 import { UIDialogWrapper } from "../wrapper/wrapper.mjs";
-
 import { createBtn } from "../../../utils/index.mjs";
 
 const ACTIONS = {

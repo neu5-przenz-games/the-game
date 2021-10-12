@@ -1,7 +1,7 @@
 import { UIDialogWrapper } from "../wrapper/wrapper.mjs";
-import { gameItems } from "../../../../../shared/init/gameItems/index.mjs";
 import { ITEMS_PATH } from "../../../constants.mjs";
 import { createBtn } from "../../../utils/index.mjs";
+import { gameItems } from "../../../../../shared/init/gameItems/index.mjs";
 
 const DIALOG_ITEMS_COUNTER_CLASSNAME = "dialog-counter";
 const DIALOG_ITEMS_CLASSNAME = "dialog-items";
