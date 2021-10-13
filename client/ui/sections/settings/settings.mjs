@@ -1,5 +1,7 @@
+import { LootingBag } from "../../../gameObjects/LootingBag.mjs";
+
 export class UISettings {
-  constructor({ checkboxCb, isDead, name, respawnCb, settings }) {
+  constructor({ checkboxCb, isDead, name, respawnCb, settings, game }) {
     const [respawnButton] = document.getElementsByClassName(
       "profile-wrapper__respawn-button"
     );
@@ -9,23 +11,30 @@ export class UISettings {
     const [fightCheckbox] = document.getElementsByClassName(
       "profile-wrapper__fight-checkbox"
     );
-    const [showRange] = document.getElementsByClassName(
+    const [showRangeCheckbox] = document.getElementsByClassName(
       "profile-wrapper__range-checkbox"
     );
-    const [keepSelectionOnMovement] = document.getElementsByClassName(
+    const [keepSelectionOnMovementCheckbox] = document.getElementsByClassName(
       "profile-wrapper__keep-selection-on-movement-checkbox"
+    );
+    const [transparentObjectsCheckbox] = document.getElementsByClassName(
+      "profile-wrapper__transparent-objects-checkbox"
     );
 
     this.respawnButton = respawnButton;
     this.followCheckbox = followCheckbox;
     this.fightCheckbox = fightCheckbox;
-    this.showRange = showRange;
-    this.keepSelectionOnMovement = keepSelectionOnMovement;
+    this.showRangeCheckbox = showRangeCheckbox;
+    this.keepSelectionOnMovementCheckbox = keepSelectionOnMovementCheckbox;
+    this.transparentObjectsCheckbox = transparentObjectsCheckbox;
 
     this.followCheckbox.checked = settings.follow;
     this.fightCheckbox.checked = settings.fight;
-    this.showRange.checked = settings.showRange;
-    this.keepSelectionOnMovement.checked = settings.keepSelectionOnMovement;
+    this.showRangeCheckbox.checked = settings.showRange;
+    this.keepSelectionOnMovementCheckbox.checked =
+      settings.keepSelectionOnMovement;
+    this.transparentObjectsCheckbox.checked =
+      settings.transparentObjectsCheckbox;
 
     this.respawnButton.disabled = !isDead;
 
@@ -41,8 +50,23 @@ export class UISettings {
 
     this.followCheckbox.onchange = handleCheckbox;
     this.fightCheckbox.onchange = handleCheckbox;
-    this.showRange.onchange = handleCheckbox;
-    this.keepSelectionOnMovement.onchange = handleCheckbox;
+    this.showRangeCheckbox.onchange = handleCheckbox;
+    this.keepSelectionOnMovementCheckbox.onchange = handleCheckbox;
+
+    this.transparentObjectsCheckbox.onchange = () => {
+      console.log(game.gameObjects);
+      game.gameObjects.forEach((obj) => {
+        if (obj.constructor.TYPE !== LootingBag.TYPE) {
+          if (this.transparentObjectsCheckbox.checked) {
+            obj.setAlpha(0.4);
+            obj.disableInteractive();
+          } else {
+            obj.setAlpha(1);
+            obj.setInteractive();
+          }
+        }
+      });
+    };
 
     this.respawnButton.onclick = () => {
       respawnCb(name);

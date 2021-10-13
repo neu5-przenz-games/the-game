@@ -24,20 +24,30 @@ const healingStones = gameObjects.reduce((res, go) => {
   return res;
 }, []);
 
-const lootingBag = new LootingBag({
-  name: `LootingBag10x16`,
-  positionTile: { tileX: 10, tileY: 16 },
-  items: [
-    { id: "armor", quantity: 2 },
-    { id: "sword", quantity: 2 },
-  ],
-});
+const lootingBags = [
+  new LootingBag({
+    name: `LootingBag10x16`,
+    positionTile: { tileX: 10, tileY: 16 },
+    items: [
+      { id: "armor", quantity: 2 },
+      { id: "sword", quantity: 2 },
+    ],
+  }),
+  new LootingBag({
+    name: `LootingBag13x6`,
+    positionTile: { tileX: 13, tileY: 6 },
+    items: [
+      { id: "armor", quantity: 2 },
+      { id: "sword", quantity: 2 },
+    ],
+  }),
+];
 
 playersMocks.forEach((player) => {
   players.set(player.name, new Player(player));
 });
 
-const go = [...gameObjects, lootingBag];
+const go = [...gameObjects, ...lootingBags];
 
 const io = sockets({
   gameObjects: go,

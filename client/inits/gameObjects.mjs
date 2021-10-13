@@ -32,6 +32,7 @@ export const initGameObjects = (game) => {
     );
 
     game.add.existing(object);
+    game.gameObjects.push(object);
 
     if (Type.hitAreaPoly) {
       object.setInteractive(

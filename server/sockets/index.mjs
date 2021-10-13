@@ -445,16 +445,19 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           quantity: parseInt(item.quantity, 10),
         }));
 
+        const { selectedPlayer } = player;
+
         if (
           !player ||
           itemsToAdd.length === 0 ||
-          player.selectedPlayer.type !== "LootingBag" ||
-          !player.canInteractWithLootingBag()
+          selectedPlayer.type !== "LootingBag" ||
+          !player.canInteractWithLootingBag() ||
+          gameObjects.find((go) => go.name === selectedPlayer.name) ===
+            undefined
         ) {
           return;
         }
 
-        const { selectedPlayer } = player;
         const lootingBagItems = player.selectedPlayer.items;
 
         if (

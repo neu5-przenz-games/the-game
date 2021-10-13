@@ -190,7 +190,7 @@ export const debugMenu = (game) => {
   };
 
   DEBUGHitAreaCheckbox.onchange = () => {
-    game.input._list.forEach((obj) => { // eslint-disable-line
+    game.gameObjects.forEach((obj) => {
       if (DEBUGHitAreaCheckbox.checked) {
         game.input.enableDebug(obj);
       } else {

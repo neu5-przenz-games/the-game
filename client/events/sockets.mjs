@@ -106,7 +106,7 @@ export const sockets = (game) => {
           skills = player.skills;
         }
 
-        return game.add.existing(
+        const skeleton = game.add.existing(
           new Skeleton({
             direction: player.direction,
             isMainPlayer,
@@ -120,6 +120,9 @@ export const sockets = (game) => {
             y: player.y,
           })
         );
+        game.gameObjects.push(skeleton);
+
+        return skeleton;
       })
     );
 
@@ -154,6 +157,7 @@ export const sockets = (game) => {
         dropSelectionCb,
         itemActionsCb,
         respawnCb,
+        game,
       })
     );
 
@@ -307,11 +311,15 @@ export const sockets = (game) => {
   });
 
   game.socket.on("looting-bag:list", (lootingBags) => {
-    game.lootingBags.forEach((lootingBag) => {
-      lootingBag.destroy();
-    });
+    game.gameObjects = game.gameObjects.reduce((gameObjects, gameObject) => {
+      if (gameObject.constructor.TYPE === LootingBag.TYPE) {
+        gameObject.destroy();
+      } else {
+        gameObjects.push(gameObject);
+      }
 
-    game.lootingBags = [];
+      return gameObjects;
+    }, []);
 
     lootingBags.forEach(({ id, positionTile }) => {
       const objectWorldXY = game.groundLayer.tileToWorldXY(
@@ -339,7 +347,7 @@ export const sockets = (game) => {
         Phaser.Geom.Rectangle.Contains
       );
 
-      game.lootingBags.push(lootingBag);
+      game.gameObjects.push(lootingBag);
     });
   });
 

@@ -24,6 +24,7 @@ export class UIProfile {
     dropSelectionCb,
     itemActionsCb,
     respawnCb,
+    game,
   }) {
     const [profileHello] = document.getElementsByClassName(
       "profile-wrapper__hello"
@@ -54,6 +55,7 @@ export class UIProfile {
       name,
       respawnCb,
       settings,
+      game,
     });
     this.UITabs = new UITabs();
 
