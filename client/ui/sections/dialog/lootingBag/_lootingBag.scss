@@ -1,0 +1,43 @@
+.dialog-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 64px);
+  grid-template-rows: auto;
+  column-gap: 8px;
+  row-gap: 4px;
+
+  &__label {
+    width: 64px;
+    height: 64px;
+    display: block;
+    border: 1px solid black;
+  }
+
+  &__item {
+    @include item;
+
+    height: 88px;
+    border: none;
+
+    input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+
+      &:checked + .dialog-items__item-marker {
+        border: 2px solid #00ff2e;
+      }
+    }
+  }
+  &__item-marker {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    box-sizing: border-box;
+  }
+  &__item-quantity {
+    @include item-quantity;
+  }
+}
+
+.quantity-selector {
+  width: 100%;
+}

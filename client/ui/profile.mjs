@@ -20,7 +20,6 @@ export class UIProfile {
     actionCb,
     checkboxCb,
     craftingCb,
-    dialogCb,
     dropSelectionCb,
     itemActionsCb,
     respawnCb,
@@ -62,7 +61,7 @@ export class UIProfile {
     this.UICrafting.setCrafting(crafting);
     this.UISkills.setSkills(skills);
 
-    this.UIDialog = new UIDialog({ dialogCb, name });
+    this.UIDialog = UIDialog;
 
     this.dropSelectionButton.onclick = () => {
       dropSelectionCb(name);

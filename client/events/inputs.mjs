@@ -36,7 +36,7 @@ export const inputs = (game) => {
   game.input.on("gameobjectdown", (pointer, obj) => {
     if (
       game.UIMenu.classList.contains("show") ||
-      !game.profile.UIDialog.dialogWrapper.classList.contains("hidden")
+      !game.profile.UIDialog.wrapper.dialogWrapper.classList.contains("hidden")
     ) {
       return;
     }

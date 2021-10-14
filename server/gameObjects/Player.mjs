@@ -113,6 +113,10 @@ class Player {
     this.selectedPlayer = player;
   }
 
+  setSettingsAttackAlly(value) {
+    this.settings.attackAlly = value;
+  }
+
   setSettingsFollow(value) {
     this.isWalking = false;
     this.settings.follow = value;
@@ -388,6 +392,10 @@ class Player {
     );
   }
 
+  isSameFraction(fraction) {
+    return this.fraction === fraction;
+  }
+
   hasTwoHandedWeapon() {
     return getCurrentWeapon(this.equipment.weapon).isTwoHanded;
   }
@@ -419,7 +427,8 @@ class Player {
       this.energy >=
         getCurrentWeapon(this.equipment.weapon).details.energyCost &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
-      this.fraction !== this.selectedPlayer.fraction &&
+      (this.settings.attackAlly ||
+        !this.isSameFraction(this.selectedPlayer.fraction)) &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
       isObjectAhead(this, this.selectedPlayer) &&

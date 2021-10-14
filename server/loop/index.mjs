@@ -54,7 +54,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
           if (player.selectedPlayer?.type === "LootingBag") {
             io.to(player.socketId).emit(
-              "looting-bag:show",
+              "dialog:looting-bag:show",
               player.selectedPlayer.items
             );
           }

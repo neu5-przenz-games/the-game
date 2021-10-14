@@ -71,11 +71,8 @@ export const sockets = (game) => {
     });
   };
 
-  const dialogCb = ({ items, name }) => {
-    game.socket.emit("looting-bag:get-items", {
-      items,
-      name,
-    });
+  const dialogCb = ({ socketName, ...props }) => {
+    game.socket.emit(socketName, props);
   };
 
   game.socket.on("players:list", (players, socketId) => {
@@ -150,7 +147,6 @@ export const sockets = (game) => {
         actionCb,
         checkboxCb,
         craftingCb,
-        dialogCb,
         dropSelectionCb,
         itemActionsCb,
         respawnCb,
@@ -343,14 +339,33 @@ export const sockets = (game) => {
     });
   });
 
-  game.socket.on("looting-bag:show", (items) => {
-    game.profile.UIDialog.show(items);
+  game.socket.on("dialog:looting-bag:show", (items) => {
+    game.profile.UIDialog.lootingBag.show({
+      name: game.mainPlayerName,
+      items,
+      dialogCb,
+    });
   });
 
-  game.socket.on("looting-bag:close", () => {
+  game.socket.on(
+    "dialog:confirm-attack-ally:show",
+    (selectedPlayerDisplayName) => {
+      game.profile.UIDialog.confirm.show({
+        name: game.mainPlayerName,
+        selectedPlayerDisplayName,
+        dialogCb,
+      });
+    }
+  );
+
+  game.socket.on("dialog:close", () => {
+    game.profile.UIDialog.wrapper.close();
+  });
+
+  game.socket.on("dialog:looting-bag:close", () => {
     game.resetSelectedObject();
 
-    game.profile.UIDialog.close();
+    game.profile.UIDialog.wrapper.close();
   });
 
   game.socket.on("connect", () => {
