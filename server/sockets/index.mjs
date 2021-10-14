@@ -100,7 +100,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
             player.positionTile.tileX !== tileX ||
             player.positionTile.tileY !== tileY
           ) {
-            if (player.selectedPlayer) {
+            if (player.selectedObject) {
               if (
                 player.settings.keepSelectionOnMovement &&
                 player.settings.follow
@@ -109,9 +109,9 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
               }
 
               if (!player.settings.keepSelectionOnMovement) {
-                player.selectedPlayer = null;
+                player.selectedObject = null;
               }
-              player.selectedPlayerTile = null;
+              player.selectedObjectTile = null;
             }
 
             player.receipt = null;
@@ -145,17 +145,17 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           player.isWalking = false;
 
           if (type === "Skeleton") {
-            const selectedPlayer = players.get(selectedObjectName);
+            const selectedObject = players.get(selectedObjectName);
 
-            player.setSelectedObject(selectedPlayer);
+            player.setSelectedObject(selectedObject);
 
             if (
-              player.isSameFraction(player.selectedPlayer.fraction) &&
+              player.isSameFraction(player.selectedObject.fraction) &&
               !player.settings.attackAlly
             ) {
               io.to(player.socketId).emit(
                 "dialog:confirm-attack-ally:show",
-                player.selectedPlayer.displayName
+                player.selectedObject.displayName
               );
             }
           } else {
@@ -185,7 +185,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
             if (openLootingBagResult === true) {
               io.to(player.socketId).emit(
                 "dialog:looting-bag:show",
-                player.selectedPlayer.items
+                player.selectedObject.items
               );
             } else {
               io.to(player.socketId).emit(
@@ -355,7 +355,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
       socket.on("action:button:clicked", ({ name }) => {
         const player = players.get(name);
 
-        const { durationTicks, energyCost } = player.selectedPlayer;
+        const { durationTicks, energyCost } = player.selectedObject;
 
         const getResourceResult = player.canGetResource(energyCost);
         if (getResourceResult !== true) {
@@ -460,20 +460,20 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           quantity: parseInt(item.quantity, 10),
         }));
 
-        const { selectedPlayer } = player;
+        const { selectedObject } = player;
 
         if (
           !player ||
           itemsToAdd.length === 0 ||
-          selectedPlayer.type !== "LootingBag" ||
+          selectedObject.type !== "LootingBag" ||
           !player.canInteractWithLootingBag() ||
-          gameObjects.find((go) => go.name === selectedPlayer.name) ===
+          gameObjects.find((go) => go.name === selectedObject.name) ===
             undefined
         ) {
           return;
         }
 
-        const lootingBagItems = player.selectedPlayer.items;
+        const lootingBagItems = player.selectedObject.items;
 
         if (
           !itemsToAdd.every(({ id, quantity }) =>
@@ -516,7 +516,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
               gameObjects.findIndex(
                 (go) =>
                   go.name ===
-                  `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+                  `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
               ),
               1
             );
@@ -525,14 +525,14 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
               gameObjects.findIndex(
                 (go) =>
                   go.name ===
-                  `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+                  `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
               ),
               1,
               new LootingBag({
-                name: `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
                 positionTile: {
-                  tileX: selectedPlayer.positionTile.tileX,
-                  tileY: selectedPlayer.positionTile.tileY,
+                  tileX: selectedObject.positionTile.tileX,
+                  tileY: selectedObject.positionTile.tileY,
                 },
                 items: [...newLootingBagItems],
               })

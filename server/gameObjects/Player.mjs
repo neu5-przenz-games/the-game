@@ -28,8 +28,8 @@ class Player {
     equipment,
     backpack,
     settings,
-    selectedPlayer,
-    selectedPlayerTile,
+    selectedObject,
+    selectedObjectTile,
     dropSelection,
     receipt,
     action,
@@ -68,8 +68,8 @@ class Player {
     this.equipment = equipment;
     this.backpack = backpack;
     this.settings = settings;
-    this.selectedPlayer = selectedPlayer;
-    this.selectedPlayerTile = selectedPlayerTile;
+    this.selectedObject = selectedObject;
+    this.selectedObjectTile = selectedObjectTile;
 
     // properties
     this.action = action;
@@ -110,7 +110,7 @@ class Player {
   }
 
   setSelectedObject(player) {
-    this.selectedPlayer = player;
+    this.selectedObject = player;
   }
 
   setSettingsAttackAlly(value) {
@@ -371,8 +371,8 @@ class Player {
         .findPath(
           this.positionTile.tileX,
           this.positionTile.tileY,
-          this.selectedPlayer.positionTile.tileX,
-          this.selectedPlayer.positionTile.tileY,
+          this.selectedObject.positionTile.tileX,
+          this.selectedObject.positionTile.tileY,
           combatGrid
         )
         .slice(1, -1);
@@ -387,7 +387,7 @@ class Player {
     return (
       getChebyshevDistance(
         this.positionTile,
-        this.selectedPlayer.positionTile
+        this.selectedObject.positionTile
       ) <= range
     );
   }
@@ -423,15 +423,15 @@ class Player {
 
   canAttack({ finder, map, PF }) {
     return (
-      this.selectedPlayer.isDead === false &&
+      this.selectedObject.isDead === false &&
       this.energy >=
         getCurrentWeapon(this.equipment.weapon).details.energyCost &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
       (this.settings.attackAlly ||
-        !this.isSameFraction(this.selectedPlayer.fraction)) &&
+        !this.isSameFraction(this.selectedObject.fraction)) &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
-      isObjectAhead(this, this.selectedPlayer) &&
+      isObjectAhead(this, this.selectedObject) &&
       this.noObstacles({ finder, map, PF })
     );
   }
@@ -512,19 +512,19 @@ class Player {
 
   updateFollowing(map, players) {
     if (
-      this.selectedPlayerTile === null ||
-      this.selectedPlayer.positionTile.tileX !==
-        this.selectedPlayerTile.tileX ||
-      this.selectedPlayer.positionTile.tileY !== this.selectedPlayerTile.tileY
+      this.selectedObjectTile === null ||
+      this.selectedObject.positionTile.tileX !==
+        this.selectedObjectTile.tileX ||
+      this.selectedObject.positionTile.tileY !== this.selectedObjectTile.tileY
     ) {
-      this.selectedPlayerTile = {
-        tileX: this.selectedPlayer.positionTile.tileX,
-        tileY: this.selectedPlayer.positionTile.tileY,
+      this.selectedObjectTile = {
+        tileX: this.selectedObject.positionTile.tileX,
+        tileY: this.selectedObject.positionTile.tileY,
       };
 
-      let obj = this.selectedPlayer;
+      let obj = this.selectedObject;
 
-      if (this.selectedPlayer.positionTile === undefined) {
+      if (this.selectedObject.positionTile === undefined) {
         obj = {
           ...obj,
           positionTile: obj.positionTile,

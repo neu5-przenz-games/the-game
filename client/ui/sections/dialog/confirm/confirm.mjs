@@ -46,14 +46,14 @@ export class UIDialogConfirm extends UIDialogWrapper {
 
   getContent = () => {
     const p = document.createElement("p");
-    p.textContent = `Do you want to attack your ally - ${this.selectedPlayerDisplayName}?`;
+    p.textContent = `Do you want to attack your ally - ${this.selectedObjectDisplayName}?`;
 
     return p;
   };
 
-  show({ name, selectedPlayerDisplayName, dialogCb }) {
+  show({ name, selectedObjectDisplayName, dialogCb }) {
     this.setListeners({ name, dialogCb });
-    this.selectedPlayerDisplayName = selectedPlayerDisplayName;
+    this.selectedObjectDisplayName = selectedObjectDisplayName;
 
     const content = this.getContent();
     const footer = getFooter();

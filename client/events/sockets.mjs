@@ -357,10 +357,10 @@ export const sockets = (game) => {
 
   game.socket.on(
     "dialog:confirm-attack-ally:show",
-    (selectedPlayerDisplayName) => {
+    (selectedObjectDisplayName) => {
       game.profile.UIDialog.confirm.show({
         name: game.mainPlayerName,
-        selectedPlayerDisplayName,
+        selectedObjectDisplayName,
         dialogCb,
       });
     }

@@ -37,7 +37,7 @@ const isAttackMissed = ({
   currentWeapon,
   player,
   skillLevelName,
-  selectedPlayer,
+  selectedObject,
 }) => {
   const SKILL_TO_MISS_MAP = {
     [LEVEL_TYPES.NOOB]: 150,
@@ -56,7 +56,7 @@ const isAttackMissed = ({
     missChance *= 2;
   }
 
-  if (selectedPlayer.isWalking) {
+  if (selectedObject.isWalking) {
     missChance *= 2;
   }
 
@@ -64,7 +64,7 @@ const isAttackMissed = ({
   if (currentWeapon.details.range > 1) {
     let range = getChebyshevDistance(
       player.positionTile,
-      selectedPlayer.positionTile
+      selectedObject.positionTile
     );
 
     range = range > MAX_RANGE ? MAX_RANGE : range;
@@ -75,10 +75,10 @@ const isAttackMissed = ({
   return getRandomInt(0, 1000) <= Math.floor(missChance);
 };
 
-const isAttackParried = ({ player, selectedPlayer }) => {
+const isAttackParried = ({ player, selectedObject }) => {
   if (
-    selectedPlayer.selectedPlayer === null ||
-    selectedPlayer.selectedPlayer.name !== player.name
+    selectedObject.selectedObject === null ||
+    selectedObject.selectedObject.name !== player.name
   ) {
     return false;
   }
@@ -94,24 +94,24 @@ const isAttackParried = ({ player, selectedPlayer }) => {
 
   let parryChance = 0;
 
-  if (selectedPlayer.equipment.weapon) {
-    const currentWeapon = getCurrentWeapon(selectedPlayer.equipment.weapon);
+  if (selectedObject.equipment.weapon) {
+    const currentWeapon = getCurrentWeapon(selectedObject.equipment.weapon);
     const weaponSkill = currentWeapon.skillToIncrease.name;
 
     const weaponSkillLevelName = getLevel(
-      selectedPlayer.skills[weaponSkill].points
+      selectedObject.skills[weaponSkill].points
     ).name;
 
     parryChance = SKILL_TO_PARRY_MAP[weaponSkillLevelName];
   }
 
-  if (selectedPlayer.equipment.shield) {
-    const currentShield = gameItems.get(selectedPlayer.equipment.shield.id);
+  if (selectedObject.equipment.shield) {
+    const currentShield = gameItems.get(selectedObject.equipment.shield.id);
 
     const weaponSkill = currentShield.skillToIncrease.name;
 
     const weaponSkillLevelName = getLevel(
-      selectedPlayer.skills[weaponSkill].points
+      selectedObject.skills[weaponSkill].points
     ).name;
 
     parryChance += SKILL_TO_PARRY_MAP[weaponSkillLevelName];
@@ -124,17 +124,17 @@ const getAttack = ({
   currentWeapon,
   player,
   skillLevelName,
-  selectedPlayer,
+  selectedObject,
 }) => {
   if (
-    isAttackMissed({ currentWeapon, player, skillLevelName, selectedPlayer })
+    isAttackMissed({ currentWeapon, player, skillLevelName, selectedObject })
   ) {
     return {
       type: ATTACK_TYPES.MISS,
     };
   }
 
-  if (isAttackParried({ player, selectedPlayer })) {
+  if (isAttackParried({ player, selectedObject })) {
     return {
       type: ATTACK_TYPES.PARRY,
     };
