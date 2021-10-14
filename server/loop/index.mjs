@@ -52,10 +52,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           player.dest = null;
           player.isWalking = false;
 
-          if (player.selectedPlayer?.type === "LootingBag") {
+          if (player.selectedObject?.type === "LootingBag") {
             io.to(player.socketId).emit(
               "dialog:looting-bag:show",
-              player.selectedPlayer.items
+              player.selectedObject.items
             );
           }
         }
@@ -63,8 +63,8 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         if (player.dropSelection) {
           player.dropSelection = false;
           player.dest = null;
-          player.selectedPlayer = null;
-          player.selectedPlayerTile = null;
+          player.selectedObject = null;
+          player.selectedObjectTile = null;
           player.isWalking = false;
 
           return;
@@ -98,8 +98,8 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           });
 
           if (
-            player.selectedPlayer === null ||
-            (player.selectedPlayer && player.settings.follow) ||
+            player.selectedObject === null ||
+            (player.selectedObject && player.settings.follow) ||
             player.settings.keepSelectionOnMovement
           ) {
             player.next = {
@@ -120,9 +120,9 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    const { selectedPlayer } = player;
+    const { selectedObject } = player;
 
-    if (selectedPlayer) {
+    if (selectedObject) {
       if (player.settings.follow) {
         player.updateFollowing(map, players);
       }
@@ -130,13 +130,13 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       if (player.dest === null) {
         player.direction = getDirection(
           player.positionTile,
-          selectedPlayer.positionTile
+          selectedObject.positionTile
         );
       }
 
       if (player.settings.fight && player.canAttack({ finder, map, PF })) {
         player.attackDelayTicks = 0;
-        player.attack = selectedPlayer.name;
+        player.attack = selectedObject.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
 
@@ -147,34 +147,34 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           currentWeapon,
           player,
           skillLevelName,
-          selectedPlayer,
+          selectedObject,
         });
 
         if (attack.type === ATTACK_TYPES.MISS) {
           io.emit("player:attack-missed", {
-            name: selectedPlayer.name,
+            name: selectedObject.name,
             message: MESSAGES_TYPES.ATTACK_MISSED,
           });
         } else if (attack.type === ATTACK_TYPES.PARRY) {
           io.emit("player:attack-parried", {
-            name: selectedPlayer.name,
+            name: selectedObject.name,
             message: MESSAGES_TYPES.ATTACK_PARRIED,
           });
-          selectedPlayer.isParrying = true;
+          selectedObject.isParrying = true;
         } else if (attack.type === ATTACK_TYPES.HIT) {
-          const defenseValue = getDefenseValue(selectedPlayer.equipment);
+          const defenseValue = getDefenseValue(selectedObject.equipment);
 
           const hit = getHitValue(attack.value, defenseValue);
 
-          selectedPlayer.hit(hit);
+          selectedObject.hit(hit);
 
           io.emit("player:attack-hit", {
-            name: selectedPlayer.name,
+            name: selectedObject.name,
             hitType: getHitText(hit),
           });
 
-          io.to(selectedPlayer.fraction).emit("players:hp:update", {
-            players: getAllies(players, selectedPlayer.fraction),
+          io.to(selectedObject.fraction).emit("players:hp:update", {
+            players: getAllies(players, selectedObject.fraction),
           });
         }
 
@@ -189,18 +189,18 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           shapeSkillsForClient(player.skills)
         );
 
-        if (selectedPlayer.equipment.shield) {
-          const selectedPlayerSkillDetails = getCurrentWeapon(
-            selectedPlayer.equipment.shield
+        if (selectedObject.equipment.shield) {
+          const selectedObjectSkillDetails = getCurrentWeapon(
+            selectedObject.equipment.shield
           ).skillToIncrease;
 
-          selectedPlayer.skillUpdate(
-            skillIncrease(selectedPlayer.skills, selectedPlayerSkillDetails)
+          selectedObject.skillUpdate(
+            skillIncrease(selectedObject.skills, selectedObjectSkillDetails)
           );
 
-          io.to(selectedPlayer.socketId).emit(
+          io.to(selectedObject.socketId).emit(
             "skills:update",
-            shapeSkillsForClient(selectedPlayer.skills)
+            shapeSkillsForClient(selectedObject.skills)
           );
         }
 
@@ -212,18 +212,18 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           );
         }
 
-        if (selectedPlayer.isDead) {
-          selectedPlayer.dest = null;
-          selectedPlayer.next = null;
-          selectedPlayer.isWalking = false;
+        if (selectedObject.isDead) {
+          selectedObject.dest = null;
+          selectedObject.next = null;
+          selectedObject.isWalking = false;
 
           const lootingBag = gameObjects.find(
             (go) =>
               go.name ===
-              `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+              `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
           );
 
-          if (selectedPlayer.hasItems()) {
+          if (selectedObject.hasItems()) {
             if (lootingBag) {
               const currentItems = [...lootingBag.items];
 
@@ -231,37 +231,37 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
                 gameObjects.findIndex(
                   (go) =>
                     go.name ===
-                    `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`
+                    `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
                 ),
                 1,
                 new LootingBag({
-                  name: `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                  name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
                   positionTile: {
-                    tileX: selectedPlayer.positionTile.tileX,
-                    tileY: selectedPlayer.positionTile.tileY,
+                    tileX: selectedObject.positionTile.tileX,
+                    tileY: selectedObject.positionTile.tileY,
                   },
                   items: [
                     ...currentItems,
-                    ...selectedPlayer.backpack.items,
-                    ...Object.values(selectedPlayer.equipment),
+                    ...selectedObject.backpack.items,
+                    ...Object.values(selectedObject.equipment),
                   ].reduce(mergeItems, []),
                 })
               );
             } else {
               const items = [
-                ...selectedPlayer.backpack.items,
-                ...Object.values(selectedPlayer.equipment),
+                ...selectedObject.backpack.items,
+                ...Object.values(selectedObject.equipment),
               ].reduce(mergeItems, []);
 
-              selectedPlayer.setBackpack();
-              selectedPlayer.setEquipment();
+              selectedObject.setBackpack();
+              selectedObject.setEquipment();
 
               gameObjects.push(
                 new LootingBag({
-                  name: `LootingBag${selectedPlayer.positionTile.tileX}x${selectedPlayer.positionTile.tileY}`,
+                  name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
                   positionTile: {
-                    tileX: selectedPlayer.positionTile.tileX,
-                    tileY: selectedPlayer.positionTile.tileY,
+                    tileX: selectedObject.positionTile.tileX,
+                    tileY: selectedObject.positionTile.tileY,
                   },
                   items,
                 })
@@ -286,23 +286,23 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
             );
           }
 
-          io.to(selectedPlayer.socketId).emit(
+          io.to(selectedObject.socketId).emit(
             "items:update",
-            selectedPlayer.backpack,
-            selectedPlayer.equipment
+            selectedObject.backpack,
+            selectedObject.equipment
           );
 
-          io.to(selectedPlayer.socketId).emit(
+          io.to(selectedObject.socketId).emit(
             "player:dead",
-            selectedPlayer.name
+            selectedObject.name
           );
         }
         io.to(player.socketId).emit("player:energy:update", player.energy);
       }
     } else if (player.dropSelection) {
       player.dropSelection = false;
-      player.selectedPlayer = null;
-      player.selectedPlayerTile = null;
+      player.selectedObject = null;
+      player.selectedObjectTile = null;
     }
 
     if (player.toRespawn) {
@@ -358,10 +358,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
         item = { ...createdItem };
         skillDetails = { ...skill };
-      } else if (player.selectedPlayer) {
+      } else if (player.selectedObject) {
         // getting resources action
-        item = player.selectedPlayer.item;
-        skillDetails = player.selectedPlayer.skill;
+        item = player.selectedObject.item;
+        skillDetails = player.selectedObject.skill;
       }
 
       player.receipt = null;
