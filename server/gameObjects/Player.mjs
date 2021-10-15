@@ -279,15 +279,15 @@ class Player {
     const item = this.getFromBackpack(itemName);
 
     if (
-      this.equipment.weapon?.id
+      (this.equipment.weapon?.id
         ? this.canAddToBackpack([this.equipment.weapon])
-        : true &&
-          this.removeFromBackpack(itemName) &&
-          this.addToEquipment(item) &&
-          this.moveToBackpackFromEquipment(
-            this.equipment.shield.id,
-            ITEM_TYPES.SHIELD
-          )
+        : true) &&
+      this.removeFromBackpack(itemName) &&
+      this.addToEquipment(item) &&
+      this.moveToBackpackFromEquipment(
+        this.equipment.shield.id,
+        ITEM_TYPES.SHIELD
+      )
     ) {
       return true;
     }
