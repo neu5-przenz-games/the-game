@@ -145,7 +145,7 @@ class Player {
   }
 
   addToBackpack(newItems) {
-    if (!this.canAddToBackpack(newItems.length)) {
+    if (!this.canAddToBackpack(newItems)) {
       return false;
     }
 
@@ -279,7 +279,9 @@ class Player {
     const item = this.getFromBackpack(itemName);
 
     if (
-      this.canAddToBackpack(this.equipment.weapon?.id ? 1 : 0) &&
+      (this.equipment.weapon?.id
+        ? this.canAddToBackpack([this.equipment.weapon])
+        : true) &&
       this.removeFromBackpack(itemName) &&
       this.addToEquipment(item) &&
       this.moveToBackpackFromEquipment(
@@ -358,8 +360,26 @@ class Player {
     return this.destroyItemFromEquipment(itemName, equipmentItemType);
   }
 
-  canAddToBackpack(itemsToAddNum) {
-    return itemsToAddNum <= this.backpack.slots - this.backpack.items.length;
+  canAddToBackpack(itemsToAdd) {
+    if (this.equipment.backpack?.id === undefined) {
+      return false;
+    }
+
+    return (
+      this.backpack.slots - this.backpack.items.length >=
+      itemsToAdd.reduce((sum, itemtoAdd) => {
+        let result = sum;
+
+        if (
+          this.backpack.items.find((item) => item.id === itemtoAdd.id) ===
+          undefined
+        ) {
+          result = sum + 1;
+        }
+
+        return result;
+      }, 0)
+    );
   }
 
   noObstacles = ({ PF, finder, map }) => {
