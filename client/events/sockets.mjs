@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import { MESSAGES } from "../../shared/UIMessages/index.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { Skeleton } from "../gameObjects/Skeleton.mjs";
+import { Mob } from "../gameObjects/Mob.mjs";
 import { TextTween } from "../gameObjects/TextTween.mjs";
 import { UIProfile } from "../ui/profile.mjs";
 import { ParticleEmitter } from "../utils/index.mjs";
@@ -103,23 +104,39 @@ export const sockets = (game) => {
           skills = player.skills;
         }
 
-        const skeleton = game.add.existing(
-          new Skeleton({
+        if (player.type === "Player") {
+          const skeleton = game.add.existing(
+            new Skeleton({
+              direction: player.direction,
+              isMainPlayer,
+              energy: player.energy,
+              isDead: player.isDead,
+              name: player.name,
+              displayName: player.displayName,
+              fraction: player.fraction,
+              scene: game,
+              x: player.x,
+              y: player.y,
+            })
+          );
+          game.gameObjects.push(skeleton);
+
+          return skeleton;
+        }
+        const mob = game.add.existing(
+          new Mob({
             direction: player.direction,
-            isMainPlayer,
-            energy: player.energy,
             isDead: player.isDead,
             name: player.name,
             displayName: player.displayName,
-            fraction: player.fraction,
             scene: game,
             x: player.x,
             y: player.y,
           })
         );
-        game.gameObjects.push(skeleton);
+        game.gameObjects.push(mob);
 
-        return skeleton;
+        return mob;
       })
     );
 

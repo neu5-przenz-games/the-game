@@ -159,6 +159,11 @@ export class MainScene extends Phaser.Scene {
         }
       );
     });
+
+    this.load.spritesheet("mob-devil", "./assets/mob/devil.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
   }
 
   create() {

@@ -96,6 +96,8 @@ class Player {
     this.isParrying = false;
   }
 
+  static TYPE = "Player";
+
   getFromBackpack(itemName) {
     return this.backpack.items.find((item) => item.id === itemName);
   }

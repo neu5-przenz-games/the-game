@@ -1,7 +1,7 @@
 import PF from "pathfinding";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
-import { HP_MAX } from "../gameObjects/Player.mjs";
+import { HP_MAX, Player } from "../gameObjects/Player.mjs";
 import { directions, getDirection } from "../utils/directions.mjs";
 import {
   getAllies,
@@ -329,15 +329,17 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    if (player.energyRegenerate()) {
-      io.to(player.socketId).emit("player:energy:update", player.energy);
-    }
+    if (player.constructor.type === Player.TYPE) {
+      if (player.energyRegenerate()) {
+        io.to(player.socketId).emit("player:energy:update", player.energy);
+      }
 
-    if (player.attackDelayTicks < player.attackDelayMaxTicks) {
-      player.attackDelayTicks += 1;
-    }
-    if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
-      player.energyRegenDelayTicks += 1;
+      if (player.attackDelayTicks < player.attackDelayMaxTicks) {
+        player.attackDelayTicks += 1;
+      }
+      if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
+        player.energyRegenDelayTicks += 1;
+      }
     }
 
     if (
