@@ -186,7 +186,9 @@ export class UIDialogLootingBag extends UIDialogWrapper {
       itemsWrapper.appendChild(div);
     }
 
-    return itemsWrapper;
+    fragment.appendChild(itemsWrapper);
+
+    return fragment;
   }
 
   show({ name, items, dialogCb }) {
