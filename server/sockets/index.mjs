@@ -150,7 +150,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           player.action = null;
           player.isWalking = false;
 
-          if (type === "Skeleton") {
+          if (type === "Player") {
             const selectedObject = players.get(selectedObjectName);
 
             player.setSelectedObject(selectedObject);

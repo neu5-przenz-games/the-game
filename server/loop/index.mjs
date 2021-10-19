@@ -329,7 +329,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    if (player.constructor.type === Player.TYPE) {
+    if (player.constructor.TYPE === Player.TYPE) {
       if (player.energyRegenerate()) {
         io.to(player.socketId).emit("player:energy:update", player.energy);
       }

@@ -4,8 +4,7 @@ import { createServer } from "http";
 
 import { playersMocks } from "./mocks/players.mjs";
 import { mobsMocks } from "./mocks/mobs.mjs";
-import { Player } from "./gameObjects/Player.mjs";
-import { Devil } from "./gameObjects/mobs/Devil.mjs";
+import { Player, createMob } from "./gameObjects/index.mjs";
 import { sockets } from "./sockets/index.mjs";
 import { loop } from "./loop/index.mjs";
 import { gameObjects } from "../shared/init/gameObjects.mjs";
@@ -50,7 +49,7 @@ playersMocks.forEach((player) => {
 });
 
 mobsMocks.forEach((mob) => {
-  players.set(mob.name, new Devil(mob));
+  players.set(mob.name, createMob(mob));
 });
 
 const go = [...gameObjects, ...lootingBags];

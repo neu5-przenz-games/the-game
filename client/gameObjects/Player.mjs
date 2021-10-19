@@ -64,7 +64,7 @@ const OFFSET = {
   Y: 16,
 };
 
-class Skeleton extends Phaser.GameObjects.Image {
+class Player extends Phaser.GameObjects.Image {
   constructor({
     direction,
     isMainPlayer,
@@ -172,7 +172,7 @@ class Skeleton extends Phaser.GameObjects.Image {
     );
   }
 
-  static TYPE = "Skeleton";
+  static TYPE = "Player";
 
   static hitAreaSize = {
     width: 64,
@@ -437,4 +437,4 @@ class Skeleton extends Phaser.GameObjects.Image {
   }
 }
 
-export { directions, OFFSET, Skeleton };
+export { directions, OFFSET, Player };

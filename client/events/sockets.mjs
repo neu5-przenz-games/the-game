@@ -3,7 +3,7 @@ import io from "socket.io-client";
 
 import { MESSAGES } from "../../shared/UIMessages/index.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
-import { Skeleton } from "../gameObjects/Skeleton.mjs";
+import { Player } from "../gameObjects/Player.mjs";
 import { Mob } from "../gameObjects/Mob.mjs";
 import { TextTween } from "../gameObjects/TextTween.mjs";
 import { UIProfile } from "../ui/profile.mjs";
@@ -105,8 +105,8 @@ export const sockets = (game) => {
         }
 
         if (player.type === "Player") {
-          const skeleton = game.add.existing(
-            new Skeleton({
+          const playerObj = game.add.existing(
+            new Player({
               direction: player.direction,
               isMainPlayer,
               energy: player.energy,
@@ -119,10 +119,11 @@ export const sockets = (game) => {
               y: player.y,
             })
           );
-          game.gameObjects.push(skeleton);
+          game.gameObjects.push(playerObj);
 
-          return skeleton;
+          return playerObj;
         }
+
         const mob = game.add.existing(
           new Mob({
             direction: player.direction,
