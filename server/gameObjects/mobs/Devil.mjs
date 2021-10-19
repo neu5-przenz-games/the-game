@@ -30,6 +30,8 @@ class Devil {
     attack,
     attackDelayTicks,
     attackDelayMaxTicks,
+    respawnDelayTicks,
+    respawnDelayMaxTicks,
     next,
     skills,
     speed,
@@ -60,6 +62,8 @@ class Devil {
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
     this.attackDelayMaxTicks = attackDelayMaxTicks;
+    this.respawnDelayTicks = respawnDelayTicks;
+    this.respawnDelayMaxTicks = respawnDelayMaxTicks;
     this.hp = hp;
     this.skills = skills;
 
@@ -194,8 +198,6 @@ class Devil {
   canAttack({ finder, map, PF }) {
     return (
       this.selectedObject.isDead === false &&
-      this.energy >=
-        getCurrentWeapon(this.equipment.weapon).details.energyCost &&
       this.attackDelayTicks >= this.attackDelayMaxTicks &&
       (this.settings.attackAlly ||
         !this.isSameFraction(this.selectedObject.fraction)) &&
@@ -221,7 +223,6 @@ class Devil {
     }
 
     if (this.hp === 0) {
-      this.energy = 0;
       this.isDead = true;
       this.resetSelected();
 
@@ -280,10 +281,6 @@ class Devil {
     }
   }
 
-  energyUse(value) {
-    this.energy -= value;
-  }
-
   skillUpdate({ name, skill }) {
     this.skills = {
       ...this.skills,
@@ -339,6 +336,7 @@ class Devil {
 
     const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
     this.positionTile = respawnTile;
+    this.respawnDelayTicks = 0;
     this.x = respawnXY.x;
     this.y = respawnXY.y;
   }
