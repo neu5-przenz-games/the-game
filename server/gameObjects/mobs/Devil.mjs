@@ -71,6 +71,8 @@ class Devil {
     this.isParrying = false;
   }
 
+  static DISPLAY_NAME = "Devil";
+
   static TYPE = "Devil";
 
   getFromBackpack(itemName) {

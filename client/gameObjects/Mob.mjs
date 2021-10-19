@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
+import { TileFight, TileMarked, TileSelected } from "./Tile/index.mjs";
 import { Arrow } from "./Arrow.mjs";
 
 const directions = {
@@ -70,6 +71,10 @@ class Mob extends Phaser.GameObjects.Image {
     this.displayName = displayName;
     this.dest = { x: null, y: null };
     this.isDead = isDead;
+
+    this.tileMarked = new TileMarked(scene);
+    this.tileSelected = new TileSelected(scene, this.x, this.y);
+    this.tileFight = new TileFight(scene, this.x, this.y);
 
     this.arrow = new Arrow(scene, this.x, this.y);
     scene.add.existing(this.arrow);
@@ -238,6 +243,23 @@ class Mob extends Phaser.GameObjects.Image {
       if (this.motion !== "idle") {
         this.setMotion("idle");
       }
+    }
+
+    if (
+      this.scene.selectedObject &&
+      this.scene.selectedObject.type === this.constructor.TYPE &&
+      this.scene.selectedObject.name === this.name
+    ) {
+      if (this.scene.settings.fight) {
+        this.tileFight.toggleVisible(true);
+        this.tileSelected.toggleVisible(false);
+      } else {
+        this.tileSelected.toggleVisible(true);
+        this.tileFight.toggleVisible(false);
+      }
+    } else {
+      this.tileSelected.toggleVisible(false);
+      this.tileFight.toggleVisible(false);
     }
 
     // player changed direction
