@@ -150,7 +150,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           player.action = null;
           player.isWalking = false;
 
-          if (type === "Player") {
+          if (type === Player.TYPE) {
             const selectedObject = players.get(selectedObjectName);
 
             player.setSelectedObject(selectedObject);
@@ -164,6 +164,10 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
                 player.selectedObject.displayName
               );
             }
+          } else if (type === "Devil") {
+            const selectedObject = players.get(selectedObjectName);
+
+            player.setSelectedObject(selectedObject);
           } else {
             const selectedObject = gameObjects.find(
               (obj) => obj.name === selectedObjectName
