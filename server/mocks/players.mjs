@@ -87,7 +87,7 @@ export const playersMocks = [
     skills,
     settings: {
       attackAlly: false,
-      follow: false,
+      follow: true,
       fight: true,
       showRange: false,
       keepSelectionOnMovement: false,
@@ -133,8 +133,8 @@ export const playersMocks = [
     skills,
     settings: {
       attackAlly: false,
-      follow: false,
-      fight: false,
+      follow: true,
+      fight: true,
       showRange: false,
       keepSelectionOnMovement: false,
       respawnBuilding: radiantHouse,
@@ -179,8 +179,8 @@ export const playersMocks = [
     skills,
     settings: {
       attackAlly: false,
-      follow: false,
-      fight: false,
+      follow: true,
+      fight: true,
       showRange: false,
       keepSelectionOnMovement: false,
       respawnBuilding: direHouse,
@@ -225,8 +225,8 @@ export const playersMocks = [
     skills,
     settings: {
       attackAlly: false,
-      follow: false,
-      fight: false,
+      follow: true,
+      fight: true,
       showRange: false,
       keepSelectionOnMovement: false,
       respawnBuilding: radiantHouse,
@@ -271,8 +271,8 @@ export const playersMocks = [
     skills,
     settings: {
       attackAlly: false,
-      follow: false,
-      fight: false,
+      follow: true,
+      fight: true,
       showRange: false,
       keepSelectionOnMovement: false,
       respawnBuilding: direHouse,

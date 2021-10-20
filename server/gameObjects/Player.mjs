@@ -11,7 +11,7 @@ import {
 } from "../utils/algo.mjs";
 import { isObjectAhead } from "../utils/directions.mjs";
 
-const ENERGY_REGEN_RATE = 3;
+const ENERGY_REGEN_RATE = 100;
 const ENERGY_MAX = 1000;
 const HP_MAX = 1000;
 
@@ -95,6 +95,8 @@ class Player {
     this.toRespawn = false;
     this.isParrying = false;
   }
+
+  static TYPE = "Player";
 
   getFromBackpack(itemName) {
     return this.backpack.items.find((item) => item.id === itemName);

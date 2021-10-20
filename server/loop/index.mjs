@@ -1,7 +1,7 @@
 import PF from "pathfinding";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
-import { HP_MAX } from "../gameObjects/Player.mjs";
+import { HP_MAX, Player } from "../gameObjects/Player.mjs";
 import { directions, getDirection } from "../utils/directions.mjs";
 import {
   getAllies,
@@ -305,39 +305,62 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       player.selectedObjectTile = null;
     }
 
-    if (player.toRespawn) {
-      const respawnTile = getRespawnTile({
-        map,
-        obj: gameObjects.find(
-          (b) => b.name === player.settings.respawnBuilding.name
-        ),
-        players,
-        sizeToIncrease: {
-          x: 2,
-          y: 2,
-        },
-      });
-
-      if (respawnTile) {
-        player.respawn(respawnTile);
+    if (player.constructor.TYPE === Player.TYPE) {
+      if (player.energyRegenerate()) {
         io.to(player.socketId).emit("player:energy:update", player.energy);
-        io.to(player.fraction).emit("players:hp:update", {
-          players: getAllies(players, player.fraction),
-        });
-      } else {
-        // fallback for no place to respawn
       }
-    }
 
-    if (player.energyRegenerate()) {
-      io.to(player.socketId).emit("player:energy:update", player.energy);
-    }
+      if (player.attackDelayTicks < player.attackDelayMaxTicks) {
+        player.attackDelayTicks += 1;
+      }
+      if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
+        player.energyRegenDelayTicks += 1;
+      }
 
-    if (player.attackDelayTicks < player.attackDelayMaxTicks) {
-      player.attackDelayTicks += 1;
-    }
-    if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
-      player.energyRegenDelayTicks += 1;
+      if (player.toRespawn) {
+        const respawnTile = getRespawnTile({
+          map,
+          obj: gameObjects.find(
+            (b) => b.name === player.settings.respawnBuilding.name
+          ),
+          players,
+          sizeToIncrease: {
+            x: 2,
+            y: 2,
+          },
+        });
+
+        if (respawnTile) {
+          player.respawn(respawnTile);
+          io.to(player.socketId).emit("player:energy:update", player.energy);
+          io.to(player.fraction).emit("players:hp:update", {
+            players: getAllies(players, player.fraction),
+          });
+        } else {
+          // fallback for no place to respawn
+        }
+      }
+    } else if (player.constructor.TYPE !== Player.TYPE) {
+      if (
+        player.isDead &&
+        player.respawnDelayTicks < player.respawnDelayMaxTicks
+      ) {
+        player.respawnDelayTicks += 1;
+      }
+
+      if (player.respawnDelayTicks >= player.respawnDelayMaxTicks) {
+        player.toRespawn = true;
+      }
+
+      if (player.toRespawn) {
+        const respawnTile = player.positionTile;
+
+        if (respawnTile) {
+          player.respawn(respawnTile);
+        } else {
+          // fallback for no place to respawn
+        }
+      }
     }
 
     if (

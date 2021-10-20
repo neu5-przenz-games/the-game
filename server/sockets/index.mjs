@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { Player } from "../gameObjects/Player.mjs";
 import {
   DEBUG_ITEMS_SETS,
   DEBUG_SKILL_POINTS,
@@ -52,21 +53,26 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
       socket.emit(
         "players:list",
         Array.from(players, ([name, value]) => {
-          const newValue = {
-            ...value,
-            crafting: Array.from(receipts, ([id, craftingValue]) => ({
-              id,
-              displayName: craftingValue.displayName,
-            })),
-            skills:
-              availablePlayer.name === name
-                ? shapeSkillsForClient(availablePlayer.skills)
-                : shapeSkillsForClient(skillsSchema),
-          };
+          const type = value.constructor.TYPE;
 
           return {
             name,
-            ...newValue,
+            ...{
+              ...value,
+              type,
+              skills:
+                availablePlayer.name === name
+                  ? shapeSkillsForClient(availablePlayer.skills)
+                  : shapeSkillsForClient(skillsSchema),
+              ...(type === Player.TYPE
+                ? {
+                    crafting: Array.from(receipts, ([id, craftingValue]) => ({
+                      id,
+                      displayName: craftingValue.displayName,
+                    })),
+                  }
+                : {}),
+            },
           };
         }),
         socket.id
@@ -144,7 +150,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           player.action = null;
           player.isWalking = false;
 
-          if (type === "Skeleton") {
+          if (type === Player.TYPE) {
             const selectedObject = players.get(selectedObjectName);
 
             player.setSelectedObject(selectedObject);
@@ -158,6 +164,10 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
                 player.selectedObject.displayName
               );
             }
+          } else if (type === "Devil") {
+            const selectedObject = players.get(selectedObjectName);
+
+            player.setSelectedObject(selectedObject);
           } else {
             const selectedObject = gameObjects.find(
               (obj) => obj.name === selectedObjectName

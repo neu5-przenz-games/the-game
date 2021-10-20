@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
-import { EnergyBar, HealthBar, ProgressBar } from "./Bar/index.mjs";
 import { TileFight, TileMarked, TileSelected } from "./Tile/index.mjs";
 import { Arrow } from "./Arrow.mjs";
 
@@ -48,40 +47,20 @@ const anims = {
   },
 };
 
-const HEALTH_BAR_OFFSET_X = -32;
-const HEALTH_BAR_OFFSET_Y = -36;
-
-const ENERGY_BAR_OFFSET_X = -32;
-const ENERGY_BAR_OFFSET_Y = -30;
-
 const LABEL_OFFSET_Y = 25;
-
-const PROGRESS_BAR_OFFSET_X = -32;
-const PROGRESS_BAR_OFFSET_Y = 48;
 
 const OFFSET = {
   X: 32,
   Y: 16,
 };
 
-class Skeleton extends Phaser.GameObjects.Image {
-  constructor({
-    direction,
-    isMainPlayer,
-    energy,
-    isDead,
-    name,
-    displayName,
-    fraction,
-    scene,
-    x,
-    y,
-  }) {
+class Mob extends Phaser.GameObjects.Image {
+  constructor({ direction, isDead, name, displayName, scene, x, y }) {
     super(
       scene,
       x + OFFSET.X,
       y + OFFSET.Y,
-      fraction,
+      "mob-devil",
       directions[direction].offset
     );
 
@@ -90,40 +69,8 @@ class Skeleton extends Phaser.GameObjects.Image {
 
     this.name = name;
     this.displayName = displayName;
-    this.fraction = fraction;
     this.dest = { x: null, y: null };
-    this.isMainPlayer = isMainPlayer;
     this.isDead = isDead;
-
-    this.healthBar = new HealthBar(
-      scene,
-      this.x,
-      this.y,
-      HEALTH_BAR_OFFSET_X,
-      HEALTH_BAR_OFFSET_Y,
-      0,
-      false
-    );
-
-    this.energyBar = new EnergyBar(
-      scene,
-      this.x,
-      this.y,
-      ENERGY_BAR_OFFSET_X,
-      ENERGY_BAR_OFFSET_Y,
-      energy,
-      isMainPlayer
-    );
-
-    this.actionProgressBar = new ProgressBar(
-      scene,
-      this.x,
-      this.y,
-      PROGRESS_BAR_OFFSET_X,
-      PROGRESS_BAR_OFFSET_Y,
-      0,
-      false
-    );
 
     this.tileMarked = new TileMarked(scene);
     this.tileSelected = new TileSelected(scene, this.x, this.y);
@@ -137,8 +84,6 @@ class Skeleton extends Phaser.GameObjects.Image {
     this.depth = this.y;
 
     this.scene = scene;
-
-    this.rangeTiles = [];
 
     if (this.isDead) {
       this.motion = "die";
@@ -172,7 +117,7 @@ class Skeleton extends Phaser.GameObjects.Image {
     );
   }
 
-  static TYPE = "Skeleton";
+  static TYPE = "Devil";
 
   static hitAreaSize = {
     width: 64,
@@ -189,36 +134,7 @@ class Skeleton extends Phaser.GameObjects.Image {
   }
 
   getDisplayName() {
-    return `[${this.fraction.charAt(0)}] ${this.displayName}`;
-  }
-
-  setAlphaTiles(alpha = 1) {
-    this.rangeTiles.forEach((tile) => {
-      tile.setAlpha(alpha);
-    });
-  }
-
-  showRange() {
-    this.setAlphaTiles();
-
-    const { range } = getCurrentWeapon(
-      this.scene.equipment && this.scene.equipment.weapon
-    ).details;
-
-    const vec = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
-    this.rangeTiles = this.scene.groundLayer.getTilesWithin(
-      vec.x - range,
-      vec.y - range,
-      range * 2 + 1,
-      range * 2 + 1
-    );
-
-    this.setAlphaTiles(0.8);
-  }
-
-  hideRange() {
-    this.setAlphaTiles();
-    this.rangeTiles = [];
+    return this.displayName;
   }
 
   isFighting() {
@@ -236,14 +152,6 @@ class Skeleton extends Phaser.GameObjects.Image {
         targets[0].setVisible(false);
       },
     });
-  }
-
-  actionStart(duration) {
-    this.actionProgressBar.startCounter(duration);
-  }
-
-  actionEnd() {
-    this.actionProgressBar.resetCounter();
   }
 
   setMotion(motion) {
@@ -296,17 +204,7 @@ class Skeleton extends Phaser.GameObjects.Image {
     );
   }
 
-  update({
-    x,
-    y,
-    destTile,
-    direction,
-    attack,
-    weapon,
-    isDead,
-    isWalking,
-    isParrying,
-  }) {
+  update({ x, y, direction, attack, weapon, isDead, isWalking, isParrying }) {
     this.isDead = isDead;
 
     if (attack !== null) {
@@ -364,41 +262,6 @@ class Skeleton extends Phaser.GameObjects.Image {
       this.tileFight.toggleVisible(false);
     }
 
-    // Handle Main player only
-    if (this.isMainPlayer) {
-      if (destTile !== null) {
-        // clear previous marker if it exists and if player is in movement
-        if (
-          this.tileMarked.visible === true &&
-          (this.tileMarked.tileX !== destTile.tileX ||
-            this.tileMarked.tileY !== destTile.tileY)
-        ) {
-          this.tileMarked.toggleVisible(false);
-        }
-
-        const tile = this.scene.groundLayer.tileToWorldXY(
-          destTile.tileX,
-          destTile.tileY
-        );
-
-        this.tileMarked.setPosition(tile.x + OFFSET.X, tile.y + OFFSET.Y);
-        this.tileMarked.toggleVisible(true, tile);
-      } else {
-        this.tileMarked.toggleVisible(false);
-      }
-
-      if (this.scene.settings.showRange) {
-        this.showRange();
-      } else {
-        this.hideRange();
-      }
-    } else if (!this.isMainPlayer) {
-      // Handle other players only
-      if (this.isDead || this.fraction !== this.scene.mainPlayer.fraction) {
-        this.healthBar.hide();
-      }
-    }
-
     // player changed direction
     if (direction) {
       this.direction = directions[direction];
@@ -419,22 +282,13 @@ class Skeleton extends Phaser.GameObjects.Image {
       this.tileSelected.setPosition(this.x, this.y);
       this.tileFight.setPosition(this.x, this.y);
     }
-
-    this.healthBar.setPosition(this.x, this.y, this.depth);
-    this.energyBar.setPosition(this.x, this.y, this.depth);
-    this.actionProgressBar.setPosition(this.x, this.y, this.depth);
-
-    this.actionProgressBar.update();
   }
 
   destroy() {
     this.arrow.destroy();
     this.label.destroy();
-    this.healthBar.destroy();
-    this.energyBar.destroy();
-    this.actionProgressBar.destroy();
     super.destroy();
   }
 }
 
-export { directions, OFFSET, Skeleton };
+export { directions, OFFSET, Mob };

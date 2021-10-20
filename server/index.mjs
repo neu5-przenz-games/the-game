@@ -3,7 +3,8 @@ import express from "express";
 import { createServer } from "http";
 
 import { playersMocks } from "./mocks/players.mjs";
-import { Player } from "./gameObjects/Player.mjs";
+import { mobsMocks } from "./mocks/mobs.mjs";
+import { Player, createMob } from "./gameObjects/index.mjs";
 import { sockets } from "./sockets/index.mjs";
 import { loop } from "./loop/index.mjs";
 import { gameObjects } from "../shared/init/gameObjects.mjs";
@@ -45,6 +46,10 @@ const lootingBags = [
 
 playersMocks.forEach((player) => {
   players.set(player.name, new Player(player));
+});
+
+mobsMocks.forEach((mob) => {
+  players.set(mob.name, createMob(mob));
 });
 
 const go = [...gameObjects, ...lootingBags];
