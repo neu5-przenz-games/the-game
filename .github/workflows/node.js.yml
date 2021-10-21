@@ -1,6 +1,3 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Node.js CI
 
 on:
@@ -31,10 +28,10 @@ jobs:
       run: yarn lint
       
     - name: Build dev version
-      if: github.ref == 'refs/heads/main'
+      if: github.ref != 'refs/heads/main'
       run: yarn build:dev
     - name: Build prod version
-      if: github.ref != 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
       run: yarn build
       
     - name: Test
