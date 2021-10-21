@@ -54,6 +54,8 @@ const createMob = ({
   attackDelayMaxTicks: 30,
   respawnDelayTicks: 0,
   respawnDelayMaxTicks: 90,
+  getNextDestDelayTicks: 0,
+  getNextDestDelayMaxTicks: 30,
   next: null,
   speed: 2,
   direction: "east",

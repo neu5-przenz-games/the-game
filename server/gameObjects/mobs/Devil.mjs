@@ -33,6 +33,8 @@ class Devil {
     attackDelayMaxTicks,
     respawnDelayTicks,
     respawnDelayMaxTicks,
+    getNextDestDelayTicks,
+    getNextDestDelayMaxTicks,
     next,
     skills,
     speed,
@@ -66,6 +68,8 @@ class Devil {
     this.attackDelayMaxTicks = attackDelayMaxTicks;
     this.respawnDelayTicks = respawnDelayTicks;
     this.respawnDelayMaxTicks = respawnDelayMaxTicks;
+    this.getNextDestDelayTicks = getNextDestDelayTicks;
+    this.getNextDestDelayMaxTicks = getNextDestDelayMaxTicks;
     this.hp = hp;
     this.skills = skills;
 

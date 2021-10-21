@@ -121,25 +121,30 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     } else if (player.dest === null) {
       if (player.constructor.TYPE !== Player.TYPE && player.isDead === false) {
-        const goToTile = getRespawnTile({
-          map,
-          obj: {
-            positionTile: player.presenceAreaCenterTile,
-            size: player.size,
-          },
-          players,
-          sizeToIncrease: {
-            x: 2,
-            y: 2,
-          },
-        });
+        if (player.getNextDestDelayTicks < player.getNextDestDelayMaxTicks) {
+          player.getNextDestDelayTicks += 1;
+        } else {
+          player.getNextDestDelayTicks = 0;
+          const goToTile = getRespawnTile({
+            map,
+            obj: {
+              positionTile: player.presenceAreaCenterTile,
+              size: player.size,
+            },
+            players,
+            sizeToIncrease: {
+              x: 2,
+              y: 2,
+            },
+          });
 
-        const { tileX, tileY } = goToTile;
+          const { tileX, tileY } = goToTile;
 
-        player.dest = {
-          ...getXYFromTile(tileX, tileY),
-          tile: { tileX, tileY },
-        };
+          player.dest = {
+            ...getXYFromTile(tileX, tileY),
+            tile: { tileX, tileY },
+          };
+        }
       }
     }
 
