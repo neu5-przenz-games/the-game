@@ -17,12 +17,25 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: browser-actions/setup-chrome@latest
-    - name: Use Node.js
+    
+    - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '16.x'
         cache: 'yarn'
-    - run: yarn --frozen-lockfile
-    - run: yarn lint
-    - run: yarn build
-    - run: yarn test
+        
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+      
+    - name: Lint
+      run: yarn lint
+      
+    - name: Build dev version
+      if: github.ref == 'refs/heads/main'
+      run: yarn build:dev
+    - name: Build prod version
+      if: github.ref != 'refs/heads/main'
+      run: yarn build
+      
+    - name: Test
+      run: yarn test
