@@ -18,6 +18,7 @@ class Devil {
     name,
     displayName,
     positionTile,
+    presenceAreaCenterTile,
     size,
     dest,
     isWalking,
@@ -43,6 +44,7 @@ class Devil {
 
     // movement
     this.positionTile = positionTile;
+    this.presenceAreaCenterTile = presenceAreaCenterTile;
     this.size = size;
     this.dest = dest;
     this.isWalking = isWalking;

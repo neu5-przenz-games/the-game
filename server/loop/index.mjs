@@ -9,6 +9,7 @@ import {
   getDefenseValue,
   getHitValue,
   getRespawnTile,
+  getXYFromTile,
 } from "../utils/algo.mjs";
 import { getHitText } from "../utils/hitText.mjs";
 
@@ -117,6 +118,28 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           // player can't go there
           player.dest = null;
         }
+      }
+    } else if (player.dest === null) {
+      if (player.constructor.TYPE !== Player.TYPE && player.isDead === false) {
+        const goToTile = getRespawnTile({
+          map,
+          obj: {
+            positionTile: player.presenceAreaCenterTile,
+            size: player.size,
+          },
+          players,
+          sizeToIncrease: {
+            x: 2,
+            y: 2,
+          },
+        });
+
+        const { tileX, tileY } = goToTile;
+
+        player.dest = {
+          ...getXYFromTile(tileX, tileY),
+          tile: { tileX, tileY },
+        };
       }
     }
 
@@ -353,7 +376,18 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
 
       if (player.toRespawn) {
-        const respawnTile = player.positionTile;
+        const respawnTile = getRespawnTile({
+          map,
+          obj: {
+            positionTile: player.presenceAreaCenterTile,
+            size: player.size,
+          },
+          players,
+          sizeToIncrease: {
+            x: 2,
+            y: 2,
+          },
+        });
 
         if (respawnTile) {
           player.respawn(respawnTile);
