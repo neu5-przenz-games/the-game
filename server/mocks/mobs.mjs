@@ -1,22 +1,11 @@
 import { skillsSchema } from "../../shared/skills/index.mjs";
+import {
+  backpack as devilBackpack,
+  equipment as devilEquipment,
+} from "../../shared/mobs/Devil.mjs";
 import { Devil, HP_MAX } from "../gameObjects/mobs/Devil.mjs";
 
 const skills = skillsSchema;
-
-const eq = {
-  armor: { id: "armor", quantity: 1 },
-  pants: { id: "pants", quantity: 1 },
-  boots: { id: "boots", quantity: 1 },
-  backpack: { id: "bag", quantity: 1 },
-  shield: { id: "shield", quantity: 1 },
-  weapon: { id: "dagger", quantity: 1 },
-  helmet: { id: "hat", quantity: 1 },
-};
-
-const bp = {
-  slots: 4,
-  items: [{ id: "bow", quantity: 1 }],
-};
 
 const createMob = ({
   name,
@@ -68,8 +57,8 @@ const devil1 = createMob({
   type: Devil.TYPE,
   positionTile: { tileX: 25, tileY: 25 },
   presenceAreaCenterTile: { tileX: 25, tileY: 25 },
-  equipment: eq,
-  backpack: bp,
+  backpack: devilBackpack,
+  equipment: devilEquipment,
 });
 
 const devil2 = createMob({
@@ -78,8 +67,8 @@ const devil2 = createMob({
   type: Devil.TYPE,
   positionTile: { tileX: 26, tileY: 8 },
   presenceAreaCenterTile: { tileX: 26, tileY: 8 },
-  equipment: eq,
-  backpack: bp,
+  backpack: devilBackpack,
+  equipment: devilEquipment,
 });
 
 const devil3 = createMob({
@@ -88,8 +77,8 @@ const devil3 = createMob({
   type: Devil.TYPE,
   positionTile: { tileX: 1, tileY: 14 },
   presenceAreaCenterTile: { tileX: 1, tileY: 14 },
-  equipment: eq,
-  backpack: bp,
+  backpack: devilBackpack,
+  equipment: devilEquipment,
 });
 
 export const mobsMocks = [devil1, devil2, devil3];
