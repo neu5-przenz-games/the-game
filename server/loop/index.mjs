@@ -8,7 +8,7 @@ import {
   getAttack,
   getDefenseValue,
   getHitValue,
-  getRespawnTile,
+  getRandomTile,
   getXYFromTile,
 } from "../utils/algo.mjs";
 import { getHitText } from "../utils/hitText.mjs";
@@ -24,6 +24,10 @@ import {
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
 import { LootingBag, mergeItems } from "../../shared/gameObjects/index.mjs";
+import {
+  backpack as devilBackpack,
+  equipment as devilEquipment,
+} from "../../shared/mobs/Devil.mjs";
 
 const SI = new SnapshotInterpolation();
 
@@ -125,7 +129,8 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           player.getNextDestDelayTicks += 1;
         } else {
           player.getNextDestDelayTicks = 0;
-          const goToTile = getRespawnTile({
+
+          const goToTile = getRandomTile({
             map,
             obj: {
               positionTile: player.presenceAreaCenterTile,
@@ -346,7 +351,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
 
       if (player.toRespawn) {
-        const respawnTile = getRespawnTile({
+        const respawnTile = getRandomTile({
           map,
           obj: gameObjects.find(
             (b) => b.name === player.settings.respawnBuilding.name
@@ -381,7 +386,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
 
       if (player.toRespawn) {
-        const respawnTile = getRespawnTile({
+        player.setBackpack(devilBackpack.slots, devilBackpack.items);
+        player.setEquipment(devilEquipment);
+
+        const respawnTile = getRandomTile({
           map,
           obj: {
             positionTile: player.presenceAreaCenterTile,

@@ -210,7 +210,7 @@ const availableTiles = ({ surroundingTiles, players, map }) => {
   }, []);
 };
 
-const getRespawnTile = ({ map, obj, players, sizeToIncrease }) => {
+const getRandomTile = ({ map, obj, players, sizeToIncrease }) => {
   const { positionTile, size } = obj;
 
   const respawnTiles = availableTiles({
@@ -280,6 +280,6 @@ export {
   getDestTile,
   getHitValue,
   getRandomInt,
-  getRespawnTile,
+  getRandomTile,
   getXYFromTile,
 };
