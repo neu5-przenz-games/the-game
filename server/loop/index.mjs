@@ -125,10 +125,13 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     } else if (player.dest === null) {
       if (player.constructor.TYPE !== Player.TYPE && player.isDead === false) {
-        if (player.getNextDestDelayTicks < player.getNextDestDelayMaxTicks) {
-          player.getNextDestDelayTicks += 1;
+        if (
+          player.getNextDestDelayTicks.value <
+          player.getNextDestDelayTicks.maxValue
+        ) {
+          player.getNextDestDelayTicks.value += 1;
         } else {
-          player.getNextDestDelayTicks = 0;
+          player.getNextDestDelayTicks.value = 0;
 
           const goToTile = getRandomTile({
             map,
@@ -168,7 +171,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
 
       if (player.settings.fight && player.canAttack({ finder, map, PF })) {
-        player.attackDelayTicks = 0;
+        player.attackDelayTicks.value = 0;
         player.attack = selectedObject.name;
 
         const currentWeapon = getCurrentWeapon(player.equipment.weapon);
@@ -343,11 +346,55 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         io.to(player.socketId).emit("player:energy:update", player.energy);
       }
 
-      if (player.attackDelayTicks < player.attackDelayMaxTicks) {
-        player.attackDelayTicks += 1;
+      if (player.attackDelayTicks.value < player.attackDelayTicks.maxValue) {
+        player.attackDelayTicks.value += 1;
       }
-      if (player.energyRegenDelayTicks < player.energyRegenDelayMaxTicks) {
-        player.energyRegenDelayTicks += 1;
+      if (
+        player.energyRegenDelayTicks.value <
+        player.energyRegenDelayTicks.maxValue
+      ) {
+        player.energyRegenDelayTicks.value += 1;
+      }
+
+      if (
+        player.actionDurationTicks !== null &&
+        player.actionDurationTicks.value < player.actionDurationTicks.maxValue
+      ) {
+        player.actionDurationTicks.value += 1;
+      } else if (player.resetActionDuration()) {
+        // action has ended
+        io.to(player.socketId).emit("action:end");
+
+        let item = null;
+        let skillDetails = null;
+
+        if (player.receipt) {
+          // crafting action
+          const { createdItem, skill } = player.receipt;
+
+          item = { ...createdItem };
+          skillDetails = { ...skill };
+        } else if (player.selectedObject) {
+          // getting resources action
+          item = player.selectedObject.item;
+          skillDetails = player.selectedObject.skill;
+        }
+
+        player.receipt = null;
+        player.skillUpdate(skillIncrease(player.skills, skillDetails));
+
+        io.to(player.socketId).emit(
+          "skills:update",
+          shapeSkillsForClient(player.skills)
+        );
+
+        if (item && player.addToBackpack([item])) {
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
+        }
       }
 
       if (player.toRespawn) {
@@ -376,12 +423,12 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
     } else if (player.constructor.TYPE !== Player.TYPE) {
       if (
         player.isDead &&
-        player.respawnDelayTicks < player.respawnDelayMaxTicks
+        player.respawnDelayTicks.value < player.respawnDelayTicks.maxValue
       ) {
-        player.respawnDelayTicks += 1;
+        player.respawnDelayTicks.value += 1;
       }
 
-      if (player.respawnDelayTicks >= player.respawnDelayMaxTicks) {
+      if (player.respawnDelayTicks.value >= player.respawnDelayTicks.maxValue) {
         player.toRespawn = true;
       }
 
@@ -410,47 +457,6 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    if (
-      Number.isInteger(player.actionDurationTicks) &&
-      player.actionDurationTicks < player.actionDurationMaxTicks
-    ) {
-      player.actionDurationTicks += 1;
-    } else if (player.resetActionDuration()) {
-      // action has ended
-      io.to(player.socketId).emit("action:end");
-
-      let item = null;
-      let skillDetails = null;
-
-      if (player.receipt) {
-        // crafting action
-        const { createdItem, skill } = player.receipt;
-
-        item = { ...createdItem };
-        skillDetails = { ...skill };
-      } else if (player.selectedObject) {
-        // getting resources action
-        item = player.selectedObject.item;
-        skillDetails = player.selectedObject.skill;
-      }
-
-      player.receipt = null;
-      player.skillUpdate(skillIncrease(player.skills, skillDetails));
-
-      io.to(player.socketId).emit(
-        "skills:update",
-        shapeSkillsForClient(player.skills)
-      );
-
-      if (item && player.addToBackpack([item])) {
-        io.to(player.socketId).emit(
-          "items:update",
-          player.backpack,
-          player.equipment
-        );
-      }
-    }
-
     if (process.env.NODE_ENV === "development") {
       if (player.toKill) {
         player.toKill = false;
@@ -461,7 +467,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
   });
 
   healingStones.forEach((healingStone) => {
-    if (healingStone.healingDelayTicks >= healingStone.healingDelayMaxTicks) {
+    if (
+      healingStone.healingDelayTicks.value >=
+      healingStone.healingDelayTicks.maxValue
+    ) {
       players.forEach((player) => {
         if (
           !player.isDead &&
@@ -476,11 +485,14 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         }
       });
 
-      healingStone.healingDelayTicks = 0;
+      healingStone.healingDelayTicks.value = 0;
     }
 
-    if (healingStone.healingDelayTicks < healingStone.healingDelayMaxTicks) {
-      healingStone.healingDelayTicks += 1;
+    if (
+      healingStone.healingDelayTicks.value <
+      healingStone.healingDelayTicks.maxValue
+    ) {
+      healingStone.healingDelayTicks.value += 1;
     }
   });
 

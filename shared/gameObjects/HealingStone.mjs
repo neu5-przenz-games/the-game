@@ -9,15 +9,13 @@ export class HealingStone extends GameObject {
     positionTile,
     size = { x: 2, y: 2 },
     sizeToIncrease = { x: 4, y: 4 },
-    healingDelayTicks = 10,
-    healingDelayMaxTicks = 10,
+    healingDelayTicks = { value: 10, maxValue: 10 },
     HP_REGEN_RATE = 5,
   }) {
     super({ name, displayName, type, positionTile, size });
 
     this.sizeToIncrease = sizeToIncrease;
     this.healingDelayTicks = healingDelayTicks;
-    this.healingDelayMaxTicks = healingDelayMaxTicks;
     this.HP_REGEN_RATE = HP_REGEN_RATE;
 
     this.healingArea = getSurroundingTiles;

@@ -295,8 +295,8 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
           if (player && equipment && backpackItems) {
             const backpackToSet = gameItems.get(equipment.backpack.id);
-            player.attackDelayTicks = 0;
-            player.attackDelayMaxTicks = gameItems.get(
+            player.attackDelayTicks.value = 0;
+            player.attackDelayTicks.maxValue = gameItems.get(
               equipment.weapon.id
             ).details.attackDelayTicks;
             player.setEquipment(equipment);
@@ -373,8 +373,10 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           return;
         }
 
-        player.actionDurationTicks = 0;
-        player.actionDurationMaxTicks = durationTicks;
+        player.actionDurationTicks = {
+          value: 0,
+          maxValue: durationTicks,
+        };
         player.receipt = null;
 
         player.energyUse(energyCost);
@@ -441,8 +443,10 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
           return;
         }
 
-        player.actionDurationTicks = 0;
-        player.actionDurationMaxTicks = receipt.durationTicks;
+        player.actionDurationTicks = {
+          value: 0,
+          maxValue: receipt.durationTicks,
+        };
 
         receipt.requiredItems.forEach((requiredItem) =>
           player.removeFromBackpack(requiredItem.id)

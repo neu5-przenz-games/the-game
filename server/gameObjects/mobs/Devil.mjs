@@ -30,11 +30,8 @@ class Devil {
     dropSelection,
     attack,
     attackDelayTicks,
-    attackDelayMaxTicks,
     respawnDelayTicks,
-    respawnDelayMaxTicks,
     getNextDestDelayTicks,
-    getNextDestDelayMaxTicks,
     next,
     skills,
     speed,
@@ -65,11 +62,8 @@ class Devil {
     // properties
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
-    this.attackDelayMaxTicks = attackDelayMaxTicks;
     this.respawnDelayTicks = respawnDelayTicks;
-    this.respawnDelayMaxTicks = respawnDelayMaxTicks;
     this.getNextDestDelayTicks = getNextDestDelayTicks;
-    this.getNextDestDelayMaxTicks = getNextDestDelayMaxTicks;
     this.hp = hp;
     this.skills = skills;
 
@@ -204,7 +198,7 @@ class Devil {
   canAttack({ finder, map, PF }) {
     return (
       this.selectedObject.isDead === false &&
-      this.attackDelayTicks >= this.attackDelayMaxTicks &&
+      this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
       (this.settings.attackAlly ||
         !this.isSameFraction(this.selectedObject.fraction)) &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
@@ -231,12 +225,6 @@ class Devil {
     if (this.hp === 0) {
       this.isDead = true;
       this.resetSelected();
-
-      if (this.action && this.actionDurationTicks !== null) {
-        this.action = null;
-        this.actionDurationTicks = null;
-        this.actionDurationMax = null;
-      }
     }
   }
 
@@ -342,20 +330,9 @@ class Devil {
 
     const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
     this.positionTile = respawnTile;
-    this.respawnDelayTicks = 0;
+    this.respawnDelayTicks.value = 0;
     this.x = respawnXY.x;
     this.y = respawnXY.y;
-  }
-
-  resetActionDuration() {
-    if (Number.isInteger(this.actionDurationTicks)) {
-      this.actionDurationTicks = null;
-      this.actionDurationMax = null;
-
-      return true;
-    }
-
-    return false;
   }
 
   resetSelected() {
