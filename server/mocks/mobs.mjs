@@ -1,9 +1,10 @@
 import { skillsSchema } from "../../shared/skills/index.mjs";
 import {
-  backpack as devilBackpack,
-  equipment as devilEquipment,
-} from "../../shared/mobs/Devil.mjs";
-import { Devil, HP_MAX } from "../gameObjects/mobs/Devil.mjs";
+  Devil,
+  HP_MAX,
+  defaultBackpack,
+  defaultEquipment,
+} from "../gameObjects/mobs/Devil.mjs";
 
 const skills = skillsSchema;
 
@@ -63,8 +64,8 @@ const devil1 = createMob({
   type: Devil.TYPE,
   positionTile: { tileX: 25, tileY: 25 },
   presenceAreaCenterTile: { tileX: 25, tileY: 25 },
-  backpack: devilBackpack,
-  equipment: devilEquipment,
+  backpack: defaultBackpack,
+  equipment: defaultEquipment,
 });
 
 const devil2 = createMob({
@@ -73,8 +74,8 @@ const devil2 = createMob({
   type: Devil.TYPE,
   positionTile: { tileX: 26, tileY: 8 },
   presenceAreaCenterTile: { tileX: 26, tileY: 8 },
-  backpack: devilBackpack,
-  equipment: devilEquipment,
+  backpack: defaultBackpack,
+  equipment: defaultEquipment,
 });
 
 const devil3 = createMob({
@@ -83,8 +84,8 @@ const devil3 = createMob({
   type: Devil.TYPE,
   positionTile: { tileX: 1, tileY: 14 },
   presenceAreaCenterTile: { tileX: 1, tileY: 14 },
-  backpack: devilBackpack,
-  equipment: devilEquipment,
+  backpack: defaultBackpack,
+  equipment: defaultEquipment,
 });
 
 export const mobsMocks = [devil1, devil2, devil3];

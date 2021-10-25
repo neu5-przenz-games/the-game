@@ -24,10 +24,6 @@ import {
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
 import { LootingBag, mergeItems } from "../../shared/gameObjects/index.mjs";
-import {
-  backpack as devilBackpack,
-  equipment as devilEquipment,
-} from "../../shared/mobs/Devil.mjs";
 
 const SI = new SnapshotInterpolation();
 
@@ -433,8 +429,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
 
       if (player.toRespawn) {
-        player.setBackpack(devilBackpack.slots, devilBackpack.items);
-        player.setEquipment(devilEquipment);
+        player.setDefaultEquipment();
 
         const respawnTile = getRandomTile({
           map,

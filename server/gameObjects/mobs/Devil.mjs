@@ -13,6 +13,23 @@ import { isObjectAhead } from "../../utils/directions.mjs";
 
 const HP_MAX = 1000;
 
+const backpack = gameItems.get("bag");
+
+const defaultEquipment = {
+  armor: { id: "armor", quantity: 1 },
+  pants: { id: "pants", quantity: 1 },
+  boots: { id: "boots", quantity: 1 },
+  backpack: { id: backpack.id, quantity: 1 },
+  shield: { id: "shield", quantity: 1 },
+  weapon: { id: "dagger", quantity: 1 },
+  helmet: { id: "hat", quantity: 1 },
+};
+
+const defaultBackpack = {
+  slots: backpack.slots,
+  items: [{ id: "bow", quantity: 1 }],
+};
+
 class Devil {
   constructor({
     name,
@@ -87,17 +104,8 @@ class Devil {
     return getCurrentWeapon(this.equipment.weapon).details.range;
   }
 
-  setOnline(socketId) {
-    this.isOnline = true;
-    this.socketId = socketId;
-  }
-
   setSelectedObject(player) {
     this.selectedObject = player;
-  }
-
-  setSettingsAttackAlly(value) {
-    this.settings.attackAlly = value;
   }
 
   setSettingsFollow(value) {
@@ -107,10 +115,6 @@ class Devil {
 
   setSettingsFight(value) {
     this.settings.fight = value;
-  }
-
-  setSettingsShowRange(value) {
-    this.settings.showRange = value;
   }
 
   setSettingsKeepSelectionOnMovement(value) {
@@ -138,6 +142,11 @@ class Devil {
     this.equipment = {
       ...items,
     };
+  }
+
+  setDefaultEquipment() {
+    this.setBackpack(defaultBackpack.slots, defaultBackpack.items);
+    this.setEquipment(defaultEquipment);
   }
 
   noObstacles = ({ PF, finder, map }) => {
@@ -340,4 +349,4 @@ class Devil {
   }
 }
 
-export { HP_MAX, Devil };
+export { HP_MAX, Devil, defaultBackpack, defaultEquipment };
