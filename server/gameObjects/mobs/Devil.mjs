@@ -13,20 +13,20 @@ import { isObjectAhead } from "../../utils/directions.mjs";
 
 const HP_MAX = 1000;
 
-const backpack = gameItems.get("bag");
+const mobDefaultBackpack = gameItems.get("bag");
 
 const defaultEquipment = {
   armor: { id: "armor", quantity: 1 },
   pants: { id: "pants", quantity: 1 },
   boots: { id: "boots", quantity: 1 },
-  backpack: { id: backpack.id, quantity: 1 },
+  backpack: { id: mobDefaultBackpack.id, quantity: 1 },
   shield: { id: "shield", quantity: 1 },
   weapon: { id: "dagger", quantity: 1 },
   helmet: { id: "hat", quantity: 1 },
 };
 
 const defaultBackpack = {
-  slots: backpack.slots,
+  slots: mobDefaultBackpack.slots,
   items: [{ id: "bow", quantity: 1 }],
 };
 
