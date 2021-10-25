@@ -13,6 +13,23 @@ import { isObjectAhead } from "../../utils/directions.mjs";
 
 const HP_MAX = 1000;
 
+const mobDefaultBackpack = gameItems.get("bag");
+
+const defaultEquipment = {
+  armor: { id: "armor", quantity: 1 },
+  pants: { id: "pants", quantity: 1 },
+  boots: { id: "boots", quantity: 1 },
+  backpack: { id: mobDefaultBackpack.id, quantity: 1 },
+  shield: { id: "shield", quantity: 1 },
+  weapon: { id: "dagger", quantity: 1 },
+  helmet: { id: "hat", quantity: 1 },
+};
+
+const defaultBackpack = {
+  slots: mobDefaultBackpack.slots,
+  items: [{ id: "bow", quantity: 1 }],
+};
+
 class Devil {
   constructor({
     name,
@@ -30,11 +47,8 @@ class Devil {
     dropSelection,
     attack,
     attackDelayTicks,
-    attackDelayMaxTicks,
     respawnDelayTicks,
-    respawnDelayMaxTicks,
     getNextDestDelayTicks,
-    getNextDestDelayMaxTicks,
     next,
     skills,
     speed,
@@ -65,11 +79,8 @@ class Devil {
     // properties
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
-    this.attackDelayMaxTicks = attackDelayMaxTicks;
     this.respawnDelayTicks = respawnDelayTicks;
-    this.respawnDelayMaxTicks = respawnDelayMaxTicks;
     this.getNextDestDelayTicks = getNextDestDelayTicks;
-    this.getNextDestDelayMaxTicks = getNextDestDelayMaxTicks;
     this.hp = hp;
     this.skills = skills;
 
@@ -93,17 +104,8 @@ class Devil {
     return getCurrentWeapon(this.equipment.weapon).details.range;
   }
 
-  setOnline(socketId) {
-    this.isOnline = true;
-    this.socketId = socketId;
-  }
-
   setSelectedObject(player) {
     this.selectedObject = player;
-  }
-
-  setSettingsAttackAlly(value) {
-    this.settings.attackAlly = value;
   }
 
   setSettingsFollow(value) {
@@ -113,10 +115,6 @@ class Devil {
 
   setSettingsFight(value) {
     this.settings.fight = value;
-  }
-
-  setSettingsShowRange(value) {
-    this.settings.showRange = value;
   }
 
   setSettingsKeepSelectionOnMovement(value) {
@@ -144,6 +142,11 @@ class Devil {
     this.equipment = {
       ...items,
     };
+  }
+
+  setDefaultEquipment() {
+    this.setBackpack(defaultBackpack.slots, defaultBackpack.items);
+    this.setEquipment(defaultEquipment);
   }
 
   noObstacles = ({ PF, finder, map }) => {
@@ -204,7 +207,7 @@ class Devil {
   canAttack({ finder, map, PF }) {
     return (
       this.selectedObject.isDead === false &&
-      this.attackDelayTicks >= this.attackDelayMaxTicks &&
+      this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
       (this.settings.attackAlly ||
         !this.isSameFraction(this.selectedObject.fraction)) &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
@@ -231,12 +234,6 @@ class Devil {
     if (this.hp === 0) {
       this.isDead = true;
       this.resetSelected();
-
-      if (this.action && this.actionDurationTicks !== null) {
-        this.action = null;
-        this.actionDurationTicks = null;
-        this.actionDurationMax = null;
-      }
     }
   }
 
@@ -342,20 +339,9 @@ class Devil {
 
     const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
     this.positionTile = respawnTile;
-    this.respawnDelayTicks = 0;
+    this.respawnDelayTicks.value = 0;
     this.x = respawnXY.x;
     this.y = respawnXY.y;
-  }
-
-  resetActionDuration() {
-    if (Number.isInteger(this.actionDurationTicks)) {
-      this.actionDurationTicks = null;
-      this.actionDurationMax = null;
-
-      return true;
-    }
-
-    return false;
   }
 
   resetSelected() {
@@ -363,4 +349,4 @@ class Devil {
   }
 }
 
-export { HP_MAX, Devil };
+export { HP_MAX, Devil, defaultBackpack, defaultEquipment };

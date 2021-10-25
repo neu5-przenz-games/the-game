@@ -33,13 +33,10 @@ class Player {
     dropSelection,
     receipt,
     action,
-    actionDurationTicks,
-    actionDurationMaxTicks,
     attack,
+    actionDurationTicks,
     attackDelayTicks,
-    attackDelayMaxTicks,
     energyRegenDelayTicks,
-    energyRegenDelayMaxTicks,
     next,
     skills,
     speed,
@@ -75,12 +72,9 @@ class Player {
     this.action = action;
     this.receipt = receipt;
     this.actionDurationTicks = actionDurationTicks;
-    this.actionDurationMaxTicks = actionDurationMaxTicks;
     this.attack = attack;
     this.attackDelayTicks = attackDelayTicks;
-    this.attackDelayMaxTicks = attackDelayMaxTicks;
     this.energyRegenDelayTicks = energyRegenDelayTicks;
-    this.energyRegenDelayMaxTicks = energyRegenDelayMaxTicks;
     this.hp = hp;
     this.energy = energy;
     this.skills = skills;
@@ -251,8 +245,8 @@ class Player {
     this.equipment[itemSchema.type] = item;
 
     if (itemSchema.type === ITEM_TYPES.WEAPON) {
-      this.attackDelayTicks = 0;
-      this.attackDelayMaxTicks = itemSchema.details.attackDelayTicks;
+      this.attackDelayTicks.value = 0;
+      this.attackDelayTicks.maxValue = itemSchema.details.attackDelayTicks;
     }
 
     return true;
@@ -448,7 +442,7 @@ class Player {
       this.selectedObject.isDead === false &&
       this.energy >=
         getCurrentWeapon(this.equipment.weapon).details.energyCost &&
-      this.attackDelayTicks >= this.attackDelayMaxTicks &&
+      this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
       (this.settings.attackAlly ||
         !this.isSameFraction(this.selectedObject.fraction)) &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
@@ -519,7 +513,6 @@ class Player {
       if (this.action && this.actionDurationTicks !== null) {
         this.action = null;
         this.actionDurationTicks = null;
-        this.actionDurationMax = null;
       }
     }
   }
@@ -577,12 +570,12 @@ class Player {
 
   energyRegenerate() {
     if (
-      this.energyRegenDelayTicks >= this.energyRegenDelayMaxTicks &&
+      this.energyRegenDelayTicks.value >= this.energyRegenDelayTicks.maxValue &&
       !this.isDead &&
       this.energy < ENERGY_MAX
     ) {
       this.energy += ENERGY_REGEN_RATE;
-      this.energyRegenDelayTicks = 0;
+      this.energyRegenDelayTicks.value = 0;
 
       if (this.energy > ENERGY_MAX) {
         this.energy = ENERGY_MAX;
@@ -653,9 +646,8 @@ class Player {
   }
 
   resetActionDuration() {
-    if (Number.isInteger(this.actionDurationTicks)) {
+    if (this.actionDurationTicks !== null) {
       this.actionDurationTicks = null;
-      this.actionDurationMax = null;
 
       return true;
     }
