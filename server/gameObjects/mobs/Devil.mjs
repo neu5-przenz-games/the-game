@@ -38,8 +38,8 @@ const defaultBackpack = {
 const skillPoints = getSkillPoints(LEVEL_TYPES.BEGINNER);
 
 const defaultSkills = Object.entries(skillsSchema).reduce(
-  (result, [key, skillDetails]) => ({
-    ...result,
+  (skills, [key, skillDetails]) => ({
+    ...skills,
     [key]: {
       ...skillDetails,
       points: skillPoints,
