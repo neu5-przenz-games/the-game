@@ -1,12 +1,10 @@
-import { skillsSchema } from "../../shared/skills/index.mjs";
 import {
   Devil,
   HP_MAX,
   defaultBackpack,
   defaultEquipment,
+  defaultSkills,
 } from "../gameObjects/mobs/Devil.mjs";
-
-const skills = skillsSchema;
 
 const createMob = ({
   name,
@@ -29,7 +27,7 @@ const createMob = ({
   isDead,
   equipment,
   backpack,
-  skills,
+  skills: defaultSkills,
   settings: {
     attackAlly: false,
     follow: true,

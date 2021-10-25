@@ -2,6 +2,11 @@ import {
   gameItems,
   getCurrentWeapon,
 } from "../../../shared/init/gameItems/index.mjs";
+import {
+  LEVEL_TYPES,
+  getSkillPoints,
+  skillsSchema,
+} from "../../../shared/skills/index.mjs";
 import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
 import { ITEM_TYPES } from "../../../shared/gameItems/index.mjs";
 import {
@@ -29,6 +34,19 @@ const defaultBackpack = {
   slots: mobDefaultBackpack.slots,
   items: [{ id: "bow", quantity: 1 }],
 };
+
+const skillPoints = getSkillPoints(LEVEL_TYPES.BEGINNER);
+
+const defaultSkills = Object.entries(skillsSchema).reduce(
+  (result, [key, skillDetails]) => ({
+    ...result,
+    [key]: {
+      ...skillDetails,
+      points: skillPoints,
+    },
+  }),
+  {}
+);
 
 class Devil {
   constructor({
@@ -349,4 +367,4 @@ class Devil {
   }
 }
 
-export { HP_MAX, Devil, defaultBackpack, defaultEquipment };
+export { HP_MAX, Devil, defaultBackpack, defaultEquipment, defaultSkills };
