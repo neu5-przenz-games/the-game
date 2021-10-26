@@ -54,7 +54,6 @@ export class UISettings {
     this.keepSelectionOnMovementCheckbox.onchange = handleCheckbox;
 
     this.transparentObjectsCheckbox.onchange = () => {
-      console.log(game.gameObjects);
       game.gameObjects.forEach((obj) => {
         if (obj.constructor.TYPE !== LootingBag.TYPE) {
           if (this.transparentObjectsCheckbox.checked) {
