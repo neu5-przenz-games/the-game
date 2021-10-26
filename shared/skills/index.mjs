@@ -72,6 +72,27 @@ const getLevel = (points) =>
     ({ minPoints, maxPoints }) => !!(points >= minPoints && points < maxPoints)
   );
 
+const getSkillPoints = (skillType) =>
+  ({
+    [LEVEL_TYPES.NOOB]: LEVELS.find((level) => level.name === LEVEL_TYPES.NOOB)
+      .minPoints,
+    [LEVEL_TYPES.BEGINNER]: LEVELS.find(
+      (level) => level.name === LEVEL_TYPES.BEGINNER
+    ).minPoints,
+    [LEVEL_TYPES.ADVANCED]: LEVELS.find(
+      (level) => level.name === LEVEL_TYPES.ADVANCED
+    ).minPoints,
+    [LEVEL_TYPES.REGULAR]: LEVELS.find(
+      (level) => level.name === LEVEL_TYPES.REGULAR
+    ).minPoints,
+    [LEVEL_TYPES.EXPERT]: LEVELS.find(
+      (level) => level.name === LEVEL_TYPES.EXPERT
+    ).minPoints,
+    [LEVEL_TYPES.MASTER]: LEVELS.find(
+      (level) => level.name === LEVEL_TYPES.MASTER
+    ).minPoints,
+  }[skillType]);
+
 const skillIncrease = (skills, { name, pointsToGain }) => {
   const skill = skills[name];
 
@@ -81,14 +102,10 @@ const skillIncrease = (skills, { name, pointsToGain }) => {
   };
 };
 
-const setSkillPoints = (skills, { name, pointsNumber }) => {
-  const skill = skills[name];
-
-  return {
-    name,
-    skill: { ...skill, points: pointsNumber },
-  };
-};
+const setSkillPoints = (skills, { name, pointsNumber }) => ({
+  name,
+  skill: { ...skills[name], points: pointsNumber },
+});
 
 const skillsSchema = {
   [SKILLS_TYPES.ARCHERY_FIGHTING]: {
@@ -148,6 +165,7 @@ export {
   SKILLS_TYPES,
   LEVELS,
   getLevel,
+  getSkillPoints,
   setSkillPoints,
   skillIncrease,
   skillsSchema,

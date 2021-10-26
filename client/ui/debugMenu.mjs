@@ -1,7 +1,5 @@
-import {
-  DEBUG_ITEMS_SETS_TYPES,
-  DEBUG_LEVEL_TYPES,
-} from "../../shared/debugUtils/index.mjs";
+import { LEVEL_TYPES } from "../../shared/skills/index.mjs";
+import { DEBUG_ITEMS_SETS_TYPES } from "../../shared/debugUtils/index.mjs";
 
 export const debugMenu = (game) => {
   const sheet = document.createElement("style");
@@ -122,13 +120,13 @@ export const debugMenu = (game) => {
 
   const DEBUGSetPlayerSkillsNoob = document.createElement("option");
   DEBUGSetPlayerSkillsNoob.innerText = "Noob";
-  DEBUGSetPlayerSkillsNoob.value = DEBUG_LEVEL_TYPES.NOOB;
+  DEBUGSetPlayerSkillsNoob.value = LEVEL_TYPES.NOOB;
   const DEBUGSetPlayerSkillsRegular = document.createElement("option");
   DEBUGSetPlayerSkillsRegular.innerText = "Regular";
-  DEBUGSetPlayerSkillsRegular.value = DEBUG_LEVEL_TYPES.REGULAR;
+  DEBUGSetPlayerSkillsRegular.value = LEVEL_TYPES.REGULAR;
   const DEBUGSetPlayerSkillsExpert = document.createElement("option");
   DEBUGSetPlayerSkillsExpert.innerText = "Expert";
-  DEBUGSetPlayerSkillsExpert.value = DEBUG_LEVEL_TYPES.EXPERT;
+  DEBUGSetPlayerSkillsExpert.value = LEVEL_TYPES.EXPERT;
 
   const DEBUGSetPlayerSkillsBtn = document.createElement("button");
   DEBUGSetPlayerSkillsBtn.innerText = "Set skills";

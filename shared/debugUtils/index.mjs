@@ -13,7 +13,6 @@ import {
 } from "../init/gameItems/weapon.mjs";
 import { quiver } from "../init/gameItems/quiver.mjs";
 import { arrowsBunch } from "../init/gameItems/arrows.mjs";
-import { LEVELS, LEVEL_TYPES } from "../skills/index.mjs";
 
 const DEBUG_ITEMS_SETS_TYPES = {
   ARCHER_BASIC: "ARCHER_BASIC",
@@ -72,27 +71,4 @@ const DEBUG_ITEMS_SETS = {
   },
 };
 
-const DEBUG_LEVEL_TYPES = {
-  NOOB: LEVEL_TYPES.NOOB,
-  REGULAR: LEVEL_TYPES.REGULAR,
-  EXPERT: LEVEL_TYPES.EXPERT,
-};
-
-const DEBUG_SKILL_POINTS = {
-  [DEBUG_LEVEL_TYPES.NOOB]: LEVELS.find(
-    (level) => level.name === DEBUG_LEVEL_TYPES.NOOB
-  ).minPoints,
-  [DEBUG_LEVEL_TYPES.REGULAR]: LEVELS.find(
-    (level) => level.name === DEBUG_LEVEL_TYPES.REGULAR
-  ).minPoints,
-  [DEBUG_LEVEL_TYPES.EXPERT]: LEVELS.find(
-    (level) => level.name === DEBUG_LEVEL_TYPES.EXPERT
-  ).minPoints,
-};
-
-export {
-  DEBUG_ITEMS_SETS_TYPES,
-  DEBUG_ITEMS_SETS,
-  DEBUG_LEVEL_TYPES,
-  DEBUG_SKILL_POINTS,
-};
+export { DEBUG_ITEMS_SETS_TYPES, DEBUG_ITEMS_SETS };

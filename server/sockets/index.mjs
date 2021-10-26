@@ -1,15 +1,13 @@
 import { Server } from "socket.io";
 import { Player } from "../gameObjects/Player.mjs";
-import {
-  DEBUG_ITEMS_SETS,
-  DEBUG_SKILL_POINTS,
-} from "../../shared/debugUtils/index.mjs";
+import { DEBUG_ITEMS_SETS } from "../../shared/debugUtils/index.mjs";
 import { UI_ITEM_ACTIONS } from "../../shared/UIItemActions/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
 import { bag } from "../../shared/init/gameItems/backpack.mjs";
 import { receipts } from "../../shared/receipts/index.mjs";
 import { LootingBag } from "../../shared/gameObjects/index.mjs";
 import {
+  getSkillPoints,
   setSkillPoints,
   shapeSkillsForClient,
   skillsSchema,
@@ -342,7 +340,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
 
         socket.on("player:skills:set", ({ name, skillType }) => {
           const player = players.get(name);
-          const skillPoints = DEBUG_SKILL_POINTS[skillType];
+          const skillPoints = getSkillPoints(skillType);
 
           if (player && skillPoints !== undefined) {
             Object.entries(player.skills).forEach(([skillKey]) => {
