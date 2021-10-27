@@ -404,6 +404,9 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
       if (player.toRespawn) {
         player.setDefaultEquipment();
+        player.dest = null;
+        player.selectedObject = null;
+        player.selectedObjectTile = null;
 
         const respawnTile = getRandomTile({
           map,

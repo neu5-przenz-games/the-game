@@ -27,7 +27,7 @@ const defaultEquipment = {
   boots: { id: "boots", quantity: 1 },
   backpack: { id: mobDefaultBackpack.id, quantity: 1 },
   shield: { id: "shield", quantity: 1 },
-  weapon: { id: "dagger", quantity: 1 },
+  weapon: { id: "sword", quantity: 1 },
   helmet: { id: "hat", quantity: 1 },
 };
 
@@ -194,21 +194,43 @@ class Devil {
   };
 
   getPlayerToAttack(players) {
-    let playerToAttack = null;
+    const playersInRange = [];
 
     players.forEach((player) => {
+      const distance = getChebyshevDistance(
+        this.positionTile,
+        player.positionTile
+      );
+
       if (
         this.name !== player.name &&
         player.constructor.TYPE === "Player" &&
         player.isDead === false &&
-        getChebyshevDistance(this.positionTile, player.positionTile) <
-          this.constructor.ATTACKING_DISTANCE
+        distance < this.constructor.ATTACKING_DISTANCE
       ) {
-        playerToAttack = player;
+        playersInRange.push({
+          player,
+          distance,
+        });
       }
     });
 
-    return playerToAttack;
+    if (playersInRange.length === 0) {
+      return null;
+    }
+
+    if (playersInRange.length === 1) {
+      return playersInRange[0].player;
+    }
+
+    return playersInRange.reduce(
+      (closestPlayer, player) => {
+        return player.distance < closestPlayer.distance
+          ? player
+          : closestPlayer;
+      },
+      { distance: Infinity }
+    ).player;
   }
 
   setState(players, map) {
@@ -221,35 +243,37 @@ class Devil {
       this.selectedObjectTile = null;
     }
 
-    const playerToAttack = this.getPlayerToAttack(players);
-    if (playerToAttack) {
-      this.setSelectedObject(playerToAttack);
-    }
+    if (this.selectedObject === null) {
+      const playerToAttack = this.getPlayerToAttack(players);
+      if (playerToAttack) {
+        this.setSelectedObject(playerToAttack);
+      }
 
-    if (this.selectedObject === null && this.dest === null) {
-      if (
-        this.getNextDestDelayTicks.value < this.getNextDestDelayTicks.maxValue
-      ) {
-        this.getNextDestDelayTicks.value += 1;
-      } else {
-        this.getNextDestDelayTicks.value = 0;
-        const goToTile = getRandomTile({
-          map,
-          obj: {
-            positionTile: this.presenceAreaCenterTile,
-            size: this.size,
-          },
-          players,
-          sizeToIncrease: {
-            x: 2,
-            y: 2,
-          },
-        });
-        const { tileX, tileY } = goToTile;
-        this.dest = {
-          ...getXYFromTile(tileX, tileY),
-          tile: { tileX, tileY },
-        };
+      if (this.dest === null) {
+        if (
+          this.getNextDestDelayTicks.value < this.getNextDestDelayTicks.maxValue
+        ) {
+          this.getNextDestDelayTicks.value += 1;
+        } else {
+          this.getNextDestDelayTicks.value = 0;
+          const goToTile = getRandomTile({
+            map,
+            obj: {
+              positionTile: this.presenceAreaCenterTile,
+              size: this.size,
+            },
+            players,
+            sizeToIncrease: {
+              x: 2,
+              y: 2,
+            },
+          });
+          const { tileX, tileY } = goToTile;
+          this.dest = {
+            ...getXYFromTile(tileX, tileY),
+            tile: { tileX, tileY },
+          };
+        }
       }
     }
   }
@@ -290,6 +314,7 @@ class Devil {
 
   canAttack({ finder, map, PF }) {
     return (
+      this.isDead === false &&
       this.selectedObject.isDead === false &&
       this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&

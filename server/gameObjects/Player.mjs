@@ -440,6 +440,7 @@ class Player {
   canAttack({ finder, map, PF }) {
     return (
       this.selectedObject.isDead === false &&
+      this.isDead === false &&
       this.energy >=
         getCurrentWeapon(this.equipment.weapon).details.energyCost &&
       this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
