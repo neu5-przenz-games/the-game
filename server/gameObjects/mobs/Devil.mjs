@@ -49,6 +49,15 @@ const defaultSkills = Object.entries(skillsSchema).reduce(
   {}
 );
 
+const STATES = {
+  ESCAPING: "ESCAPING",
+  FIGHTING: "FIGHTING",
+  WALKING_RANDOMLY: "WALKING_RANDOMLY",
+  SHOULD_ESCAPE: "SHOULD_ESCAPE",
+};
+
+const DEFAULT_STATE = STATES.WALKING_RANDOMLY;
+
 class Devil {
   constructor({
     name,
@@ -111,6 +120,7 @@ class Devil {
     this.y = y;
     this.toRespawn = false;
     this.isParrying = false;
+    this.state = DEFAULT_STATE;
   }
 
   static DISPLAY_NAME = "Devil";
@@ -118,6 +128,8 @@ class Devil {
   static TYPE = "Devil";
 
   static ATTACKING_DISTANCE = 8;
+
+  static ESCAPE_DISTANCE = 10;
 
   getFromBackpack(itemName) {
     return this.backpack.items.find((item) => item.id === itemName);
@@ -233,9 +245,38 @@ class Devil {
     ).player;
   }
 
-  setState(players, map) {
+  setState(STATE) {
+    this.state = STATE;
+  }
+
+  getState(players, map) {
     if (this.isDead) {
       return;
+    }
+
+    if (this.state === STATES.SHOULD_ESCAPE) {
+      this.selectedObject = null;
+      this.selectedObjectTile = null;
+
+      const goToTile = getRandomTile({
+        map,
+        obj: {
+          positionTile: this.presenceAreaCenterTile,
+          size: this.size,
+        },
+        players,
+        sizeToIncrease: {
+          x: 2,
+          y: 2,
+        },
+      });
+      const { tileX, tileY } = goToTile;
+      this.dest = {
+        ...getXYFromTile(tileX, tileY),
+        tile: { tileX, tileY },
+      };
+
+      this.state = STATES.ESCAPING;
     }
 
     if (this.selectedObject?.isDead) {
@@ -243,10 +284,19 @@ class Devil {
       this.selectedObjectTile = null;
     }
 
+    if (this.state === STATES.ESCAPING) {
+      if (this.dest === null) {
+        this.setState(DEFAULT_STATE);
+      }
+
+      return;
+    }
+
     if (this.selectedObject === null) {
       const playerToAttack = this.getPlayerToAttack(players);
       if (playerToAttack) {
         this.setSelectedObject(playerToAttack);
+        this.setState(STATES.FIGHTING);
       }
 
       if (this.dest === null) {
@@ -255,6 +305,10 @@ class Devil {
         ) {
           this.getNextDestDelayTicks.value += 1;
         } else {
+          if (this.state !== this.WALKING_RANDOMLY) {
+            this.setState(this.WALKING_RANDOMLY);
+          }
+
           this.getNextDestDelayTicks.value = 0;
           const goToTile = getRandomTile({
             map,
@@ -378,6 +432,15 @@ class Devil {
         obj,
         players,
       });
+
+      if (
+        getChebyshevDistance(this.positionTile, this.presenceAreaCenterTile) >
+          this.constructor.ESCAPE_DISTANCE &&
+        this.state !== STATES.SHOULD_ESCAPE &&
+        this.state !== STATES.ESCAPING
+      ) {
+        this.setState(STATES.SHOULD_ESCAPE);
+      }
 
       if (tileX && tileY) {
         this.dest = {
