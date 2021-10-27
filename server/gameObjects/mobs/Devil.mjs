@@ -27,7 +27,7 @@ const defaultEquipment = {
   boots: { id: "boots", quantity: 1 },
   backpack: { id: mobDefaultBackpack.id, quantity: 1 },
   shield: { id: "shield", quantity: 1 },
-  weapon: { id: "sword", quantity: 1 },
+  weapon: { id: "dagger", quantity: 1 },
   helmet: { id: "hat", quantity: 1 },
 };
 
