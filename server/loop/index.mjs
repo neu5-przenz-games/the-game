@@ -9,7 +9,6 @@ import {
   getDefenseValue,
   getHitValue,
   getRandomTile,
-  getXYFromTile,
 } from "../utils/algo.mjs";
 import { getHitText } from "../utils/hitText.mjs";
 
@@ -119,37 +118,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           player.dest = null;
         }
       }
-    } else if (player.dest === null) {
-      if (player.constructor.TYPE !== Player.TYPE && player.isDead === false) {
-        if (
-          player.getNextDestDelayTicks.value <
-          player.getNextDestDelayTicks.maxValue
-        ) {
-          player.getNextDestDelayTicks.value += 1;
-        } else {
-          player.getNextDestDelayTicks.value = 0;
+    }
 
-          const goToTile = getRandomTile({
-            map,
-            obj: {
-              positionTile: player.presenceAreaCenterTile,
-              size: player.size,
-            },
-            players,
-            sizeToIncrease: {
-              x: 2,
-              y: 2,
-            },
-          });
-
-          const { tileX, tileY } = goToTile;
-
-          player.dest = {
-            ...getXYFromTile(tileX, tileY),
-            tile: { tileX, tileY },
-          };
-        }
-      }
+    if (player.constructor.TYPE !== Player.TYPE) {
+      player.setState(players, map);
     }
 
     const { selectedObject } = player;
@@ -210,7 +182,9 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           });
         }
 
-        player.energyUse(currentWeapon.details.energyCost);
+        if (player.constructor.TYPE === Player.TYPE) {
+          player.energyUse(currentWeapon.details.energyCost);
+        }
 
         const skillDetails = currentWeapon.skillToIncrease;
 
@@ -337,13 +311,13 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       player.selectedObjectTile = null;
     }
 
+    if (player.attackDelayTicks.value < player.attackDelayTicks.maxValue) {
+      player.attackDelayTicks.value += 1;
+    }
+
     if (player.constructor.TYPE === Player.TYPE) {
       if (player.energyRegenerate()) {
         io.to(player.socketId).emit("player:energy:update", player.energy);
-      }
-
-      if (player.attackDelayTicks.value < player.attackDelayTicks.maxValue) {
-        player.attackDelayTicks.value += 1;
       }
       if (
         player.energyRegenDelayTicks.value <
@@ -430,6 +404,9 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
       if (player.toRespawn) {
         player.setDefaultEquipment();
+        player.dest = null;
+        player.selectedObject = null;
+        player.selectedObjectTile = null;
 
         const respawnTile = getRandomTile({
           map,

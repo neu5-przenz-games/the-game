@@ -12,6 +12,7 @@ import { ITEM_TYPES } from "../../../shared/gameItems/index.mjs";
 import {
   getChebyshevDistance,
   getDestTile,
+  getRandomTile,
   getXYFromTile,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
@@ -60,6 +61,7 @@ class Devil {
     isDead,
     equipment,
     backpack,
+    settings,
     selectedObject,
     selectedObjectTile,
     dropSelection,
@@ -91,6 +93,7 @@ class Devil {
     // settings
     this.equipment = equipment;
     this.backpack = backpack;
+    this.settings = settings;
     this.selectedObject = selectedObject;
     this.selectedObjectTile = selectedObjectTile;
 
@@ -113,6 +116,8 @@ class Devil {
   static DISPLAY_NAME = "Devil";
 
   static TYPE = "Devil";
+
+  static ATTACKING_DISTANCE = 8;
 
   getFromBackpack(itemName) {
     return this.backpack.items.find((item) => item.id === itemName);
@@ -188,6 +193,91 @@ class Devil {
     return noObstacle;
   };
 
+  getPlayerToAttack(players) {
+    const playersInRange = [];
+
+    players.forEach((player) => {
+      const distance = getChebyshevDistance(
+        this.positionTile,
+        player.positionTile
+      );
+
+      if (
+        this.name !== player.name &&
+        player.constructor.TYPE === "Player" &&
+        player.isDead === false &&
+        distance < this.constructor.ATTACKING_DISTANCE
+      ) {
+        playersInRange.push({
+          player,
+          distance,
+        });
+      }
+    });
+
+    if (playersInRange.length === 0) {
+      return null;
+    }
+
+    if (playersInRange.length === 1) {
+      return playersInRange[0].player;
+    }
+
+    return playersInRange.reduce(
+      (closestPlayer, player) => {
+        return player.distance < closestPlayer.distance
+          ? player
+          : closestPlayer;
+      },
+      { distance: Infinity }
+    ).player;
+  }
+
+  setState(players, map) {
+    if (this.isDead) {
+      return;
+    }
+
+    if (this.selectedObject?.isDead) {
+      this.selectedObject = null;
+      this.selectedObjectTile = null;
+    }
+
+    if (this.selectedObject === null) {
+      const playerToAttack = this.getPlayerToAttack(players);
+      if (playerToAttack) {
+        this.setSelectedObject(playerToAttack);
+      }
+
+      if (this.dest === null) {
+        if (
+          this.getNextDestDelayTicks.value < this.getNextDestDelayTicks.maxValue
+        ) {
+          this.getNextDestDelayTicks.value += 1;
+        } else {
+          this.getNextDestDelayTicks.value = 0;
+          const goToTile = getRandomTile({
+            map,
+            obj: {
+              positionTile: this.presenceAreaCenterTile,
+              size: this.size,
+            },
+            players,
+            sizeToIncrease: {
+              x: 2,
+              y: 2,
+            },
+          });
+          const { tileX, tileY } = goToTile;
+          this.dest = {
+            ...getXYFromTile(tileX, tileY),
+            tile: { tileX, tileY },
+          };
+        }
+      }
+    }
+  }
+
   isInRange(range) {
     return (
       getChebyshevDistance(
@@ -224,10 +314,9 @@ class Devil {
 
   canAttack({ finder, map, PF }) {
     return (
+      this.isDead === false &&
       this.selectedObject.isDead === false &&
       this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
-      (this.settings.attackAlly ||
-        !this.isSameFraction(this.selectedObject.fraction)) &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
       isObjectAhead(this, this.selectedObject) &&
