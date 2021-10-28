@@ -121,7 +121,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
     }
 
     if (player.constructor.TYPE !== Player.TYPE) {
-      player.setState(players, map);
+      player.getState(players, map);
     }
 
     const { selectedObject } = player;
