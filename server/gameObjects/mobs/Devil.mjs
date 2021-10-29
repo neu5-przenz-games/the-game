@@ -134,7 +134,7 @@ class Devil {
 
   static TYPE = "Devil";
 
-  static ATTACKING_DISTANCE = 1;
+  static ATTACKING_DISTANCE = 8;
 
   static ESCAPE_DISTANCE = 10;
 
