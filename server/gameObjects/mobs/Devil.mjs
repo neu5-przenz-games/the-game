@@ -50,14 +50,15 @@ const defaultSkills = Object.entries(skillsSchema).reduce(
   {}
 );
 
+const getPatrollingIndex = (index, length) => (index < length ? index + 1 : 0);
+
 const STATES = {
   ESCAPING: "ESCAPING",
   FIGHTING: "FIGHTING",
-  WALKING_RANDOMLY: "WALKING_RANDOMLY",
+  PATROLLING: "PATROLLING",
   SHOULD_ESCAPE: "SHOULD_ESCAPE",
+  WALKING_RANDOMLY: "WALKING_RANDOMLY",
 };
-
-const DEFAULT_STATE = STATES.WALKING_RANDOMLY;
 
 class Devil {
   constructor({
@@ -66,6 +67,8 @@ class Devil {
     positionTile,
     presenceAreaCenterTile,
     size,
+    defaultState = STATES.WALKING_RANDOMLY,
+    patrollingTiles = [],
     dest,
     isWalking,
     isDead,
@@ -114,6 +117,8 @@ class Devil {
     this.getNextDestDelayTicks = getNextDestDelayTicks;
     this.hp = hp;
     this.skills = skills;
+    this.defaultState = defaultState;
+    this.patrollingTiles = patrollingTiles;
 
     // generated
     const { x, y } = getXYFromTile(positionTile.tileX, positionTile.tileY);
@@ -121,7 +126,8 @@ class Devil {
     this.y = y;
     this.toRespawn = false;
     this.isParrying = false;
-    this.state = DEFAULT_STATE;
+    this.patrollingIndex = 0;
+    this.state = this.defaultState;
   }
 
   static DISPLAY_NAME = "Devil";
@@ -144,21 +150,22 @@ class Devil {
     const playersInRange = [];
 
     players.forEach((player) => {
-      const distance = getChebyshevDistance(
-        this.positionTile,
-        player.positionTile
-      );
-
       if (
         this.name !== player.name &&
         player.constructor.TYPE === Player.TYPE &&
-        player.isDead === false &&
-        distance < this.constructor.ATTACKING_DISTANCE
+        player.isDead === false
       ) {
-        playersInRange.push({
-          player,
-          distance,
-        });
+        const distance = getChebyshevDistance(
+          this.positionTile,
+          player.positionTile
+        );
+
+        if (distance < this.constructor.ATTACKING_DISTANCE) {
+          playersInRange.push({
+            player,
+            distance,
+          });
+        }
       }
     });
 
@@ -195,6 +202,25 @@ class Devil {
     });
   }
 
+  getNextDestination(map, players) {
+    const { tileX, tileY } = {
+      [STATES.PATROLLING]: () => {
+        this.patrollingIndex = getPatrollingIndex(
+          this.patrollingIndex,
+          this.patrollingTiles.length - 1
+        );
+
+        return this.patrollingTiles[this.patrollingIndex];
+      },
+      [STATES.WALKING_RANDOMLY]: () => this.getMobRandomTile(map, players),
+    }[this.defaultState]();
+
+    this.dest = {
+      ...getXYFromTile(tileX, tileY),
+      tile: { tileX, tileY },
+    };
+  }
+
   getState(players, map) {
     if (this.isDead) {
       return;
@@ -204,23 +230,14 @@ class Devil {
       this.selectedObject = null;
       this.selectedObjectTile = null;
 
-      const { tileX, tileY } = this.getMobRandomTile(map, players);
-      this.dest = {
-        ...getXYFromTile(tileX, tileY),
-        tile: { tileX, tileY },
-      };
+      this.getNextDestination(map, players);
 
       this.state = STATES.ESCAPING;
     }
 
-    if (this.selectedObject?.isDead) {
-      this.selectedObject = null;
-      this.selectedObjectTile = null;
-    }
-
     if (this.state === STATES.ESCAPING) {
       if (this.dest === null) {
-        this.setState(DEFAULT_STATE);
+        this.setState(this.defaultState);
       }
 
       return;
@@ -232,24 +249,21 @@ class Devil {
         this.setSelectedObject(playerToAttack);
         this.setState(STATES.FIGHTING);
       }
+    } else if (this.selectedObject.isDead) {
+      this.selectedObject = null;
+      this.selectedObjectTile = null;
 
-      if (this.dest === null) {
-        if (
-          this.getNextDestDelayTicks.value < this.getNextDestDelayTicks.maxValue
-        ) {
-          this.getNextDestDelayTicks.value += 1;
-        } else {
-          if (this.state !== this.WALKING_RANDOMLY) {
-            this.setState(this.WALKING_RANDOMLY);
-          }
+      this.setState(this.defaultState);
+    }
 
-          this.getNextDestDelayTicks.value = 0;
-          const { tileX, tileY } = this.getMobRandomTile(map, players);
-          this.dest = {
-            ...getXYFromTile(tileX, tileY),
-            tile: { tileX, tileY },
-          };
-        }
+    if (this.state === this.defaultState && this.dest === null) {
+      if (
+        this.getNextDestDelayTicks.value < this.getNextDestDelayTicks.maxValue
+      ) {
+        this.getNextDestDelayTicks.value += 1;
+      } else {
+        this.getNextDestDelayTicks.value = 0;
+        this.getNextDestination(map, players);
       }
     }
   }

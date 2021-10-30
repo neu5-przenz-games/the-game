@@ -15,6 +15,8 @@ const createMob = ({
   equipment = {},
   backpack = {},
   isDead = false,
+  defaultState,
+  patrollingTiles,
 }) => ({
   name,
   displayName,
@@ -52,6 +54,8 @@ const createMob = ({
   },
   next: null,
   speed: 2,
+  defaultState,
+  patrollingTiles,
   direction: "east",
   hp: HP_MAX,
 });
@@ -60,8 +64,13 @@ const devil1 = createMob({
   name: "devil1",
   displayName: Devil.DISPLAY_NAME,
   type: Devil.TYPE,
-  positionTile: { tileX: 25, tileY: 25 },
-  presenceAreaCenterTile: { tileX: 25, tileY: 25 },
+  positionTile: { tileX: 20, tileY: 25 },
+  presenceAreaCenterTile: { tileX: 20, tileY: 25 },
+  defaultState: "PATROLLING",
+  patrollingTiles: [
+    { tileX: 19, tileY: 27 },
+    { tileX: 27, tileY: 19 },
+  ],
   backpack: defaultBackpack,
   equipment: defaultEquipment,
 });
