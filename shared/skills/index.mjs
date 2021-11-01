@@ -150,6 +150,18 @@ const skillsSchema = {
   },
 };
 
+const setAllSkillsPoints = (points) =>
+  Object.entries(skillsSchema).reduce(
+    (skills, [key, skillDetails]) => ({
+      ...skills,
+      [key]: {
+        ...skillDetails,
+        points,
+      },
+    }),
+    {}
+  );
+
 const shapeSkillsForClient = (skills) =>
   Object.values(skills).map(({ displayName, points }) => {
     const level = getLevel(points);
@@ -165,6 +177,7 @@ export {
   SKILLS_TYPES,
   LEVELS,
   getLevel,
+  setAllSkillsPoints,
   getSkillPoints,
   setSkillPoints,
   skillIncrease,
