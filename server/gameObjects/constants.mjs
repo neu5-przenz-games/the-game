@@ -1,0 +1,5 @@
+const ENERGY_MAX = 1000;
+const ENERGY_REGEN_RATE = 100;
+const HP_MAX = 1000;
+
+export { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX };

@@ -27,14 +27,18 @@ const defaultEquipment = {
   pants: { id: "pants", quantity: 1 },
   boots: { id: "boots", quantity: 1 },
   backpack: { id: mobDefaultBackpack.id, quantity: 1 },
-  shield: { id: "shield", quantity: 1 },
-  weapon: { id: "dagger", quantity: 1 },
+  weapon: { id: "bow", quantity: 1 },
+  quiver: { id: "quiver", quantity: 1 },
+  arrows: { id: "arrowsBunch", quantity: 30 },
   helmet: { id: "hat", quantity: 1 },
 };
 
 const defaultBackpack = {
   slots: mobDefaultBackpack.slots,
-  items: [{ id: "bow", quantity: 1 }],
+  items: [
+    { id: "dagger", quantity: 1 },
+    { id: "shield", quantity: 1 },
+  ],
 };
 
 const skillPoints = getSkillPoints(LEVEL_TYPES.BEGINNER);
@@ -60,7 +64,7 @@ const STATES = {
   WALKING_RANDOMLY: "WALKING_RANDOMLY",
 };
 
-class Devil {
+class Cupid {
   constructor({
     name,
     displayName,
@@ -130,9 +134,9 @@ class Devil {
     this.state = this.defaultState;
   }
 
-  static DISPLAY_NAME = "Devil";
+  static DISPLAY_NAME = "Cupid";
 
-  static TYPE = "Devil";
+  static TYPE = "Cupid";
 
   static ATTACKING_DISTANCE = 8;
 
@@ -524,4 +528,4 @@ class Devil {
   }
 }
 
-export { HP_MAX, Devil, defaultBackpack, defaultEquipment, defaultSkills };
+export { HP_MAX, Cupid, defaultBackpack, defaultEquipment, defaultSkills };
