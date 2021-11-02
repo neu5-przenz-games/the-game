@@ -210,7 +210,11 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           );
         }
 
-        if (player.hasRangedWeapon() && player.useArrow()) {
+        if (
+          player.constructor.TYPE === Player.TYPE &&
+          player.hasRangedWeapon() &&
+          player.useArrow()
+        ) {
           io.to(player.socketId).emit(
             "items:update",
             player.backpack,

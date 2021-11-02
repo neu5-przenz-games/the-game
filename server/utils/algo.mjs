@@ -188,6 +188,8 @@ const getAllies = (players, fraction) =>
     return allies;
   }, []);
 
+const getPatrollingIndex = (index, length) => (index < length ? index + 1 : 0);
+
 const availableTiles = ({ surroundingTiles, players, map }) => {
   const tiles = [...surroundingTiles];
   const currentPlayersPositions = [];
@@ -279,6 +281,7 @@ export {
   getDefenseValue,
   getDestTile,
   getHitValue,
+  getPatrollingIndex,
   getRandomInt,
   getRandomTile,
   getXYFromTile,

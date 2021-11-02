@@ -15,22 +15,26 @@ const defaultEquipment = {
   pants: { id: "pants", quantity: 1 },
   boots: { id: "boots", quantity: 1 },
   backpack: { id: mobDefaultBackpack.id, quantity: 1 },
-  shield: { id: "shield", quantity: 1 },
-  weapon: { id: "dagger", quantity: 1 },
+  weapon: { id: "bow", quantity: 1 },
+  quiver: { id: "quiver", quantity: 1 },
+  arrows: { id: "arrowsBunch", quantity: 30 },
   helmet: { id: "hat", quantity: 1 },
 };
 
 const defaultBackpack = {
   slots: mobDefaultBackpack.slots,
-  items: [{ id: "bow", quantity: 1 }],
+  items: [
+    { id: "dagger", quantity: 1 },
+    { id: "shield", quantity: 1 },
+  ],
 };
 
 const defaultSkills = setAllSkillsPoints(getSkillPoints(LEVEL_TYPES.BEGINNER));
 
-class Devil extends Mob {
-  static DISPLAY_NAME = "Devil";
+class Cupid extends Mob {
+  static DISPLAY_NAME = "Cupid";
 
-  static TYPE = "Devil";
+  static TYPE = "Cupid";
 
   static ATTACKING_DISTANCE = 8;
 
@@ -42,4 +46,4 @@ class Devil extends Mob {
   }
 }
 
-export { HP_MAX, Devil, defaultBackpack, defaultEquipment, defaultSkills };
+export { HP_MAX, Cupid, defaultBackpack, defaultEquipment, defaultSkills };

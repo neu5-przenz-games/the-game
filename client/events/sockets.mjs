@@ -125,7 +125,7 @@ export const sockets = (game) => {
         }
 
         const mob = game.add.existing(
-          new Mob({
+          new Mob[player.type]({
             direction: player.direction,
             isDead: player.isDead,
             name: player.name,

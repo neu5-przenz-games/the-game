@@ -162,7 +162,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
                 player.selectedObject.displayName
               );
             }
-          } else if (type === "Devil") {
+          } else if (["Cupid", "Devil"].includes(type)) {
             const selectedObject = players.get(selectedObjectName);
 
             player.setSelectedObject(selectedObject);
