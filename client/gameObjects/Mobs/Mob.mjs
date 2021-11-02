@@ -154,7 +154,7 @@ class Mob extends Phaser.GameObjects.Image {
       x,
       y,
       ease: "Linear",
-      duration: 250,
+      duration: Math.abs(Phaser.Math.Distance.Between(this.x, this.y, x, y)),
       onComplete(tween, targets) {
         targets[0].setVisible(false);
       },

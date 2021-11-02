@@ -1,15 +1,9 @@
 import { Mob } from "./Mob.mjs";
 
 class Cupid extends Mob {
-  constructor({ direction, isDead, name, displayName, scene, x, y }) {
+  constructor(props) {
     super({
-      direction,
-      isDead,
-      name,
-      displayName,
-      scene,
-      x,
-      y,
+      ...props,
       spriteName: "mob-cupid",
     });
   }
