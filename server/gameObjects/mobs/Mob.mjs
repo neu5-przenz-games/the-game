@@ -4,6 +4,7 @@ import {
   getPatrollingIndex,
   getRandomTile,
   getXYFromTile,
+  noObstacles,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
 import { Player } from "../Player.mjs";
@@ -187,6 +188,7 @@ class Mob {
 
   getState(players, map) {
     if (this.isDead) {
+      this.setState(this.defaultState);
       return;
     }
 
@@ -237,7 +239,6 @@ class Mob {
   }
 
   setSettingsFollow(value) {
-    this.isWalking = false;
     this.settings.follow = value;
   }
 
@@ -275,27 +276,6 @@ class Mob {
       ...items,
     };
   }
-
-  noObstacles = ({ PF, finder, map }) => {
-    let noObstacle = true;
-
-    if (this.hasRangedWeapon()) {
-      const combatGrid = new PF.Grid(map.length, map.length);
-      const combatPath = finder
-        .findPath(
-          this.positionTile.tileX,
-          this.positionTile.tileY,
-          this.selectedObject.positionTile.tileX,
-          this.selectedObject.positionTile.tileY,
-          combatGrid
-        )
-        .slice(1, -1);
-
-      noObstacle = combatPath.every(([x, y]) => map[y][x] === 0);
-    }
-
-    return noObstacle;
-  };
 
   isInRange(range) {
     return (
@@ -339,7 +319,14 @@ class Mob {
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
       isObjectAhead(this, this.selectedObject) &&
-      this.noObstacles({ finder, map, PF })
+      noObstacles({
+        finder,
+        map,
+        PF,
+        positionTile: this.positionTile,
+        selectedObjectPositionTile: this.selectedObject.positionTile,
+        hasRangedWeapon: this.hasRangedWeapon(),
+      })
     );
   }
 
@@ -470,7 +457,6 @@ class Mob {
     this.isDead = false;
     this.toRespawn = false;
     this.hp = HP_MAX;
-    this.state = this.defaultState;
 
     const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
     this.positionTile = respawnTile;

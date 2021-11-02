@@ -122,6 +122,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
     if (player.constructor.TYPE !== Player.TYPE) {
       player.getState(players, map);
+
+      if (player.state === "FIGHTING" && player.fightingHook) {
+        player.fightingHook({ finder, map, PF });
+      }
     }
 
     const { selectedObject } = player;
@@ -136,6 +140,8 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           player.positionTile,
           selectedObject.positionTile
         );
+
+        player.isWalking = false;
       }
 
       if (player.settings.fight && player.canAttack({ finder, map, PF })) {

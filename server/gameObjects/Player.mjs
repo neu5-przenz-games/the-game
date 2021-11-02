@@ -8,6 +8,7 @@ import {
   getChebyshevDistance,
   getDestTile,
   getXYFromTile,
+  noObstacles,
 } from "../utils/algo.mjs";
 import { isObjectAhead } from "../utils/directions.mjs";
 import { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX } from "./constants.mjs";
@@ -111,7 +112,6 @@ class Player {
   }
 
   setSettingsFollow(value) {
-    this.isWalking = false;
     this.settings.follow = value;
   }
 
@@ -375,27 +375,6 @@ class Player {
     );
   }
 
-  noObstacles = ({ PF, finder, map }) => {
-    let noObstacle = true;
-
-    if (this.hasRangedWeapon()) {
-      const combatGrid = new PF.Grid(map.length, map.length);
-      const combatPath = finder
-        .findPath(
-          this.positionTile.tileX,
-          this.positionTile.tileY,
-          this.selectedObject.positionTile.tileX,
-          this.selectedObject.positionTile.tileY,
-          combatGrid
-        )
-        .slice(1, -1);
-
-      noObstacle = combatPath.every(([x, y]) => map[y][x] === 0);
-    }
-
-    return noObstacle;
-  };
-
   isInRange(range) {
     return (
       getChebyshevDistance(
@@ -446,7 +425,14 @@ class Player {
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
       isObjectAhead(this, this.selectedObject) &&
-      this.noObstacles({ finder, map, PF })
+      noObstacles({
+        finder,
+        map,
+        PF,
+        positionTile: this.positionTile,
+        selectedObjectPositionTile: this.selectedObject.positionTile,
+        hasRangedWeapon: this.hasRangedWeapon(),
+      })
     );
   }
 
