@@ -1,5 +1,6 @@
 import { Mob } from "./Mob.mjs";
 import { gameItems } from "../../../shared/init/gameItems/index.mjs";
+import { noObstacles } from "../../utils/algo.mjs";
 import {
   LEVEL_TYPES,
   getSkillPoints,
@@ -43,6 +44,28 @@ class Cupid extends Mob {
   setDefaultEquipment() {
     this.setBackpack(defaultBackpack.slots, defaultBackpack.items);
     this.setEquipment(defaultEquipment);
+  }
+
+  fightingHook({ finder, map, PF }) {
+    if (
+      this.selectedObject !== null &&
+      !this.selectedObject.isDead &&
+      this.next === null &&
+      super.isInRange(super.getWeaponRange()) &&
+      noObstacles({
+        finder,
+        map,
+        PF,
+        positionTile: this.positionTile,
+        selectedObjectPositionTile: this.selectedObject.positionTile,
+        hasRangedWeapon: super.hasRangedWeapon(),
+      })
+    ) {
+      super.setSettingsFollow(false);
+      this.dest = null;
+    } else {
+      super.setSettingsFollow(true);
+    }
   }
 }
 

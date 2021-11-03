@@ -4,6 +4,7 @@ import {
   getPatrollingIndex,
   getRandomTile,
   getXYFromTile,
+  noObstacles,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
 import { Player } from "../Player.mjs";
@@ -14,15 +15,7 @@ import {
 import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
 import { ITEM_TYPES } from "../../../shared/gameItems/index.mjs";
 
-import { HP_MAX } from "../constants.mjs";
-
-const STATES = {
-  ESCAPING: "ESCAPING",
-  FIGHTING: "FIGHTING",
-  PATROLLING: "PATROLLING",
-  SHOULD_ESCAPE: "SHOULD_ESCAPE",
-  WALKING_RANDOMLY: "WALKING_RANDOMLY",
-};
+import { HP_MAX, PLAYER_STATES } from "../constants.mjs";
 
 class Mob {
   constructor({
@@ -31,7 +24,7 @@ class Mob {
     positionTile,
     presenceAreaCenterTile,
     size,
-    defaultState = STATES.WALKING_RANDOMLY,
+    defaultState = PLAYER_STATES.WALKING_RANDOMLY,
     patrollingTiles = [],
     dest,
     isWalking,
@@ -168,7 +161,7 @@ class Mob {
 
   getNextDestination(map, players) {
     const { tileX, tileY } = {
-      [STATES.PATROLLING]: () => {
+      [PLAYER_STATES.PATROLLING]: () => {
         this.patrollingIndex = getPatrollingIndex(
           this.patrollingIndex,
           this.patrollingTiles.length - 1
@@ -176,7 +169,8 @@ class Mob {
 
         return this.patrollingTiles[this.patrollingIndex];
       },
-      [STATES.WALKING_RANDOMLY]: () => this.getMobRandomTile(map, players),
+      [PLAYER_STATES.WALKING_RANDOMLY]: () =>
+        this.getMobRandomTile(map, players),
     }[this.defaultState]();
 
     this.dest = {
@@ -187,19 +181,20 @@ class Mob {
 
   getState(players, map) {
     if (this.isDead) {
+      this.setState(this.defaultState);
       return;
     }
 
-    if (this.state === STATES.SHOULD_ESCAPE) {
+    if (this.state === PLAYER_STATES.SHOULD_ESCAPE) {
       this.selectedObject = null;
       this.selectedObjectTile = null;
 
       this.getNextDestination(map, players);
 
-      this.state = STATES.ESCAPING;
+      this.state = PLAYER_STATES.ESCAPING;
     }
 
-    if (this.state === STATES.ESCAPING) {
+    if (this.state === PLAYER_STATES.ESCAPING) {
       if (this.dest === null) {
         this.setState(this.defaultState);
       }
@@ -208,16 +203,16 @@ class Mob {
     }
 
     if (this.selectedObject === null) {
+      if (this.state === PLAYER_STATES.FIGHTING) {
+        this.setState(this.defaultState);
+      }
+
       const playerToAttack = this.getPlayerToAttack(players);
+
       if (playerToAttack) {
         this.setSelectedObject(playerToAttack);
-        this.setState(STATES.FIGHTING);
+        this.setState(PLAYER_STATES.FIGHTING);
       }
-    } else if (this.selectedObject.isDead) {
-      this.selectedObject = null;
-      this.selectedObjectTile = null;
-
-      this.setState(this.defaultState);
     }
 
     if (this.state === this.defaultState && this.dest === null) {
@@ -237,7 +232,6 @@ class Mob {
   }
 
   setSettingsFollow(value) {
-    this.isWalking = false;
     this.settings.follow = value;
   }
 
@@ -275,27 +269,6 @@ class Mob {
       ...items,
     };
   }
-
-  noObstacles = ({ PF, finder, map }) => {
-    let noObstacle = true;
-
-    if (this.hasRangedWeapon()) {
-      const combatGrid = new PF.Grid(map.length, map.length);
-      const combatPath = finder
-        .findPath(
-          this.positionTile.tileX,
-          this.positionTile.tileY,
-          this.selectedObject.positionTile.tileX,
-          this.selectedObject.positionTile.tileY,
-          combatGrid
-        )
-        .slice(1, -1);
-
-      noObstacle = combatPath.every(([x, y]) => map[y][x] === 0);
-    }
-
-    return noObstacle;
-  };
 
   isInRange(range) {
     return (
@@ -339,7 +312,14 @@ class Mob {
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
       this.isInRange(this.getWeaponRange()) &&
       isObjectAhead(this, this.selectedObject) &&
-      this.noObstacles({ finder, map, PF })
+      noObstacles({
+        finder,
+        map,
+        PF,
+        positionTile: this.positionTile,
+        selectedObjectPositionTile: this.selectedObject.positionTile,
+        hasRangedWeapon: this.hasRangedWeapon(),
+      })
     );
   }
 
@@ -401,9 +381,9 @@ class Mob {
       if (
         getChebyshevDistance(this.positionTile, this.presenceAreaCenterTile) >
           this.constructor.ESCAPE_DISTANCE &&
-        this.state === STATES.FIGHTING
+        this.state === PLAYER_STATES.FIGHTING
       ) {
-        this.setState(STATES.SHOULD_ESCAPE);
+        this.setState(PLAYER_STATES.SHOULD_ESCAPE);
       }
 
       if (tileX && tileY) {
@@ -470,7 +450,6 @@ class Mob {
     this.isDead = false;
     this.toRespawn = false;
     this.hp = HP_MAX;
-    this.state = this.defaultState;
 
     const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
     this.positionTile = respawnTile;

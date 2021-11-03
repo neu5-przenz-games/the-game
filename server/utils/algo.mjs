@@ -274,6 +274,36 @@ const getDestTile = (player, { map, obj, players }) => {
   return destTile.distance > 0 ? destTile : {};
 };
 
+const noObstacles = ({
+  PF,
+  finder,
+  map,
+  positionTile,
+  selectedObjectPositionTile,
+  hasRangedWeapon,
+}) => {
+  if (!hasRangedWeapon) {
+    return true;
+  }
+
+  let noObstacle = true;
+
+  const combatGrid = new PF.Grid(map.length, map.length);
+  const combatPath = finder
+    .findPath(
+      positionTile.tileX,
+      positionTile.tileY,
+      selectedObjectPositionTile.tileX,
+      selectedObjectPositionTile.tileY,
+      combatGrid
+    )
+    .slice(1, -1);
+
+  noObstacle = combatPath.every(([x, y]) => map[y][x] === 0);
+
+  return noObstacle;
+};
+
 export {
   getAllies,
   getAttack,
@@ -285,4 +315,5 @@ export {
   getRandomInt,
   getRandomTile,
   getXYFromTile,
+  noObstacles,
 };
