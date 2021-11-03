@@ -15,15 +15,7 @@ import {
 import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
 import { ITEM_TYPES } from "../../../shared/gameItems/index.mjs";
 
-import { HP_MAX } from "../constants.mjs";
-
-const STATES = {
-  ESCAPING: "ESCAPING",
-  FIGHTING: "FIGHTING",
-  PATROLLING: "PATROLLING",
-  SHOULD_ESCAPE: "SHOULD_ESCAPE",
-  WALKING_RANDOMLY: "WALKING_RANDOMLY",
-};
+import { HP_MAX, PLAYER_STATES } from "../constants.mjs";
 
 class Mob {
   constructor({
@@ -32,7 +24,7 @@ class Mob {
     positionTile,
     presenceAreaCenterTile,
     size,
-    defaultState = STATES.WALKING_RANDOMLY,
+    defaultState = PLAYER_STATES.WALKING_RANDOMLY,
     patrollingTiles = [],
     dest,
     isWalking,
@@ -169,7 +161,7 @@ class Mob {
 
   getNextDestination(map, players) {
     const { tileX, tileY } = {
-      [STATES.PATROLLING]: () => {
+      [PLAYER_STATES.PATROLLING]: () => {
         this.patrollingIndex = getPatrollingIndex(
           this.patrollingIndex,
           this.patrollingTiles.length - 1
@@ -177,7 +169,8 @@ class Mob {
 
         return this.patrollingTiles[this.patrollingIndex];
       },
-      [STATES.WALKING_RANDOMLY]: () => this.getMobRandomTile(map, players),
+      [PLAYER_STATES.WALKING_RANDOMLY]: () =>
+        this.getMobRandomTile(map, players),
     }[this.defaultState]();
 
     this.dest = {
@@ -192,16 +185,16 @@ class Mob {
       return;
     }
 
-    if (this.state === STATES.SHOULD_ESCAPE) {
+    if (this.state === PLAYER_STATES.SHOULD_ESCAPE) {
       this.selectedObject = null;
       this.selectedObjectTile = null;
 
       this.getNextDestination(map, players);
 
-      this.state = STATES.ESCAPING;
+      this.state = PLAYER_STATES.ESCAPING;
     }
 
-    if (this.state === STATES.ESCAPING) {
+    if (this.state === PLAYER_STATES.ESCAPING) {
       if (this.dest === null) {
         this.setState(this.defaultState);
       }
@@ -210,16 +203,16 @@ class Mob {
     }
 
     if (this.selectedObject === null) {
+      if (this.state === PLAYER_STATES.FIGHTING) {
+        this.setState(this.defaultState);
+      }
+
       const playerToAttack = this.getPlayerToAttack(players);
+
       if (playerToAttack) {
         this.setSelectedObject(playerToAttack);
-        this.setState(STATES.FIGHTING);
+        this.setState(PLAYER_STATES.FIGHTING);
       }
-    } else if (this.selectedObject.isDead) {
-      this.selectedObject = null;
-      this.selectedObjectTile = null;
-
-      this.setState(this.defaultState);
     }
 
     if (this.state === this.defaultState && this.dest === null) {
@@ -388,9 +381,9 @@ class Mob {
       if (
         getChebyshevDistance(this.positionTile, this.presenceAreaCenterTile) >
           this.constructor.ESCAPE_DISTANCE &&
-        this.state === STATES.FIGHTING
+        this.state === PLAYER_STATES.FIGHTING
       ) {
-        this.setState(STATES.SHOULD_ESCAPE);
+        this.setState(PLAYER_STATES.SHOULD_ESCAPE);
       }
 
       if (tileX && tileY) {

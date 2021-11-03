@@ -252,6 +252,10 @@ export const sockets = (game) => {
     });
   });
 
+  game.socket.on("player:selection:drop", () => {
+    game.resetSelectedObject();
+  });
+
   game.socket.on("player:dead", (name) => {
     const player = game.players.get(name);
 

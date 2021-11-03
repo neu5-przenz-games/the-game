@@ -2,6 +2,7 @@ import PF from "pathfinding";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
 import { HP_MAX, Player } from "../gameObjects/Player.mjs";
+import { PLAYER_STATES } from "../gameObjects/constants.mjs";
 import { directions, getDirection } from "../utils/directions.mjs";
 import {
   getAllies,
@@ -123,7 +124,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
     if (player.constructor.TYPE !== Player.TYPE) {
       player.getState(players, map);
 
-      if (player.state === "FIGHTING" && player.fightingHook) {
+      if (player.state === PLAYER_STATES.FIGHTING && player.fightingHook) {
         player.fightingHook({ finder, map, PF });
       }
     }
@@ -232,6 +233,12 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           selectedObject.dest = null;
           selectedObject.next = null;
           selectedObject.isWalking = false;
+          player.selectedObject = null;
+          player.selectedObjectTile = null;
+
+          if (player.constructor.TYPE === Player.TYPE) {
+            io.to(player.socketId).emit("player:selection:drop");
+          }
 
           const lootingBag = gameObjects.find(
             (go) =>

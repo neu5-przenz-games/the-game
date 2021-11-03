@@ -48,6 +48,8 @@ class Cupid extends Mob {
 
   fightingHook({ finder, map, PF }) {
     if (
+      this.selectedObject !== null &&
+      !this.selectedObject.isDead &&
       this.next === null &&
       super.isInRange(super.getWeaponRange()) &&
       noObstacles({
