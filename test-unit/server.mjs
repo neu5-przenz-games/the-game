@@ -43,6 +43,7 @@ describe("Player", () => {
         "energyRegenDelayTicks",
         "direction",
         "isOnline",
+        "buffs",
         "name",
         "displayName",
         "equipment",

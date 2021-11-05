@@ -1,9 +1,7 @@
-import Phaser from "phaser";
-
 export class ParticleEmitter {
   constructor({
     scene,
-    particleImgId,
+    particle,
     particleScale = 1,
     x,
     y,
@@ -11,16 +9,13 @@ export class ParticleEmitter {
     particleDuration = 1000,
   }) {
     this.scene = scene;
-    this.particleImgId = particleImgId;
     this.x = x;
     this.y = y;
-    this.objDepth = objDepth;
     this.particleDuration = particleDuration;
 
-    this.particle = this.scene.add.image(this.x, this.y + 32, particleImgId);
-    this.particle.setBlendMode(Phaser.BlendModes.ADD);
+    this.particle = particle.image;
     this.particle.setScale(particleScale);
-    this.particle.depth = this.objDepth + 1;
+    this.particle.depth = objDepth + 1;
 
     this.scene.tweens.add({
       targets: [this.particle],

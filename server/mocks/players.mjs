@@ -18,6 +18,7 @@ export const playersMocks = [
     dest: null,
     isWalking: false,
     isDead: false,
+    buffs: [],
     equipment: {
       armor: { id: "armor", quantity: 1 },
       pants: { id: "pants", quantity: 1 },
@@ -79,6 +80,7 @@ export const playersMocks = [
     dest: null,
     isWalking: false,
     isDead: false,
+    buffs: [],
     equipment: {
       weapon: { id: "bow", quantity: 1 },
       backpack: { id: "bag", quantity: 1 },
@@ -128,6 +130,7 @@ export const playersMocks = [
     dest: null,
     isWalking: false,
     isDead: false,
+    buffs: [],
     equipment: {
       weapon: { id: "sword", quantity: 1 },
       backpack: { id: "bag", quantity: 1 },
@@ -177,6 +180,7 @@ export const playersMocks = [
     dest: null,
     isWalking: false,
     isDead: false,
+    buffs: [],
     equipment: {
       weapon: { id: "sword", quantity: 1 },
       backpack: { id: "bag", quantity: 1 },
@@ -226,6 +230,7 @@ export const playersMocks = [
     dest: null,
     isWalking: false,
     isDead: false,
+    buffs: [],
     equipment: {
       weapon: { id: "sword", quantity: 1 },
       backpack: { id: "bag", quantity: 1 },
@@ -275,6 +280,7 @@ export const playersMocks = [
     dest: null,
     isWalking: false,
     isDead: false,
+    buffs: [],
     equipment: {
       weapon: { id: "sword", quantity: 1 },
       backpack: { id: "bag", quantity: 1 },

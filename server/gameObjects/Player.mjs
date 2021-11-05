@@ -22,6 +22,7 @@ class Player {
     size,
     dest,
     isWalking,
+    buffs,
     isDead,
     equipment,
     backpack,
@@ -76,6 +77,8 @@ class Player {
     this.hp = hp;
     this.energy = energy;
     this.skills = skills;
+    this.buffs = buffs;
+
     // technical info
     this.socketId = socketId;
     this.isOnline = isOnline;
@@ -492,6 +495,9 @@ class Player {
     if (this.hp === 0) {
       this.energy = 0;
       this.isDead = true;
+      this.buffs = [];
+      this.dest = null;
+      this.next = null;
       this.resetSelected();
 
       if (this.action && this.actionDurationTicks !== null) {

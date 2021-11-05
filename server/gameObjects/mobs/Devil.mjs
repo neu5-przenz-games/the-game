@@ -5,6 +5,7 @@ import {
   getSkillPoints,
   setAllSkillsPoints,
 } from "../../../shared/skills/index.mjs";
+import { Buff } from "../../../shared/buffs/index.mjs";
 
 import { HP_MAX } from "../constants.mjs";
 
@@ -39,6 +40,25 @@ class Devil extends Mob {
   setDefaultEquipment() {
     this.setBackpack(defaultBackpack.slots, defaultBackpack.items);
     this.setEquipment(defaultEquipment);
+  }
+
+  afterAttackHook() {
+    if (this.selectedObject.buffs.length === 0) {
+      const buff = new Buff({
+        name: "setOnFire",
+        selectedObjectName: this.selectedObject.name,
+        durationInMS: 6000,
+        occurrencesIntervalInMS: 2000,
+        effect() {
+          return {
+            type: "HIT",
+            value: 50,
+          };
+        },
+      });
+
+      this.selectedObject.buffs.push(buff);
+    }
   }
 }
 

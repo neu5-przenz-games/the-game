@@ -28,6 +28,7 @@ class Mob {
     patrollingTiles = [],
     dest,
     isWalking,
+    buffs,
     isDead,
     equipment,
     backpack,
@@ -54,6 +55,7 @@ class Mob {
     this.size = size;
     this.dest = dest;
     this.isWalking = isWalking;
+    this.buffs = buffs;
     this.isDead = isDead;
     this.direction = direction;
     this.speed = speed;
@@ -213,6 +215,11 @@ class Mob {
         this.setSelectedObject(playerToAttack);
         this.setState(PLAYER_STATES.FIGHTING);
       }
+    } else if (this.selectedObject.isDead) {
+      this.selectedObject = null;
+      this.selectedObjectTile = null;
+
+      this.setState(this.defaultState);
     }
 
     if (this.state === this.defaultState && this.dest === null) {

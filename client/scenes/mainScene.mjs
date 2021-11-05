@@ -147,6 +147,12 @@ export class MainScene extends Phaser.Scene {
       "./assets/gfx/particle-healing-green.png"
     );
 
+    this.load.spritesheet("fire-gif", "./assets/gfx/fire.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+      endFrame: 23,
+    });
+
     this.load.tilemapTiledJSON("map", "./assets/map/map.json");
 
     FRACTIONS.forEach((fraction) => {

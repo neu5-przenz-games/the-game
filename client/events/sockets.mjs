@@ -6,6 +6,8 @@ import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { Player } from "../gameObjects/Player.mjs";
 import { Mob } from "../gameObjects/Mob.mjs";
 import { TextTween } from "../gameObjects/TextTween.mjs";
+import { Fire } from "../gameObjects/Fire.mjs";
+import { Particle } from "../gameObjects/Particle.mjs";
 import { UIProfile } from "../ui/profile.mjs";
 import { ParticleEmitter } from "../utils/index.mjs";
 import { inputs } from "./inputs.mjs";
@@ -190,7 +192,12 @@ export const sockets = (game) => {
 
       const particle = new ParticleEmitter({ // eslint-disable-line
         scene: game,
-        particleImgId: "particle-healing-green",
+        particle: new Particle(
+          game,
+          player.x,
+          player.y,
+          "particle-healing-green"
+        ),
         particleScale: 0.3,
         x: player.x,
         y: player.y,
@@ -206,17 +213,28 @@ export const sockets = (game) => {
     });
   });
 
-  game.socket.on("player:attack-hit", ({ name, hitType }) => {
+  game.socket.on("player:attack-hit", ({ name, hitType, effectType }) => {
     const player = game.players.get(name);
 
-    const particle = new ParticleEmitter({ // eslint-disable-line
-      scene: game,
-      particleImgId: "particle-red",
-      particleScale: 0.5,
-      x: player.x,
-      y: player.y,
-      objDepth: player.depth,
-    });
+    if (effectType === "fire") {
+      const particle = new ParticleEmitter({ // eslint-disable-line
+        scene: game,
+        particle: new Fire(game, player.x, player.y + 16),
+        x: player.x,
+        y: player.y,
+        objDepth: player.depth,
+        particleDuration: 400,
+      });
+    } else {
+      const particle = new ParticleEmitter({ // eslint-disable-line
+        scene: game,
+        particle: new Particle(game, player.x, player.y, "particle-red"),
+        particleScale: 0.5,
+        x: player.x,
+        y: player.y,
+        objDepth: player.depth,
+      });
+    }
 
     TextTween({
       scene: game,
