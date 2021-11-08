@@ -23,6 +23,7 @@ import {
 } from "../../shared/skills/index.mjs";
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
+import { BUFF_TYPES } from "../../shared/buffs/Buff.mjs";
 import { LootingBag, mergeItems } from "../../shared/gameObjects/index.mjs";
 
 const SI = new SnapshotInterpolation();
@@ -460,7 +461,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
           const buffResult = buff.effect(players);
 
-          if (buffResult.type === "HIT") {
+          if (buff.resultType === BUFF_TYPES.HIT) {
             const buffedPlayer = players.get(buff.selectedObjectName);
 
             buffedPlayer.hit(buffResult.value);
@@ -468,7 +469,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
             io.emit("player:attack-hit", {
               name: buffedPlayer.name,
               hitType: getHitText(buffResult.value),
-              effectType: "fire",
+              effectType: buffResult.type,
             });
 
             io.to(buffedPlayer.fraction).emit("players:hp:update", {

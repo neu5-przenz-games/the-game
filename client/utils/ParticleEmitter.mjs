@@ -5,7 +5,7 @@ export class ParticleEmitter {
     particleScale = 1,
     x,
     y,
-    objDepth,
+    depth,
     particleDuration = 1000,
   }) {
     this.scene = scene;
@@ -15,7 +15,7 @@ export class ParticleEmitter {
 
     this.particle = particle.image;
     this.particle.setScale(particleScale);
-    this.particle.depth = objDepth + 1;
+    this.particle.depth = depth + 1;
 
     this.scene.tweens.add({
       targets: [this.particle],

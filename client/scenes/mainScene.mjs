@@ -147,7 +147,7 @@ export class MainScene extends Phaser.Scene {
       "./assets/gfx/particle-healing-green.png"
     );
 
-    this.load.spritesheet("fire-gif", "./assets/gfx/fire.png", {
+    this.load.spritesheet("fire-sprite", "./assets/gfx/fire.png", {
       frameWidth: 64,
       frameHeight: 64,
       endFrame: 23,

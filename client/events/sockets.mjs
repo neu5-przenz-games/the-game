@@ -2,14 +2,17 @@ import Phaser from "phaser";
 import io from "socket.io-client";
 
 import { MESSAGES } from "../../shared/UIMessages/index.mjs";
+import { BUFF_EFFECT_TYPES } from "../../shared/buffs/Buff.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { Player } from "../gameObjects/Player.mjs";
 import { Mob } from "../gameObjects/Mob.mjs";
 import { TextTween } from "../gameObjects/TextTween.mjs";
-import { Fire } from "../gameObjects/Fire.mjs";
-import { Particle } from "../gameObjects/Particle.mjs";
+import {
+  FireParticle,
+  HealParticle,
+  HitParticle,
+} from "../gameObjects/Particles/index.mjs";
 import { UIProfile } from "../ui/profile.mjs";
-import { ParticleEmitter } from "../utils/index.mjs";
 import { inputs } from "./inputs.mjs";
 
 const displayServerMessage = (game, msgArg) => {
@@ -188,21 +191,9 @@ export const sockets = (game) => {
 
   game.socket.on("players:hp:update", ({ playerName, players }) => {
     if (playerName) {
-      const player = game.players.get(playerName);
+      const { x, y, depth } = game.players.get(playerName);
 
-      const particle = new ParticleEmitter({ // eslint-disable-line
-        scene: game,
-        particle: new Particle(
-          game,
-          player.x,
-          player.y,
-          "particle-healing-green"
-        ),
-        particleScale: 0.3,
-        x: player.x,
-        y: player.y,
-        objDepth: player.depth,
-      });
+      HealParticle({ scene: game, x, y, depth });
     }
 
     players.forEach(({ name, hp }) => {
@@ -214,33 +205,19 @@ export const sockets = (game) => {
   });
 
   game.socket.on("player:attack-hit", ({ name, hitType, effectType }) => {
-    const player = game.players.get(name);
+    const { x, y, depth } = game.players.get(name);
 
-    if (effectType === "fire") {
-      const particle = new ParticleEmitter({ // eslint-disable-line
-        scene: game,
-        particle: new Fire(game, player.x, player.y + 16),
-        x: player.x,
-        y: player.y,
-        objDepth: player.depth,
-        particleDuration: 400,
-      });
+    if (effectType === BUFF_EFFECT_TYPES.FIRE) {
+      FireParticle({ scene: game, x, y, depth, particleDuration: 400 });
     } else {
-      const particle = new ParticleEmitter({ // eslint-disable-line
-        scene: game,
-        particle: new Particle(game, player.x, player.y, "particle-red"),
-        particleScale: 0.5,
-        x: player.x,
-        y: player.y,
-        objDepth: player.depth,
-      });
+      HitParticle({ scene: game, x, y, depth });
     }
 
     TextTween({
       scene: game,
-      x: player.x,
-      y: player.y,
-      depth: player.depth,
+      x,
+      y,
+      depth,
       message: hitType.text,
       color: hitType.color,
     });

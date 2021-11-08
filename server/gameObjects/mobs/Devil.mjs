@@ -5,7 +5,8 @@ import {
   getSkillPoints,
   setAllSkillsPoints,
 } from "../../../shared/skills/index.mjs";
-import { Buff } from "../../../shared/buffs/index.mjs";
+import { getRandomInt } from "../../utils/algo.mjs";
+import { SetOnFireBuff } from "../../../shared/buffs/index.mjs";
 
 import { HP_MAX } from "../constants.mjs";
 
@@ -43,21 +44,12 @@ class Devil extends Mob {
   }
 
   afterAttackHook() {
-    if (this.selectedObject.buffs.length === 0) {
-      const buff = new Buff({
-        name: "setOnFire",
-        selectedObjectName: this.selectedObject.name,
-        durationInMS: 6000,
-        occurrencesIntervalInMS: 2000,
-        effect() {
-          return {
-            type: "HIT",
-            value: 50,
-          };
-        },
-      });
-
-      this.selectedObject.buffs.push(buff);
+    if (getRandomInt(0, 1000) <= 100) {
+      this.selectedObject.buffs.push(
+        new SetOnFireBuff({
+          selectedObjectName: this.selectedObject.name,
+        })
+      );
     }
   }
 }
