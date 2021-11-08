@@ -23,6 +23,7 @@ import {
 } from "../../shared/skills/index.mjs";
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
+import { BUFF_TYPES } from "../../shared/buffs/Buff.mjs";
 import { LootingBag, mergeItems } from "../../shared/gameObjects/index.mjs";
 
 const SI = new SnapshotInterpolation();
@@ -187,6 +188,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           io.to(selectedObject.fraction).emit("players:hp:update", {
             players: getAllies(players, selectedObject.fraction),
           });
+
+          if (player.afterAttackHook) {
+            player.afterAttackHook();
+          }
         }
 
         if (player.constructor.TYPE === Player.TYPE) {
@@ -444,6 +449,52 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           // fallback for no place to respawn
         }
       }
+    }
+
+    if (player.buffs.length) {
+      player.buffs.forEach((buff) => {
+        if (
+          buff.occurrencesIntervalTicks.value >=
+          buff.occurrencesIntervalTicks.maxValue
+        ) {
+          buff.occurrencesIntervalTicks.value = 0;
+
+          const buffResult = buff.effect(players);
+
+          if (buff.resultType === BUFF_TYPES.HIT) {
+            const buffedPlayer = players.get(buff.selectedObjectName);
+
+            buffedPlayer.hit(buffResult.value);
+
+            io.emit("player:attack-hit", {
+              name: buffedPlayer.name,
+              hitType: getHitText(buffResult.value),
+              effectType: buffResult.type,
+            });
+
+            io.to(buffedPlayer.fraction).emit("players:hp:update", {
+              players: getAllies(players, buffedPlayer.fraction),
+            });
+
+            if (buffedPlayer.isDead) {
+              io.to(buffedPlayer.socketId).emit(
+                "player:dead",
+                buffedPlayer.name
+              );
+            }
+          }
+        }
+
+        if (buff.durationTicks.value >= buff.durationTicks.maxValue) {
+          buff.isFinished = true;
+          return;
+        }
+
+        buff.durationTicks.value += 1;
+        buff.occurrencesIntervalTicks.value += 1;
+      });
+
+      player.buffs = player.buffs.filter((buff) => !buff.isFinished);
     }
 
     if (process.env.NODE_ENV === "development") {

@@ -6,6 +6,7 @@ import { gameItems } from "../../shared/init/gameItems/index.mjs";
 import { bag } from "../../shared/init/gameItems/backpack.mjs";
 import { receipts } from "../../shared/receipts/index.mjs";
 import { LootingBag } from "../../shared/gameObjects/index.mjs";
+import { getDurationFromTicksToMS } from "../../shared/utils/index.mjs";
 import {
   getSkillPoints,
   setSkillPoints,
@@ -33,7 +34,7 @@ const emitLootingBagList = (gameObjects, io) =>
       }))
   );
 
-const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
+const sockets = ({ gameObjects, httpServer, players }) => {
   const io = new Server(httpServer);
 
   return io.on("connection", (socket) => {
@@ -380,7 +381,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
         player.energyUse(energyCost);
         io.to(player.socketId).emit(
           "action:start",
-          Math.ceil(durationTicks * FRAME_IN_MS)
+          getDurationFromTicksToMS(durationTicks)
         );
       });
 
@@ -461,7 +462,7 @@ const sockets = ({ gameObjects, httpServer, players, FRAME_IN_MS }) => {
         player.energyUse(receipt.energyCost);
         io.to(player.socketId).emit(
           "action:start",
-          Math.ceil(receipt.durationTicks * FRAME_IN_MS)
+          getDurationFromTicksToMS(receipt.durationTicks)
         );
       });
 

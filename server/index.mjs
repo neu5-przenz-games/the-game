@@ -7,13 +7,12 @@ import { mobsMocks } from "./mocks/mobs.mjs";
 import { Player, createMob } from "./gameObjects/index.mjs";
 import { sockets } from "./sockets/index.mjs";
 import { loop } from "./loop/index.mjs";
+import { FRAME_IN_MS } from "../shared/constants/index.mjs";
 import { gameObjects } from "../shared/init/gameObjects.mjs";
 import { LootingBag } from "../shared/gameObjects/index.mjs";
 
 const app = express();
 const httpServer = createServer(app);
-
-const FRAME_IN_MS = 1000 / 30;
 
 const players = new Map();
 
@@ -58,7 +57,6 @@ const io = sockets({
   gameObjects: go,
   httpServer,
   players,
-  FRAME_IN_MS,
 });
 
 setInterval(() => {

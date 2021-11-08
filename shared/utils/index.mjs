@@ -1,3 +1,9 @@
+import { FRAME_IN_MS } from "../constants/index.mjs";
+
+const getDurationFromMSToTicks = (ms) => Math.ceil(ms / FRAME_IN_MS);
+
+const getDurationFromTicksToMS = (ticks) => Math.ceil(ticks * FRAME_IN_MS);
+
 const getObjectTiles = ({ positionTile, size = { x: 1, y: 1 } }) => {
   if (size.x <= 0 || size.y <= 0) {
     return [];
@@ -59,4 +65,9 @@ const getSurroundingTiles = ({
   return tiles;
 };
 
-export { getObjectTiles, getSurroundingTiles };
+export {
+  getDurationFromMSToTicks,
+  getDurationFromTicksToMS,
+  getObjectTiles,
+  getSurroundingTiles,
+};
