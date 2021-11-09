@@ -3,9 +3,13 @@ import { Player } from "../gameObjects/Player.mjs";
 import { DEBUG_ITEMS_SETS } from "../../shared/debugUtils/index.mjs";
 import { UI_ITEM_ACTIONS } from "../../shared/UIItemActions/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
+import { ITEM_TYPES } from "../../shared/gameItems/index.mjs";
 import { bag } from "../../shared/init/gameItems/backpack.mjs";
 import { receipts } from "../../shared/receipts/index.mjs";
-import { LootingBag } from "../../shared/gameObjects/index.mjs";
+import {
+  getNewLootingBagItems,
+  removeItemsFromLootingBag,
+} from "../../shared/gameObjects/index.mjs";
 import { getDurationFromTicksToMS } from "../../shared/utils/index.mjs";
 import {
   getSkillPoints,
@@ -488,6 +492,47 @@ const sockets = ({ gameObjects, httpServer, players }) => {
 
         const lootingBagItems = player.selectedObject.items;
 
+        // make it possible to get backpack from the Looting Bag if player doesn't have any backpack
+        if (
+          player.equipment.backpack === undefined &&
+          itemsToAdd.length === 1 &&
+          itemsToAdd[0].quantity === 1
+        ) {
+          const backpackItem = gameItems.get(itemsToAdd[0].id);
+
+          if (backpackItem.type !== ITEM_TYPES.BACKPACK) {
+            return;
+          }
+
+          player.addToEquipment(itemsToAdd[0]);
+          player.setBackpack(backpackItem.slots);
+
+          const newLootingBagItems = getNewLootingBagItems(
+            itemsToAdd,
+            lootingBagItems
+          );
+
+          removeItemsFromLootingBag({
+            gameObjects,
+            newLootingBagItems,
+            selectedObject,
+          });
+
+          emitLootingBagList(gameObjects, io);
+
+          io.emit("dialog:looting-bag:close");
+
+          io.to(player.socketId).emit(
+            "items:update",
+            player.backpack,
+            player.equipment
+          );
+
+          player.resetSelected();
+
+          return;
+        }
+
         if (
           !itemsToAdd.every(({ id, quantity }) =>
             lootingBagItems.find(
@@ -500,57 +545,16 @@ const sockets = ({ gameObjects, httpServer, players }) => {
         }
 
         if (player.addToBackpack(itemsToAdd)) {
-          const newLootingBagItems = lootingBagItems.reduce(
-            (lootingBag, item) => {
-              const itemSelectedByPlayer = itemsToAdd.find(
-                ({ id }) => id === item.id
-              );
-
-              if (
-                (itemSelectedByPlayer &&
-                  itemSelectedByPlayer.quantity !== item.quantity) ||
-                itemSelectedByPlayer === undefined
-              ) {
-                lootingBag.push({
-                  ...item,
-                  quantity:
-                    item.quantity -
-                    (itemSelectedByPlayer ? itemSelectedByPlayer.quantity : 0),
-                });
-              }
-
-              return lootingBag;
-            },
-            []
+          const newLootingBagItems = getNewLootingBagItems(
+            itemsToAdd,
+            lootingBagItems
           );
 
-          if (newLootingBagItems.length === 0) {
-            gameObjects.splice(
-              gameObjects.findIndex(
-                (go) =>
-                  go.name ===
-                  `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
-              ),
-              1
-            );
-          } else {
-            gameObjects.splice(
-              gameObjects.findIndex(
-                (go) =>
-                  go.name ===
-                  `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
-              ),
-              1,
-              new LootingBag({
-                name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
-                positionTile: {
-                  tileX: selectedObject.positionTile.tileX,
-                  tileY: selectedObject.positionTile.tileY,
-                },
-                items: [...newLootingBagItems],
-              })
-            );
-          }
+          removeItemsFromLootingBag({
+            gameObjects,
+            newLootingBagItems,
+            selectedObject,
+          });
 
           emitLootingBagList(gameObjects, io);
 

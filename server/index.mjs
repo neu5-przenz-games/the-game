@@ -31,6 +31,7 @@ const lootingBags = [
     items: [
       { id: "armor", quantity: 2 },
       { id: "sword", quantity: 2 },
+      { id: "bag", quantity: 1 },
     ],
   }),
   new LootingBag({
