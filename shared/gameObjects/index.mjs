@@ -3,8 +3,8 @@ import { HealingStone } from "./HealingStone.mjs";
 import { House } from "./House.mjs";
 import {
   LootingBag,
+  addLootingBagAfterPlayerIsDead,
   getNewLootingBagItems,
-  mergeItems,
   removeItemsFromLootingBag,
 } from "./LootingBag.mjs";
 import { Tree } from "./Tree.mjs";
@@ -15,7 +15,7 @@ export {
   House,
   LootingBag,
   Tree,
+  addLootingBagAfterPlayerIsDead,
   getNewLootingBagItems,
-  mergeItems,
   removeItemsFromLootingBag,
 };
