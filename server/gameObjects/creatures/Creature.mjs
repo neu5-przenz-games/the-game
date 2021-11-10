@@ -7,17 +7,19 @@ import {
   noObstacles,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
-import { Player } from "../Player.mjs";
 import {
   gameItems,
   getCurrentWeapon,
 } from "../../../shared/init/gameItems/index.mjs";
 import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
-import { ITEM_TYPES } from "../../../shared/gameItems/index.mjs";
+import {
+  ITEM_TYPES,
+  WEARABLE_TYPES,
+} from "../../../shared/gameItems/index.mjs";
 
-import { HP_MAX, PLAYER_STATES } from "../constants.mjs";
+import { HP_MAX, PLAYER_STATES } from "./constants.mjs";
 
-class Mob {
+class Creature {
   constructor({
     name,
     displayName,
@@ -111,7 +113,7 @@ class Mob {
     players.forEach((player) => {
       if (
         this.name !== player.name &&
-        player.constructor.TYPE === Player.TYPE &&
+        player.constructor.TYPE === "Player" &&
         player.isDead === false
       ) {
         const distance = getChebyshevDistance(
@@ -146,7 +148,7 @@ class Mob {
     ).player;
   }
 
-  getMobRandomTile(map, players) {
+  getCreatureRandomTile(map, players) {
     return getRandomTile({
       map,
       obj: {
@@ -172,7 +174,7 @@ class Mob {
         return this.patrollingTiles[this.patrollingIndex];
       },
       [PLAYER_STATES.WALKING_RANDOMLY]: () =>
-        this.getMobRandomTile(map, players),
+        this.getCreatureRandomTile(map, players),
     }[this.defaultState]();
 
     this.dest = {
@@ -275,6 +277,231 @@ class Mob {
     this.equipment = {
       ...items,
     };
+  }
+
+  addToBackpack(newItems) {
+    if (!this.canAddToBackpack(newItems)) {
+      return false;
+    }
+
+    newItems.forEach((newItem) => {
+      const item = this.backpack.items.find((i) => i.id === newItem.id);
+
+      if (item) {
+        item.quantity += newItem.quantity;
+      } else {
+        this.backpack.items.push(newItem);
+      }
+    });
+
+    return true;
+  }
+
+  moveToBackpackFromEquipment(itemName, equipmentItemType) {
+    const item = this.equipment[equipmentItemType];
+
+    if (itemName !== item.id) {
+      return false;
+    }
+
+    const itemSchema = gameItems.get(item.id);
+
+    if (itemSchema.type === ITEM_TYPES.BACKPACK) {
+      return false;
+    }
+
+    if (itemSchema.type === ITEM_TYPES.QUIVER && this.hasArrows()) {
+      const { arrows } = this.equipment;
+      if (!this.addToBackpack([item, arrows])) {
+        return false;
+      }
+
+      this.removeFromEquipment(arrows.id, ITEM_TYPES.ARROWS);
+    } else if (!this.addToBackpack([item])) {
+      return false;
+    }
+
+    this.removeFromEquipment(itemName, equipmentItemType);
+
+    return true;
+  }
+
+  removeFromBackpack(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (!item) {
+      return false;
+    }
+
+    const itemSchema = gameItems.get(item.id);
+
+    if (itemSchema.type === ITEM_TYPES.ARROWS) {
+      this.destroyItemFromBackpack(itemName);
+    } else if (item.quantity > 1) {
+      item.quantity -= 1;
+    } else if (!this.destroyItemFromBackpack(itemName)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  addToEquipment(item) {
+    const itemSchema = gameItems.get(item.id);
+
+    if (!itemSchema || !WEARABLE_TYPES.includes(itemSchema.type)) {
+      return false;
+    }
+
+    const itemFromEquipment = this.equipment[itemSchema.type];
+    if (
+      itemFromEquipment &&
+      !this.moveToBackpackFromEquipment(itemFromEquipment.id, itemSchema.type)
+    ) {
+      return false;
+    }
+
+    if (
+      itemSchema.type === ITEM_TYPES.ARROWS &&
+      this.equipment.quiver === undefined
+    ) {
+      return false;
+    }
+
+    this.equipment[itemSchema.type] = item;
+
+    if (itemSchema.type === ITEM_TYPES.WEAPON) {
+      this.attackDelayTicks.value = 0;
+      this.attackDelayTicks.maxValue = itemSchema.details.attackDelayTicks;
+    }
+
+    return true;
+  }
+
+  moveBackpackToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+    const itemSchema = gameItems.get(item.id);
+    const currentBackpack = this.equipment.backpack;
+    const backpackItems = this.backpack.items;
+
+    const { slots } = itemSchema;
+
+    this.setBackpack(slots, [
+      ...(backpackItems.length >= slots
+        ? backpackItems.slice(0, slots)
+        : backpackItems),
+      currentBackpack,
+    ]);
+
+    this.destroyItemFromBackpack(itemName);
+    this.equipment.backpack = item;
+  }
+
+  moveTwoHandedWeaponToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (
+      (this.equipment.weapon?.id
+        ? this.canAddToBackpack([this.equipment.weapon])
+        : true) &&
+      this.removeFromBackpack(itemName) &&
+      this.addToEquipment(item) &&
+      this.moveToBackpackFromEquipment(
+        this.equipment.shield.id,
+        ITEM_TYPES.SHIELD
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  moveShieldToEquipment(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    if (
+      this.removeFromBackpack(itemName) &&
+      this.addToEquipment(item) &&
+      this.moveToBackpackFromEquipment(
+        this.equipment.weapon.id,
+        ITEM_TYPES.WEAPON
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  moveToEquipmentFromBackpack(itemName) {
+    const item = this.getFromBackpack(itemName);
+
+    const itemSchema = gameItems.get(item.id);
+
+    if (!WEARABLE_TYPES.includes(itemSchema.type)) {
+      return false;
+    }
+
+    if (itemSchema.type === ITEM_TYPES.BACKPACK) {
+      this.moveBackpackToEquipment(itemName);
+    }
+    // player wants to wear two-handed weapon and wears the shield
+    else if (itemSchema.isTwoHanded && this.equipment.shield !== undefined) {
+      return this.moveTwoHandedWeaponToEquipment(itemName);
+    }
+    // player wants to wear shield
+    else if (
+      itemSchema.type === ITEM_TYPES.SHIELD &&
+      this.hasTwoHandedWeapon()
+    ) {
+      return this.moveShieldToEquipment(itemName);
+    } else {
+      // player has to wear quiver if wants to wear arrows
+      if (
+        itemSchema.type === ITEM_TYPES.ARROWS &&
+        this.equipment.quiver === undefined
+      ) {
+        return false;
+      }
+
+      if (!this.removeFromBackpack(itemName)) {
+        this.removeFromEquipment(itemName, gameItems.get(itemName));
+
+        return false;
+      }
+      if (!this.addToEquipment(item)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  removeFromEquipment(itemName, equipmentItemType) {
+    return this.destroyItemFromEquipment(itemName, equipmentItemType);
+  }
+
+  canAddToBackpack(itemsToAdd) {
+    if (this.equipment.backpack?.id === undefined) {
+      return false;
+    }
+
+    return (
+      this.backpack.slots - this.backpack.items.length >=
+      itemsToAdd.reduce((sum, itemtoAdd) => {
+        let result = sum;
+
+        if (
+          this.backpack.items.find((item) => item.id === itemtoAdd.id) ===
+          undefined
+        ) {
+          result = sum + 1;
+        }
+
+        return result;
+      }, 0)
+    );
   }
 
   isInRange(range) {
@@ -470,4 +697,4 @@ class Mob {
   }
 }
 
-export { HP_MAX, Mob };
+export { HP_MAX, Creature };

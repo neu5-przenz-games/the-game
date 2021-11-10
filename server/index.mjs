@@ -4,7 +4,8 @@ import { createServer } from "http";
 
 import { playersMocks } from "./mocks/players.mjs";
 import { mobsMocks } from "./mocks/mobs.mjs";
-import { Player, createMob } from "./gameObjects/index.mjs";
+import { Player } from "./gameObjects/creatures/Player.mjs";
+import { createMob } from "./gameObjects/creatures/index.mjs";
 import { sockets } from "./sockets/index.mjs";
 import { loop } from "./loop/index.mjs";
 import { FRAME_IN_MS } from "../shared/constants/index.mjs";

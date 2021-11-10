@@ -1,4 +1,4 @@
-import { Mob } from "./Mob.mjs";
+import { Creature } from "./Creature.mjs";
 import { gameItems } from "../../../shared/init/gameItems/index.mjs";
 import {
   LEVEL_TYPES,
@@ -7,8 +7,7 @@ import {
 } from "../../../shared/skills/index.mjs";
 import { getRandomInt } from "../../utils/algo.mjs";
 import { SetOnFireBuff } from "../../../shared/buffs/index.mjs";
-
-import { HP_MAX } from "../constants.mjs";
+import { HP_MAX } from "./constants.mjs";
 
 const mobDefaultBackpack = gameItems.get("bag");
 
@@ -29,7 +28,7 @@ const defaultBackpack = {
 
 const defaultSkills = setAllSkillsPoints(getSkillPoints(LEVEL_TYPES.BEGINNER));
 
-class Devil extends Mob {
+class Devil extends Creature {
   static DISPLAY_NAME = "Devil";
 
   static TYPE = "Devil";
