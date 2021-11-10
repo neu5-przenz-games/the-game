@@ -1,6 +1,6 @@
 import { GameObject } from "./GameObject.mjs";
 
-export class LootingBag extends GameObject {
+class LootingBag extends GameObject {
   constructor({
     name,
     displayName = "Looting Bag",
@@ -15,7 +15,7 @@ export class LootingBag extends GameObject {
   }
 }
 
-export const getNewLootingBagItems = (itemsToAdd, lootingBagItems) => {
+const getNewLootingBagItems = (itemsToAdd, lootingBagItems) => {
   return lootingBagItems.reduce((lootingBag, item) => {
     const itemSelectedByPlayer = itemsToAdd.find(({ id }) => id === item.id);
 
@@ -36,7 +36,7 @@ export const getNewLootingBagItems = (itemsToAdd, lootingBagItems) => {
   }, []);
 };
 
-export const mergeItems = (items, item) => {
+const mergeItems = (items, item) => {
   const index = items.findIndex((i) => i.id === item.id);
 
   if (index !== -1) {
@@ -53,7 +53,91 @@ export const mergeItems = (items, item) => {
   return items;
 };
 
-export const removeItemsFromLootingBag = ({
+const addLootingBagAfterPlayerIsDead = ({
+  gameObjects,
+  selectedObject,
+  io,
+}) => {
+  if (selectedObject.hasItems()) {
+    const lootingBag = gameObjects.find(
+      (go) =>
+        go.name ===
+        `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
+    );
+
+    if (lootingBag) {
+      const currentItems = [...lootingBag.items];
+
+      gameObjects.splice(
+        gameObjects.findIndex(
+          (go) =>
+            go.name ===
+            `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
+        ),
+        1,
+        new LootingBag({
+          name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
+          positionTile: {
+            tileX: selectedObject.positionTile.tileX,
+            tileY: selectedObject.positionTile.tileY,
+          },
+          items: [
+            ...currentItems,
+            ...selectedObject.backpack.items,
+            ...Object.values(selectedObject.equipment),
+          ].reduce(mergeItems, []),
+        })
+      );
+    } else {
+      const items = [
+        ...selectedObject.backpack.items,
+        ...Object.values(selectedObject.equipment),
+      ].reduce(mergeItems, []);
+
+      selectedObject.setBackpack();
+      selectedObject.setEquipment();
+
+      gameObjects.push(
+        new LootingBag({
+          name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
+          positionTile: {
+            tileX: selectedObject.positionTile.tileX,
+            tileY: selectedObject.positionTile.tileY,
+          },
+          items,
+        })
+      );
+    }
+
+    const lootingBags = gameObjects.reduce((res, go) => {
+      if (go.type === "LootingBag") {
+        res.push(go);
+      }
+
+      return res;
+    }, []);
+
+    io.emit(
+      "looting-bag:list",
+      lootingBags.map(({ name, positionTile, items }) => ({
+        id: name,
+        positionTile,
+        items,
+      }))
+    );
+  }
+
+  io.to(selectedObject.socketId).emit("player:dead", selectedObject.name);
+
+  // clear player items if its dead
+  io.to(selectedObject.socketId).emit(
+    "items:update",
+    selectedObject.backpack,
+    selectedObject.equipment
+  );
+};
+
+const removeItemsFromLootingBag = ({
   gameObjects,
   newLootingBagItems,
   selectedObject,
@@ -85,4 +169,11 @@ export const removeItemsFromLootingBag = ({
       })
     );
   }
+};
+
+export {
+  LootingBag,
+  addLootingBagAfterPlayerIsDead,
+  getNewLootingBagItems,
+  removeItemsFromLootingBag,
 };

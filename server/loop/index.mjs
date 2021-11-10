@@ -24,7 +24,7 @@ import {
 import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
 import { BUFF_TYPES } from "../../shared/buffs/Buff.mjs";
-import { LootingBag, mergeItems } from "../../shared/gameObjects/index.mjs";
+import { addLootingBagAfterPlayerIsDead } from "../../shared/gameObjects/index.mjs";
 
 const SI = new SnapshotInterpolation();
 
@@ -245,86 +245,13 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
             io.to(player.socketId).emit("player:selection:drop");
           }
 
-          const lootingBag = gameObjects.find(
-            (go) =>
-              go.name ===
-              `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
-          );
-
-          if (selectedObject.hasItems()) {
-            if (lootingBag) {
-              const currentItems = [...lootingBag.items];
-
-              gameObjects.splice(
-                gameObjects.findIndex(
-                  (go) =>
-                    go.name ===
-                    `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`
-                ),
-                1,
-                new LootingBag({
-                  name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
-                  positionTile: {
-                    tileX: selectedObject.positionTile.tileX,
-                    tileY: selectedObject.positionTile.tileY,
-                  },
-                  items: [
-                    ...currentItems,
-                    ...selectedObject.backpack.items,
-                    ...Object.values(selectedObject.equipment),
-                  ].reduce(mergeItems, []),
-                })
-              );
-            } else {
-              const items = [
-                ...selectedObject.backpack.items,
-                ...Object.values(selectedObject.equipment),
-              ].reduce(mergeItems, []);
-
-              selectedObject.setBackpack();
-              selectedObject.setEquipment();
-
-              gameObjects.push(
-                new LootingBag({
-                  name: `LootingBag${selectedObject.positionTile.tileX}x${selectedObject.positionTile.tileY}`,
-                  positionTile: {
-                    tileX: selectedObject.positionTile.tileX,
-                    tileY: selectedObject.positionTile.tileY,
-                  },
-                  items,
-                })
-              );
-            }
-
-            const lootingBags = gameObjects.reduce((res, go) => {
-              if (go.type === "LootingBag") {
-                res.push(go);
-              }
-
-              return res;
-            }, []);
-
-            io.emit(
-              "looting-bag:list",
-              lootingBags.map(({ name, positionTile, items }) => ({
-                id: name,
-                positionTile,
-                items,
-              }))
-            );
-          }
-
-          io.to(selectedObject.socketId).emit(
-            "items:update",
-            selectedObject.backpack,
-            selectedObject.equipment
-          );
-
-          io.to(selectedObject.socketId).emit(
-            "player:dead",
-            selectedObject.name
-          );
+          addLootingBagAfterPlayerIsDead({
+            gameObjects,
+            selectedObject,
+            io,
+          });
         }
+
         io.to(player.socketId).emit("player:energy:update", player.energy);
       }
     } else if (player.dropSelection) {
@@ -477,10 +404,11 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
             });
 
             if (buffedPlayer.isDead) {
-              io.to(buffedPlayer.socketId).emit(
-                "player:dead",
-                buffedPlayer.name
-              );
+              addLootingBagAfterPlayerIsDead({
+                gameObjects,
+                selectedObject: buffedPlayer,
+                io,
+              });
             }
           }
         }
