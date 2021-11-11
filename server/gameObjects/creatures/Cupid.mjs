@@ -1,4 +1,4 @@
-import { Mob } from "./Mob.mjs";
+import { Creature } from "./Creature.mjs";
 import { gameItems } from "../../../shared/init/gameItems/index.mjs";
 import { noObstacles } from "../../utils/algo.mjs";
 import {
@@ -6,8 +6,7 @@ import {
   getSkillPoints,
   setAllSkillsPoints,
 } from "../../../shared/skills/index.mjs";
-
-import { HP_MAX } from "../constants.mjs";
+import { HP_MAX } from "./constants.mjs";
 
 const mobDefaultBackpack = gameItems.get("bag");
 
@@ -32,7 +31,7 @@ const defaultBackpack = {
 
 const defaultSkills = setAllSkillsPoints(getSkillPoints(LEVEL_TYPES.BEGINNER));
 
-class Cupid extends Mob {
+class Cupid extends Creature {
   static DISPLAY_NAME = "Cupid";
 
   static TYPE = "Cupid";

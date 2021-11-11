@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { Player } from "../gameObjects/Player.mjs";
+import { Player } from "../gameObjects/creatures/Player.mjs";
 import { DEBUG_ITEMS_SETS } from "../../shared/debugUtils/index.mjs";
 import { UI_ITEM_ACTIONS } from "../../shared/UIItemActions/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";

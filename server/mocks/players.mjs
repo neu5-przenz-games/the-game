@@ -1,6 +1,6 @@
 import { FRACTIONS } from "../../shared/fractions/index.mjs";
 import { skillsSchema } from "../../shared/skills/index.mjs";
-import { ENERGY_MAX, HP_MAX } from "../gameObjects/Player.mjs";
+import { ENERGY_MAX, HP_MAX } from "../gameObjects/creatures/Player.mjs";
 
 const radiantFraction = FRACTIONS[0].name;
 const radiantHouse = FRACTIONS[0].houses[0];

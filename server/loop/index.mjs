@@ -1,8 +1,8 @@
 import PF from "pathfinding";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
-import { HP_MAX, Player } from "../gameObjects/Player.mjs";
-import { PLAYER_STATES } from "../gameObjects/constants.mjs";
+import { HP_MAX, Player } from "../gameObjects/creatures/Player.mjs";
+import { PLAYER_STATES } from "../gameObjects/creatures/constants.mjs";
 import { directions, getDirection } from "../utils/directions.mjs";
 import {
   getAllies,

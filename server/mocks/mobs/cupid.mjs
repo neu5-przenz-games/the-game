@@ -5,7 +5,7 @@ import {
   defaultBackpack,
   defaultEquipment,
   defaultSkills,
-} from "../../gameObjects/mobs/Cupid.mjs";
+} from "../../gameObjects/creatures/Cupid.mjs";
 
 const createCupid = ({
   name,

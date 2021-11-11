@@ -5,7 +5,7 @@ import {
   defaultBackpack,
   defaultEquipment,
   defaultSkills,
-} from "../../gameObjects/mobs/Devil.mjs";
+} from "../../gameObjects/creatures/Devil.mjs";
 
 const createDevil = ({
   name,
