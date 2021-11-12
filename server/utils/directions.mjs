@@ -69,7 +69,11 @@ const getDirection = (currentTile, nextTile) => {
   return direction;
 };
 
-const isObjectAhead = (player, selectedObject) =>
+const isObjectAhead = ({
+  playerPositionTile,
+  playerDirection,
+  selectedObjectPositionTile,
+}) =>
   ({
     north: ["north", "northEast", "northWest"],
     northWest: ["northWest", "north", "west"],
@@ -79,8 +83,8 @@ const isObjectAhead = (player, selectedObject) =>
     southEast: ["southEast", "south", "east"],
     east: ["east", "southEast", "northEast"],
     northEast: ["northEast", "east", "north"],
-  }[getDirection(player.positionTile, selectedObject.positionTile)].includes(
-    player.direction
+  }[getDirection(playerPositionTile, selectedObjectPositionTile)].includes(
+    playerDirection
   ));
 
 export { directions, getDirection, isObjectAhead };

@@ -77,8 +77,8 @@ const isAttackMissed = ({
 
 const isAttackParried = ({ player, selectedObject }) => {
   if (
-    selectedObject.selectedObject === null ||
-    selectedObject.selectedObject.name !== player.name
+    selectedObject.selectedObjectName === null ||
+    selectedObject.selectedObjectName.name !== player.name
   ) {
     return false;
   }

@@ -35,7 +35,7 @@ class Creature {
     equipment,
     backpack,
     settings,
-    selectedObject,
+    selectedObjectName,
     selectedObjectTile,
     dropSelection,
     attack,
@@ -68,7 +68,7 @@ class Creature {
     this.equipment = equipment;
     this.backpack = backpack;
     this.settings = settings;
-    this.selectedObject = selectedObject;
+    this.selectedObjectName = selectedObjectName;
     this.selectedObjectTile = selectedObjectTile;
 
     // properties
@@ -190,7 +190,7 @@ class Creature {
     }
 
     if (this.state === PLAYER_STATES.SHOULD_ESCAPE) {
-      this.selectedObject = null;
+      this.selectedObjectName = null;
       this.selectedObjectTile = null;
 
       this.getNextDestination(map, players);
@@ -206,7 +206,9 @@ class Creature {
       return;
     }
 
-    if (this.selectedObject === null) {
+    const selectedObject = players.get(this.selectedObjectName);
+
+    if (!selectedObject) {
       if (this.state === PLAYER_STATES.FIGHTING) {
         this.setState(this.defaultState);
       }
@@ -214,11 +216,11 @@ class Creature {
       const playerToAttack = this.getPlayerToAttack(players);
 
       if (playerToAttack) {
-        this.setSelectedObject(playerToAttack);
+        this.setSelectedObjectName(playerToAttack.name);
         this.setState(PLAYER_STATES.FIGHTING);
       }
-    } else if (this.selectedObject.isDead) {
-      this.selectedObject = null;
+    } else if (selectedObject.isDead) {
+      this.selectedObjectName = null;
       this.selectedObjectTile = null;
 
       this.setState(this.defaultState);
@@ -236,8 +238,8 @@ class Creature {
     }
   }
 
-  setSelectedObject(player) {
-    this.selectedObject = player;
+  setSelectedObjectName(playerName) {
+    this.selectedObjectName = playerName;
   }
 
   setSettingsFollow(value) {
@@ -504,13 +506,8 @@ class Creature {
     );
   }
 
-  isInRange(range) {
-    return (
-      getChebyshevDistance(
-        this.positionTile,
-        this.selectedObject.positionTile
-      ) <= range
-    );
+  isInRange(range, destTile) {
+    return getChebyshevDistance(this.positionTile, destTile) <= range;
   }
 
   hasTwoHandedWeapon() {
@@ -538,27 +535,31 @@ class Creature {
     return false;
   }
 
-  canAttack({ finder, map, PF }) {
+  canAttack({ finder, map, selectedObject, PF }) {
     return (
       this.isDead === false &&
-      this.selectedObject.isDead === false &&
+      selectedObject.isDead === false &&
       this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
-      this.isInRange(this.getWeaponRange()) &&
-      isObjectAhead(this, this.selectedObject) &&
+      this.isInRange(this.getWeaponRange(), selectedObject.positionTile) &&
+      isObjectAhead({
+        playerPositionTile: this.positionTile,
+        playerDirection: this.direction,
+        selectedObjectPositionTile: selectedObject.positionTile,
+      }) &&
       noObstacles({
         finder,
         map,
         PF,
         positionTile: this.positionTile,
-        selectedObjectPositionTile: this.selectedObject.positionTile,
+        selectedObjectPositionTile: selectedObject.positionTile,
         hasRangedWeapon: this.hasRangedWeapon(),
       })
     );
   }
 
-  canInteractWithLootingBag() {
-    if (!this.isInRange(1)) {
+  canInteractWithLootingBag(lootingBagPositionTile) {
+    if (!this.isInRange(1, lootingBagPositionTile)) {
       return MESSAGES_TYPES.NOT_IN_RANGE;
     }
     return true;
@@ -586,20 +587,21 @@ class Creature {
   }
 
   updateFollowing(map, players) {
+    const selectedObject = players.get(this.selectedObjectName);
+
     if (
       this.selectedObjectTile === null ||
-      this.selectedObject.positionTile.tileX !==
-        this.selectedObjectTile.tileX ||
-      this.selectedObject.positionTile.tileY !== this.selectedObjectTile.tileY
+      selectedObject.positionTile.tileX !== this.selectedObjectTile.tileX ||
+      selectedObject.positionTile.tileY !== this.selectedObjectTile.tileY
     ) {
       this.selectedObjectTile = {
-        tileX: this.selectedObject.positionTile.tileX,
-        tileY: this.selectedObject.positionTile.tileY,
+        tileX: selectedObject.positionTile.tileX,
+        tileY: selectedObject.positionTile.tileY,
       };
 
-      let obj = this.selectedObject;
+      let obj = selectedObject;
 
-      if (this.selectedObject.positionTile === undefined) {
+      if (selectedObject.positionTile === undefined) {
         obj = {
           ...obj,
           positionTile: obj.positionTile,

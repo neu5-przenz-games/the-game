@@ -109,7 +109,7 @@ const sockets = ({ gameObjects, httpServer, players }) => {
             player.positionTile.tileX !== tileX ||
             player.positionTile.tileY !== tileY
           ) {
-            if (player.selectedObject) {
+            if (player.selectedObjectName) {
               if (
                 player.settings.keepSelectionOnMovement &&
                 player.settings.follow
@@ -118,7 +118,7 @@ const sockets = ({ gameObjects, httpServer, players }) => {
               }
 
               if (!player.settings.keepSelectionOnMovement) {
-                player.selectedObject = null;
+                player.selectedObjectName = null;
               }
               player.selectedObjectTile = null;
             }
@@ -153,32 +153,25 @@ const sockets = ({ gameObjects, httpServer, players }) => {
           player.action = null;
           player.isWalking = false;
 
-          if (type === Player.TYPE) {
-            const selectedObject = players.get(selectedObjectName);
+          let selectedObject = players.get(selectedObjectName);
 
-            player.setSelectedObject(selectedObject);
-
+          if (selectedObject) {
             if (
-              player.isSameFraction(player.selectedObject.fraction) &&
+              type === Player.TYPE &&
+              player.isSameFraction(selectedObject.fraction) &&
               !player.settings.attackAlly
             ) {
               io.to(player.socketId).emit(
                 "dialog:confirm-attack-ally:show",
-                player.selectedObject.displayName
+                selectedObject.displayName
               );
             }
-          } else if (["Cupid", "Devil"].includes(type)) {
-            const selectedObject = players.get(selectedObjectName);
-
-            player.setSelectedObject(selectedObject);
           } else {
-            const selectedObject = gameObjects.find(
+            selectedObject = gameObjects.find(
               (obj) => obj.name === selectedObjectName
             );
 
             if (selectedObject) {
-              player.setSelectedObject(selectedObject);
-
               const { action } = selectedObject;
 
               if (action) {
@@ -187,18 +180,22 @@ const sockets = ({ gameObjects, httpServer, players }) => {
             }
           }
 
+          player.setSelectedObjectName(selectedObject.name);
+
           if (player.settings.follow) {
-            player.updateFollowing(map, players);
+            player.updateFollowing(map, players, gameObjects);
           }
 
           // player selected looting bag and stands next to it
           if (type === "LootingBag" && player.dest === null) {
-            const openLootingBagResult = player.canInteractWithLootingBag();
+            const openLootingBagResult = player.canInteractWithLootingBag(
+              selectedObject.positionTile
+            );
 
             if (openLootingBagResult === true) {
               io.to(player.socketId).emit(
                 "dialog:looting-bag:show",
-                player.selectedObject.items
+                selectedObject.items
               );
             } else {
               io.to(player.socketId).emit(
@@ -368,9 +365,18 @@ const sockets = ({ gameObjects, httpServer, players }) => {
       socket.on("action:button:clicked", ({ name }) => {
         const player = players.get(name);
 
-        const { durationTicks, energyCost } = player.selectedObject;
+        let selectedObject = players.get(player.selectedObjectName);
 
-        const getResourceResult = player.canGetResource(energyCost);
+        if (!selectedObject) {
+          selectedObject = gameObjects.find(
+            (obj) => obj.name === player.selectedObjectName
+          );
+        }
+
+        const getResourceResult = player.canGetResource(
+          selectedObject.energyCost,
+          gameObjects
+        );
         if (getResourceResult !== true) {
           io.to(player.socketId).emit("action:rejected", getResourceResult);
           return;
@@ -378,14 +384,14 @@ const sockets = ({ gameObjects, httpServer, players }) => {
 
         player.actionDurationTicks = {
           value: 0,
-          maxValue: durationTicks,
+          maxValue: selectedObject.durationTicks,
         };
         player.receipt = null;
 
-        player.energyUse(energyCost);
+        player.energyUse(selectedObject.energyCost);
         io.to(player.socketId).emit(
           "action:start",
-          getDurationFromTicksToMS(durationTicks)
+          getDurationFromTicksToMS(selectedObject.durationTicks)
         );
       });
 
@@ -477,20 +483,26 @@ const sockets = ({ gameObjects, httpServer, players }) => {
           quantity: parseInt(item.quantity, 10),
         }));
 
-        const { selectedObject } = player;
+        let selectedObject = players.get(player.selectedObjectName);
+
+        if (!selectedObject) {
+          selectedObject = gameObjects.find(
+            (obj) => obj.name === player.selectedObjectName
+          );
+        }
 
         if (
           !player ||
           itemsToAdd.length === 0 ||
           selectedObject.type !== "LootingBag" ||
-          !player.canInteractWithLootingBag() ||
+          !player.canInteractWithLootingBag(selectedObject.positionTile) ||
           gameObjects.find((go) => go.name === selectedObject.name) ===
             undefined
         ) {
           return;
         }
 
-        const lootingBagItems = player.selectedObject.items;
+        const lootingBagItems = selectedObject.items;
 
         // make it possible to get backpack from the Looting Bag if player doesn't have any backpack
         if (

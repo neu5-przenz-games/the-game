@@ -32,7 +32,7 @@ const createMob = ({
     fight: true,
     keepSelectionOnMovement: true,
   },
-  selectedObject: null,
+  selectedObjectName: null,
   selectedObjectTile: null,
   dropSelection: false,
   attack: null,

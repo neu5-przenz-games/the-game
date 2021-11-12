@@ -42,11 +42,13 @@ class Devil extends Creature {
     this.setEquipment(defaultEquipment);
   }
 
-  afterAttackHook() {
+  afterAttackHook(players) {
     if (getRandomInt(0, 1000) <= 100) {
-      this.selectedObject.buffs.push(
+      const selectedObject = players.get(this.selectedObjectName);
+
+      selectedObject.buffs.push(
         new SetOnFireBuff({
-          selectedObjectName: this.selectedObject.name,
+          selectedObjectName: selectedObject.name,
         })
       );
     }

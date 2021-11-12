@@ -45,18 +45,18 @@ class Cupid extends Creature {
     this.setEquipment(defaultEquipment);
   }
 
-  fightingHook({ finder, map, PF }) {
+  fightingHook({ finder, map, selectedObject, PF }) {
     if (
-      this.selectedObject !== null &&
-      !this.selectedObject.isDead &&
+      selectedObject !== undefined &&
+      !selectedObject.isDead &&
       this.next === null &&
-      super.isInRange(super.getWeaponRange()) &&
+      super.isInRange(super.getWeaponRange(), selectedObject.positionTile) &&
       noObstacles({
         finder,
         map,
         PF,
         positionTile: this.positionTile,
-        selectedObjectPositionTile: this.selectedObject.positionTile,
+        selectedObjectPositionTile: selectedObject.positionTile,
         hasRangedWeapon: super.hasRangedWeapon(),
       })
     ) {
