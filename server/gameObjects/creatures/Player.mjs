@@ -1,7 +1,12 @@
 import { Creature } from "./Creature.mjs";
 import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
 import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
-import { getDestTile, getXYFromTile, noObstacles } from "../../utils/algo.mjs";
+import {
+  getDestTile,
+  getSelectedObject,
+  getXYFromTile,
+  noObstacles,
+} from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
 import { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX } from "./constants.mjs";
 
@@ -154,13 +159,11 @@ class Player extends Creature {
   }
 
   updateFollowing(map, players, gameObjects) {
-    let selectedObject = players.get(this.selectedObjectName);
-
-    if (!selectedObject) {
-      selectedObject = gameObjects.find(
-        (obj) => obj.name === this.selectedObjectName
-      );
-    }
+    const selectedObject = getSelectedObject({
+      players,
+      gameObjects,
+      selectedObjectName: this.selectedObjectName,
+    });
 
     if (
       this.selectedObjectTile === null ||

@@ -18,7 +18,7 @@ import {
   skillsSchema,
 } from "../../shared/skills/index.mjs";
 import map from "../../public/assets/map/map.mjs";
-import { getAllies, getXYFromTile } from "../utils/algo.mjs";
+import { getAllies, getSelectedObject, getXYFromTile } from "../utils/algo.mjs";
 
 const emitLootingBagList = (gameObjects, io) =>
   io.emit(
@@ -365,13 +365,11 @@ const sockets = ({ gameObjects, httpServer, players }) => {
       socket.on("action:button:clicked", ({ name }) => {
         const player = players.get(name);
 
-        let selectedObject = players.get(player.selectedObjectName);
-
-        if (!selectedObject) {
-          selectedObject = gameObjects.find(
-            (obj) => obj.name === player.selectedObjectName
-          );
-        }
+        const selectedObject = getSelectedObject({
+          players,
+          gameObjects,
+          selectedObjectName: player.selectedObjectName,
+        });
 
         const getResourceResult = player.canGetResource(
           selectedObject.energyCost,

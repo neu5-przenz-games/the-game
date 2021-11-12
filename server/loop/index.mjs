@@ -10,6 +10,7 @@ import {
   getDefenseValue,
   getHitValue,
   getRandomTile,
+  getSelectedObject,
 } from "../utils/algo.mjs";
 import { getHitText } from "../utils/hitText.mjs";
 
@@ -38,13 +39,11 @@ let tick = 0;
 
 const loop = ({ gameObjects, healingStones, io, players }) => {
   players.forEach((player) => {
-    let selectedObject = players.get(player.selectedObjectName);
-
-    if (!selectedObject) {
-      selectedObject = gameObjects.find(
-        (obj) => obj.name === player.selectedObjectName
-      );
-    }
+    let selectedObject = getSelectedObject({
+      players,
+      gameObjects,
+      selectedObjectName: player.selectedObjectName,
+    });
 
     // Destination is set
     if (player.dest !== null) {
@@ -138,13 +137,11 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    selectedObject = players.get(player.selectedObjectName);
-
-    if (!selectedObject) {
-      selectedObject = gameObjects.find(
-        (obj) => obj.name === player.selectedObjectName
-      );
-    }
+    selectedObject = getSelectedObject({
+      players,
+      gameObjects,
+      selectedObjectName: player.selectedObjectName,
+    });
 
     if (selectedObject) {
       if (player.settings.follow) {
