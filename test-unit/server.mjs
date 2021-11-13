@@ -61,7 +61,7 @@ describe("Player", () => {
         "x",
         "y",
         "toRespawn",
-        "selectedObject",
+        "selectedObjectName",
         "selectedObjectTile",
         "dropSelection",
         "settings",

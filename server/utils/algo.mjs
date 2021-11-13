@@ -77,8 +77,8 @@ const isAttackMissed = ({
 
 const isAttackParried = ({ player, selectedObject }) => {
   if (
-    selectedObject.selectedObject === null ||
-    selectedObject.selectedObject.name !== player.name
+    selectedObject.selectedObjectName === null ||
+    selectedObject.selectedObjectName.name !== player.name
   ) {
     return false;
   }
@@ -228,6 +228,16 @@ const getRandomTile = ({ map, obj, players, sizeToIncrease }) => {
   return respawnTiles[getRandomInt(0, respawnTiles.length - 1)];
 };
 
+const getSelectedObject = ({ players, gameObjects, selectedObjectName }) => {
+  let selectedObject = players.get(selectedObjectName);
+
+  if (!selectedObject) {
+    selectedObject = gameObjects.find((obj) => obj.name === selectedObjectName);
+  }
+
+  return selectedObject;
+};
+
 const getXYFromTile = (tileX, tileY) => ({
   x: tileX * TILE_HALF - tileY * TILE_HALF,
   y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
@@ -314,6 +324,7 @@ export {
   getPatrollingIndex,
   getRandomInt,
   getRandomTile,
+  getSelectedObject,
   getXYFromTile,
   noObstacles,
 };

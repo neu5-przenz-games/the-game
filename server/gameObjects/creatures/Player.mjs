@@ -1,7 +1,12 @@
 import { Creature } from "./Creature.mjs";
 import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
 import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
-import { getDestTile, getXYFromTile, noObstacles } from "../../utils/algo.mjs";
+import {
+  getDestTile,
+  getSelectedObject,
+  getXYFromTile,
+  noObstacles,
+} from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
 import { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX } from "./constants.mjs";
 
@@ -61,31 +66,39 @@ class Player extends Creature {
     return this.fraction === fraction;
   }
 
-  canAttack({ finder, map, PF }) {
+  canAttack({ finder, map, selectedObject, PF }) {
     return (
-      this.selectedObject.isDead === false &&
+      selectedObject.isDead === false &&
       this.isDead === false &&
       this.energy >=
         getCurrentWeapon(this.equipment.weapon).details.energyCost &&
       this.attackDelayTicks.value >= this.attackDelayTicks.maxValue &&
       (this.settings.attackAlly ||
-        !this.isSameFraction(this.selectedObject.fraction)) &&
+        !this.isSameFraction(selectedObject.fraction)) &&
       (this.hasRangedWeapon() ? this.hasArrows() : true) &&
-      this.isInRange(this.getWeaponRange()) &&
-      isObjectAhead(this, this.selectedObject) &&
+      this.isInRange(this.getWeaponRange(), selectedObject.positionTile) &&
+      isObjectAhead({
+        playerPositionTile: this.positionTile,
+        playerDirection: this.direction,
+        selectedObjectPositionTile: selectedObject.positionTile,
+      }) &&
       noObstacles({
         finder,
         map,
         PF,
         positionTile: this.positionTile,
-        selectedObjectPositionTile: this.selectedObject.positionTile,
+        selectedObjectPositionTile: selectedObject.positionTile,
         hasRangedWeapon: this.hasRangedWeapon(),
       })
     );
   }
 
-  canGetResource(energyCost) {
-    if (!this.isInRange(1)) {
+  canGetResource(energyCost, gameObjects) {
+    const { positionTile } = gameObjects.find(
+      (obj) => obj.name === this.selectedObjectName
+    );
+
+    if (!this.isInRange(1, positionTile)) {
       return MESSAGES_TYPES.NOT_IN_RANGE;
     }
     if (this.energy < energyCost) {
@@ -145,21 +158,26 @@ class Player extends Creature {
     }
   }
 
-  updateFollowing(map, players) {
+  updateFollowing(map, players, gameObjects) {
+    const selectedObject = getSelectedObject({
+      players,
+      gameObjects,
+      selectedObjectName: this.selectedObjectName,
+    });
+
     if (
       this.selectedObjectTile === null ||
-      this.selectedObject.positionTile.tileX !==
-        this.selectedObjectTile.tileX ||
-      this.selectedObject.positionTile.tileY !== this.selectedObjectTile.tileY
+      selectedObject.positionTile.tileX !== this.selectedObjectTile.tileX ||
+      selectedObject.positionTile.tileY !== this.selectedObjectTile.tileY
     ) {
       this.selectedObjectTile = {
-        tileX: this.selectedObject.positionTile.tileX,
-        tileY: this.selectedObject.positionTile.tileY,
+        tileX: selectedObject.positionTile.tileX,
+        tileY: selectedObject.positionTile.tileY,
       };
 
-      let obj = this.selectedObject;
+      let obj = { ...selectedObject };
 
-      if (this.selectedObject.positionTile === undefined) {
+      if (selectedObject.positionTile === undefined) {
         obj = {
           ...obj,
           positionTile: obj.positionTile,

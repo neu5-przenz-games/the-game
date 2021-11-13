@@ -10,6 +10,7 @@ import {
   getDefenseValue,
   getHitValue,
   getRandomTile,
+  getSelectedObject,
 } from "../utils/algo.mjs";
 import { getHitText } from "../utils/hitText.mjs";
 
@@ -38,6 +39,12 @@ let tick = 0;
 
 const loop = ({ gameObjects, healingStones, io, players }) => {
   players.forEach((player) => {
+    let selectedObject = getSelectedObject({
+      players,
+      gameObjects,
+      selectedObjectName: player.selectedObjectName,
+    });
+
     // Destination is set
     if (player.dest !== null) {
       // Next tile is set
@@ -54,10 +61,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           player.dest = null;
           player.isWalking = false;
 
-          if (player.selectedObject?.type === "LootingBag") {
+          if (selectedObject?.type === "LootingBag") {
             io.to(player.socketId).emit(
               "dialog:looting-bag:show",
-              player.selectedObject.items
+              selectedObject.items
             );
           }
         }
@@ -65,7 +72,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         if (player.dropSelection) {
           player.dropSelection = false;
           player.dest = null;
-          player.selectedObject = null;
+          player.selectedObjectName = null;
           player.selectedObjectTile = null;
           player.isWalking = false;
 
@@ -100,8 +107,8 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           });
 
           if (
-            player.selectedObject === null ||
-            (player.selectedObject && player.settings.follow) ||
+            !selectedObject ||
+            (selectedObject && player.settings.follow) ||
             player.settings.keepSelectionOnMovement
           ) {
             player.next = {
@@ -126,15 +133,19 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       player.getState(players, map);
 
       if (player.state === PLAYER_STATES.FIGHTING && player.fightingHook) {
-        player.fightingHook({ finder, map, PF });
+        player.fightingHook({ finder, map, selectedObject, PF });
       }
     }
 
-    const { selectedObject } = player;
+    selectedObject = getSelectedObject({
+      players,
+      gameObjects,
+      selectedObjectName: player.selectedObjectName,
+    });
 
     if (selectedObject) {
       if (player.settings.follow) {
-        player.updateFollowing(map, players);
+        player.updateFollowing(map, players, gameObjects);
       }
 
       if (player.dest === null) {
@@ -146,7 +157,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         player.isWalking = false;
       }
 
-      if (player.settings.fight && player.canAttack({ finder, map, PF })) {
+      if (
+        player.settings.fight &&
+        player.canAttack({ finder, map, selectedObject, PF })
+      ) {
         player.attackDelayTicks.value = 0;
         player.attack = selectedObject.name;
 
@@ -190,7 +204,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           });
 
           if (player.afterAttackHook) {
-            player.afterAttackHook();
+            player.afterAttackHook(players);
           }
         }
 
@@ -238,7 +252,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           selectedObject.dest = null;
           selectedObject.next = null;
           selectedObject.isWalking = false;
-          player.selectedObject = null;
+          player.selectedObjectName = null;
           player.selectedObjectTile = null;
 
           if (player.constructor.TYPE === Player.TYPE) {
@@ -256,7 +270,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     } else if (player.dropSelection) {
       player.dropSelection = false;
-      player.selectedObject = null;
+      player.selectedObjectName = null;
       player.selectedObjectTile = null;
     }
 
@@ -293,10 +307,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
           item = { ...createdItem };
           skillDetails = { ...skill };
-        } else if (player.selectedObject) {
+        } else if (selectedObject) {
           // getting resources action
-          item = player.selectedObject.item;
-          skillDetails = player.selectedObject.skill;
+          item = selectedObject.item;
+          skillDetails = selectedObject.skill;
         }
 
         player.receipt = null;
@@ -354,7 +368,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       if (player.toRespawn) {
         player.setDefaultEquipment();
         player.dest = null;
-        player.selectedObject = null;
+        player.selectedObjectName = null;
         player.selectedObjectTile = null;
 
         const respawnTile = getRandomTile({
