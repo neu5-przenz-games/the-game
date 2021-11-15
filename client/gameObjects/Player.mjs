@@ -1,6 +1,7 @@
 import { Mob } from "./Mobs/Mob.mjs";
 import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
 import { EnergyBar, HealthBar, ProgressBar } from "./Bar/index.mjs";
+import { DizzyImage } from "./Images/index.mjs";
 
 const HEALTH_BAR_OFFSET_X = -32;
 const HEALTH_BAR_OFFSET_Y = -36;
@@ -22,6 +23,8 @@ class Player extends Mob {
       ...props,
       spriteName: fraction,
     });
+
+    this.dizzy = new DizzyImage({ scene: this.scene, x: this.x, y: this.y });
 
     this.healthBar = new HealthBar(
       this.scene,
@@ -133,6 +136,8 @@ class Player extends Mob {
         this.healthBar.hide();
       }
     }
+
+    this.dizzy.setPosition(this.x, this.y, this.depth);
 
     this.healthBar.setPosition(this.x, this.y, this.depth);
     this.energyBar.setPosition(this.x, this.y, this.depth);

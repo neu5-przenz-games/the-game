@@ -8,7 +8,12 @@ import {
   noObstacles,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
-import { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX } from "./constants.mjs";
+import {
+  ENERGY_MAX,
+  ENERGY_REGEN_RATE,
+  HP_MAX,
+  PLAYER_STATES,
+} from "./constants.mjs";
 
 class Player extends Creature {
   constructor({
@@ -64,6 +69,22 @@ class Player extends Creature {
 
   isSameFraction(fraction) {
     return this.fraction === fraction;
+  }
+
+  getState(players, map) {
+    if (this.isDead) {
+      this.setState(this.defaultState);
+      return;
+    }
+
+    if (this.state === PLAYER_STATES.DIZZY) {
+      this.selectedObjectName = null;
+      this.selectedObjectTile = null;
+
+      if (this.dest === null) {
+        this.getNextDestination(map, players, PLAYER_STATES.DIZZY);
+      }
+    }
   }
 
   canAttack({ finder, map, selectedObject, PF }) {

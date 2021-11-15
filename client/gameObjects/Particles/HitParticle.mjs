@@ -1,5 +1,5 @@
 import { createParticle } from "../../utils/index.mjs";
-import { HitImage } from "../Images/HitImage.mjs";
+import { HitImage } from "../Images/index.mjs";
 
 export const HitParticle = (props) =>
   createParticle({

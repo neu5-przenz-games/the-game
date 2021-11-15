@@ -6,7 +6,7 @@ import {
   setAllSkillsPoints,
 } from "../../../shared/skills/index.mjs";
 import { getRandomInt } from "../../utils/algo.mjs";
-import { SetOnFireBuff } from "../../../shared/buffs/index.mjs";
+import { FireBuff } from "../../../shared/buffs/index.mjs";
 import { HP_MAX } from "./constants.mjs";
 
 const mobDefaultBackpack = gameItems.get("bag");
@@ -47,7 +47,7 @@ class Devil extends Creature {
       const selectedObject = players.get(this.selectedObjectName);
 
       selectedObject.buffs.push(
-        new SetOnFireBuff({
+        new FireBuff({
           selectedObjectName: selectedObject.name,
         })
       );

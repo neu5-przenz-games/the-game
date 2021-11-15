@@ -129,12 +129,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    if (player.constructor.TYPE !== Player.TYPE) {
-      player.getState(players, map);
+    player.getState(players, map);
 
-      if (player.state === PLAYER_STATES.FIGHTING && player.fightingHook) {
-        player.fightingHook({ finder, map, selectedObject, PF });
-      }
+    if (player.state === PLAYER_STATES.FIGHTING && player.fightingHook) {
+      player.fightingHook({ finder, map, selectedObject, PF });
     }
 
     selectedObject = getSelectedObject({
@@ -403,32 +401,46 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           const buffResult = buff.effect(players);
 
           if (buff.resultType === BUFF_TYPES.HIT) {
-            const buffedPlayer = players.get(buff.selectedObjectName);
-
-            buffedPlayer.hit(buffResult.value);
+            player.hit(buffResult.value);
 
             io.emit("player:attack-hit", {
-              name: buffedPlayer.name,
+              name: player.name,
               hitType: getHitText(buffResult.value),
               effectType: buffResult.type,
             });
 
-            io.to(buffedPlayer.fraction).emit("players:hp:update", {
-              players: getAllies(players, buffedPlayer.fraction),
+            io.to(player.fraction).emit("players:hp:update", {
+              players: getAllies(players, player.fraction),
             });
 
-            if (buffedPlayer.isDead) {
+            if (player.isDead) {
               addLootingBagAfterPlayerIsDead({
                 gameObjects,
-                selectedObject: buffedPlayer,
+                selectedObject: player,
                 io,
               });
             }
+          } else if (
+            buff.resultType === BUFF_TYPES.DIZZY &&
+            player.state !== PLAYER_STATES.DIZZY
+          ) {
+            player.setState(PLAYER_STATES.DIZZY);
+
+            io.emit("player:effect:dizzy", {
+              name: player.name,
+              hitType: getHitText(buffResult.value),
+              effectType: buffResult.type,
+            });
           }
         }
 
         if (buff.durationTicks.value >= buff.durationTicks.maxValue) {
           buff.isFinished = true;
+
+          if (player.state === PLAYER_STATES.DIZZY) {
+            player.setState(player.defaultState);
+          }
+
           return;
         }
 
@@ -494,6 +506,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         y: player.y,
         destTile: player.dest && player.dest.tile,
         direction: player.direction,
+        state: player.state,
       });
       player.attack = null;
       player.isParrying = false;

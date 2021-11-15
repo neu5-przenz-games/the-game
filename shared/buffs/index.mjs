@@ -1,3 +1,4 @@
-import { SetOnFireBuff } from "./SetOnFireBuff.mjs";
+import { DizzyBuff } from "./DizzyBuff.mjs";
+import { FireBuff } from "./FireBuff.mjs";
 
-export { SetOnFireBuff };
+export { DizzyBuff, FireBuff };

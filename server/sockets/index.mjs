@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import { Player } from "../gameObjects/creatures/Player.mjs";
+import { PLAYER_STATES } from "../gameObjects/creatures/constants.mjs";
 import { DEBUG_ITEMS_SETS } from "../../shared/debugUtils/index.mjs";
 import { UI_ITEM_ACTIONS } from "../../shared/UIItemActions/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
@@ -101,7 +102,7 @@ const sockets = ({ gameObjects, httpServer, players }) => {
         ) {
           const player = players.get(name);
 
-          if (player.isDead) {
+          if (player.isDead || player.state === PLAYER_STATES.DIZZY) {
             return;
           }
 
@@ -142,7 +143,7 @@ const sockets = ({ gameObjects, httpServer, players }) => {
         ({ name, selectedObjectName, type }) => {
           const player = players.get(name);
 
-          if (player.isDead) {
+          if (player.isDead || player.state === PLAYER_STATES.DIZZY) {
             return;
           }
 
