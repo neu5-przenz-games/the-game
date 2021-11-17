@@ -1,6 +1,7 @@
 import { Creature } from "./Creature.mjs";
 import { gameItems } from "../../../shared/init/gameItems/index.mjs";
-import { noObstacles } from "../../utils/algo.mjs";
+import { getRandomInt, noObstacles } from "../../utils/algo.mjs";
+import { DizzyBuff } from "../../../shared/buffs/index.mjs";
 import {
   LEVEL_TYPES,
   getSkillPoints,
@@ -64,6 +65,18 @@ class Cupid extends Creature {
       this.dest = null;
     } else {
       super.setSettingsFollow(true);
+    }
+  }
+
+  afterAttackHook(players) {
+    if (getRandomInt(0, 1000) <= 100) {
+      const selectedObject = players.get(this.selectedObjectName);
+
+      selectedObject.buffs.push(
+        new DizzyBuff({
+          selectedObjectName: selectedObject.name,
+        })
+      );
     }
   }
 }

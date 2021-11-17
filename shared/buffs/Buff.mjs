@@ -1,6 +1,7 @@
 import { getDurationFromMSToTicks } from "../utils/index.mjs";
 
 const BUFF_TYPES = {
+  DIZZY: "DIZZY",
   HIT: "HIT",
 };
 

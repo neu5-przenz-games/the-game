@@ -1,6 +1,5 @@
 import { Creature } from "./Creature.mjs";
-import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
-import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
+import { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX } from "./constants.mjs";
 import {
   getDestTile,
   getSelectedObject,
@@ -8,7 +7,9 @@ import {
   noObstacles,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
-import { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX } from "./constants.mjs";
+import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
+import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
+import { PLAYER_STATES } from "../../../shared/constants/index.mjs";
 
 class Player extends Creature {
   constructor({
@@ -64,6 +65,22 @@ class Player extends Creature {
 
   isSameFraction(fraction) {
     return this.fraction === fraction;
+  }
+
+  getState(players, map) {
+    if (this.isDead) {
+      this.setState(this.defaultState);
+      return;
+    }
+
+    if (this.state === PLAYER_STATES.DIZZY) {
+      this.selectedObjectName = null;
+      this.selectedObjectTile = null;
+
+      if (this.dest === null) {
+        this.getNextDestination(map, players, PLAYER_STATES.DIZZY);
+      }
+    }
   }
 
   canAttack({ finder, map, selectedObject, PF }) {

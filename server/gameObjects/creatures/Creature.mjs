@@ -1,3 +1,4 @@
+import { HP_MAX } from "./constants.mjs";
 import {
   getChebyshevDistance,
   getDestTile,
@@ -16,8 +17,7 @@ import {
   ITEM_TYPES,
   WEARABLE_TYPES,
 } from "../../../shared/gameItems/index.mjs";
-
-import { HP_MAX, PLAYER_STATES } from "./constants.mjs";
+import { PLAYER_STATES } from "../../../shared/constants/index.mjs";
 
 class Creature {
   constructor({
@@ -148,23 +148,32 @@ class Creature {
     ).player;
   }
 
-  getCreatureRandomTile(map, players) {
+  getCreatureRandomTile({
+    map,
+    players,
+    positionTile,
+    sizeToIncrease = { x: 2, y: 2 },
+  }) {
     return getRandomTile({
       map,
       obj: {
-        positionTile: this.presenceAreaCenterTile,
+        positionTile: positionTile || this.presenceAreaCenterTile,
         size: this.size,
       },
       players,
-      sizeToIncrease: {
-        x: 2,
-        y: 2,
-      },
+      sizeToIncrease,
     });
   }
 
-  getNextDestination(map, players) {
+  getNextDestination(map, players, state) {
     const { tileX, tileY } = {
+      [PLAYER_STATES.DIZZY]: () =>
+        this.getCreatureRandomTile({
+          map,
+          players,
+          positionTile: this.positionTile,
+          sizeToIncrease: { x: 1, y: 1 },
+        }),
       [PLAYER_STATES.PATROLLING]: () => {
         this.patrollingIndex = getPatrollingIndex(
           this.patrollingIndex,
@@ -174,8 +183,8 @@ class Creature {
         return this.patrollingTiles[this.patrollingIndex];
       },
       [PLAYER_STATES.WALKING_RANDOMLY]: () =>
-        this.getCreatureRandomTile(map, players),
-    }[this.defaultState]();
+        this.getCreatureRandomTile({ map, players }),
+    }[state || this.defaultState]();
 
     this.dest = {
       ...getXYFromTile(tileX, tileY),
@@ -201,6 +210,17 @@ class Creature {
     if (this.state === PLAYER_STATES.ESCAPING) {
       if (this.dest === null) {
         this.setState(this.defaultState);
+      }
+
+      return;
+    }
+
+    if (this.state === PLAYER_STATES.DIZZY) {
+      this.selectedObjectName = null;
+      this.selectedObjectTile = null;
+
+      if (this.dest === null) {
+        this.getNextDestination(map, players);
       }
 
       return;

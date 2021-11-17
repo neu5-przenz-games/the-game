@@ -1,6 +1,6 @@
 import { BUFF_EFFECT_TYPES, BUFF_TYPES, Buff } from "./Buff.mjs";
 
-class SetOnFireBuff extends Buff {
+class FireBuff extends Buff {
   constructor({ selectedObjectName }) {
     super({
       name: "setOnFire",
@@ -18,4 +18,4 @@ class SetOnFireBuff extends Buff {
   }
 }
 
-export { SetOnFireBuff };
+export { FireBuff };

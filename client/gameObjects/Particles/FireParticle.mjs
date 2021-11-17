@@ -1,5 +1,5 @@
 import { createParticle } from "../../utils/index.mjs";
-import { FireImage } from "../Images/FireImage.mjs";
+import { FireImage } from "../Images/index.mjs";
 
 export const FireParticle = ({ y, ...props }) => {
   const yWithOffset = y + 16;

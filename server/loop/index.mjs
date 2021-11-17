@@ -2,7 +2,6 @@ import PF from "pathfinding";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
 import { HP_MAX, Player } from "../gameObjects/creatures/Player.mjs";
-import { PLAYER_STATES } from "../gameObjects/creatures/constants.mjs";
 import { directions, getDirection } from "../utils/directions.mjs";
 import {
   getAllies,
@@ -26,6 +25,7 @@ import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
 import { BUFF_TYPES } from "../../shared/buffs/Buff.mjs";
 import { addLootingBagAfterPlayerIsDead } from "../../shared/gameObjects/index.mjs";
+import { PLAYER_STATES } from "../../shared/constants/index.mjs";
 
 const SI = new SnapshotInterpolation();
 
@@ -129,12 +129,10 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    if (player.constructor.TYPE !== Player.TYPE) {
-      player.getState(players, map);
+    player.getState(players, map);
 
-      if (player.state === PLAYER_STATES.FIGHTING && player.fightingHook) {
-        player.fightingHook({ finder, map, selectedObject, PF });
-      }
+    if (player.state === PLAYER_STATES.FIGHTING && player.fightingHook) {
+      player.fightingHook({ finder, map, selectedObject, PF });
     }
 
     selectedObject = getSelectedObject({
@@ -400,35 +398,47 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         ) {
           buff.occurrencesIntervalTicks.value = 0;
 
-          const buffResult = buff.effect(players);
+          let buffResult;
+
+          if (buff.effect) {
+            buffResult = buff.effect(players);
+          }
 
           if (buff.resultType === BUFF_TYPES.HIT) {
-            const buffedPlayer = players.get(buff.selectedObjectName);
-
-            buffedPlayer.hit(buffResult.value);
+            player.hit(buffResult.value);
 
             io.emit("player:attack-hit", {
-              name: buffedPlayer.name,
+              name: player.name,
               hitType: getHitText(buffResult.value),
               effectType: buffResult.type,
             });
 
-            io.to(buffedPlayer.fraction).emit("players:hp:update", {
-              players: getAllies(players, buffedPlayer.fraction),
+            io.to(player.fraction).emit("players:hp:update", {
+              players: getAllies(players, player.fraction),
             });
 
-            if (buffedPlayer.isDead) {
+            if (player.isDead) {
               addLootingBagAfterPlayerIsDead({
                 gameObjects,
-                selectedObject: buffedPlayer,
+                selectedObject: player,
                 io,
               });
             }
+          } else if (
+            buff.resultType === BUFF_TYPES.DIZZY &&
+            player.state !== PLAYER_STATES.DIZZY
+          ) {
+            player.setState(PLAYER_STATES.DIZZY);
           }
         }
 
         if (buff.durationTicks.value >= buff.durationTicks.maxValue) {
           buff.isFinished = true;
+
+          if (player.state === PLAYER_STATES.DIZZY) {
+            player.setState(player.defaultState);
+          }
+
           return;
         }
 
@@ -494,6 +504,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         y: player.y,
         destTile: player.dest && player.dest.tile,
         direction: player.direction,
+        state: player.state,
       });
       player.attack = null;
       player.isParrying = false;

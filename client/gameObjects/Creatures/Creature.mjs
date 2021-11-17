@@ -1,7 +1,9 @@
 import Phaser from "phaser";
-import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
 import { TileFight, TileMarked, TileSelected } from "../Tile/index.mjs";
 import { Arrow } from "../Arrow.mjs";
+import { DizzyImage } from "../Images/index.mjs";
+import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
+import { PLAYER_STATES } from "../../../shared/constants/index.mjs";
 
 const directions = {
   west: { offset: 0 },
@@ -54,7 +56,7 @@ const OFFSET = {
   Y: 16,
 };
 
-class Mob extends Phaser.GameObjects.Image {
+class Creature extends Phaser.GameObjects.Image {
   constructor({
     direction,
     isDead,
@@ -107,6 +109,13 @@ class Mob extends Phaser.GameObjects.Image {
     this.speed = this.anim.speed;
 
     this.frame = this.texture.get(this.direction.offset);
+
+    // buffs
+    this.buffDizzy = new DizzyImage({
+      scene: this.scene,
+      x: this.x,
+      y: this.y,
+    });
 
     this.label = this.scene.add
       .text(this.x, this.y, this.getDisplayName(), {
@@ -211,7 +220,17 @@ class Mob extends Phaser.GameObjects.Image {
     );
   }
 
-  update({ x, y, direction, attack, weapon, isDead, isWalking, isParrying }) {
+  update({
+    x,
+    y,
+    direction,
+    attack,
+    weapon,
+    isDead,
+    isWalking,
+    isParrying,
+    state,
+  }) {
     this.isDead = isDead;
 
     if (attack !== null) {
@@ -252,6 +271,14 @@ class Mob extends Phaser.GameObjects.Image {
       }
     }
 
+    // buffs
+    if (state !== PLAYER_STATES.DIZZY && this.buffDizzy.isVisible() === true) {
+      this.buffDizzy.hide();
+    }
+    if (state === PLAYER_STATES.DIZZY && this.buffDizzy.isVisible() === false) {
+      this.buffDizzy.show();
+    }
+
     if (
       this.scene.selectedObject &&
       this.scene.selectedObject.type === this.constructor.TYPE &&
@@ -288,6 +315,7 @@ class Mob extends Phaser.GameObjects.Image {
 
       this.tileSelected.setPosition(this.x, this.y);
       this.tileFight.setPosition(this.x, this.y);
+      this.buffDizzy.setPosition(this.x, this.y, this.depth);
     }
   }
 
@@ -298,4 +326,4 @@ class Mob extends Phaser.GameObjects.Image {
   }
 }
 
-export { directions, OFFSET, Mob };
+export { directions, OFFSET, Creature };

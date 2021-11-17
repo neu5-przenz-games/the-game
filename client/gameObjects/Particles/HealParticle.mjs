@@ -1,5 +1,5 @@
 import { createParticle } from "../../utils/index.mjs";
-import { HealImage } from "../Images/HealImage.mjs";
+import { HealImage } from "../Images/index.mjs";
 
 export const HealParticle = (props) =>
   createParticle({

@@ -1,6 +1,6 @@
-import { Mob } from "./Mobs/Mob.mjs";
-import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
-import { EnergyBar, HealthBar, ProgressBar } from "./Bar/index.mjs";
+import { Creature } from "./Creature.mjs";
+import { EnergyBar, HealthBar, ProgressBar } from "../Bar/index.mjs";
+import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
 
 const HEALTH_BAR_OFFSET_X = -32;
 const HEALTH_BAR_OFFSET_Y = -36;
@@ -16,7 +16,7 @@ const OFFSET = {
   Y: 16,
 };
 
-class Player extends Mob {
+class Player extends Creature {
   constructor({ fraction, energy, isMainPlayer, ...props }) {
     super({
       ...props,

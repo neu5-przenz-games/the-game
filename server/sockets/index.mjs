@@ -1,11 +1,13 @@
 import { Server } from "socket.io";
 import { Player } from "../gameObjects/creatures/Player.mjs";
+import { getAllies, getSelectedObject, getXYFromTile } from "../utils/algo.mjs";
 import { DEBUG_ITEMS_SETS } from "../../shared/debugUtils/index.mjs";
 import { UI_ITEM_ACTIONS } from "../../shared/UIItemActions/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
 import { ITEM_TYPES } from "../../shared/gameItems/index.mjs";
 import { bag } from "../../shared/init/gameItems/backpack.mjs";
 import { receipts } from "../../shared/receipts/index.mjs";
+import { PLAYER_STATES } from "../../shared/constants/index.mjs";
 import {
   getNewLootingBagItems,
   removeItemsFromLootingBag,
@@ -18,7 +20,6 @@ import {
   skillsSchema,
 } from "../../shared/skills/index.mjs";
 import map from "../../public/assets/map/map.mjs";
-import { getAllies, getSelectedObject, getXYFromTile } from "../utils/algo.mjs";
 
 const emitLootingBagList = (gameObjects, io) =>
   io.emit(
@@ -101,7 +102,7 @@ const sockets = ({ gameObjects, httpServer, players }) => {
         ) {
           const player = players.get(name);
 
-          if (player.isDead) {
+          if (player.isDead || player.state === PLAYER_STATES.DIZZY) {
             return;
           }
 
@@ -142,7 +143,7 @@ const sockets = ({ gameObjects, httpServer, players }) => {
         ({ name, selectedObjectName, type }) => {
           const player = players.get(name);
 
-          if (player.isDead) {
+          if (player.isDead || player.state === PLAYER_STATES.DIZZY) {
             return;
           }
 
