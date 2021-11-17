@@ -69,7 +69,7 @@ class Cupid extends Creature {
   }
 
   afterAttackHook(players) {
-    if (getRandomInt(0, 1000) <= 1000) {
+    if (getRandomInt(0, 1000) <= 100) {
       const selectedObject = players.get(this.selectedObjectName);
 
       selectedObject.buffs.push(

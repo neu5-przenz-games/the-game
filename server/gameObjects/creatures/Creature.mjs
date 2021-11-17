@@ -1,3 +1,4 @@
+import { HP_MAX } from "./constants.mjs";
 import {
   getChebyshevDistance,
   getDestTile,
@@ -16,8 +17,7 @@ import {
   ITEM_TYPES,
   WEARABLE_TYPES,
 } from "../../../shared/gameItems/index.mjs";
-
-import { HP_MAX, PLAYER_STATES } from "./constants.mjs";
+import { PLAYER_STATES } from "../../../shared/constants/index.mjs";
 
 class Creature {
   constructor({

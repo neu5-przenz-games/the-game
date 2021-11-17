@@ -5,6 +5,8 @@ const OFFSET_Y = -22;
 export class DizzyImage extends Image {
   constructor({ y, ...props }) {
     super({ ...props, y: y + OFFSET_Y, imageId: "buff-dizzy" });
+
+    this.hide();
   }
 
   setPosition(x, y, depth) {

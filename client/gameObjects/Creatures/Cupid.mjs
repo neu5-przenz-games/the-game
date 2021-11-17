@@ -1,6 +1,6 @@
-import { Mob } from "./Mob.mjs";
+import { Creature } from "./Creature.mjs";
 
-class Cupid extends Mob {
+class Cupid extends Creature {
   constructor(props) {
     super({
       ...props,

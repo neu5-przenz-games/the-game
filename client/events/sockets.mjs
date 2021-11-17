@@ -4,8 +4,8 @@ import io from "socket.io-client";
 import { MESSAGES } from "../../shared/UIMessages/index.mjs";
 import { BUFF_EFFECT_TYPES } from "../../shared/buffs/Buff.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
-import { Player } from "../gameObjects/Player.mjs";
-import { Mob } from "../gameObjects/Mob.mjs";
+import { Player } from "../gameObjects/Creatures/Player.mjs";
+import { Mob } from "../gameObjects/Creatures/Mob.mjs";
 import { TextTween } from "../gameObjects/TextTween.mjs";
 import {
   FireParticle,

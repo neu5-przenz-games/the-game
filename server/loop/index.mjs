@@ -2,7 +2,6 @@ import PF from "pathfinding";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
 import { HP_MAX, Player } from "../gameObjects/creatures/Player.mjs";
-import { PLAYER_STATES } from "../gameObjects/creatures/constants.mjs";
 import { directions, getDirection } from "../utils/directions.mjs";
 import {
   getAllies,
@@ -26,6 +25,7 @@ import { ATTACK_TYPES } from "../../shared/attackTypes/index.mjs";
 import { MESSAGES_TYPES } from "../../shared/UIMessages/index.mjs";
 import { BUFF_TYPES } from "../../shared/buffs/Buff.mjs";
 import { addLootingBagAfterPlayerIsDead } from "../../shared/gameObjects/index.mjs";
+import { PLAYER_STATES } from "../../shared/constants/index.mjs";
 
 const SI = new SnapshotInterpolation();
 
@@ -398,7 +398,11 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         ) {
           buff.occurrencesIntervalTicks.value = 0;
 
-          const buffResult = buff.effect(players);
+          let buffResult;
+
+          if (buff.effect) {
+            buffResult = buff.effect(players);
+          }
 
           if (buff.resultType === BUFF_TYPES.HIT) {
             player.hit(buffResult.value);
@@ -425,12 +429,6 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
             player.state !== PLAYER_STATES.DIZZY
           ) {
             player.setState(PLAYER_STATES.DIZZY);
-
-            io.emit("player:effect:dizzy", {
-              name: player.name,
-              hitType: getHitText(buffResult.value),
-              effectType: buffResult.type,
-            });
           }
         }
 
