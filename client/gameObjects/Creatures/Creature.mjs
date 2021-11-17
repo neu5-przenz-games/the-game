@@ -315,7 +315,7 @@ class Creature extends Phaser.GameObjects.Image {
 
       this.tileSelected.setPosition(this.x, this.y);
       this.tileFight.setPosition(this.x, this.y);
-      this.dizzy.setPosition(this.x, this.y, this.depth);
+      this.buffDizzy.setPosition(this.x, this.y, this.depth);
     }
   }
 
