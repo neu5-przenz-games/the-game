@@ -71,4 +71,8 @@ app.get("/", (req, res) => {
   res.sendFile("index.html", { root: "./dist" });
 });
 
+app.get("/wiki", (req, res) => {
+  res.sendFile("wiki/index.html", { root: "./dist" });
+});
+
 export const server = httpServer.listen(process.env.PORT || 5000);
