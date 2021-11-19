@@ -1,5 +1,5 @@
 export class GameItem {
-  constructor({ id, displayName, imgURL = "", type }) {
+  constructor({ id, displayName, imgURL, type }) {
     this.id = id;
     this.displayName = displayName;
     this.imgURL = imgURL;
