@@ -7,13 +7,18 @@ export class Weapon extends GameItem {
   constructor({
     id,
     displayName,
-    imgURL = "",
+    imgURL,
     type = ITEM_TYPES.WEAPON,
     isTwoHanded = false,
     skillToIncrease = {},
     details = {},
   }) {
-    super({ id, displayName, imgURL: `${weaponURL}/${imgURL}`, type });
+    super({
+      id,
+      displayName,
+      imgURL: imgURL ? `${weaponURL}/${imgURL}` : undefined,
+      type,
+    });
 
     this.isTwoHanded = isTwoHanded;
     this.skillToIncrease = skillToIncrease;

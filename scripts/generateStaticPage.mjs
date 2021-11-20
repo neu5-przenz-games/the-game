@@ -1,14 +1,32 @@
 import ejs from "ejs";
 import { writeFileSync } from "fs";
 
-ejs.renderFile("./server/pages/wiki/index.ejs", {}, {}, (err, str) => {
-  if (err) {
-    console.log(err);
-  } else {
-    writeFileSync("./public/wiki/index.html", str, (error) => {
-      if (error) return console.log(error);
+import { gameItems } from "../shared/init/gameItems/index.mjs";
 
-      return 1;
-    });
-  }
+const pages = [
+  {
+    sourcePath: "./pages/wiki/index.ejs",
+    outputPath: "./public/wiki/index.html",
+  },
+  {
+    sourcePath: "./pages/wiki/items.ejs",
+    outputPath: "./public/wiki/items.html",
+    data: {
+      gameItems,
+    },
+  },
+];
+
+pages.forEach(({ sourcePath, outputPath, data = {} }) => {
+  ejs.renderFile(sourcePath, data, {}, (err, str) => {
+    if (err) {
+      console.log(`Error in ${sourcePath}: ${err}`);
+    } else {
+      writeFileSync(outputPath, str, (error) => {
+        if (error) return console.log(`Error in ${sourcePath}: ${error}`);
+
+        return 1;
+      });
+    }
+  });
 });
