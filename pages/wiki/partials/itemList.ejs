@@ -1,0 +1,48 @@
+<ol class="list">
+    <% gameItems.forEach(function(item) { %>
+      <li class="list__item" id="<%= item.id %>">
+        <div class="item__img">
+          <% if(item.imgURL) { %>
+          <img src="/assets/items/<%= item.imgURL %>" />
+          <% } %>
+        </div>
+        <div class="item__content">
+          <h3 class="item__name">
+            <a href="#<%= item.id %>">
+              <%= item.displayName %>
+            </a>
+          </h3>
+          <p class="item__detail">
+            Type: <%= item.type %>
+          </p>
+          <% if(item.isTwoHanded !== undefined) { %>
+            <p class="item__detail">
+              Two handed: <%= item.isTwoHanded %>
+            </p>
+          <% } %>
+          <% if(item.details) { %>
+            <% if(item.details.damage) { %>
+            <p class="item__detail">
+              Damage: <%= `from ${item.details.damage[0]}, to ${item.details.damage[1]}` %>
+            </p>
+            <% } %>
+            <% if(item.details.defense) { %>
+            <p class="item__detail">
+              Defense: <%= item.details.defense %>
+            </p>
+            <% } %>
+            <% if(item.details.range) { %>
+            <p class="item__detail">
+              Range: <%= item.details.range %>
+            </p>
+            <% } %>
+          <% } %>
+          <% if(item.slots) { %>
+            <p class="item__detail">
+            Slots: <%= item.slots %>
+            </p>
+          <% } %>
+        </div>
+        </li>
+    <% }); %>
+  </ol>
