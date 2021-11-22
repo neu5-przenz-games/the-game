@@ -16,12 +16,12 @@ export const gameObjects = [
     positionTile: { tileX: 15, tileY: 30 },
   }),
   new Tree({
-    name: "tree1",
+    name: "tree-1",
     displayName: "tree",
     positionTile: { tileX: 17, tileY: 4 },
   }),
   new Tree({
-    name: "tree2",
+    name: "tree-2",
     displayName: "tree",
     positionTile: { tileX: 20, tileY: 20 },
   }),
@@ -36,12 +36,12 @@ export const gameObjects = [
     positionTile: { tileX: 16, tileY: 23 },
   }),
   new HealingStone({
-    name: "healing-stone",
+    name: "healing-stone-1",
     displayName: "healing stone",
     positionTile: { tileX: 10, tileY: 20 },
   }),
   new HealingStone({
-    name: "healing-stone",
+    name: "healing-stone-2",
     displayName: "healing stone",
     positionTile: { tileX: 32, tileY: 14 },
   }),
