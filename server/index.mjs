@@ -8,6 +8,7 @@ import { Player } from "./gameObjects/creatures/Player.mjs";
 import { createMob } from "./gameObjects/creatures/index.mjs";
 import { sockets } from "./sockets/index.mjs";
 import { loop } from "./loop/index.mjs";
+import { wikiPages } from "./pages/wiki.mjs";
 import { FRAME_IN_MS } from "../shared/constants/index.mjs";
 import { gameObjects } from "../shared/init/gameObjects.mjs";
 import { LootingBag } from "../shared/gameObjects/index.mjs";
@@ -71,12 +72,6 @@ app.get("/", (req, res) => {
   res.sendFile("index.html", { root: "./dist" });
 });
 
-app.get("/wiki", (req, res) => {
-  res.sendFile("wiki/index.html", { root: "./dist" });
-});
-
-app.get("/wiki/items", (req, res) => {
-  res.sendFile("wiki/items.html", { root: "./dist" });
-});
+wikiPages(app);
 
 export const server = httpServer.listen(process.env.PORT || 5000);

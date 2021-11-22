@@ -62,7 +62,7 @@
     "build": "if test \"$NODE_ENV\" = \"production\"; then yarn build:prod; else yarn build:dev; fi",
     "build:prod": "NODE_ENV=production parcel build client/index.html",
     "build:dev": "NODE_ENV=development parcel build client/index.html --no-minify",
-    "build:html": "node ./scripts/generateStaticPage.mjs",
+    "build:html": "node ./scripts/generateStaticPages.mjs",
     "postbuild": "yarn build:html",
     "predev": "yarn extract:map",
     "dev": "parcel watch client/index.html",
