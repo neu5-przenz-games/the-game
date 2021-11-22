@@ -69,16 +69,6 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
           }
         }
       } else {
-        if (player.dropSelection) {
-          player.dropSelection = false;
-          player.dest = null;
-          player.selectedObjectName = null;
-          player.selectedObjectTile = null;
-          player.isWalking = false;
-
-          return;
-        }
-
         const tempGrid = grid.clone();
 
         // add current players positions to the map grid
@@ -266,10 +256,14 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
 
         io.to(player.socketId).emit("player:energy:update", player.energy);
       }
-    } else if (player.dropSelection) {
+    }
+
+    if (player.next === null && player.dropSelection) {
       player.dropSelection = false;
+      player.dest = null;
       player.selectedObjectName = null;
       player.selectedObjectTile = null;
+      player.isWalking = false;
     }
 
     if (player.attackDelayTicks.value < player.attackDelayTicks.maxValue) {
