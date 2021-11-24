@@ -2,6 +2,7 @@ export const initMap = (game) => {
   const tilemap = game.make.tilemap({ key: "map" });
   const tilesetOutside = tilemap.addTilesetImage("outside", "tileset-outside");
 
+  game.setWaterLayer(tilemap.createLayer("Water", tilesetOutside));
   game.setGroundLayer(tilemap.createLayer("Ground", tilesetOutside));
 
   const onGroundLayer = tilemap.createLayer("OnGround", tilesetOutside);
@@ -14,7 +15,7 @@ export const initMap = (game) => {
 
       if (tileOnGround.index !== -1) {
         const layer = tilemap.createBlankLayer(
-          `Layer onGround ${x}${y}`,
+          `Layer onGround x:${x} y:${y}`,
           tilesetOutside,
           0,
           0,
@@ -33,7 +34,7 @@ export const initMap = (game) => {
       }
       if (tileCollides.index !== -1) {
         const layer = tilemap.createBlankLayer(
-          `Layer collides ${x}${y}`,
+          `Layer collides x:${x} y:${y}`,
           tilesetOutside,
           0,
           0,
@@ -48,6 +49,4 @@ export const initMap = (game) => {
       }
     }
   }
-
-  tilemap.createLayer("Above", tilesetOutside);
 };

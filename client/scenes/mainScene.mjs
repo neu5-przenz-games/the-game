@@ -20,6 +20,7 @@ export class MainScene extends Phaser.Scene {
 
     this.mainPlayer = null;
     this.mainPlayerName = null;
+    this.waterLayer = null;
     this.groundLayer = null;
     this.players = new Map();
     this.gameObjects = [];
@@ -52,8 +53,12 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  setGroundLayer(groundLayer) {
-    this.groundLayer = groundLayer;
+  setWaterLayer(layer) {
+    this.groundLayer = layer;
+  }
+
+  setGroundLayer(layer) {
+    this.groundLayer = layer;
   }
 
   setSocket(socket) {

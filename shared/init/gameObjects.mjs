@@ -8,41 +8,11 @@ export const gameObjects = [
   new House({
     name: direHouse.name,
     displayName: direHouse.displayName,
-    positionTile: { tileX: 14, tileY: 8 },
+    positionTile: { tileX: 60, tileY: 50 },
   }),
   new House({
     name: radiantHouse.name,
     displayName: radiantHouse.displayName,
-    positionTile: { tileX: 15, tileY: 30 },
-  }),
-  new Tree({
-    name: "tree-1",
-    displayName: "tree",
-    positionTile: { tileX: 17, tileY: 4 },
-  }),
-  new Tree({
-    name: "tree-2",
-    displayName: "tree",
-    positionTile: { tileX: 20, tileY: 20 },
-  }),
-  new CopperOre({
-    name: "ore-copper-1",
-    displayName: "copper ore",
-    positionTile: { tileX: 20, tileY: 12 },
-  }),
-  new CopperOre({
-    name: "ore-copper-2",
-    displayName: "copper ore",
-    positionTile: { tileX: 16, tileY: 23 },
-  }),
-  new HealingStone({
-    name: "healing-stone-1",
-    displayName: "healing stone",
-    positionTile: { tileX: 10, tileY: 20 },
-  }),
-  new HealingStone({
-    name: "healing-stone-2",
-    displayName: "healing stone",
-    positionTile: { tileX: 32, tileY: 14 },
+    positionTile: { tileX: 53, tileY: 60 },
   }),
 ];

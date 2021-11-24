@@ -6,11 +6,16 @@
  * In this script we take that array and we create two-dimensional array
  * in the phaser-like manner so it can be used on server.
  */
-import { readFileSync, writeFileSync } from "fs";
+import { copyFile, readFileSync, writeFileSync } from "fs";
 
 import { gameObjects } from "../shared/init/gameObjects.mjs";
 
-const map = readFileSync("public/assets/map/map.json", "utf8");
+const mapType = process.env.MAP === "test" ? "testmap" : "map";
+const mocksType = process.env.MAP === "test" ? "test" : "production";
+
+console.log({ mapType });
+
+const map = readFileSync(`tiledMap/${mapType}.json`, "utf8");
 
 const LAYER_NAME = "Collides";
 
@@ -41,6 +46,49 @@ gameObjects.forEach((gameObject) => {
       arr[y][x] = 1;
     }
   }
+});
+
+copyFile(
+  `mocks/${mocksType}/players/players.mjs`,
+  "./server/mocks/players/players.mjs",
+  (err) => {
+    if (err) return console.log(err);
+
+    return 1;
+  }
+);
+copyFile(
+  `mocks/${mocksType}/mobs/cupid.mjs`,
+  "./server/mocks/mobs/cupid.mjs",
+  (err) => {
+    if (err) return console.log(err);
+
+    return 1;
+  }
+);
+copyFile(
+  `mocks/${mocksType}/mobs/devil.mjs`,
+  "./server/mocks/mobs/devil.mjs",
+  (err) => {
+    if (err) return console.log(err);
+
+    return 1;
+  }
+);
+copyFile(
+  `mocks/${mocksType}/gameObjects.mjs`,
+  "./shared/init/gameObjects.mjs",
+  (err) => {
+    if (err) return console.log(err);
+
+    return 1;
+  }
+);
+
+copyFile(`tiledMap/${mapType}.json`, "./public/assets/map/map.json", (err) => {
+  if (err) return console.log(err);
+
+  return 1;
 });
 
 writeFileSync(

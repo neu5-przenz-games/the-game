@@ -2,7 +2,7 @@ import express from "express";
 
 import { createServer } from "http";
 
-import { playersMocks } from "./mocks/players.mjs";
+import { playersMocks } from "./mocks/players/players.mjs";
 import { mobsMocks } from "./mocks/mobs.mjs";
 import { Player } from "./gameObjects/creatures/Player.mjs";
 import { createMob } from "./gameObjects/creatures/index.mjs";

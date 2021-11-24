@@ -66,6 +66,7 @@
     "postbuild": "yarn build:html",
     "predev": "yarn extract:map",
     "dev": "parcel watch client/index.html",
+    "dev:test": "MAP=test yarn dev",
     "extract:map": "node ./scripts/extractMap.mjs",
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",

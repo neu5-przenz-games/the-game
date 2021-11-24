@@ -41,10 +41,10 @@ const devil1 = createDevil({
 
 const devil2 = createDevil({
   name: "devil2",
-  positionTile: { tileX: 1, tileY: 14 },
-  presenceAreaCenterTile: { tileX: 1, tileY: 14 },
+  positionTile: { tileX: 3, tileY: 14 },
+  presenceAreaCenterTile: { tileX: 3, tileY: 14 },
 });
 
-const devilsMocks = [devil1, devil2];
+const devilsMocks = [/*devil1, devil2*/];
 
 export { devilsMocks };

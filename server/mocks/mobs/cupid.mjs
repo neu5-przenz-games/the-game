@@ -40,6 +40,6 @@ const cupid2 = createCupid({
   presenceAreaCenterTile: { tileX: 26, tileY: 8 },
 });
 
-const cupidsMocks = [cupid1, cupid2];
+const cupidsMocks = [/*cupid1, cupid2*/];
 
 export { cupidsMocks };
