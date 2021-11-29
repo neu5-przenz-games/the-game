@@ -8,7 +8,7 @@
  */
 import { copyFile, readFileSync, writeFileSync } from "fs";
 
-import { gameObjects } from "../generated/gameObjects.mjs";
+import { gameObjects } from "../generated/gameObjects.mjs"; // eslint-disable-line
 
 const mapType = process.env.MAP === "test" ? "testmap" : "map";
 

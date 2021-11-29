@@ -2,4 +2,3 @@ dist/
 node_modules/
 public/assets/map/map.mjs
 generated/
-scripts/extractMap.mjs

@@ -54,7 +54,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   setWaterLayer(layer) {
-    this.groundLayer = layer;
+    this.waterLayer = layer;
   }
 
   setGroundLayer(layer) {
