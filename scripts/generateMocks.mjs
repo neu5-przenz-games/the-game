@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { getGameObjects, getMobs, getPlayers } from "./generate/index.mjs";
 
 const mocksType = process.env.MAP === "test" ? "test" : "production";
@@ -8,6 +8,10 @@ const mobs = getMobs(mocksType);
 const players = getPlayers(mocksType);
 
 console.log({ mocksType });
+
+if (!existsSync("./generated")) {
+  mkdirSync("./generated");
+}
 
 writeFileSync(
   "./generated/gameObjects.mjs",

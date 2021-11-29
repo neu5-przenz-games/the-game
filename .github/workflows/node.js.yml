@@ -23,9 +23,6 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - name: Create generated/ directory
-        run: mkdir generated
-
       - name: Build test version
         run: yarn build:test
 
