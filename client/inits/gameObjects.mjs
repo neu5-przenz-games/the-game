@@ -1,16 +1,16 @@
 import Phaser from "phaser";
-import { gameObjects } from "../../shared/init/gameObjects.mjs";
+import { gameObjects } from "../../generated/gameObjects.mjs";
 import { HealingStone } from "../gameObjects/HealingStone.mjs";
 import { House } from "../gameObjects/House.mjs";
 import { Tree } from "../gameObjects/Tree.mjs";
-import { Ore } from "../gameObjects/Ore.mjs";
+import { CopperOre } from "../gameObjects/CopperOre.mjs";
 import { RangedParticleEmitter } from "../utils/index.mjs";
 
 const TYPES = {
+  CopperOre,
   HealingStone,
   House,
   Tree,
-  Ore,
 };
 
 export const initGameObjects = (game) => {

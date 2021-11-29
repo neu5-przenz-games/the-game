@@ -26,7 +26,7 @@ const defaultBackpack = {
   items: [{ id: "bow", quantity: 1 }],
 };
 
-const defaultSkills = setAllSkillsPoints(getSkillPoints(LEVEL_TYPES.BEGINNER));
+const defaultSkills = setAllSkillsPoints(getSkillPoints(LEVEL_TYPES.MASTER));
 
 class Devil extends Creature {
   static DISPLAY_NAME = "Devil";

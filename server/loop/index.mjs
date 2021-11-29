@@ -326,7 +326,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
         const respawnTile = getRandomTile({
           map,
           obj: gameObjects.find(
-            (b) => b.name === player.settings.respawnBuilding.name
+            (b) => b.name === player.settings.respawnBuilding
           ),
           players,
           sizeToIncrease: {

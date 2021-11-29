@@ -1,0 +1,40 @@
+[
+  {
+    "name": "player1",
+    "displayName": "player 1",
+    "fraction": "Radiant",
+    "positionTile": { "tileX": 10, "tileY": 15 },
+    "equipment": {},
+    "backpack": {
+      "slots": 0,
+      "items": []
+    },
+    "settings": {
+      "attackAlly": false,
+      "follow": true,
+      "fight": true,
+      "showRange": false,
+      "keepSelectionOnMovement": false,
+      "respawnBuilding": "house_radiant"
+    }
+  },
+  {
+    "name": "player2",
+    "displayName": "player 2",
+    "fraction": "Dire",
+    "positionTile": { "tileX": 15, "tileY": 15 },
+    "equipment": {},
+    "backpack": {
+      "slots": 0,
+      "items": []
+    },
+    "settings": {
+      "attackAlly": false,
+      "follow": true,
+      "fight": true,
+      "showRange": false,
+      "keepSelectionOnMovement": false,
+      "respawnBuilding": "house_dire"
+    }
+  }
+]

@@ -6,11 +6,15 @@
  * In this script we take that array and we create two-dimensional array
  * in the phaser-like manner so it can be used on server.
  */
-import { readFileSync, writeFileSync } from "fs";
+import { copyFile, readFileSync, writeFileSync } from "fs";
 
-import { gameObjects } from "../shared/init/gameObjects.mjs";
+import { gameObjects } from "../generated/gameObjects.mjs"; // eslint-disable-line
 
-const map = readFileSync("public/assets/map/map.json", "utf8");
+const mapType = process.env.MAP === "test" ? "testmap" : "map";
+
+console.log({ mapType });
+
+const map = readFileSync(`tiledMap/${mapType}.json`, "utf8");
 
 const LAYER_NAME = "Collides";
 
@@ -41,6 +45,12 @@ gameObjects.forEach((gameObject) => {
       arr[y][x] = 1;
     }
   }
+});
+
+copyFile(`tiledMap/${mapType}.json`, "./public/assets/map/map.json", (err) => {
+  if (err) return console.log(err);
+
+  return 1;
 });
 
 writeFileSync(

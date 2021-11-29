@@ -20,6 +20,7 @@ export class MainScene extends Phaser.Scene {
 
     this.mainPlayer = null;
     this.mainPlayerName = null;
+    this.waterLayer = null;
     this.groundLayer = null;
     this.players = new Map();
     this.gameObjects = [];
@@ -52,8 +53,12 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  setGroundLayer(groundLayer) {
-    this.groundLayer = groundLayer;
+  setWaterLayer(layer) {
+    this.waterLayer = layer;
+  }
+
+  setGroundLayer(layer) {
+    this.groundLayer = layer;
   }
 
   setSocket(socket) {
@@ -130,7 +135,7 @@ export class MainScene extends Phaser.Scene {
     );
     this.load.image("House", "./assets/gfx/house.png");
     this.load.image("Tree", "./assets/gfx/tree.png");
-    this.load.image("Ore", "./assets/gfx/ore-copper.png");
+    this.load.image("CopperOre", "./assets/gfx/ore-copper.png");
 
     this.load.image("looting-bag", "./assets/gfx/looting-bag.png");
 
