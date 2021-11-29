@@ -58,16 +58,18 @@
     "watcherGlob": "**"
   },
   "scripts": {
-    "prebuild": "yarn extract:map",
+    "prebuild": "yarn generateMocks && yarn extract:map",
     "build": "if test \"$NODE_ENV\" = \"production\"; then yarn build:prod; else yarn build:dev; fi",
     "build:prod": "NODE_ENV=production parcel build client/index.html",
     "build:dev": "NODE_ENV=development parcel build client/index.html --no-minify",
+    "build:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map && NODE_ENV=development parcel build client/index.html --no-minify",
     "build:html": "node ./scripts/generateStaticPages.mjs",
     "postbuild": "yarn build:html",
-    "predev": "yarn extract:map",
+    "predev": "yarn generateMocks && yarn extract:map",
     "dev": "parcel watch client/index.html",
     "dev:test": "MAP=test yarn dev",
     "extract:map": "node ./scripts/extractMap.mjs",
+    "generateMocks": "node ./scripts/generateMocks.mjs",
     "lint": "eslint '**/*.{mjs, js}'",
     "lint:fix": "npm run lint -- --fix",
     "serve:dev": "NODE_ENV=development nodemon server/index.mjs",
@@ -75,7 +77,7 @@
     "serve": "node server/index.mjs",
     "test:unit": "PORT=1234 mocha test-unit --exit",
     "test:e2e": "start-server-and-test serve:test http://localhost:5000 nightwatch",
-    "test:all": "yarn test:unit && yarn test:e2e",
+    "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",
     "test": "if test \"$NODE_ENV\" = \"production\"; then yarn test:unit; else yarn test:all; fi"
   }
 }

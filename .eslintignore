@@ -1,4 +1,5 @@
 dist/
 node_modules/
 public/assets/map/map.mjs
-mocks/
+generated/
+scripts/extractMap.mjs

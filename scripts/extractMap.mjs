@@ -8,10 +8,9 @@
  */
 import { copyFile, readFileSync, writeFileSync } from "fs";
 
-import { gameObjects } from "../shared/init/gameObjects.mjs";
+import { gameObjects } from "../generated/gameObjects.mjs";
 
 const mapType = process.env.MAP === "test" ? "testmap" : "map";
-const mocksType = process.env.MAP === "test" ? "test" : "production";
 
 console.log({ mapType });
 
@@ -47,43 +46,6 @@ gameObjects.forEach((gameObject) => {
     }
   }
 });
-
-copyFile(
-  `mocks/${mocksType}/players/players.mjs`,
-  "./server/mocks/players/players.mjs",
-  (err) => {
-    if (err) return console.log(err);
-
-    return 1;
-  }
-);
-copyFile(
-  `mocks/${mocksType}/mobs/cupid.mjs`,
-  "./server/mocks/mobs/cupid.mjs",
-  (err) => {
-    if (err) return console.log(err);
-
-    return 1;
-  }
-);
-copyFile(
-  `mocks/${mocksType}/mobs/devil.mjs`,
-  "./server/mocks/mobs/devil.mjs",
-  (err) => {
-    if (err) return console.log(err);
-
-    return 1;
-  }
-);
-copyFile(
-  `mocks/${mocksType}/gameObjects.mjs`,
-  "./shared/init/gameObjects.mjs",
-  (err) => {
-    if (err) return console.log(err);
-
-    return 1;
-  }
-);
 
 copyFile(`tiledMap/${mapType}.json`, "./public/assets/map/map.json", (err) => {
   if (err) return console.log(err);

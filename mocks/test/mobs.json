@@ -1,0 +1,28 @@
+[{
+    "type": "Cupid",
+    "name": "cupid1",
+    "positionTile": { "tileX": 6, "tileY": 30 },
+    "presenceAreaCenterTile": { "tileX": 6, "tileY": 30 }
+  }, {
+    "type": "Cupid",
+    "name": "cupid2",
+    "positionTile": { "tileX": 26, "tileY": 8 },
+    "presenceAreaCenterTile": { "tileX": 26, "tileY": 8 }
+  },
+  {
+    "type": "Devil",
+    "name": "devil1",
+    "positionTile": { "tileX": 20, "tileY": 25 },
+    "presenceAreaCenterTile": { "tileX": 20, "tileY": 25 },
+    "defaultState": "PATROLLING",
+    "patrollingTiles": [
+      { "tileX": 19, "tileY": 27 },
+      { "tileX": 27, "tileY": 19 }
+    ]
+  },
+  {
+    "type": "Devil",
+    "name": "devil2",
+    "positionTile": { "tileX": 3, "tileY": 14 },
+    "presenceAreaCenterTile": { "tileX": 3, "tileY": 14 }
+}]

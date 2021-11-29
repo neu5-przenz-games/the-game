@@ -2,16 +2,16 @@ import express from "express";
 
 import { createServer } from "http";
 
-import { playersMocks } from "./mocks/players/players.mjs";
-import { mobsMocks } from "./mocks/mobs.mjs";
 import { Player } from "./gameObjects/creatures/Player.mjs";
 import { createMob } from "./gameObjects/creatures/index.mjs";
 import { sockets } from "./sockets/index.mjs";
 import { loop } from "./loop/index.mjs";
 import { wikiPages } from "./pages/wiki.mjs";
 import { FRAME_IN_MS } from "../shared/constants/index.mjs";
-import { gameObjects } from "../shared/init/gameObjects.mjs";
 import { LootingBag } from "../shared/gameObjects/index.mjs";
+import { gameObjects } from "../generated/gameObjects.mjs";
+import { mobs } from "../generated/mobs.mjs";
+import { playersMocks } from "../generated/players.mjs";
 
 const app = express();
 const httpServer = createServer(app);
@@ -50,7 +50,7 @@ playersMocks.forEach((player) => {
   players.set(player.name, new Player(player));
 });
 
-mobsMocks.forEach((mob) => {
+mobs.forEach((mob) => {
   players.set(mob.name, createMob(mob));
 });
 

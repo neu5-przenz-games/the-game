@@ -1,0 +1,21 @@
+[
+  {
+    "name": "player1",
+    "displayName": "player 1",
+    "fraction": "Radiant",
+    "positionTile": { "tileX": 54, "tileY": 48 },
+    "equipment": {},
+    "backpack": {
+      "slots": 0,
+      "items": []
+    },
+    "settings": {
+      "attackAlly": false,
+      "follow": true,
+      "fight": true,
+      "showRange": false,
+      "keepSelectionOnMovement": false,
+      "respawnBuilding": "house_radiant"
+    }
+  }
+]

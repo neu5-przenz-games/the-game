@@ -1,0 +1,38 @@
+[
+  {
+    "type": "House",
+    "name": "house_radiant",
+    "displayName": "Radiant Sanctuary",
+    "positionTile": { "tileX": 14, "tileY": 8 }
+  },
+  {
+    "type": "House",
+    "name": "house_dire",
+    "displayName": "Dire Sanctuary",
+    "positionTile": { "tileX": 15, "tileY": 30 }
+  },
+  {
+    "type": "Tree",
+    "name": "tree-1",
+    "displayName": "tree",
+    "positionTile": { "tileX": 17, "tileY": 4 }
+  },
+  {
+    "type": "Tree",
+    "name": "tree-2",
+    "displayName": "tree",
+    "positionTile": { "tileX": 20, "tileY": 17 }
+  },
+  {
+    "type": "CopperOre",
+    "name": "ore-copper-1",
+    "displayName": "copper ore",
+    "positionTile": { "tileX": 20, "tileY": 12 }
+  },
+  {
+    "type": "CopperOre",
+    "name": "ore-copper-2",
+    "displayName": "copper ore",
+    "positionTile": { "tileX": 16, "tileY": 23 }
+  }
+]
