@@ -10,16 +10,25 @@ import { copyFile, readFileSync, writeFileSync } from "fs";
 
 import { gameObjects } from "../generated/gameObjects.mjs"; // eslint-disable-line
 
-const mapType = process.env.MAP === "test" ? "testmap" : "map";
+const mapType = {
+  mini: "minimap",
+  test: "testmap",
+  production: "map",
+}[process.env.MAP || "production"];
 
 console.log({ mapType });
 
 const map = readFileSync(`tiledMap/${mapType}.json`, "utf8");
 
-const LAYER_NAME = "Collides";
+const WATER_LAYER = "Water";
+const COLLIDES_LAYER = "Collides";
+
+const layerWater = JSON.parse(map).layers.find(
+  (layer) => layer.name === WATER_LAYER
+);
 
 const layerCollides = JSON.parse(map).layers.find(
-  (layer) => layer.name === LAYER_NAME
+  (layer) => layer.name === COLLIDES_LAYER
 );
 
 const arr = [];
@@ -27,8 +36,13 @@ const arr = [];
 for (let y = 0, idx = 0; y < layerCollides.width; y += 1) {
   arr.push([]);
   for (let x = 0; x < layerCollides.height; x += 1) {
-    const tileId = layerCollides.data[idx];
-    arr[y][x] = tileId === 0 ? 0 : 1;
+    const collidesTile = layerCollides.data[idx];
+    const waterTile = layerWater.data[idx];
+    arr[y][x] = collidesTile === 0 ? 0 : 1;
+
+    if (waterTile > 0) {
+      arr[y][x] = 1;
+    }
 
     idx += 1;
   }
