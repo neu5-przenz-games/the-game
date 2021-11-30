@@ -34,5 +34,11 @@
     "name": "ore-copper-2",
     "displayName": "copper ore",
     "positionTile": { "tileX": 16, "tileY": 23 }
+  },
+  {
+    "type": "HealingStone",
+    "name": "healing-stone-1",
+    "displayName": "healing stone",
+    "positionTile": { "tileX": 10, "tileY": 20 }
   }
 ]
