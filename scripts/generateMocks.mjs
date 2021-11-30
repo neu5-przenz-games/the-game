@@ -1,7 +1,11 @@
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { getGameObjects, getMobs, getPlayers } from "./generate/index.mjs";
 
-const mocksType = process.env.MAP === "test" ? "test" : "production";
+const mocksType = {
+  mini: "mini",
+  test: "test",
+  production: "production",
+}[process.env.MAP || "production"];
 
 const gameObjects = getGameObjects(mocksType);
 const mobs = getMobs(mocksType);
