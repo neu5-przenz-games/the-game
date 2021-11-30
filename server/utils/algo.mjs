@@ -190,6 +190,12 @@ const getAllies = (players, fraction) =>
 
 const getPatrollingIndex = (index, length) => (index < length ? index + 1 : 0);
 
+const isPlayerInHealingArea = (healingArea, positionTile) =>
+  healingArea.some(
+    ({ tileX, tileY }) =>
+      tileX === positionTile.tileX && tileY === positionTile.tileY
+  );
+
 const availableTiles = ({ surroundingTiles, players, map }) => {
   const tiles = [...surroundingTiles];
   const currentPlayersPositions = [];
@@ -315,6 +321,7 @@ const noObstacles = ({
 };
 
 export {
+  isPlayerInHealingArea,
   getAllies,
   getAttack,
   getChebyshevDistance,

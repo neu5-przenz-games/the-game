@@ -10,6 +10,7 @@ import {
   getHitValue,
   getRandomTile,
   getSelectedObject,
+  isPlayerInHealingArea,
 } from "../utils/algo.mjs";
 import { getHitText } from "../utils/hitText.mjs";
 
@@ -460,7 +461,7 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       players.forEach((player) => {
         if (
           !player.isDead &&
-          healingStone.isPlayerInHealingArea(player.positionTile)
+          isPlayerInHealingArea(healingStone.healingArea, player.positionTile)
         ) {
           player.heal(healingStone.HP_REGEN_RATE);
 
