@@ -22,6 +22,7 @@
     "socket.io": "^4.1.2"
   },
   "devDependencies": {
+    "0x": "^4.11.0",
     "babel-eslint": "^10.1.0",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
@@ -79,6 +80,7 @@
     "test:unit": "PORT=1234 mocha test-unit --exit",
     "test:e2e": "start-server-and-test serve:test http://localhost:5000 nightwatch",
     "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",
-    "test": "if test \"$NODE_ENV\" = \"production\"; then yarn test:unit; else yarn test:all; fi"
+    "test": "if test \"$NODE_ENV\" = \"production\"; then yarn test:unit; else yarn test:all; fi",
+    "profile:node": "yarn 0x -D profileNodeJS/ -o server/index.mjs"
   }
 }
