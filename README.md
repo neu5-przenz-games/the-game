@@ -23,3 +23,8 @@ https://the-game1.herokuapp.com/
 ## Staging environment
 
 https://the-game-staging.herokuapp.com/
+
+### Profiling
+
+To profile nodeJS server locally run
+`yarn profile:node`
