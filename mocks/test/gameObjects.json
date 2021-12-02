@@ -40,5 +40,24 @@
     "name": "healing-stone-1",
     "displayName": "healing stone",
     "positionTile": { "tileX": 10, "tileY": 20 }
+  },
+  {
+    "type": "LootingBag",
+    "name": "LootingBag10x16",
+    "positionTile": { "tileX": 10, "tileY": 16 },
+    "items": [
+      { "id": "armor", "quantity": 2 },
+      { "id": "sword", "quantity": 2 },
+      { "id": "bag", "quantity": 1 }
+    ]
+  },
+  {
+    "type": "LootingBag",
+    "name": "LootingBag13x6",
+    "positionTile": { "tileX": 13, "tileY": 6 },
+    "items": [
+      { "id": "armor", "quantity": 2 },
+      { "id": "sword", "quantity": 2 }
+    ]
   }
 ]

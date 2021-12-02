@@ -477,6 +477,11 @@ const sockets = ({ gameObjects, httpServer, players }) => {
 
       socket.on("looting-bag:get-items", ({ selectedItems, name }) => {
         const player = players.get(name);
+
+        if (player.isDead) {
+          return;
+        }
+
         const itemsToAdd = selectedItems.map((item) => ({
           ...item,
           quantity: parseInt(item.quantity, 10),

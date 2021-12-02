@@ -8,7 +8,6 @@ import { sockets } from "./sockets/index.mjs";
 import { loop } from "./loop/index.mjs";
 import { wikiPages } from "./pages/wiki.mjs";
 import { FRAME_IN_MS } from "../shared/constants/index.mjs";
-import { LootingBag } from "../shared/gameObjects/index.mjs";
 import { gameObjects } from "../generated/gameObjects.mjs";
 import { mobs } from "../generated/mobs.mjs";
 import { playersMocks } from "../generated/players.mjs";
@@ -26,26 +25,6 @@ const healingStones = gameObjects.reduce((res, go) => {
   return res;
 }, []);
 
-const lootingBags = [
-  new LootingBag({
-    name: `LootingBag10x16`,
-    positionTile: { tileX: 10, tileY: 16 },
-    items: [
-      { id: "armor", quantity: 2 },
-      { id: "sword", quantity: 2 },
-      { id: "bag", quantity: 1 },
-    ],
-  }),
-  new LootingBag({
-    name: `LootingBag13x6`,
-    positionTile: { tileX: 13, tileY: 6 },
-    items: [
-      { id: "armor", quantity: 2 },
-      { id: "sword", quantity: 2 },
-    ],
-  }),
-];
-
 playersMocks.forEach((player) => {
   players.set(player.name, new Player(player));
 });
@@ -54,16 +33,14 @@ mobs.forEach((mob) => {
   players.set(mob.name, createMob(mob));
 });
 
-const go = [...gameObjects, ...lootingBags];
-
 const io = sockets({
-  gameObjects: go,
+  gameObjects,
   httpServer,
   players,
 });
 
 setInterval(() => {
-  loop({ gameObjects: go, healingStones, io, players });
+  loop({ gameObjects, healingStones, io, players });
 }, FRAME_IN_MS);
 
 app.use(express.static("dist"));
