@@ -9,6 +9,16 @@ import { players as miniPlayers } from "./mini/players.mjs";
 import { players as testPlayers } from "./test/players.mjs";
 import { players as productionPlayers } from "./production/players.mjs";
 
+export const getConfig = (mapType) => {
+  const mapJson = JSON.parse(readFileSync(`tiledMap/${mapType}.json`, "utf8"));
+
+  return {
+    mapImgDimensions: {
+      width: mapJson.width * mapJson.tilewidth,
+    },
+  };
+};
+
 export const getGameObjects = (type) => {
   const gameObjects = readFileSync(`mocks/${type}/gameObjects.json`, "utf8");
 

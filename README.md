@@ -3,7 +3,7 @@
 To work locally on test map (smaller map) run
 `yarn dev:test`
 
-To work locally on development version of a game run
+To work locally on production size of a map run
 `yarn dev`
 
 To start the server run
