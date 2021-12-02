@@ -6,20 +6,22 @@ const ACTIONS = {
   CANCEL: "CANCEL",
 };
 
-const DIALOG_WIDTH = 0.8; // 80% of the window width taken from the styles
+const DIALOG_WIDTH = window.innerWidth > 1366 ? 0.8 : 1;
 const POINTER_WIDTH = 14;
 const POINTER_HEIGHT = 18;
 
 const getPointerPosition = ({ x, y, width }) => {
-  const widthRatio = Math.ceil((window.innerWidth * DIALOG_WIDTH) / width);
+  const widthRatio = (window.innerWidth * DIALOG_WIDTH) / width;
 
   return {
-    top: widthRatio * (y - OFFSET.Y) - POINTER_WIDTH / 2,
+    top: Math.ceil(widthRatio * (y - OFFSET.Y) - POINTER_WIDTH / 2),
     /* isometric map in Phaser has (0,0) point at the top center
      * but HTML image has (0,0) point at top left
      * so to make it align we need to add half of the width to the x
      */
-    left: widthRatio * (x - OFFSET.X + width / 2) - POINTER_HEIGHT / 2,
+    left: Math.ceil(
+      widthRatio * (x - OFFSET.X + width / 2) - POINTER_HEIGHT / 2
+    ),
   };
 };
 
