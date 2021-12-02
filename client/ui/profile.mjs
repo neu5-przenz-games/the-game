@@ -30,6 +30,9 @@ export class UIProfile {
     );
     profileHello.innerHTML = `Hello, ${name}!`;
 
+    const [showMapButton] = document.getElementsByClassName(
+      "profile-wrapper__show-map-button"
+    );
     const [selectedName] = document.getElementsByClassName("selected__name");
     const [dropSelectionButton] = document.getElementsByClassName(
       "selected__drop-button"
@@ -38,6 +41,7 @@ export class UIProfile {
       "selected__action-button"
     );
 
+    this.showMapButton = showMapButton;
     this.selectedName = selectedName;
     this.dropSelectionButton = dropSelectionButton;
     this.actionButton = actionButton;
@@ -64,6 +68,10 @@ export class UIProfile {
     this.UISkills.setSkills(skills);
 
     this.UIDialog = UIDialog;
+
+    this.showMapButton.onclick = () => {
+      this.UIDialog.map.show(game.mainPlayer, game.mapImgDimensions);
+    };
 
     this.dropSelectionButton.onclick = () => {
       dropSelectionCb(name);

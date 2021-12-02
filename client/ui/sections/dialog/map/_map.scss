@@ -1,0 +1,19 @@
+.map-wrapper {
+  position: relative;
+
+  &__map {
+    width: 100%;
+  }
+
+  &__player-pointer {
+    width: 14px;
+    height: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    &:after {
+      content: "⨂";
+    }
+  }
+}

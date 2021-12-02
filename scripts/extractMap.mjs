@@ -9,16 +9,13 @@
 import { copyFile, readFileSync, writeFileSync } from "fs";
 
 import { gameObjects } from "../generated/gameObjects.mjs"; // eslint-disable-line
+import { getMocksType } from "./utils.mjs";
 
-const mapType = {
-  mini: "minimap",
-  test: "testmap",
-  production: "map",
-}[process.env.MAP || "production"];
+const mocksType = getMocksType(process.env.MAP);
 
-console.log({ mapType });
+console.log({ mocksType });
 
-const map = readFileSync(`tiledMap/${mapType}.json`, "utf8");
+const map = readFileSync(`tiledMap/${mocksType}.json`, "utf8");
 
 const WATER_LAYER = "Water";
 const COLLIDES_LAYER = "Collides";
@@ -61,11 +58,15 @@ gameObjects.forEach((gameObject) => {
   }
 });
 
-copyFile(`tiledMap/${mapType}.json`, "./public/assets/map/map.json", (err) => {
-  if (err) return console.log(err);
+copyFile(
+  `tiledMap/${mocksType}.json`,
+  "./public/assets/map/map.json",
+  (err) => {
+    if (err) return console.log(err);
 
-  return 1;
-});
+    return 1;
+  }
+);
 
 writeFileSync(
   "./public/assets/map/map.mjs",
