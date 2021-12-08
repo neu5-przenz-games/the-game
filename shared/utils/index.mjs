@@ -4,6 +4,13 @@ const getDurationFromMSToTicks = (ms) => Math.ceil(ms / FRAME_IN_MS);
 
 const getDurationFromTicksToMS = (ticks) => Math.ceil(ticks * FRAME_IN_MS);
 
+const getMocksType = (type = "production") =>
+  ({
+    mini: "mini",
+    test: "test",
+    production: "production",
+  }[type]);
+
 const getObjectTiles = ({ positionTile, size = { x: 1, y: 1 } }) => {
   if (size.x <= 0 || size.y <= 0) {
     return [];
@@ -73,6 +80,7 @@ const getXYFromTile = (tileX, tileY) => ({
 export {
   getDurationFromMSToTicks,
   getDurationFromTicksToMS,
+  getMocksType,
   getObjectTiles,
   getSurroundingTiles,
   getXYFromTile,

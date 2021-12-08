@@ -5,7 +5,7 @@ import {
   getMobs,
   getPlayers,
 } from "./generate/index.mjs";
-import { getMocksType } from "./utils.mjs";
+import { getMocksType } from "../shared/utils/index.mjs";
 
 const mocksType = getMocksType(process.env.MAP);
 

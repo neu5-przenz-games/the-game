@@ -9,7 +9,7 @@
 import { readFileSync, writeFileSync } from "fs";
 
 import { gameObjects } from "../generated/gameObjects.mjs"; // eslint-disable-line
-import { getMocksType } from "./utils.mjs";
+import { getMocksType } from "../shared/utils/index.mjs";
 
 const mocksType = getMocksType(process.env.MAP);
 

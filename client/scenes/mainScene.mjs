@@ -11,6 +11,7 @@ import { UIChat } from "../ui/sections/chat/chat.mjs";
 import { debugMenu } from "../ui/debugMenu.mjs";
 
 import { FRACTIONS } from "../../shared/fractions/index.mjs";
+import { getMocksType } from "../../shared/utils/index.mjs";
 import { config } from "../../generated/config.mjs";
 
 const FPS = 30;
@@ -36,11 +37,7 @@ export class MainScene extends Phaser.Scene {
     this.socketId = null;
     this.SI = new SnapshotInterpolation(FPS);
     this.timer = 0;
-    this.mapType = {
-      mini: "mini",
-      test: "test",
-      production: "production",
-    }[process.env.MAP || "production"];
+    this.mapType = getMocksType(process.env.MAP);
 
     this.equipment = null;
     this.backpack = null;

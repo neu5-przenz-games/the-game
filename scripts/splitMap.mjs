@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, readFile, writeFile } from "fs";
 import { join } from "path";
 import rimraf from "rimraf";
 import optimist from "optimist";
-import { getMocksType } from "./utils.mjs";
+import { getMocksType } from "../shared/utils/index.mjs";
 
 const { argv } = optimist;
 const mocksType = getMocksType(process.env.MAP);
@@ -63,12 +63,10 @@ const splitMap = (out = "chunks", chunkWidth = 16, chunkHeight = 16) => {
     for (let i = 0; i < nbChunks; i += 1) {
       const chunk = {
         ...map,
-        layers: [
-          { ...map.layers[0], data: [...map.layers[0].data] },
-          { ...map.layers[1], data: [...map.layers[1].data] },
-          { ...map.layers[2], data: [...map.layers[2].data] },
-          { ...map.layers[3], data: [...map.layers[3].data] },
-        ],
+        layers: map.layers.map((layer) => ({
+          ...layer,
+          data: [...layer.data],
+        })),
       };
       // Compute the coordinates of the top-left corner of the chunk in the initial map
       const x = (i % nbChunksHorizontal) * chunkWidth;
