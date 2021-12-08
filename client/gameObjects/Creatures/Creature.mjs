@@ -145,7 +145,7 @@ class Creature extends Phaser.GameObjects.Image {
   }
 
   getCurrentPositionTile() {
-    const { x, y } = this.scene.groundLayer.worldToTileXY(this.x, this.y, true);
+    const { x, y } = this.scene.getTileFromXY(this.x, this.y);
     return { x, y };
   }
 

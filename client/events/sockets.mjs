@@ -182,6 +182,8 @@ export const sockets = (game) => {
 
     game.cameras.main.startFollow(game.mainPlayer, true);
 
+    game.updateMap();
+
     inputs(game);
   });
 
@@ -335,7 +337,7 @@ export const sockets = (game) => {
     }, []);
 
     lootingBags.forEach(({ id, positionTile }) => {
-      const objectWorldXY = game.groundLayer.tileToWorldXY(
+      const objectWorldXY = game.getXYFromTile(
         positionTile.tileX,
         positionTile.tileY
       );

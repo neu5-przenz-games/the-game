@@ -32,7 +32,7 @@ export class RangedParticleEmitter {
     if (this.particlesNum <= this.maxParticlesNum) {
       const randomTileNum = Phaser.Math.Between(0, this.rangeTiles.length - 1);
 
-      const particlePosition = this.scene.groundLayer.tileToWorldXY(
+      const particlePosition = this.scene.getXYFromTile(
         this.rangeTiles[randomTileNum].x,
         this.rangeTiles[randomTileNum].y
       );

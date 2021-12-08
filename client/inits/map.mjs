@@ -12,7 +12,6 @@ export const initMap = (game) => {
     for (let x = 0; x < tilemap.width; x += 1) {
       const tileOnGround = tilemap.getTileAt(x, y, true, onGroundLayer);
       const tileCollides = tilemap.getTileAt(x, y, true, collidesLayer);
-
       if (tileOnGround.index !== -1) {
         const layer = tilemap.createBlankLayer(
           `Layer onGround x:${x} y:${y}`,
@@ -25,7 +24,6 @@ export const initMap = (game) => {
           tilemap.tileWidth
         );
         tilemap.putTileAt(tileOnGround, x, y, true, layer);
-
         // this is special case for tile.index = 128: it should behind the player
         layer.depth =
           tileOnGround.index === 128
@@ -44,7 +42,6 @@ export const initMap = (game) => {
           tilemap.tileWidth
         );
         tilemap.putTileAt(tileCollides, x, y, true, layer);
-
         layer.depth = tileCollides.bottom + 1;
       }
     }

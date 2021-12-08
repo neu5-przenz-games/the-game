@@ -7,10 +7,7 @@ export const inputs = (game) => {
 
     const { worldX, worldY } = pointer;
 
-    const clickedTile = game.groundLayer.worldToTileXY(worldX, worldY, true);
-    // worldToTileXY method is giving us +1 tile so we need to subtract 1
-    clickedTile.x -= 1;
-    clickedTile.y -= 1;
+    const clickedTile = game.getTileFromXY(worldX, worldY);
 
     if (process.env.NODE_ENV === "development") {
       console.log(clickedTile);
