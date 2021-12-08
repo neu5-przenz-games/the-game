@@ -17,5 +17,24 @@
       "keepSelectionOnMovement": false,
       "respawnBuilding": "house_radiant"
     }
+  },
+  {
+    "name": "player2",
+    "displayName": "player 2",
+    "fraction": "Dire",
+    "positionTile": { "tileX": 60, "tileY": 55 },
+    "equipment": {},
+    "backpack": {
+      "slots": 0,
+      "items": []
+    },
+    "settings": {
+      "attackAlly": false,
+      "follow": true,
+      "fight": true,
+      "showRange": false,
+      "keepSelectionOnMovement": false,
+      "respawnBuilding": "house_dire"
+    }
   }
 ]

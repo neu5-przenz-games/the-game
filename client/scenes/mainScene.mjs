@@ -142,13 +142,6 @@ export class MainScene extends Phaser.Scene {
     };
   }
 
-  getXYFromTile(tileX, tileY) {
-    return {
-      x: tileX * this.tileWidth - tileY * this.tileWidth,
-      y: tileX * this.tileHeight + tileY * this.tileHeight,
-    };
-  }
-
   setSocket(socket) {
     this.socket = socket;
   }
@@ -267,8 +260,57 @@ export class MainScene extends Phaser.Scene {
 
     tilemap.createLayer("Water", tilesetOutside, offset.x, offset.y);
     tilemap.createLayer("Ground", tilesetOutside, offset.x, offset.y);
-    tilemap.createLayer("OnGround", tilesetOutside, offset.x, offset.y);
-    tilemap.createLayer("Collides", tilesetOutside, offset.x, offset.y);
+    const onGroundLayer = tilemap.createLayer(
+      "OnGround",
+      tilesetOutside,
+      offset.x,
+      offset.y
+    );
+    const collidesLayer = tilemap.createLayer(
+      "Collides",
+      tilesetOutside,
+      offset.x,
+      offset.y
+    );
+
+    for (let { y } = offset; y < tilemap.height; y += 1) {
+      for (let { x } = offset; x < tilemap.width; x += 1) {
+        const tileOnGround = tilemap.getTileAt(x, y, true, onGroundLayer);
+        const tileCollides = tilemap.getTileAt(x, y, true, collidesLayer);
+        if (tileOnGround.index !== -1) {
+          const layer = tilemap.createBlankLayer(
+            `Layer onGround x:${x} y:${y}`,
+            tilesetOutside,
+            x,
+            y,
+            tilemap.tileWidth,
+            tilemap.tileHeight,
+            tilemap.tileWidth,
+            tilemap.tileWidth
+          );
+          tilemap.putTileAt(tileOnGround, x, y, true, layer);
+          // this is special case for tile.index = 128: it should be behind the player
+          layer.depth =
+            tileOnGround.index === 128
+              ? tileOnGround.bottom - 1
+              : tileOnGround.bottom + 1;
+        }
+        if (tileCollides.index !== -1) {
+          const layer = tilemap.createBlankLayer(
+            `Layer collides x:${x} y:${y}`,
+            tilesetOutside,
+            x,
+            y,
+            tilemap.tileWidth,
+            tilemap.tileHeight,
+            tilemap.tileWidth,
+            tilemap.tileWidth
+          );
+          tilemap.putTileAt(tileCollides, x, y, true, layer);
+          layer.depth = tileCollides.bottom + 1;
+        }
+      }
+    }
 
     this.maps[chunkID] = tilemap;
     this.displayedChunks.push(chunkID);

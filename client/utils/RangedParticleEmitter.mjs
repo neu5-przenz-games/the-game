@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { getXYFromTile } from "../../shared/utils/index.mjs";
 
 export class RangedParticleEmitter {
   constructor({
@@ -32,9 +33,9 @@ export class RangedParticleEmitter {
     if (this.particlesNum <= this.maxParticlesNum) {
       const randomTileNum = Phaser.Math.Between(0, this.rangeTiles.length - 1);
 
-      const particlePosition = this.scene.getXYFromTile(
-        this.rangeTiles[randomTileNum].x,
-        this.rangeTiles[randomTileNum].y
+      const particlePosition = getXYFromTile(
+        this.rangeTiles[randomTileNum].tileX,
+        this.rangeTiles[randomTileNum].tileY
       );
 
       // set particle in the middle of the tile

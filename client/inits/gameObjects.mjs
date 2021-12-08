@@ -6,7 +6,10 @@ import { CopperOre } from "../gameObjects/CopperOre.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { RangedParticleEmitter } from "../utils/index.mjs";
 import { gameObjects } from "../../generated/gameObjects.mjs";
-import { getSurroundingTiles } from "../../shared/utils/index.mjs";
+import {
+  getSurroundingTiles,
+  getXYFromTile,
+} from "../../shared/utils/index.mjs";
 
 const TYPES = {
   CopperOre,
@@ -18,7 +21,7 @@ const TYPES = {
 
 export const initGameObjects = (game) => {
   gameObjects.forEach((gameObject) => {
-    const objectWorldXY = game.getXYFromTile(
+    const objectWorldXY = getXYFromTile(
       gameObject.positionTile.tileX,
       gameObject.positionTile.tileY
     );

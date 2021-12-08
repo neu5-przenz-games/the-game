@@ -1,4 +1,3 @@
-import { TILE_HALF, TILE_QUARTER } from "./constants.mjs";
 import { getSurroundingTiles } from "../../shared/utils/index.mjs";
 import {
   gameItems,
@@ -244,11 +243,6 @@ const getSelectedObject = ({ players, gameObjects, selectedObjectName }) => {
   return selectedObject;
 };
 
-const getXYFromTile = (tileX, tileY) => ({
-  x: tileX * TILE_HALF - tileY * TILE_HALF,
-  y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
-});
-
 const getDestTile = (player, { map, obj, players }) => {
   const { size } = obj;
   const surroundingTiles = getSurroundingTiles({
@@ -332,6 +326,5 @@ export {
   getRandomInt,
   getRandomTile,
   getSelectedObject,
-  getXYFromTile,
   noObstacles,
 };

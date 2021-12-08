@@ -58,7 +58,7 @@
   ],
   "staticFiles": {
     "staticPath": "public",
-    "watcherGlob": "**"
+    "excludeGlob": ["public"]
   },
   "scripts": {
     "prebuild": "yarn generateMocks && yarn extract:map",

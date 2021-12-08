@@ -1,8 +1,7 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
 
-import { MESSAGES } from "../../shared/UIMessages/index.mjs";
-import { BUFF_EFFECT_TYPES } from "../../shared/buffs/Buff.mjs";
+import { inputs } from "./inputs.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { Player } from "../gameObjects/Creatures/Player.mjs";
 import { Mob } from "../gameObjects/Creatures/Mob.mjs";
@@ -13,7 +12,9 @@ import {
   HitParticle,
 } from "../gameObjects/Particles/index.mjs";
 import { UIProfile } from "../ui/profile.mjs";
-import { inputs } from "./inputs.mjs";
+import { MESSAGES } from "../../shared/UIMessages/index.mjs";
+import { BUFF_EFFECT_TYPES } from "../../shared/buffs/Buff.mjs";
+import { getXYFromTile } from "../../shared/utils/index.mjs";
 
 const displayServerMessage = (game, msgArg) => {
   game.chat.addServerMessage(msgArg);
@@ -337,7 +338,7 @@ export const sockets = (game) => {
     }, []);
 
     lootingBags.forEach(({ id, positionTile }) => {
-      const objectWorldXY = game.getXYFromTile(
+      const objectWorldXY = getXYFromTile(
         positionTile.tileX,
         positionTile.tileY
       );

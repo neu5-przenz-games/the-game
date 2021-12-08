@@ -4,7 +4,6 @@ import {
   getDestTile,
   getPatrollingIndex,
   getRandomTile,
-  getXYFromTile,
   noObstacles,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
@@ -18,6 +17,7 @@ import {
   WEARABLE_TYPES,
 } from "../../../shared/gameItems/index.mjs";
 import { PLAYER_STATES } from "../../../shared/constants/index.mjs";
+import { getXYFromTile } from "../../../shared/utils/index.mjs";
 
 class Creature {
   constructor({

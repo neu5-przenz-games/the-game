@@ -1,7 +1,3 @@
-const TILE = 64;
-const TILE_HALF = TILE / 2;
-const TILE_QUARTER = TILE / 4;
-
 const HIT_TYPES = {
   NORMAL: {
     color: "#FFE62B",
@@ -17,4 +13,4 @@ const HIT_TYPES = {
   },
 };
 
-export { HIT_TYPES, TILE, TILE_HALF, TILE_QUARTER };
+export { HIT_TYPES };
