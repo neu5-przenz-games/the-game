@@ -36,10 +36,12 @@
     "mocha": "^8.3.0",
     "nightwatch": "^1.7.6",
     "nodemon": "^2.0.7",
+    "optimist": "^0.6.1",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-clean-easy": "^1.0.2",
     "parcel-plugin-static-files-copy": "^2.5.1",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "sass": "^1.35.1",
     "socket.io-client": "^4.1.2",
     "start-server-and-test": "^1.12.5"
@@ -56,7 +58,7 @@
   ],
   "staticFiles": {
     "staticPath": "public",
-    "watcherGlob": "**"
+    "excludeGlob": ["public"]
   },
   "scripts": {
     "prebuild": "yarn generateMocks && yarn extract:map",
@@ -70,6 +72,9 @@
     "dev": "parcel watch client/index.html",
     "dev:mini": "MAP=mini yarn dev",
     "dev:test": "MAP=test yarn dev",
+    "splitMap": "node ./scripts/splitMap.mjs",
+    "splitMap:mini": "MAP=mini node ./scripts/splitMap.mjs",
+    "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
     "lint": "eslint '**/*.{mjs, js}'",

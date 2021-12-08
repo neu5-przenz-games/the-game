@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import { Player } from "../gameObjects/creatures/Player.mjs";
-import { getAllies, getSelectedObject, getXYFromTile } from "../utils/algo.mjs";
+import { getAllies, getSelectedObject } from "../utils/algo.mjs";
 import { DEBUG_ITEMS_SETS } from "../../shared/debugUtils/index.mjs";
 import { UI_ITEM_ACTIONS } from "../../shared/UIItemActions/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
@@ -12,7 +12,10 @@ import {
   getNewLootingBagItems,
   removeItemsFromLootingBag,
 } from "../../shared/gameObjects/index.mjs";
-import { getDurationFromTicksToMS } from "../../shared/utils/index.mjs";
+import {
+  getDurationFromTicksToMS,
+  getXYFromTile,
+} from "../../shared/utils/index.mjs";
 import {
   getSkillPoints,
   setSkillPoints,

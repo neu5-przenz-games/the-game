@@ -1,4 +1,8 @@
-import { TILE, TILE_HALF, TILE_QUARTER } from "./constants.mjs";
+import {
+  TILE,
+  TILE_HALF,
+  TILE_QUARTER,
+} from "../../shared/constants/index.mjs";
 
 const directions = {
   west: { x: -2, y: 0, opposite: "east", nextX: -TILE, nextY: 0 },

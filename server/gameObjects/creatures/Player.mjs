@@ -3,13 +3,13 @@ import { ENERGY_MAX, ENERGY_REGEN_RATE, HP_MAX } from "./constants.mjs";
 import {
   getDestTile,
   getSelectedObject,
-  getXYFromTile,
   noObstacles,
 } from "../../utils/algo.mjs";
 import { isObjectAhead } from "../../utils/directions.mjs";
 import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
 import { MESSAGES_TYPES } from "../../../shared/UIMessages/index.mjs";
 import { PLAYER_STATES } from "../../../shared/constants/index.mjs";
+import { getXYFromTile } from "../../../shared/utils/index.mjs";
 
 class Player extends Creature {
   constructor({

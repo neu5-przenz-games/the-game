@@ -1,8 +1,15 @@
-import { FRAME_IN_MS } from "../constants/index.mjs";
+import { FRAME_IN_MS, TILE_HALF, TILE_QUARTER } from "../constants/index.mjs";
 
 const getDurationFromMSToTicks = (ms) => Math.ceil(ms / FRAME_IN_MS);
 
 const getDurationFromTicksToMS = (ticks) => Math.ceil(ticks * FRAME_IN_MS);
+
+const getMocksType = (type = "production") =>
+  ({
+    mini: "mini",
+    test: "test",
+    production: "production",
+  }[type]);
 
 const getObjectTiles = ({ positionTile, size = { x: 1, y: 1 } }) => {
   if (size.x <= 0 || size.y <= 0) {
@@ -65,9 +72,16 @@ const getSurroundingTiles = ({
   return tiles;
 };
 
+const getXYFromTile = (tileX, tileY) => ({
+  x: tileX * TILE_HALF - tileY * TILE_HALF,
+  y: tileX * TILE_QUARTER + tileY * TILE_QUARTER,
+});
+
 export {
   getDurationFromMSToTicks,
   getDurationFromTicksToMS,
+  getMocksType,
   getObjectTiles,
   getSurroundingTiles,
+  getXYFromTile,
 };

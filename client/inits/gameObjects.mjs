@@ -6,6 +6,10 @@ import { CopperOre } from "../gameObjects/CopperOre.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { RangedParticleEmitter } from "../utils/index.mjs";
 import { gameObjects } from "../../generated/gameObjects.mjs";
+import {
+  getSurroundingTiles,
+  getXYFromTile,
+} from "../../shared/utils/index.mjs";
 
 const TYPES = {
   CopperOre,
@@ -17,7 +21,7 @@ const TYPES = {
 
 export const initGameObjects = (game) => {
   gameObjects.forEach((gameObject) => {
-    const objectWorldXY = game.groundLayer.tileToWorldXY(
+    const objectWorldXY = getXYFromTile(
       gameObject.positionTile.tileX,
       gameObject.positionTile.tileY
     );
@@ -60,12 +64,11 @@ export const initGameObjects = (game) => {
     if (gameObject.type === "HealingStone") {
       const { positionTile, sizeToIncrease, size } = gameObject;
 
-      const rangeTiles = game.groundLayer.getTilesWithin(
-        positionTile.tileX - sizeToIncrease.x,
-        positionTile.tileY - sizeToIncrease.y,
-        sizeToIncrease.x * 2 + size.x,
-        sizeToIncrease.y * 2 + size.y
-      );
+      const rangeTiles = getSurroundingTiles({
+        positionTile,
+        size,
+        sizeToIncrease,
+      });
 
       // in the future maybe keep it in the array and run only if the player is getting close
       const particleEmitter = new RangedParticleEmitter({

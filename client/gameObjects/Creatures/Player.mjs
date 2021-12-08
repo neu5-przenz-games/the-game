@@ -111,10 +111,7 @@ class Player extends Creature {
           this.tileMarked.toggleVisible(false);
         }
 
-        const tile = this.scene.groundLayer.tileToWorldXY(
-          destTile.tileX,
-          destTile.tileY
-        );
+        const tile = this.scene.getTileFromXY(destTile.tileX, destTile.tileY);
 
         this.tileMarked.setPosition(tile.x + OFFSET.X, tile.y + OFFSET.Y);
         this.tileMarked.toggleVisible(true, tile);

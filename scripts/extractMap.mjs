@@ -6,10 +6,10 @@
  * In this script we take that array and we create two-dimensional array
  * in the phaser-like manner so it can be used on server.
  */
-import { copyFile, readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 import { gameObjects } from "../generated/gameObjects.mjs"; // eslint-disable-line
-import { getMocksType } from "./utils.mjs";
+import { getMocksType } from "../shared/utils/index.mjs";
 
 const mocksType = getMocksType(process.env.MAP);
 
@@ -57,16 +57,6 @@ gameObjects.forEach((gameObject) => {
     }
   }
 });
-
-copyFile(
-  `tiledMap/${mocksType}.json`,
-  "./public/assets/map/map.json",
-  (err) => {
-    if (err) return console.log(err);
-
-    return 1;
-  }
-);
 
 writeFileSync(
   "./public/assets/map/map.mjs",
