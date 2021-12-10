@@ -54,6 +54,7 @@ describe("Player", () => {
         "socketId",
         "skills",
         "speed",
+        "speedToBeSet",
         "state",
         "positionTile",
         "dest",
