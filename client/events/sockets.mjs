@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import io from "socket.io-client";
 
 import { inputs } from "./inputs.mjs";
+import { debugSockets } from "./debug.mjs";
 import { LootingBag } from "../gameObjects/LootingBag.mjs";
 import { Player } from "../gameObjects/Creatures/Player.mjs";
 import { Mob } from "../gameObjects/Creatures/Mob.mjs";
@@ -406,47 +407,6 @@ export const sockets = (game) => {
   });
 
   if (process.env.NODE_ENV === "development") {
-    window.e2e = {
-      ...window.e2e,
-      killPlayer: (playerName) => {
-        game.socket.emit("game:killPlayer", {
-          name: playerName,
-        });
-      },
-      clearPlayerItems: (playerName) => {
-        game.socket.emit("player:items:clear", {
-          name: playerName,
-        });
-      },
-      givePlayerABag: (playerName) => {
-        game.socket.emit("player:items:give-a-bag", {
-          name: playerName,
-        });
-      },
-      setPlayerItems: (playerName, itemsSetType) => {
-        game.socket.emit("player:items:set", {
-          name: playerName,
-          itemsSetType,
-        });
-      },
-      moveItemToBackpackFromEquipment: (playerName, itemID) => {
-        game.socket.emit("player:items:move-to-backpack", {
-          name: playerName,
-          itemID,
-        });
-      },
-      destroyItemFromBackpack: (playerName, itemID) => {
-        game.socket.emit("player:items:destroy-from-backpack", {
-          name: playerName,
-          itemID,
-        });
-      },
-      setPlayerSkills: (playerName, skillType) => {
-        game.socket.emit("player:skills:set", {
-          name: playerName,
-          skillType,
-        });
-      },
-    };
+    debugSockets(game);
   }
 };

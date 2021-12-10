@@ -282,6 +282,10 @@ class Creature {
     this.equipment.weapon = value;
   }
 
+  setSpeed(value) {
+    this.speed = value;
+  }
+
   hasItems() {
     return (
       this.backpack.items.length > 0 || Object.keys(this.equipment).length > 0

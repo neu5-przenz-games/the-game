@@ -1,5 +1,8 @@
 import { LEVEL_TYPES } from "../../shared/skills/index.mjs";
-import { DEBUG_ITEMS_SETS_TYPES } from "../../shared/debugUtils/index.mjs";
+import {
+  DEBUG_ITEMS_SETS_TYPES,
+  DEBUG_PLAYER_SPEEDS_KEYS,
+} from "../../shared/debugUtils/index.mjs";
 
 export const debugMenu = (game) => {
   const sheet = document.createElement("style");
@@ -144,12 +147,35 @@ export const debugMenu = (game) => {
   DEBUGHitAreaCheckbox.type = "checkbox";
   DEBUGHitAreaLabel.appendChild(DEBUGHitAreaCheckbox);
 
+  // set players speed
+  const DEBUGSetPlayerSpeedLabel = document.createElement("label");
+  DEBUGSetPlayerSpeedLabel.classList.add("DEBUG_Label");
+  DEBUGSetPlayerSpeedLabel.innerText = "Set player speed";
+  const DEBUGSetPlayerSpeedSelect = document.createElement("select");
+  const DEBUGSetPlayerSpeedDefault = document.createElement("option");
+  DEBUGSetPlayerSpeedDefault.innerText = "default";
+  DEBUGSetPlayerSpeedDefault.value = DEBUG_PLAYER_SPEEDS_KEYS.SPEED_DEFAULT;
+  const DEBUGSetPlayerSpeed4 = document.createElement("option");
+  DEBUGSetPlayerSpeed4.innerText = "x2";
+  DEBUGSetPlayerSpeed4.value = DEBUG_PLAYER_SPEEDS_KEYS.SPEED_X2;
+  const DEBUGSetPlayerSpeed8 = document.createElement("option");
+  DEBUGSetPlayerSpeed8.innerText = "x4";
+  DEBUGSetPlayerSpeed8.value = DEBUG_PLAYER_SPEEDS_KEYS.SPEED_X4;
+  const DEBUGSetPlayerSpeedBtn = document.createElement("button");
+  DEBUGSetPlayerSpeedBtn.innerText = "Set speed";
+  DEBUGSetPlayerSpeedSelect.appendChild(DEBUGSetPlayerSpeedDefault);
+  DEBUGSetPlayerSpeedSelect.appendChild(DEBUGSetPlayerSpeed4);
+  DEBUGSetPlayerSpeedSelect.appendChild(DEBUGSetPlayerSpeed8);
+  DEBUGSetPlayerSpeedLabel.appendChild(DEBUGSetPlayerSpeedSelect);
+  DEBUGSetPlayerSpeedLabel.appendChild(DEBUGSetPlayerSpeedBtn);
+
   // append fields to fieldset
   DEBUGFieldset.appendChild(DEBUGClearPlayerItemsLabel);
   DEBUGFieldset.appendChild(DEBUGSetPlayerEquipmentLabel);
   DEBUGFieldset.appendChild(DEBUGSetPlayerSkillsLabel);
   DEBUGFieldset.appendChild(DEBUGGivePlayerBagLabel);
   DEBUGFieldset.appendChild(DEBUGHitAreaLabel);
+  DEBUGFieldset.appendChild(DEBUGSetPlayerSpeedLabel);
 
   // append fieldset to content
   DEBUGContent.appendChild(DEBUGFieldset);
@@ -195,5 +221,12 @@ export const debugMenu = (game) => {
         game.input.removeDebug(obj);
       }
     });
+  };
+
+  DEBUGSetPlayerSpeedBtn.onclick = () => {
+    window.e2e.setPlayerSpeed(
+      game.mainPlayerName,
+      DEBUGSetPlayerSpeedSelect.value
+    );
   };
 };
