@@ -85,6 +85,7 @@ class Creature {
     const { x, y } = getXYFromTile(positionTile.tileX, positionTile.tileY);
     this.x = x;
     this.y = y;
+    this.speedToBeSet = null;
     this.toRespawn = false;
     this.isParrying = false;
     this.patrollingIndex = 0;
@@ -282,7 +283,12 @@ class Creature {
     this.equipment.weapon = value;
   }
 
+  setSpeedToBeSet(value) {
+    this.speedToBeSet = value;
+  }
+
   setSpeed(value) {
+    this.setSpeedToBeSet(null);
     this.speed = value;
   }
 

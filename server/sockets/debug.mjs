@@ -128,7 +128,7 @@ export const debugSockets = ({ io, players, socket }) => {
     const playerSpeed = DEBUG_PLAYER_SPEED_MAP[speedType];
 
     if (player && playerSpeed) {
-      player.setSpeed(playerSpeed);
+      player.setSpeedToBeSet(playerSpeed);
     }
   });
 };

@@ -259,12 +259,17 @@ const loop = ({ gameObjects, healingStones, io, players }) => {
       }
     }
 
-    if (player.next === null && player.dropSelection) {
-      player.dropSelection = false;
-      player.dest = null;
-      player.selectedObjectName = null;
-      player.selectedObjectTile = null;
-      player.isWalking = false;
+    if (player.next === null) {
+      if (player.dropSelection) {
+        player.dropSelection = false;
+        player.dest = null;
+        player.selectedObjectName = null;
+        player.selectedObjectTile = null;
+        player.isWalking = false;
+      }
+      if (player.speedToBeSet) {
+        player.setSpeed(player.speedToBeSet);
+      }
     }
 
     if (player.attackDelayTicks.value < player.attackDelayTicks.maxValue) {
