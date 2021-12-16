@@ -1,3 +1,4 @@
+import { getRandomTile } from "../utils/algo.mjs";
 import {
   DEBUG_ITEMS_SETS,
   DEBUG_PLAYER_SPEED_MAP,
@@ -10,7 +11,7 @@ import {
   shapeSkillsForClient,
 } from "../../shared/skills/index.mjs";
 
-export const debugSockets = ({ io, players, socket }) => {
+export const debugSockets = ({ gameObjects, io, map, players, socket }) => {
   socket.on("game:killPlayer", ({ name }) => {
     const player = players.get(name);
 
@@ -130,5 +131,28 @@ export const debugSockets = ({ io, players, socket }) => {
     if (player && playerSpeed) {
       player.setSpeedToBeSet(playerSpeed);
     }
+  });
+
+  socket.on("player:teleport", ({ name, teleportDestKey }) => {
+    const player = players.get(name);
+    // const playerSpeed = DEBUG_PLAYER_SPEED_MAP[speedType];
+
+    console.log(player, teleportDestKey);
+
+    const tileToTeleport = getRandomTile({
+      map,
+      obj: gameObjects.find((b) => b.name === player.settings.respawnBuilding),
+      players,
+      sizeToIncrease: {
+        x: 2,
+        y: 2,
+      },
+    });
+
+    player.teleport(tileToTeleport);
+
+    // if (player && playerSpeed) {
+    //   player.setSpeedToBeSet(playerSpeed);
+    // }
   });
 };

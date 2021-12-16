@@ -712,16 +712,22 @@ class Creature {
     return false;
   }
 
+  teleport(tileToTeleport) {
+    const teleportXY = getXYFromTile(
+      tileToTeleport.tileX,
+      tileToTeleport.tileY
+    );
+    this.positionTile = tileToTeleport;
+    this.x = teleportXY.x;
+    this.y = teleportXY.y;
+  }
+
   respawn(respawnTile) {
     this.isDead = false;
     this.toRespawn = false;
     this.hp = HP_MAX;
 
-    const respawnXY = getXYFromTile(respawnTile.tileX, respawnTile.tileY);
-    this.positionTile = respawnTile;
-    this.respawnDelayTicks.value = 0;
-    this.x = respawnXY.x;
-    this.y = respawnXY.y;
+    this.teleport(respawnTile);
   }
 
   resetSelected() {

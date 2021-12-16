@@ -2,6 +2,7 @@ import { LEVEL_TYPES } from "../../shared/skills/index.mjs";
 import {
   DEBUG_ITEMS_SETS_TYPES,
   DEBUG_PLAYER_SPEEDS_KEYS,
+  DEBUG_PLAYER_TELEPORT_KEYS,
 } from "../../shared/debugUtils/index.mjs";
 
 export const debugMenu = (game) => {
@@ -152,6 +153,7 @@ export const debugMenu = (game) => {
   DEBUGSetPlayerSpeedLabel.classList.add("DEBUG_Label");
   DEBUGSetPlayerSpeedLabel.innerText = "Set player speed";
   const DEBUGSetPlayerSpeedSelect = document.createElement("select");
+  // options
   const DEBUGSetPlayerSpeedDefault = document.createElement("option");
   DEBUGSetPlayerSpeedDefault.innerText = "default";
   DEBUGSetPlayerSpeedDefault.value = DEBUG_PLAYER_SPEEDS_KEYS.SPEED_DEFAULT;
@@ -160,14 +162,39 @@ export const debugMenu = (game) => {
   DEBUGSetPlayerSpeed4.value = DEBUG_PLAYER_SPEEDS_KEYS.SPEED_X2;
   const DEBUGSetPlayerSpeed8 = document.createElement("option");
   DEBUGSetPlayerSpeed8.innerText = "x4";
+  // button
   DEBUGSetPlayerSpeed8.value = DEBUG_PLAYER_SPEEDS_KEYS.SPEED_X4;
   const DEBUGSetPlayerSpeedBtn = document.createElement("button");
   DEBUGSetPlayerSpeedBtn.innerText = "Set speed";
+  // append
   DEBUGSetPlayerSpeedSelect.appendChild(DEBUGSetPlayerSpeedDefault);
   DEBUGSetPlayerSpeedSelect.appendChild(DEBUGSetPlayerSpeed4);
   DEBUGSetPlayerSpeedSelect.appendChild(DEBUGSetPlayerSpeed8);
   DEBUGSetPlayerSpeedLabel.appendChild(DEBUGSetPlayerSpeedSelect);
   DEBUGSetPlayerSpeedLabel.appendChild(DEBUGSetPlayerSpeedBtn);
+
+  // set teleport areas
+  const DEBUGTeleportToAreaLabel = document.createElement("label");
+  DEBUGTeleportToAreaLabel.classList.add("DEBUG_Label");
+  DEBUGTeleportToAreaLabel.innerText = "Teleport to";
+  const DEBUGTeleportToAreaSelect = document.createElement("select");
+
+  // options
+  Object.keys(DEBUG_PLAYER_TELEPORT_KEYS).forEach((key) => {
+    const DEBUGTeleportOption = document.createElement("option");
+    DEBUGTeleportOption.innerText = key;
+    DEBUGTeleportOption.value = key;
+
+    DEBUGTeleportToAreaSelect.appendChild(DEBUGTeleportOption);
+  });
+
+  // button
+  const DEBUGTeleportToAreaBtn = document.createElement("button");
+  DEBUGTeleportToAreaBtn.innerText = "Teleport";
+
+  // append
+  DEBUGTeleportToAreaLabel.appendChild(DEBUGTeleportToAreaSelect);
+  DEBUGTeleportToAreaLabel.appendChild(DEBUGTeleportToAreaBtn);
 
   // append fields to fieldset
   DEBUGFieldset.appendChild(DEBUGClearPlayerItemsLabel);
@@ -176,6 +203,7 @@ export const debugMenu = (game) => {
   DEBUGFieldset.appendChild(DEBUGGivePlayerBagLabel);
   DEBUGFieldset.appendChild(DEBUGHitAreaLabel);
   DEBUGFieldset.appendChild(DEBUGSetPlayerSpeedLabel);
+  DEBUGFieldset.appendChild(DEBUGTeleportToAreaLabel);
 
   // append fieldset to content
   DEBUGContent.appendChild(DEBUGFieldset);
@@ -228,5 +256,9 @@ export const debugMenu = (game) => {
       game.mainPlayerName,
       DEBUGSetPlayerSpeedSelect.value
     );
+  };
+
+  DEBUGTeleportToAreaBtn.onclick = () => {
+    window.e2e.teleportTo(game.mainPlayerName, DEBUGTeleportToAreaSelect.value);
   };
 };
