@@ -89,10 +89,13 @@ const DEBUG_PLAYER_TELEPORT_KEYS = {
 };
 
 const DEBUG_PLAYER_TELEPORT_MAP = {
-  [DEBUG_PLAYER_TELEPORT_KEYS.DEFAULT]: "respawn building",
+  [DEBUG_PLAYER_TELEPORT_KEYS.DEFAULT]: {
+    displayName: "respawn building",
+  },
   [DEBUG_PLAYER_TELEPORT_KEYS.SECOND_AREA]: {
+    displayName: "middle right",
     positionTile: { tileX: 55, tileY: 10 },
-    size: { tileX: 1, tileY: 1 },
+    size: { x: 1, y: 1 },
   },
 };
 

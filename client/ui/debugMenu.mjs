@@ -2,7 +2,7 @@ import { LEVEL_TYPES } from "../../shared/skills/index.mjs";
 import {
   DEBUG_ITEMS_SETS_TYPES,
   DEBUG_PLAYER_SPEEDS_KEYS,
-  DEBUG_PLAYER_TELEPORT_KEYS,
+  DEBUG_PLAYER_TELEPORT_MAP,
 } from "../../shared/debugUtils/index.mjs";
 
 export const debugMenu = (game) => {
@@ -180,9 +180,9 @@ export const debugMenu = (game) => {
   const DEBUGTeleportToAreaSelect = document.createElement("select");
 
   // options
-  Object.keys(DEBUG_PLAYER_TELEPORT_KEYS).forEach((key) => {
+  Object.entries(DEBUG_PLAYER_TELEPORT_MAP).forEach(([key, value]) => {
     const DEBUGTeleportOption = document.createElement("option");
-    DEBUGTeleportOption.innerText = key;
+    DEBUGTeleportOption.innerText = value.displayName;
     DEBUGTeleportOption.value = key;
 
     DEBUGTeleportToAreaSelect.appendChild(DEBUGTeleportOption);

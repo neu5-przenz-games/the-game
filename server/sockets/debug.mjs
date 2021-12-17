@@ -2,6 +2,8 @@ import { getRandomTile } from "../utils/algo.mjs";
 import {
   DEBUG_ITEMS_SETS,
   DEBUG_PLAYER_SPEED_MAP,
+  DEBUG_PLAYER_TELEPORT_KEYS,
+  DEBUG_PLAYER_TELEPORT_MAP,
 } from "../../shared/debugUtils/index.mjs";
 import { gameItems } from "../../shared/init/gameItems/index.mjs";
 import { bag } from "../../shared/init/gameItems/backpack.mjs";
@@ -135,24 +137,27 @@ export const debugSockets = ({ gameObjects, io, map, players, socket }) => {
 
   socket.on("player:teleport", ({ name, teleportDestKey }) => {
     const player = players.get(name);
-    // const playerSpeed = DEBUG_PLAYER_SPEED_MAP[speedType];
+    const teleportTo = DEBUG_PLAYER_TELEPORT_MAP[teleportDestKey];
 
-    console.log(player, teleportDestKey);
+    if (!player || !teleportTo) {
+      return;
+    }
 
-    const tileToTeleport = getRandomTile({
-      map,
-      obj: gameObjects.find((b) => b.name === player.settings.respawnBuilding),
-      players,
-      sizeToIncrease: {
-        x: 2,
-        y: 2,
-      },
-    });
-
-    player.teleport(tileToTeleport);
-
-    // if (player && playerSpeed) {
-    //   player.setSpeedToBeSet(playerSpeed);
-    // }
+    player.teleport(
+      getRandomTile({
+        map,
+        players,
+        sizeToIncrease: {
+          x: 2,
+          y: 2,
+        },
+        obj:
+          teleportDestKey === DEBUG_PLAYER_TELEPORT_KEYS.DEFAULT
+            ? gameObjects.find(
+                (b) => b.name === player.settings.respawnBuilding
+              )
+            : teleportTo,
+      })
+    );
   });
 };
