@@ -1,13 +1,15 @@
 {
     "DEBUG_PLAYER_TELEPORT_KEYS": {
-        "DEFAULT": "DEFAULT",
-        "SECOND_AREA": "SECOND_AREA"
+        "MIDDLE_LEFT": "MIDDLE_LEFT",
+        "MIDDLE_RIGHT": "MIDDLE_RIGHT"
     },
     "DEBUG_PLAYER_TELEPORT_MAP": {
-        "DEFAULT": {
-            "displayName": "respawn building"
+        "MIDDLE_LEFT": {
+            "displayName": "middle left",
+            "positionTile": { "tileX": 50, "tileY": 100 },
+            "size": { "x": 1, "y": 1 }
         },
-        "SECOND_AREA": {
+        "MIDDLE_RIGHT": {
             "displayName": "middle right",
             "positionTile": { "tileX": 300, "tileY": 80 },
             "size": { "x": 1, "y": 1 }
