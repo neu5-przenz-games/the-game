@@ -1,0 +1,16 @@
+{
+    "DEBUG_PLAYER_TELEPORT_KEYS": {
+        "DEFAULT": "DEFAULT",
+        "SECOND_AREA": "SECOND_AREA"
+    },
+    "DEBUG_PLAYER_TELEPORT_MAP": {
+        "DEFAULT": {
+            "displayName": "respawn building"
+        },
+        "SECOND_AREA": {
+            "displayName": "middle right",
+            "positionTile": { "tileX": 55, "tileY": 10 },
+            "size": { "x": 1, "y": 1 }
+        }
+    }
+}

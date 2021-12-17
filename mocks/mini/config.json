@@ -1,0 +1,10 @@
+{
+    "DEBUG_PLAYER_TELEPORT_KEYS": {
+        "DEFAULT": "DEFAULT"
+    },
+    "DEBUG_PLAYER_TELEPORT_MAP": {
+        "DEFAULT": {
+            "displayName": "respawn building"
+        }
+    }
+}
