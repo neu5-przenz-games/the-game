@@ -712,12 +712,9 @@ class Creature {
     return false;
   }
 
-  teleport(tileToTeleport) {
-    const teleportXY = getXYFromTile(
-      tileToTeleport.tileX,
-      tileToTeleport.tileY
-    );
-    this.positionTile = tileToTeleport;
+  teleport(teleportTile) {
+    const teleportXY = getXYFromTile(teleportTile.tileX, teleportTile.tileY);
+    this.positionTile = teleportTile;
     this.x = teleportXY.x;
     this.y = teleportXY.y;
   }

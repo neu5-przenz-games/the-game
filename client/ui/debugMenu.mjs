@@ -174,10 +174,10 @@ export const debugMenu = (game) => {
   DEBUGSetPlayerSpeedLabel.appendChild(DEBUGSetPlayerSpeedBtn);
 
   // set teleport areas
-  const DEBUGTeleportToAreaLabel = document.createElement("label");
-  DEBUGTeleportToAreaLabel.classList.add("DEBUG_Label");
-  DEBUGTeleportToAreaLabel.innerText = "Teleport to";
-  const DEBUGTeleportToAreaSelect = document.createElement("select");
+  const DEBUGTeleportAreaLabel = document.createElement("label");
+  DEBUGTeleportAreaLabel.classList.add("DEBUG_Label");
+  DEBUGTeleportAreaLabel.innerText = "Teleport to";
+  const DEBUGTeleportAreaSelect = document.createElement("select");
 
   // options
   Object.entries(DEBUG_PLAYER_TELEPORT_MAP).forEach(([key, value]) => {
@@ -185,16 +185,16 @@ export const debugMenu = (game) => {
     DEBUGTeleportOption.innerText = value.displayName;
     DEBUGTeleportOption.value = key;
 
-    DEBUGTeleportToAreaSelect.appendChild(DEBUGTeleportOption);
+    DEBUGTeleportAreaSelect.appendChild(DEBUGTeleportOption);
   });
 
   // button
-  const DEBUGTeleportToAreaBtn = document.createElement("button");
-  DEBUGTeleportToAreaBtn.innerText = "Teleport";
+  const DEBUGTeleportAreaBtn = document.createElement("button");
+  DEBUGTeleportAreaBtn.innerText = "Teleport";
 
   // append
-  DEBUGTeleportToAreaLabel.appendChild(DEBUGTeleportToAreaSelect);
-  DEBUGTeleportToAreaLabel.appendChild(DEBUGTeleportToAreaBtn);
+  DEBUGTeleportAreaLabel.appendChild(DEBUGTeleportAreaSelect);
+  DEBUGTeleportAreaLabel.appendChild(DEBUGTeleportAreaBtn);
 
   // append fields to fieldset
   DEBUGFieldset.appendChild(DEBUGClearPlayerItemsLabel);
@@ -203,7 +203,7 @@ export const debugMenu = (game) => {
   DEBUGFieldset.appendChild(DEBUGGivePlayerBagLabel);
   DEBUGFieldset.appendChild(DEBUGHitAreaLabel);
   DEBUGFieldset.appendChild(DEBUGSetPlayerSpeedLabel);
-  DEBUGFieldset.appendChild(DEBUGTeleportToAreaLabel);
+  DEBUGFieldset.appendChild(DEBUGTeleportAreaLabel);
 
   // append fieldset to content
   DEBUGContent.appendChild(DEBUGFieldset);
@@ -258,7 +258,7 @@ export const debugMenu = (game) => {
     );
   };
 
-  DEBUGTeleportToAreaBtn.onclick = () => {
-    window.e2e.teleportTo(game.mainPlayerName, DEBUGTeleportToAreaSelect.value);
+  DEBUGTeleportAreaBtn.onclick = () => {
+    window.e2e.teleport(game.mainPlayerName, DEBUGTeleportAreaSelect.value);
   };
 };

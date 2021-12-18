@@ -137,9 +137,9 @@ export const debugSockets = ({ gameObjects, io, map, players, socket }) => {
 
   socket.on("player:teleport", ({ name, teleportDestKey }) => {
     const player = players.get(name);
-    const teleportTo = DEBUG_PLAYER_TELEPORT_MAP[teleportDestKey];
+    const teleportObj = DEBUG_PLAYER_TELEPORT_MAP[teleportDestKey];
 
-    if (!player || !teleportTo) {
+    if (!player || !teleportObj) {
       return;
     }
 
@@ -156,7 +156,7 @@ export const debugSockets = ({ gameObjects, io, map, players, socket }) => {
             ? gameObjects.find(
                 (b) => b.name === player.settings.respawnBuilding
               )
-            : teleportTo,
+            : teleportObj,
       })
     );
   });
