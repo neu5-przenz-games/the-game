@@ -483,7 +483,9 @@ const sockets = ({ gameObjects, httpServer, players }) => {
 
       if (process.env.NODE_ENV === "development") {
         debugSockets({
+          gameObjects,
           io,
+          map,
           players,
           socket,
         });

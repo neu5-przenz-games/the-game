@@ -13,6 +13,7 @@ import {
 } from "../init/gameItems/weapon.mjs";
 import { quiver } from "../init/gameItems/quiver.mjs";
 import { arrowsBunch } from "../init/gameItems/arrows.mjs";
+import { config } from "../../generated/config.mjs";
 
 const DEBUG_ITEMS_SETS_TYPES = {
   ARCHER_BASIC: "ARCHER_BASIC",
@@ -83,9 +84,13 @@ const DEBUG_PLAYER_SPEED_MAP = {
   [DEBUG_PLAYER_SPEEDS_KEYS.SPEED_X4]: 8,
 };
 
+const { DEBUG_PLAYER_TELEPORT_KEYS, DEBUG_PLAYER_TELEPORT_MAP } = config;
+
 export {
   DEBUG_ITEMS_SETS_TYPES,
   DEBUG_ITEMS_SETS,
   DEBUG_PLAYER_SPEEDS_KEYS,
   DEBUG_PLAYER_SPEED_MAP,
+  DEBUG_PLAYER_TELEPORT_KEYS,
+  DEBUG_PLAYER_TELEPORT_MAP,
 };

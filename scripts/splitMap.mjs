@@ -23,7 +23,7 @@ const splitMap = (out = "chunks", chunkWidth = 16, chunkHeight = 16) => {
 
   if (!existsSync(outputDirectory)) mkdirSync(outputDirectory);
 
-  readFile(join(mapsPath, fileName), "utf8", function (err, data) {
+  readFile(join(mapsPath, fileName), "utf8", (err, data) => {
     if (err) throw err;
     const map = JSON.parse(data);
     const mapWidth = map.width;
@@ -53,7 +53,7 @@ const splitMap = (out = "chunks", chunkWidth = 16, chunkHeight = 16) => {
     writeFile(
       join(outputDirectory, "master.json"),
       JSON.stringify(master),
-      function (writingError) {
+      (writingError) => {
         if (writingError) throw writingError;
         console.log("Master file written");
       }

@@ -9,10 +9,12 @@ import { players as miniPlayers } from "./mini/players.mjs";
 import { players as testPlayers } from "./test/players.mjs";
 import { players as productionPlayers } from "./production/players.mjs";
 
-export const getConfig = (mapType) => {
-  const mapJson = JSON.parse(readFileSync(`tiledMap/${mapType}.json`, "utf8"));
+export const getConfig = (type) => {
+  const config = JSON.parse(readFileSync(`mocks/${type}/config.json`, "utf8"));
+  const mapJson = JSON.parse(readFileSync(`tiledMap/${type}.json`, "utf8"));
 
   return {
+    ...config,
     mapImgDimensions: {
       width: mapJson.width * mapJson.tilewidth,
     },

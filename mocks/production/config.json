@@ -1,0 +1,18 @@
+{
+    "DEBUG_PLAYER_TELEPORT_KEYS": {
+        "MIDDLE_LEFT": "MIDDLE_LEFT",
+        "MIDDLE_RIGHT": "MIDDLE_RIGHT"
+    },
+    "DEBUG_PLAYER_TELEPORT_MAP": {
+        "MIDDLE_LEFT": {
+            "displayName": "middle left",
+            "positionTile": { "tileX": 50, "tileY": 100 },
+            "size": { "x": 1, "y": 1 }
+        },
+        "MIDDLE_RIGHT": {
+            "displayName": "middle right",
+            "positionTile": { "tileX": 300, "tileY": 80 },
+            "size": { "x": 1, "y": 1 }
+        }
+    }
+}

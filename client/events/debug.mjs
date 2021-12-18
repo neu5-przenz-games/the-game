@@ -46,5 +46,11 @@ export const debugSockets = (game) => {
         speedType,
       });
     },
+    teleport: (playerName, teleportDestKey) => {
+      game.socket.emit("player:teleport", {
+        name: playerName,
+        teleportDestKey,
+      });
+    },
   };
 };
