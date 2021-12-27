@@ -6,13 +6,14 @@ module.exports = {
     node: true,
   },
   extends: ["airbnb-base", "plugin:prettier/recommended"],
-  parser: "babel-eslint",
+  parser: "@babel/eslint-parser",
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: "module",
     ecmaFeatures: {
       modules: true,
     },
+    requireConfigFile: false,
   },
   plugins: ["import"],
   rules: {
