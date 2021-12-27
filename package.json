@@ -23,16 +23,17 @@
   },
   "devDependencies": {
     "0x": "^4.11.0",
-    "babel-eslint": "^10.1.0",
+    "@babel/core": "^7.16.5",
+    "@babel/eslint-parser": "^7.16.5",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "chromedriver": "^95.0.0",
     "ejs": "^3.1.6",
-    "eslint": "^7.21.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.3.1",
+    "eslint": "^8.5.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.22.2",
+    "eslint-plugin-prettier": "^4.0.0",
     "mocha": "^8.3.0",
     "nightwatch": "^1.7.6",
     "nodemon": "^2.0.7",
@@ -58,7 +59,9 @@
   ],
   "staticFiles": {
     "staticPath": "public",
-    "excludeGlob": ["public"]
+    "excludeGlob": [
+      "public"
+    ]
   },
   "scripts": {
     "prebuild": "yarn generateMocks && yarn extract:map",
