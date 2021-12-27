@@ -25,6 +25,29 @@ const getPointerPosition = ({ x, y, width }) => {
   };
 };
 
+const getContent = ({ top, left }) => {
+  const fragment = new DocumentFragment();
+
+  const mapWrapper = document.createElement("div");
+  mapWrapper.classList.add("map-wrapper");
+
+  const mapImg = new Image();
+  mapImg.classList.add("map-wrapper__map");
+  mapImg.src = "./assets/map/map.png";
+
+  const playerPointer = document.createElement("div");
+  playerPointer.classList.add("map-wrapper__player-pointer");
+
+  playerPointer.style.top = top;
+  playerPointer.style.left = left;
+
+  mapWrapper.appendChild(mapImg);
+  mapWrapper.appendChild(playerPointer);
+  fragment.appendChild(mapWrapper);
+
+  return fragment;
+};
+
 const getFooter = () => {
   const fragment = new DocumentFragment();
 
@@ -49,33 +72,10 @@ export class UIDialogMap extends UIDialogWrapper {
     };
   }
 
-  getContent = ({ top, left }) => {
-    const fragment = new DocumentFragment();
-
-    const mapWrapper = document.createElement("div");
-    mapWrapper.classList.add("map-wrapper");
-
-    const mapImg = new Image();
-    mapImg.classList.add("map-wrapper__map");
-    mapImg.src = "./assets/map/map.png";
-
-    const playerPointer = document.createElement("div");
-    playerPointer.classList.add("map-wrapper__player-pointer");
-
-    playerPointer.style.top = top;
-    playerPointer.style.left = left;
-
-    mapWrapper.appendChild(mapImg);
-    mapWrapper.appendChild(playerPointer);
-    fragment.appendChild(mapWrapper);
-
-    return fragment;
-  };
-
   show({ x, y }, { width }) {
     this.setListeners();
 
-    const content = this.getContent(getPointerPosition({ x, y, width }));
+    const content = getContent(getPointerPosition({ x, y, width }));
     const footer = getFooter();
 
     super.show({
