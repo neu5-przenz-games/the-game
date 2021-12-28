@@ -80,7 +80,7 @@
     "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
-    "lint": "eslint '**/*.{mjs, js}'",
+    "lint": "eslint '**/*.{mjs,js}'",
     "lint:fix": "npm run lint -- --fix",
     "serve:dev": "NODE_ENV=development nodemon server/index.mjs",
     "serve:test": "NODE_ENV=development node server/index.mjs",
