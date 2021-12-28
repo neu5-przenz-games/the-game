@@ -2,3 +2,7 @@ dist/
 node_modules/
 public/assets/map/map.mjs
 generated/
+e2e-commands/
+e2e-page-objects/
+e2e/
+nightwatch.conf.js
