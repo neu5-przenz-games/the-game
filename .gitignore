@@ -8,10 +8,3 @@ dist/
 tests_output/
 generated/
 profileNodeJS/
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
