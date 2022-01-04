@@ -8,8 +8,8 @@ dist/
 tests_output/
 generated/
 profileNodeJS/
+.pnp.*
 .yarn/*
-!.yarn/cache
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
