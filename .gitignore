@@ -3,8 +3,15 @@
 yarn-error.log
 chromedriver.log
 node_modules/
-.cache/
+.parcel-cache/
 dist/
 tests_output/
 generated/
 profileNodeJS/
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

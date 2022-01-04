@@ -1,13 +1,9 @@
 {
   "name": "the-game",
   "version": "0.0.1",
-  "main": "index.mjs",
   "repository": "https://github.com/neu5-przenz-games/the-game",
   "author": "neu5",
   "license": "MIT",
-  "engines": {
-    "node": "^16"
-  },
   "alias": {
     "shared": "./shared"
   },
@@ -25,6 +21,7 @@
     "0x": "^4.11.0",
     "@babel/core": "^7.16.5",
     "@babel/eslint-parser": "^7.16.5",
+    "@parcel/transformer-sass": "^2.0.1",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "chromedriver": "^95.0.0",
@@ -38,7 +35,7 @@
     "nightwatch": "^1.7.6",
     "nodemon": "^2.0.7",
     "optimist": "^0.6.1",
-    "parcel-bundler": "^1.12.4",
+    "parcel": "^2.0.1",
     "parcel-plugin-clean-easy": "^1.0.2",
     "parcel-plugin-static-files-copy": "^2.5.1",
     "prettier": "^2.2.1",
@@ -63,16 +60,17 @@
       "public"
     ]
   },
+  "packageManager": "yarn@3.1.1",
   "scripts": {
     "prebuild": "yarn generateMocks && yarn extract:map",
-    "build": "if test \"$NODE_ENV\" = \"production\"; then yarn build:prod; else yarn build:dev; fi",
+    "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
     "build:prod": "NODE_ENV=production parcel build client/index.html",
-    "build:dev": "NODE_ENV=development parcel build client/index.html --no-minify",
-    "build:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map && NODE_ENV=development parcel build client/index.html --no-minify",
+    "build:dev": "NODE_ENV=development parcel build client/index.html --no-optimize",
+    "build:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map && NODE_ENV=development parcel build client/index.html --no-optimize",
     "build:html": "node ./scripts/generateStaticPages.mjs",
     "postbuild": "yarn build:html",
     "predev": "yarn generateMocks && yarn extract:map",
-    "dev": "parcel watch client/index.html",
+    "dev": "yarn predev && parcel watch client/index.html",
     "dev:mini": "MAP=mini yarn dev",
     "dev:test": "MAP=test yarn dev",
     "splitMap": "node ./scripts/splitMap.mjs",
@@ -88,7 +86,7 @@
     "test:unit": "PORT=1234 mocha test-unit --exit",
     "test:e2e": "start-server-and-test serve:test http://localhost:5000 nightwatch",
     "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",
-    "test": "if test \"$NODE_ENV\" = \"production\"; then yarn test:unit; else yarn test:all; fi",
+    "test": "bash scripts/bash/test.sh",
     "profile:node": "yarn 0x -D profileNodeJS/ -o server/index.mjs"
   }
 }
