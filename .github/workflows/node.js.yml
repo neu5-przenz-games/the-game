@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: browser-actions/setup-chrome@954270
+      - uses: browser-actions/setup-chrome@latest
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
