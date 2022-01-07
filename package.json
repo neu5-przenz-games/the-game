@@ -21,7 +21,8 @@
     "0x": "^4.11.0",
     "@babel/core": "^7.16.5",
     "@babel/eslint-parser": "^7.16.5",
-    "@parcel/transformer-sass": "^2.0.1",
+    "@parcel/config-default": "^2.1.1",
+    "@parcel/transformer-sass": "^2.1.1",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "chromedriver": "^95.0.0",
@@ -35,9 +36,9 @@
     "nightwatch": "^1.7.6",
     "nodemon": "^2.0.7",
     "optimist": "^0.6.1",
-    "parcel": "^2.0.1",
-    "parcel-plugin-clean-easy": "^1.0.2",
-    "parcel-plugin-static-files-copy": "^2.5.1",
+    "parcel": "^2.1.1",
+    "parcel-reporter-clean-dist": "^1.0.3",
+    "parcel-reporter-static-files-copy": "^1.3.4",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "sass": "^1.35.1",
@@ -51,14 +52,8 @@
     ],
     "delay": "1000"
   },
-  "parcelCleanPaths": [
-    "dist"
-  ],
   "staticFiles": {
-    "staticPath": "public",
-    "excludeGlob": [
-      "public"
-    ]
+    "staticPath": "public"
   },
   "packageManager": "yarn@3.1.1",
   "scripts": {
