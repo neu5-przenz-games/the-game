@@ -203,18 +203,13 @@ const availableTiles = ({ surroundingTiles, players, map }) => {
     currentPlayersPositions.push(player.positionTile);
   });
 
-  return tiles.reduce((avTiles, tile) => {
-    if (
+  return tiles.filter(
+    (tile) =>
       map[tile.tileY][tile.tileX] === 0 &&
       currentPlayersPositions.every(
         (pos) => pos.tileX !== tile.tileX || pos.tileY !== tile.tileY
       )
-    ) {
-      avTiles.push(tile);
-    }
-
-    return avTiles;
-  }, []);
+  );
 };
 
 const getRandomTile = ({ map, obj, players, sizeToIncrease }) => {

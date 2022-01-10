@@ -25,13 +25,7 @@ const emitLootingBagList = (gameObjects, io) =>
   io.emit(
     "looting-bag:list",
     gameObjects
-      .reduce((res, go) => {
-        if (go.type === "LootingBag") {
-          res.push(go);
-        }
-
-        return res;
-      }, [])
+      .filter((gameObject) => gameObject.type === "LootingBag")
       .map(({ name, positionTile, items }) => ({
         id: name,
         positionTile,

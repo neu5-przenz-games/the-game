@@ -17,13 +17,9 @@ const httpServer = createServer(app);
 
 const players = new Map();
 
-const healingStones = gameObjects.reduce((res, go) => {
-  if (go.type === "HealingStone") {
-    res.push(go);
-  }
-
-  return res;
-}, []);
+const healingStones = gameObjects.filter(
+  (gameObject) => gameObject.type === "HealingStone"
+);
 
 playersMocks.forEach((player) => {
   players.set(player.name, new Player(player));

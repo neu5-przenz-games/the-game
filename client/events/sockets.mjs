@@ -328,15 +328,15 @@ export const sockets = (game) => {
   });
 
   game.socket.on("looting-bag:list", (lootingBags) => {
-    game.gameObjects = game.gameObjects.reduce((gameObjects, gameObject) => {
+    game.gameObjects = game.gameObjects.filter((gameObject) => {
       if (gameObject.constructor.TYPE === LootingBag.TYPE) {
         gameObject.destroy();
-      } else {
-        gameObjects.push(gameObject);
+
+        return false;
       }
 
-      return gameObjects;
-    }, []);
+      return true;
+    });
 
     lootingBags.forEach(({ id, positionTile }) => {
       const objectWorldXY = getXYFromTile(
