@@ -109,21 +109,15 @@ const addLootingBagAfterPlayerIsDead = ({
       );
     }
 
-    const lootingBags = gameObjects.reduce((res, go) => {
-      if (go.type === "LootingBag") {
-        res.push(go);
-      }
-
-      return res;
-    }, []);
-
     io.emit(
       "looting-bag:list",
-      lootingBags.map(({ name, positionTile, items }) => ({
-        id: name,
-        positionTile,
-        items,
-      }))
+      gameObjects
+        .filter((gameObject) => gameObject.type === "LootingBag")
+        .map(({ name, positionTile, items }) => ({
+          id: name,
+          positionTile,
+          items,
+        }))
     );
   }
 
