@@ -2819,9 +2819,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromedriver@npm:^95.0.0":
-  version: 95.0.0
-  resolution: "chromedriver@npm:95.0.0"
+"chromedriver@npm:^97.0.0":
+  version: 97.0.0
+  resolution: "chromedriver@npm:97.0.0"
   dependencies:
     "@testim/chrome-version": ^1.0.7
     axios: ^0.21.2
@@ -2832,7 +2832,7 @@ __metadata:
     tcp-port-used: ^1.0.1
   bin:
     chromedriver: bin/chromedriver
-  checksum: b6afdf8b99f72bbba424c9bca85efe56d602f298fda26136e4ae3689ea00ddc64109ce036884565d292e16dd05f96338e635e6d3bdc7105c032cc988fcb23410
+  checksum: 3dd8152af188fef48103a44ff16186b8b570bd115cc8be2dc1f0551aa9aa3ddf267a3bb7946d359b392b273473426cf87bdd4ffb81239bf9ef069cfbd124b21a
   languageName: node
   linkType: hard
 
@@ -10932,7 +10932,7 @@ __metadata:
     "@parcel/transformer-sass": ^2.1.1
     chai: ^4.3.0
     chai-http: ^4.3.0
-    chromedriver: ^95.0.0
+    chromedriver: ^97.0.0
     ejs: ^3.1.6
     eslint: ^8.5.0
     eslint-config-airbnb-base: ^15.0.0
