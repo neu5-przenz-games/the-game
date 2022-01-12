@@ -723,6 +723,7 @@ class Creature {
     this.isDead = false;
     this.toRespawn = false;
     this.hp = HP_MAX;
+    this.respawnDelayTicks.value = 0;
 
     this.teleport(respawnTile);
   }
