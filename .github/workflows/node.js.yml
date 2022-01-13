@@ -12,7 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: browser-actions/setup-chrome@latest
+      - name: setup-chromedriver
+        uses: nanasess/setup-chromedriver@v1.0.1
+        with:
+          chromedriver-version: "97"
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
