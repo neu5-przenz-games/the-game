@@ -7,6 +7,7 @@ export class Tile {
     this.image = scene.add.image(x, y + OFFSET.Y, image);
     this.image.setVisible(false);
     this.image.setAlpha(0.5);
+    this.image.setDepth(1);
   }
 
   setPosition(x, y) {
