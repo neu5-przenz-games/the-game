@@ -1,6 +1,7 @@
 import { Creature } from "./Creature.mjs";
 import { EnergyBar, HealthBar, ProgressBar } from "../Bar/index.mjs";
 import { getCurrentWeapon } from "../../../shared/init/gameItems/index.mjs";
+import { getXYFromTile } from "../../../shared/utils/index.mjs";
 
 const HEALTH_BAR_OFFSET_X = -32;
 const HEALTH_BAR_OFFSET_Y = -36;
@@ -111,7 +112,7 @@ class Player extends Creature {
           this.tileMarked.toggleVisible(false);
         }
 
-        const tile = this.scene.getTileFromXY(destTile.tileX, destTile.tileY);
+        const tile = getXYFromTile(destTile.tileX, destTile.tileY);
 
         this.tileMarked.setPosition(tile.x + OFFSET.X, tile.y + OFFSET.Y);
         this.tileMarked.toggleVisible(true, tile);
