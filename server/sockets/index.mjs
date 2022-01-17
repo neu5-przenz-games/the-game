@@ -19,7 +19,7 @@ import {
   shapeSkillsForClient,
   skillsSchema,
 } from "../../shared/skills/index.mjs";
-import map from "../../public/assets/map/map.mjs";
+import map from "../../client/public/assets/map/map.mjs";
 
 const emitLootingBagList = (gameObjects, io) =>
   io.emit(

@@ -59,7 +59,7 @@ gameObjects.forEach((gameObject) => {
 });
 
 writeFileSync(
-  "./public/assets/map/map.mjs",
+  "client/public/assets/map/map.mjs",
   `export default ${JSON.stringify(arr)};`,
   (err) => {
     if (err) return console.log(err);

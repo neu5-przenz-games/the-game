@@ -1,6 +1,7 @@
 import PF from "pathfinding";
 import { SnapshotInterpolation } from "@geckos.io/snapshot-interpolation";
 
+import map from "client/public/assets/map/map.mjs";
 import { HP_MAX, Player } from "../gameObjects/creatures/Player.mjs";
 import { directions, getDirection } from "../utils/directions.mjs";
 import {
@@ -13,8 +14,6 @@ import {
   isPlayerInHealingArea,
 } from "../utils/algo.mjs";
 import { getHitText } from "../utils/hitText.mjs";
-
-import map from "../../public/assets/map/map.mjs";
 
 import { getCurrentWeapon } from "../../shared/init/gameItems/index.mjs";
 import {

@@ -1,24 +1,11 @@
 {
-  "name": "the-game",
-  "version": "0.0.1",
-  "repository": "https://github.com/neu5-przenz-games/the-game",
-  "author": "neu5",
-  "license": "MIT",
-  "alias": {
-    "shared": "./shared"
-  },
-  "_moduleAliases": {
-    "shared": "./shared"
-  },
-  "dependencies": {
-    "@geckos.io/snapshot-interpolation": "^1.0.2",
-    "express": "^4.17.1",
-    "pathfinding": "^0.4.18",
-    "phaser": "^3.52.0",
-    "socket.io": "^4.1.2"
-  },
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "packageManager": "yarn@3.1.1",
   "devDependencies": {
-    "0x": "^4.11.0",
     "@babel/core": "^7.16.5",
     "@babel/eslint-parser": "^7.16.5",
     "@parcel/config-default": "^2.1.1",
@@ -34,40 +21,13 @@
     "eslint-plugin-prettier": "^4.0.0",
     "mocha": "^8.3.0",
     "nightwatch": "^1.7.6",
-    "nodemon": "^2.0.7",
     "optimist": "^0.6.1",
-    "parcel": "^2.1.1",
-    "parcel-reporter-clean-dist": "^1.0.3",
-    "parcel-reporter-static-files-copy": "^1.3.4",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "sass": "^1.35.1",
     "socket.io-client": "^4.1.2",
     "start-server-and-test": "^1.12.5"
   },
-  "nodemonConfig": {
-    "ignore": [
-      "client/*",
-      "package.json"
-    ],
-    "delay": "1000"
-  },
-  "staticFiles": {
-    "staticPath": "public"
-  },
-  "packageManager": "yarn@3.1.1",
   "scripts": {
-    "prebuild": "yarn generateMocks && yarn extract:map",
-    "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
-    "build:prod": "NODE_ENV=production parcel build client/index.html",
-    "build:dev": "NODE_ENV=development parcel build client/index.html --no-optimize",
-    "build:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map && NODE_ENV=development parcel build client/index.html --no-optimize",
-    "build:html": "node ./scripts/generateStaticPages.mjs",
-    "postbuild": "yarn build:html",
-    "predev": "yarn generateMocks && yarn extract:map",
-    "dev": "yarn predev && parcel watch client/index.html",
-    "dev:mini": "MAP=mini yarn dev",
-    "dev:test": "MAP=test yarn dev",
     "splitMap": "node ./scripts/splitMap.mjs",
     "splitMap:mini": "MAP=mini node ./scripts/splitMap.mjs",
     "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
@@ -75,13 +35,9 @@
     "generateMocks": "node ./scripts/generateMocks.mjs",
     "lint": "eslint '**/*.{mjs,js}'",
     "lint:fix": "npm run lint -- --fix",
-    "serve:dev": "NODE_ENV=development nodemon server/index.mjs",
-    "serve:test": "NODE_ENV=development node server/index.mjs",
-    "serve": "node server/index.mjs",
     "test:unit": "PORT=1234 mocha test-unit --exit",
     "test:e2e": "start-server-and-test serve:test http://localhost:5000 nightwatch",
     "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",
-    "test": "bash scripts/bash/test.sh",
-    "profile:node": "yarn 0x -D profileNodeJS/ -o server/index.mjs"
+    "test": "bash scripts/bash/test.sh"
   }
 }
