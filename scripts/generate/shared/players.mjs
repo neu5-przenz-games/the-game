@@ -1,9 +1,9 @@
 import {
   ENERGY_MAX,
   HP_MAX,
-} from "../../../server/gameObjects/creatures/Player.mjs";
+} from "../../../packages/server/gameObjects/creatures/Player.mjs";
 
-import { skillsSchema } from "../../../shared/skills/index.mjs";
+import { skillsSchema } from "../../../packages/shared/skills/index.mjs";
 
 const createPlayer = ({
   name,

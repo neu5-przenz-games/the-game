@@ -9,7 +9,7 @@
 import { readFileSync, writeFileSync } from "fs";
 
 import { gameObjects } from "../generated/gameObjects.mjs"; // eslint-disable-line
-import { getMocksType } from "../shared/utils/index.mjs";
+import { getMocksType } from "../packages/shared/utils/index.mjs";
 
 const mocksType = getMocksType(process.env.MAP);
 
@@ -59,7 +59,7 @@ gameObjects.forEach((gameObject) => {
 });
 
 writeFileSync(
-  "client/public/assets/map/map.mjs",
+  "packages/shared/public/assets/map/map.mjs",
   `export default ${JSON.stringify(arr)};`,
   (err) => {
     if (err) return console.log(err);

@@ -1,8 +1,8 @@
 import ejs from "ejs";
 import { writeFileSync } from "fs";
 
-import { gameItems } from "../shared/init/gameItems/index.mjs";
-import { ITEM_TYPES } from "../shared/gameItems/itemTypes.mjs";
+import { gameItems } from "../packages/shared/init/gameItems/index.mjs";
+import { ITEM_TYPES } from "../packages/shared/gameItems/itemTypes.mjs";
 
 const gameItemsArr = Array.from(gameItems, ([id, obj]) => obj); // eslint-disable-line
 

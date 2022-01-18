@@ -1,17 +1,17 @@
 import {
-  Cupid,
-  defaultBackpack as CupidBp,
-  defaultEquipment as CupidEq,
-  HP_MAX as CupidHpMax,
-  defaultSkills as CupidSkills,
-} from "../../../server/gameObjects/creatures/Cupid.mjs";
-import {
   Devil,
   defaultBackpack as DevilBp,
   defaultEquipment as DevilEq,
   HP_MAX as DevilHpMax,
   defaultSkills as DevilSkills,
-} from "../../../server/gameObjects/creatures/Devil.mjs";
+} from "../../../packages/server/gameObjects/creatures/Devil.mjs";
+import {
+  Cupid,
+  defaultBackpack as CupidBp,
+  defaultEquipment as CupidEq,
+  HP_MAX as CupidHpMax,
+  defaultSkills as CupidSkills,
+} from "../../../packages/server/gameObjects/creatures/Cupid.mjs";
 
 const createMob = ({
   name,

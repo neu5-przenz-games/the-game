@@ -1,6 +1,6 @@
-dist/
 node_modules/
-public/assets/map/map.mjs
+packages/client/dist/
+packages/shared/public/assets/map/
 generated/
 e2e-commands/
 e2e-page-objects/

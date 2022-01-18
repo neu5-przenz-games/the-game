@@ -5,7 +5,7 @@ import {
   getMobs,
   getPlayers,
 } from "./generate/index.mjs";
-import { getMocksType } from "../shared/utils/index.mjs";
+import { getMocksType } from "../packages/shared/utils/index.mjs";
 
 const mocksType = getMocksType(process.env.MAP);
 
@@ -21,11 +21,15 @@ if (!existsSync("./generated")) {
 
 const config = getConfig(mocksType);
 
-copyFile(`tiledMap/${mocksType}.png`, "./public/assets/map/map.png", (err) => {
-  if (err) return console.log(err);
+copyFile(
+  `tiledMap/${mocksType}.png`,
+  "packages/shared/public/assets/map/map.png",
+  (err) => {
+    if (err) return console.log(err);
 
-  return 1;
-});
+    return 1;
+  }
+);
 
 writeFile(
   "./generated/config.mjs",

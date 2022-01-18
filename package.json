@@ -1,15 +1,17 @@
 {
   "private": true,
   "workspaces": [
-    "client",
-    "server"
+    "packages/client",
+    "packages/server",
+    "packages/shared"
   ],
+  "staticFiles": {
+    "staticPath": "../shared/public"
+  },
   "packageManager": "yarn@3.1.1",
   "devDependencies": {
     "@babel/core": "^7.16.5",
     "@babel/eslint-parser": "^7.16.5",
-    "@parcel/config-default": "^2.1.1",
-    "@parcel/transformer-sass": "^2.1.1",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "chromedriver": "^97.0.0",
@@ -33,11 +35,14 @@
     "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
+    "prebuild": "yarn generateMocks && yarn extract:map",
+    "prebuild:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map",
+    "postbuild": "yarn build:html",
     "lint": "eslint '**/*.{mjs,js}'",
     "lint:fix": "npm run lint -- --fix",
     "test:unit": "PORT=1234 mocha test-unit --exit",
-    "test:e2e": "start-server-and-test serve:test http://localhost:5000 nightwatch",
-    "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",
+    "test:e2e": "yarn workspace server test:e2e",
+    "test:all": "yarn prebuild:test && yarn test:unit && yarn test:e2e",
     "test": "bash scripts/bash/test.sh"
   }
 }
