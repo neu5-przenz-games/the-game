@@ -39,7 +39,7 @@ setInterval(() => {
   loop({ gameObjects, healingStones, io, players });
 }, FRAME_IN_MS);
 
-app.use(express.static("../client/dist"));
+app.use(express.static("./packages/client/dist"));
 
 app.get("/", (req, res) => {
   res.sendFile("index.html", { root: "./packages/client/dist" });

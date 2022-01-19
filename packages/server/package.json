@@ -5,6 +5,7 @@
     "repository": "https://github.com/neu5-przenz-games/the-game",
     "author": "neu5",
     "license": "MIT",
+    "type": "module",
     "dependencies": {
         "@geckos.io/snapshot-interpolation": "^1.0.2",
         "express": "^4.17.1",
