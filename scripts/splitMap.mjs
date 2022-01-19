@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, readFile, writeFile } from "fs";
 import { join } from "path";
 import rimraf from "rimraf";
 import optimist from "optimist";
-import { getMocksType } from "../shared/utils/index.mjs";
+import { getMocksType } from "../packages/shared/utils/index.mjs";
 
 const { argv } = optimist;
 const mocksType = getMocksType(process.env.MAP);

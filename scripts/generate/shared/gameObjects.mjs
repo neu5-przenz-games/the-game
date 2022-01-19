@@ -4,8 +4,8 @@ import {
   House,
   LootingBag,
   Tree,
-} from "../../../shared/gameObjects/index.mjs";
-import { getSurroundingTiles } from "../../../shared/utils/index.mjs";
+} from "../../../packages/shared/gameObjects/index.mjs";
+import { getSurroundingTiles } from "../../../packages/shared/utils/index.mjs";
 
 const TYPES = {
   CopperOre,

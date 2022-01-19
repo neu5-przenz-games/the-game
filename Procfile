@@ -1,1 +1,1 @@
-web: node server/index.mjs
+web: node packages/server/index.mjs

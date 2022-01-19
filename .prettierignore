@@ -1,2 +1,4 @@
-public/assets/map/map.js
+packages/client/dist/
+packages/shared/public/assets/map/
+generated/
 tiledMap/
