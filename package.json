@@ -35,6 +35,8 @@
     "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
+    "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
+    "build:html": "node ./scripts/generateStaticPages.mjs",
     "prebuild": "yarn generateMocks && yarn extract:map",
     "prebuild:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map",
     "postbuild": "yarn build:html",

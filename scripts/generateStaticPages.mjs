@@ -8,7 +8,7 @@ const gameItemsArr = Array.from(gameItems, ([id, obj]) => obj); // eslint-disabl
 
 const itemsPages = Object.values(ITEM_TYPES).map((itemType) => ({
   sourcePath: `./pages/wiki/items/${itemType}.ejs`,
-  outputPath: `./public/wiki/items/${itemType}.html`,
+  outputPath: `./packages/shared/public/wiki/items/${itemType}.html`,
   data: {
     gameItems: gameItemsArr.filter((item) => item.type === itemType),
     ITEM_TYPES,
@@ -18,11 +18,11 @@ const itemsPages = Object.values(ITEM_TYPES).map((itemType) => ({
 const pages = [
   {
     sourcePath: "./pages/wiki/index.ejs",
-    outputPath: "./public/wiki/index.html",
+    outputPath: "./packages/shared/public/wiki/index.html",
   },
   {
     sourcePath: "./pages/wiki/items.ejs",
-    outputPath: "./public/wiki/items.html",
+    outputPath: "./packages/shared/public/wiki/items.html",
     data: {
       gameItems,
       ITEM_TYPES,

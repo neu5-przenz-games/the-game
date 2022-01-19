@@ -24,7 +24,6 @@
         "build": "bash ../../scripts/bash/build.sh",
         "build:prod": "NODE_ENV=production parcel build index.html",
         "build:dev": "NODE_ENV=development parcel build index.html --no-optimize",
-        "build:html": "node ./scripts/generateStaticPages.mjs",
         "dev": "parcel watch index.html",
         "dev:mini": "MAP=mini yarn dev",
         "dev:test": "MAP=test yarn dev"
