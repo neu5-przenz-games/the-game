@@ -36,7 +36,7 @@
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
     "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
-    "build:test": "yarn build:dev",
+    "build:test": "yarn prebuild:test && yarn build:dev",
     "build:html": "node ./scripts/generateStaticPages.mjs",
     "prebuild": "yarn generateMocks && yarn extract:map",
     "prebuild:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map",
@@ -45,7 +45,7 @@
     "lint:fix": "npm run lint -- --fix",
     "test:unit": "PORT=1234 mocha test-unit --exit",
     "test:e2e": "start-server-and-test 'yarn serve:test' http://localhost:5000 nightwatch",
-    "test:all": "yarn prebuild:test && yarn build:test && yarn test:unit && yarn test:e2e",
+    "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",
     "test": "bash scripts/bash/test.sh"
   }
 }
