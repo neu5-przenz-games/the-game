@@ -40,4 +40,4 @@ jobs:
         run: yarn prebuild && yarn workspace client build:dev
       - name: Build prod version
         if: github.ref == 'refs/heads/main'
-        run: yarn prebuild && yarn workspace client build
+        run: yarn prebuild && yarn workspace client build:prod

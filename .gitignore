@@ -7,7 +7,7 @@ node_modules/
 dist/
 tests_output/
 generated/
-profileNodeJS/
+packages/server/profileNodeJS/
 .pnp.*
 .yarn/*
 !.yarn/patches

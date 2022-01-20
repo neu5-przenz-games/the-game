@@ -1,30 +1,33 @@
 {
-    "name": "server",
-    "private": true,
-    "version": "0.0.1",
-    "repository": "https://github.com/neu5-przenz-games/the-game",
-    "author": "neu5",
-    "license": "MIT",
-    "type": "module",
-    "dependencies": {
-        "@geckos.io/snapshot-interpolation": "^1.0.2",
-        "express": "^4.17.1",
-        "pathfinding": "^0.4.18",
-        "shared": "0.0.1",
-        "socket.io": "^4.1.2"
-    },
-    "devDependencies": {
-        "0x": "^4.11.0",
-        "nodemon": "^2.0.7"
-    },
-    "nodemonConfig": {
-        "delay": "1000"
-    },
-    "packageManager": "yarn@3.1.1",
-    "scripts": {
-        "serve:dev": "NODE_ENV=development nodemon index.mjs",
-        "serve:test": "NODE_ENV=development node index.mjs",
-        "serve": "node index.mjs",
-        "profile:node": "yarn 0x -D profileNodeJS/ -o index.mjs"
-    }
+  "name": "server",
+  "private": true,
+  "version": "0.0.1",
+  "repository": "https://github.com/neu5-przenz-games/the-game",
+  "author": "neu5",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "^16.13"
+  },
+  "dependencies": {
+    "@geckos.io/snapshot-interpolation": "^1.0.2",
+    "express": "^4.17.1",
+    "pathfinding": "^0.4.18",
+    "shared": "0.0.1",
+    "socket.io": "^4.1.2"
+  },
+  "devDependencies": {
+    "0x": "^4.11.0",
+    "nodemon": "^2.0.7"
+  },
+  "nodemonConfig": {
+    "delay": "1000"
+  },
+  "packageManager": "yarn@3.1.1",
+  "scripts": {
+    "serve:dev": "NODE_ENV=development nodemon index.mjs",
+    "serve:test": "NODE_ENV=development node index.mjs",
+    "serve:prod": "node index.mjs",
+    "profile:node": "yarn 0x -D profileNodeJS/ -o index.mjs"
+  }
 }

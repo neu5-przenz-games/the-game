@@ -1,9 +1,9 @@
 {
-    "name": "shared",
-    "private": true,
-    "version": "0.0.1",
-    "repository": "https://github.com/neu5-przenz-games/the-game",
-    "author": "neu5",
-    "license": "MIT",
-    "packageManager": "yarn@3.1.1"
+  "name": "shared",
+  "private": true,
+  "version": "0.0.1",
+  "repository": "https://github.com/neu5-przenz-games/the-game",
+  "author": "neu5",
+  "license": "MIT",
+  "packageManager": "yarn@3.1.1"
 }
