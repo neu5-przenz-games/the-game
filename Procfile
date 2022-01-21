@@ -1,1 +1,1 @@
-web: node packages/server/index.mjs
+web: yarn serve:prod

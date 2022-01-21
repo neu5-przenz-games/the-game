@@ -30,9 +30,6 @@
     "start-server-and-test": "^1.12.5"
   },
   "scripts": {
-    "splitMap": "node ./scripts/splitMap.mjs",
-    "splitMap:mini": "MAP=mini node ./scripts/splitMap.mjs",
-    "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
     "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
@@ -40,9 +37,13 @@
     "build:html": "node ./scripts/generateStaticPages.mjs",
     "prebuild": "yarn generateMocks && yarn extract:map",
     "prebuild:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map",
+    "prebuild:mini": "MAP=mini yarn generateMocks && MAP=mini yarn extract:map",
     "postbuild": "yarn build:html",
     "lint": "eslint '**/*.{mjs,js}'",
     "lint:fix": "npm run lint -- --fix",
+    "splitMap": "node ./scripts/splitMap.mjs",
+    "splitMap:mini": "MAP=mini node ./scripts/splitMap.mjs",
+    "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
     "test:unit": "PORT=1234 mocha test-unit --exit",
     "test:e2e": "start-server-and-test 'yarn serve:test' http://localhost:5000 nightwatch",
     "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",

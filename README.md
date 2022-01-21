@@ -1,20 +1,24 @@
 # Development
 
-To work locally on test map (smaller map) run
+Being in the `root` directory
+
+to work locally first generate the mocks and map size by running
+`yarn prebuild` (production)
+`yarn prebuild:test`
+`yarn prebuild:mini`
+
+To work on the test map run
 `yarn dev:test`
 
-To work locally on production size of a map run
-`yarn dev`
-
 To start the server run
-`yarn serve`
+`yarn serve:dev`
 and you should see page at
 `localhost:5000`
 
 The best way to test the production environment locally is to run
 `NODE_ENV=production yarn build`
 and then to start the server run
-`yarn serve`
+`yarn serve:prod`
 
 ## Demo
 

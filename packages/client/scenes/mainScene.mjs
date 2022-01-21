@@ -39,6 +39,8 @@ export class MainScene extends Phaser.Scene {
     this.timer = 0;
     this.mapType = getMocksType(process.env.MAP);
 
+    console.log(`map type = ${this.mapType}`);
+
     this.equipment = null;
     this.backpack = null;
 
