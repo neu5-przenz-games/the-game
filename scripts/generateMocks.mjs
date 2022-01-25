@@ -1,4 +1,4 @@
-import { copyFile, existsSync, mkdirSync, writeFile } from "fs";
+import { existsSync, mkdirSync, writeFile } from "fs";
 import {
   getConfig,
   getGameObjects,
@@ -20,16 +20,6 @@ if (!existsSync("./generated")) {
 }
 
 const config = getConfig(mocksType);
-
-copyFile(
-  `tiledMap/${mocksType}.png`,
-  "packages/shared/public/assets/map/map.png",
-  (err) => {
-    if (err) return console.log(err);
-
-    return 1;
-  }
-);
 
 writeFile(
   "./generated/config.mjs",

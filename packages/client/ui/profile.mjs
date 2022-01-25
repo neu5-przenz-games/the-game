@@ -69,6 +69,7 @@ export class UIProfile {
 
     this.UIDialog = UIDialog;
 
+    this.UIDialog.map.setGameType(game.mapType);
     this.showMapButton.onclick = () => {
       this.UIDialog.map.show(game.mainPlayer, game.mapImgDimensions);
     };

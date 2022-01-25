@@ -30,6 +30,7 @@
     "start-server-and-test": "^1.12.5"
   },
   "scripts": {
+    "copyMapsImages": "node ./scripts/copyMapsImages.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
     "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
