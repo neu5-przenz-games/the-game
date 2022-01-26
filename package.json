@@ -2,6 +2,7 @@
   "private": true,
   "workspaces": [
     "packages/client",
+    "packages/pages",
     "packages/server",
     "packages/shared"
   ],
@@ -15,7 +16,6 @@
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "chromedriver": "^97.0.0",
-    "ejs": "^3.1.6",
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
@@ -35,7 +35,6 @@
     "generateMocks": "node ./scripts/generateMocks.mjs",
     "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
     "build:test": "yarn prebuild:test && yarn build:dev",
-    "build:html": "node ./scripts/generateStaticPages.mjs",
     "prebuild": "yarn generateMocks && yarn extract:map",
     "prebuild:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map",
     "prebuild:mini": "MAP=mini yarn generateMocks && MAP=mini yarn extract:map",
