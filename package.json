@@ -36,7 +36,7 @@
     "prebuild": "yarn generateMocks && yarn extract:map",
     "prebuild:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map",
     "prebuild:mini": "MAP=mini yarn generateMocks && MAP=mini yarn extract:map",
-    "build": "yarn prebuild && workspace client build && yarn postbuild",
+    "build": "yarn prebuild && yarn workspace client build && yarn postbuild",
     "build:test": "yarn prebuild:test && yarn build:dev",
     "build:html": "yarn workspace pages build:html",
     "postbuild": "yarn build:html",
