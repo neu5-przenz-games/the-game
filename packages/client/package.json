@@ -21,7 +21,7 @@
   },
   "packageManager": "yarn@3.1.1",
   "scripts": {
-    "build": "bash ../../scripts/bash/build.sh",
+    "build": "bash ./scripts/bash/build.sh",
     "build:prod": "NODE_ENV=production parcel build index.html",
     "build:dev": "NODE_ENV=development parcel build index.html --no-optimize",
     "build:watch": "parcel watch index.html",

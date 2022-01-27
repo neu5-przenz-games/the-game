@@ -2,6 +2,7 @@
   "private": true,
   "workspaces": [
     "packages/client",
+    "packages/pages",
     "packages/server",
     "packages/shared"
   ],
@@ -15,7 +16,6 @@
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "chromedriver": "^97.0.0",
-    "ejs": "^3.1.6",
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
@@ -33,21 +33,24 @@
     "copyMapsImages": "node ./scripts/copyMapsImages.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
-    "build": "yarn prebuild && bash scripts/bash/build.sh && yarn postbuild",
-    "build:test": "yarn prebuild:test && yarn build:dev",
-    "build:html": "node ./scripts/generateStaticPages.mjs",
     "prebuild": "yarn generateMocks && yarn extract:map",
     "prebuild:test": "MAP=test yarn generateMocks && MAP=test yarn extract:map",
     "prebuild:mini": "MAP=mini yarn generateMocks && MAP=mini yarn extract:map",
+    "build": "yarn prebuild && workspace client build && yarn postbuild",
+    "build:test": "yarn prebuild:test && yarn build:dev",
+    "build:html": "yarn workspace pages build:html",
     "postbuild": "yarn build:html",
+    "dev:test": "yarn workspace client dev:test",
+    "serve:dev": "yarn workspace server serve:dev",
+    "serve:prod": "yarn workspace server serve:prod",
     "lint": "eslint '**/*.{mjs,js}'",
     "lint:fix": "npm run lint -- --fix",
-    "splitMap": "node ./scripts/splitMap.mjs",
-    "splitMap:mini": "MAP=mini node ./scripts/splitMap.mjs",
-    "splitMap:test": "MAP=test node ./scripts/splitMap.mjs",
     "test:unit": "PORT=1234 mocha test-unit --exit",
     "test:e2e": "start-server-and-test 'yarn serve:test' http://localhost:5000 nightwatch",
     "test:all": "yarn build:test && yarn test:unit && yarn test:e2e",
-    "test": "bash scripts/bash/test.sh"
+    "test": "bash scripts/bash/test.sh",
+    "splitMap": "node ./scripts/splitMap.mjs",
+    "splitMap:mini": "MAP=mini node ./scripts/splitMap.mjs",
+    "splitMap:test": "MAP=test node ./scripts/splitMap.mjs"
   }
 }
