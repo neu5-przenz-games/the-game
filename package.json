@@ -31,6 +31,7 @@
   },
   "scripts": {
     "copyMapsImages": "node ./scripts/copyMapsImages.mjs",
+    "copyTilesets": "node ./scripts/copyTilesets.mjs",
     "extract:map": "node ./scripts/extractMap.mjs",
     "generateMocks": "node ./scripts/generateMocks.mjs",
     "prebuild": "yarn generateMocks && yarn extract:map",
