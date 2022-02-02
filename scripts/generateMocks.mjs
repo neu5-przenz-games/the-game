@@ -5,56 +5,60 @@ import {
   getMobs,
   getPlayers,
 } from "./generate/index.mjs";
-import { getMocksType } from "../packages/shared/utils/index.mjs";
+import { MOCKS_TYPES } from "../packages/shared/utils/index.mjs";
 
-const mocksType = getMocksType(process.env.MAP);
+// const mocksType = getMocksType(process.env.MAP);
 
-const gameObjects = getGameObjects(mocksType);
-const mobs = getMobs(mocksType);
-const players = getPlayers(mocksType);
+Object.values(MOCKS_TYPES).forEach((mockType) => {
+  console.log(mockType);
+});
 
-console.log({ mocksType });
+// const gameObjects = getGameObjects(mocksType);
+// const mobs = getMobs(mocksType);
+// const players = getPlayers(mocksType);
 
-if (!existsSync("./generated")) {
-  mkdirSync("./generated");
-}
+// console.log({ mocksType });
 
-const config = getConfig(mocksType);
+// if (!existsSync("./generated")) {
+//   mkdirSync("./generated");
+// }
 
-writeFile(
-  "./generated/config.mjs",
-  `export const config = ${JSON.stringify(config)};`,
-  (err) => {
-    if (err) return console.log(err);
+// const config = getConfig(mocksType);
 
-    return 1;
-  }
-);
+// writeFile(
+//   "./generated/config.mjs",
+//   `export const config = ${JSON.stringify(config)};`,
+//   (err) => {
+//     if (err) return console.log(err);
 
-writeFile(
-  "./generated/gameObjects.mjs",
-  `export const gameObjects = ${JSON.stringify(gameObjects)};`,
-  (err) => {
-    if (err) return console.log(err);
+//     return 1;
+//   }
+// );
 
-    return 1;
-  }
-);
-writeFile(
-  "./generated/mobs.mjs",
-  `export const mobs = ${JSON.stringify(mobs)};`,
-  (err) => {
-    if (err) return console.log(err);
+// writeFile(
+//   "./generated/gameObjects.mjs",
+//   `export const gameObjects = ${JSON.stringify(gameObjects)};`,
+//   (err) => {
+//     if (err) return console.log(err);
 
-    return 1;
-  }
-);
-writeFile(
-  "./generated/players.mjs",
-  `export const playersMocks = ${JSON.stringify(players)};`,
-  (err) => {
-    if (err) return console.log(err);
+//     return 1;
+//   }
+// );
+// writeFile(
+//   "./generated/mobs.mjs",
+//   `export const mobs = ${JSON.stringify(mobs)};`,
+//   (err) => {
+//     if (err) return console.log(err);
 
-    return 1;
-  }
-);
+//     return 1;
+//   }
+// );
+// writeFile(
+//   "./generated/players.mjs",
+//   `export const playersMocks = ${JSON.stringify(players)};`,
+//   (err) => {
+//     if (err) return console.log(err);
+
+//     return 1;
+//   }
+// );
