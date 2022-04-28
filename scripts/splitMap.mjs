@@ -6,17 +6,25 @@
 import { existsSync, mkdirSync, readFile, writeFile } from "fs";
 import { join } from "path";
 import rimraf from "rimraf";
-import optimist from "optimist";
+import minimist from "minimist";
 import { getMocksType } from "../packages/shared/utils/index.mjs";
 
-const { argv } = optimist;
+const argv = minimist(process.argv.slice(2));
 const mocksType = getMocksType(process.env.MAP);
 
 const splitMap = (out = "chunks", chunkWidth = 16, chunkHeight = 16) => {
   const fileName = `${mocksType}.json`;
 
   const mapsPath = join("tiledMap");
-  const outputDirectory = join("public", "assets", "map", out, mocksType);
+  const outputDirectory = join(
+    "packages",
+    "shared",
+    "public",
+    "assets",
+    "map",
+    out,
+    mocksType
+  );
 
   rimraf.sync(outputDirectory);
   console.log(`${out} cleared`);
