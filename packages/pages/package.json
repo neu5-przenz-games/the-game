@@ -10,7 +10,7 @@
     "shared": "0.0.1"
   },
   "devDependencies": {
-    "ejs": "^3.1.6"
+    "ejs": "^3.1.7"
   },
   "scripts": {
     "build:html": "node ./scripts/generateStaticPages.mjs"
