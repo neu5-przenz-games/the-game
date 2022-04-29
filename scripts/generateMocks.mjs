@@ -13,7 +13,7 @@ const gameObjects = getGameObjects(mocksType);
 const mobs = getMobs(mocksType);
 const players = getPlayers(mocksType);
 
-console.log({ mocksType });
+console.log("generateMocks:", { mocksType });
 
 if (!existsSync("./generated")) {
   mkdirSync("./generated");
