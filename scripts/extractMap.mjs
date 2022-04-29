@@ -13,7 +13,7 @@ import { getMocksType } from "../packages/shared/utils/index.mjs";
 
 const mocksType = getMocksType(process.env.MAP);
 
-console.log({ mocksType });
+console.log("extractMap:", { mocksType });
 
 const map = readFileSync(`tiledMap/${mocksType}.json`, "utf8");
 

@@ -1289,10 +1289,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testim/chrome-version@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@testim/chrome-version@npm:1.0.7"
-  checksum: ce49208a2d698878f97428e8f830e1e95b6358964171781c6b4d37703599d0fb06f95a940d56a89d7617ea51583111f4b2709c2dc27ae24498b4d24523cf130e
+"@testim/chrome-version@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@testim/chrome-version@npm:1.1.2"
+  checksum: dcc470c190117adfade3013f9bb7b3642f3b020a770017c222114ac30fcb79defe098f6e2c7b74118199d39f749ef5cd9fab8878e3216339d9b5f4e541ec5fd9
   languageName: node
   linkType: hard
 
@@ -1862,12 +1862,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.21.1, axios@npm:^0.21.2":
+"axios@npm:^0.21.1":
   version: 0.21.4
   resolution: "axios@npm:0.21.4"
   dependencies:
     follow-redirects: ^1.14.0
   checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "axios@npm:0.24.0"
+  dependencies:
+    follow-redirects: ^1.14.4
+  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
   languageName: node
   linkType: hard
 
@@ -2534,12 +2543,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromedriver@npm:^97.0.0":
-  version: 97.0.0
-  resolution: "chromedriver@npm:97.0.0"
+"chromedriver@npm:^100.0.0":
+  version: 100.0.0
+  resolution: "chromedriver@npm:100.0.0"
   dependencies:
-    "@testim/chrome-version": ^1.0.7
-    axios: ^0.21.2
+    "@testim/chrome-version": ^1.1.2
+    axios: ^0.24.0
     del: ^6.0.0
     extract-zip: ^2.0.1
     https-proxy-agent: ^5.0.0
@@ -2547,7 +2556,7 @@ __metadata:
     tcp-port-used: ^1.0.1
   bin:
     chromedriver: bin/chromedriver
-  checksum: 3dd8152af188fef48103a44ff16186b8b570bd115cc8be2dc1f0551aa9aa3ddf267a3bb7946d359b392b273473426cf87bdd4ffb81239bf9ef069cfbd124b21a
+  checksum: d6a22ba439e189235b7f4d9006ce0a60c3644be28c01c2deda52c3f377191b8bec994fcdc0574d669b9b29447066861fbfc5c388fd9b7c372d1cc64e39b77716
   languageName: node
   linkType: hard
 
@@ -4686,13 +4695,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0":
-  version: 1.14.7
-  resolution: "follow-redirects@npm:1.14.7"
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4":
+  version: 1.14.9
+  resolution: "follow-redirects@npm:1.14.9"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: f6d03e5e30877431065bca0d1b2e3db93949eb799d368a5c07ea8a4b71205f0349a3f8f0191bf13a07c93885522834dca1dc8e527dc99a772c6911fba24edc5f
+  checksum: f5982e0eb481818642492d3ca35a86989c98af1128b8e1a62911a3410621bc15d2b079e8170b35b19d3bdee770b73ed431a257ed86195af773771145baa57845
   languageName: node
   linkType: hard
 
@@ -9249,7 +9258,7 @@ __metadata:
     "@babel/eslint-parser": ^7.16.5
     chai: ^4.3.0
     chai-http: ^4.3.0
-    chromedriver: ^97.0.0
+    chromedriver: ^100.0.0
     eslint: ^8.5.0
     eslint-config-airbnb-base: ^15.0.0
     eslint-config-prettier: ^8.3.0

@@ -15,7 +15,7 @@ jobs:
       - name: setup-chromedriver
         uses: nanasess/setup-chromedriver@v1.0.1
         with:
-          chromedriver-version: "97.0.4692.71"
+          chromedriver-version: "100.0.4896.127"
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
