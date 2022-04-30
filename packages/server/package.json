@@ -10,15 +10,15 @@
     "node": "^16.13"
   },
   "dependencies": {
-    "@geckos.io/snapshot-interpolation": "^1.0.2",
-    "express": "^4.17.1",
+    "@geckos.io/snapshot-interpolation": "^1.1.0",
+    "express": "^4.18.1",
     "pathfinding": "^0.4.18",
     "shared": "0.0.1",
-    "socket.io": "^4.1.2"
+    "socket.io": "^4.5.0"
   },
   "devDependencies": {
-    "0x": "^4.11.0",
-    "nodemon": "^2.0.7"
+    "0x": "^5.2.1",
+    "nodemon": "^2.0.16"
   },
   "nodemonConfig": {
     "delay": "1000"
