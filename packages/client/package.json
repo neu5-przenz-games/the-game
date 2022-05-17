@@ -17,7 +17,8 @@
     "parcel-reporter-clean-dist": "^1.0.4",
     "parcel-reporter-static-files-copy": "^1.3.4",
     "sass": "^1.51.0",
-    "socket.io-client": "^4.5.0"
+    "socket.io-client": "^4.5.0",
+    "typescript": "^4.6.4"
   },
   "packageManager": "yarn@3.1.1",
   "scripts": {

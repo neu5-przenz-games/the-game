@@ -10,11 +10,11 @@ const gameHeight = windowWidth > 1366 ? 768 : windowHeight;
 const [menu] = document.getElementsByClassName("menu");
 const [mobileNavBtn] = document.getElementsByClassName("mobile-nav-button");
 
-mobileNavBtn.onclick = () => {
+mobileNavBtn.addEventListener("click", () => {
   menu.classList.toggle("show");
-};
+});
 
-const config = {
+const config: Object = {
   type: Phaser.AUTO,
   scale: {
     width: gameWidth,
