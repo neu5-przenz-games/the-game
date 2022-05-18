@@ -14,7 +14,7 @@ mobileNavBtn.addEventListener("click", () => {
   menu.classList.toggle("show");
 });
 
-const config: Object = {
+const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   scale: {
     width: gameWidth,
@@ -24,7 +24,7 @@ const config: Object = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: 0,
+      gravity: { x: 0, y: 0 },
     },
   },
   scene: [MainScene],
