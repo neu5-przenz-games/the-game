@@ -13,6 +13,8 @@
   "devDependencies": {
     "@babel/core": "^7.17.10",
     "@babel/eslint-parser": "^7.17.0",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
     "chromedriver": "^100.0.0",
